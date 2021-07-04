@@ -1,0 +1,23 @@
+---
+#layout: layouts/base.njk
+templateClass: tmpl-about
+---
+{% extends "layouts/base.njk" %}
+
+{% set postAuthor = metadata.authors[author] %}
+
+{% block article %}
+
+{{ content | safe }}
+
+<h3>作者列表</h3>
+<ul>
+{% for key, author in metadata.authors %}
+  <li>
+    <h4>{{ author.name }}</h4>
+    <p>{{ author.intro }}</p>
+  </li>
+{% endfor %}
+</ul>
+
+{% endblock %}

@@ -1290,3 +1290,9 @@ a {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--primary);
 }
+
+.test123 {
+  width: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+}

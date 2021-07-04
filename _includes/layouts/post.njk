@@ -4,6 +4,7 @@ templateClass: tmpl-post
 ---
 {% extends "layouts/base.njk" %}
 
+{% set postAuthor = metadata.authors[author] %}
 
 {% block extraArticleHeader %}
    {% set wc = content | striptags | wordcount %}
@@ -11,17 +12,25 @@ templateClass: tmpl-post
    <aside>
      {{ wPerMinute | round }} min read.
    </aside>
+   Posted by {{ postAuthor.name }} on {{ date | htmlDateString }}
+   <img class="test123" src="{{ postAuthor.avatarUrl }}">
 {% endblock %}
+
 
 {% set shareUrl = metadata.url + page.url %}
 
 {% block article %}
+
 {{ content | safe }}
 
-<h1>🙏🙏🙏</h1>
+<hr>
+<img class="test123" src="{{ postAuthor.avatarUrl }}">
+<h4>{{ postAuthor.name }}</h4>
+<p>{{ postAuthor.intro }}</p>
 <p>
-  Since you've made it this far, <a href="{{ shareUrl | safe }}" on-click="share">sharing</a> this article on your favorite social media network 
-  would be highly appreciated 💖! For feedback, please 
+  <a href="{{ shareUrl | safe }}" on-click="share">點我分享此文章</a>
+
+  For feedback, please 
   <a href="https://twitter.com/{{ metadata.author.twitterHandle }}" target="_blank" rel="noopener">ping me on Twitter.</a>
 </p>
 

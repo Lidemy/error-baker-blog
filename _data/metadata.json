@@ -1,5 +1,5 @@
 {
-  "title": "Title of the website. Update me.",
+  "title": "ErrorBaker 技術共筆部落格",
   "url": "https://update-me.com",
   "domain": "update-me.com",
   "description": "Description of the website. Update me.",
@@ -17,8 +17,20 @@
     "url": "https://update-me.com/feed/feed.json"
   },
   "author": {
-    "name": "Author Name. Update me.",
+    "name": "作者名詞是我",
     "twitterHandle": "update_me"
+  },
+  "authors": {
+    "huli": {
+      "name": "Huli",
+      "intro": "相信分享會讓世界變得更美好",
+      "avatarUrl": "/img/authors/huli_logo.jpg"
+    },
+    "clay": {
+      "name": "Clay",
+      "intro": "大家好我是 clay",
+      "avatarUrl": "/img/authors/clay.png"
+    }
   },
   "publisher": {
     "name": "Publisher name. Update me."

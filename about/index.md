@@ -1,12 +1,11 @@
 ---
-layout: layouts/base.njk
-title: About
-templateClass: tmpl-post
+layout: layouts/about.njk
+title: 關於我們
 eleventyNavigation:
-  key: About
+  key: 關於我們
   order: 3
 ---
 
-I am a person that writes stuff.
+關於我們寫在這邊
 
-This blog template is based on [eleventy-high-performance-blog](https://www.industrialempathy.com/posts/eleventy-high-performance-blog/) which itself is based on [eleventy-base-blog](https://github.com/11ty/eleventy-base-blog).
+
