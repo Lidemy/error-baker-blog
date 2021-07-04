@@ -63,6 +63,8 @@ const processImage = async (img, outputPath) => {
     return;
   }
   if (dimensions.type == "gif") {
+    // note: disable gif2mp4 by huli
+    return
     const videoSrc = await gif2mp4(src);
     const video = img.ownerDocument.createElement(
       /AMP/i.test(img.tagName) ? "amp-video" : "video"

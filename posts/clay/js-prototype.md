@@ -6,7 +6,11 @@ author: clay
 tags: [JavaScript]
 ---
 
-前言
+hello
+
+## 前言
+
+![](/img/posts/clay/react.gif)
 
 這篇文章原本在一年多前曾經寫在 Medium 上，算是當時為了準備面試而寫的筆記文，不過現在再重看一次覺得還有很多部分可以改進，於是就想說再來改寫一下，順便當作 Blog 的第一篇文章。
 
