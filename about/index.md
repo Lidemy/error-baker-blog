@@ -1,8 +1,8 @@
 ---
 layout: layouts/about.njk
-title: 關於我們
+title: About
 eleventyNavigation:
-  key: 關於我們
+  key: About
   order: 3
 ---
 

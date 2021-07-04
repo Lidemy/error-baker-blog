@@ -1142,3 +1142,4 @@ a {
 .justify-center { justify-content: center; }
 .justify-between { justify-content: space-between; }
 .w-full { width: 100%; }
+.f-monospace { font-family: monospace;  }

@@ -10,7 +10,16 @@ templateClass: tmpl-post
    <aside class="w-full">
       <div class="flex items-center">
         <img class="avatar" src="{{ postAuthor.avatarUrl }}">
-        <span style="margin-left: 12px;">{{ postAuthor.name }} 於 {{ date | htmlDateString }} 發布</span>
+        <span style="margin-left: 12px;"><a href="/posts/{{ author }}">{{ postAuthor.name }}</a> 於 {{ date | htmlDateString }} 發布</span>
+      </div>
+      <div style="text-align: left;">
+      {% for tag in tags %}
+        {% if tag !== "posts" %}
+          {% set tagUrl %}/tags/{{ tag | slug }}/{% endset %}
+          <a href="{{ tagUrl | url }}" class="post-tag">#{{ tag }}</a>
+        {% endif %}
+        
+      {% endfor %}
       </div>
    </aside>
 {% endblock %}
@@ -27,9 +36,9 @@ templateClass: tmpl-post
   <h3>關於作者</h3>
   <div class="flex items-center">
     <img class="avatar avatar-large" src="{{ postAuthor.avatarUrl }}">
-    <h3 style="margin-left: 12px;">{{ postAuthor.name }}</h3>
+    <h3 style="margin-left: 12px;"><a href="/posts/{{ author }}">{{ postAuthor.name }}</a></h3>
   </div>
-  <p>{{ postAuthor.intro }}</p>
+  <p>{{ postAuthor.intro | safe }}</p>
 </p>
 
 <p>
@@ -48,7 +57,7 @@ templateClass: tmpl-post
   "@type": "Article",
   "headline": "{{ title }}",
   "image": [],
-  "author": "{{ metadata.author.name }}", 
+  "author": "{{ postAuthor.name }}", 
   "genre": "{{ metadata.genre }}", 
   "publisher": {
     "@type": "Organization",

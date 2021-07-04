@@ -3,7 +3,7 @@ title: 理解基礎的 JavaScript Prototype
 date: 2021-06-22
 layout: layouts/post.njk
 author: clay
-tags: [JS]
+tags: [JavaScript]
 ---
 
 前言

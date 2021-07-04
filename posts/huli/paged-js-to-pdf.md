@@ -1,9 +1,7 @@
 ---
 title: 用 Paged.js 做出適合印成 PDF 的 HTML 網頁
-description: This is a post on My Blog about touchpoints and circling wagons.
 date: 2018-09-30
-tags: second-tag
-categories: abc
+tags: [Front-end, JavaScript]
 author: huli
 layout: layouts/post.njk
 ---
