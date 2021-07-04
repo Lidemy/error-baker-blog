@@ -2,9 +2,9 @@
   "title": "ErrorBaker 技術共筆部落格",
   "url": "https://update-me.com",
   "domain": "update-me.com",
-  "description": "Description of the website. Update me.",
+  "description": "錯誤烘焙師，從錯誤中學習",
   "genre": "Insert a schema.org genre",
-  "googleAnalyticsId": "GA ID. Update me. Note, that this is not compatible with the not-yet-commonly used version 4 of Google Analytics",
+  "googleAnalyticsId": "",
   "sendWebVitals": false,
   "feed": {
     "subtitle": "Subtitle. Update me.",
@@ -17,8 +17,8 @@
     "url": "https://update-me.com/feed/feed.json"
   },
   "author": {
-    "name": "作者名詞是我",
-    "twitterHandle": "update_me"
+    "name": "ErrorBaker 技術共筆部落格",
+    "twitterHandle": ""
   },
   "authors": {
     "huli": {
@@ -33,6 +33,6 @@
     }
   },
   "publisher": {
-    "name": "Publisher name. Update me."
+    "name": "ErrorBaker 技術共筆部落格"
   }
 }

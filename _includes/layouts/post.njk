@@ -7,13 +7,12 @@ templateClass: tmpl-post
 {% set postAuthor = metadata.authors[author] %}
 
 {% block extraArticleHeader %}
-   {% set wc = content | striptags | wordcount %}
-   {% set wPerMinute = (wc / 240) + 1 %}
-   <aside>
-     {{ wPerMinute | round }} min read.
+   <aside class="w-full">
+      <div class="flex items-center">
+        <img class="avatar" src="{{ postAuthor.avatarUrl }}">
+        <span style="margin-left: 12px;">{{ postAuthor.name }} 於 {{ date | htmlDateString }} 發布</span>
+      </div>
    </aside>
-   Posted by {{ postAuthor.name }} on {{ date | htmlDateString }}
-   <img class="test123" src="{{ postAuthor.avatarUrl }}">
 {% endblock %}
 
 
@@ -24,14 +23,17 @@ templateClass: tmpl-post
 {{ content | safe }}
 
 <hr>
-<img class="test123" src="{{ postAuthor.avatarUrl }}">
-<h4>{{ postAuthor.name }}</h4>
-<p>{{ postAuthor.intro }}</p>
 <p>
-  <a href="{{ shareUrl | safe }}" on-click="share">點我分享此文章</a>
+  <h3>關於作者</h3>
+  <div class="flex items-center">
+    <img class="avatar avatar-large" src="{{ postAuthor.avatarUrl }}">
+    <h3 style="margin-left: 12px;">{{ postAuthor.name }}</h3>
+  </div>
+  <p>{{ postAuthor.intro }}</p>
+</p>
 
-  For feedback, please 
-  <a href="https://twitter.com/{{ metadata.author.twitterHandle }}" target="_blank" rel="noopener">ping me on Twitter.</a>
+<p>
+  <a href="{{ shareUrl | safe }}" on-click="share">點我複製文章連結</a>
 </p>
 
 <share-widget>

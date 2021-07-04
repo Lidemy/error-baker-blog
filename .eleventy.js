@@ -189,6 +189,7 @@ module.exports = function (eleventyConfig) {
     permalink: true,
     permalinkClass: "direct-link",
     permalinkSymbol: "#",
+    permalinkBefore: true
   });
   eleventyConfig.setLibrary("md", markdownLibrary);
 

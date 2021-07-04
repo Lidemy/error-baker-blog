@@ -1,8 +1,9 @@
 <ul>
 {% for post in postslist | reverse %}
   <li>
+    <time datetime="{{ post.date | htmlDateString }}">{{ post.date | htmlDateString }}</time>&nbsp;&nbsp;
     <a href="{{ post.url | url }}">{% if post.data.title %}{{ post.data.title }}{% else %}<code>{{ post.url }}</code>{% endif %}</a>
-    <time datetime="{{ post.date | htmlDateString }}">{{ post.date | readableDate }}</time> by @{{ post.data.author }}
+    by {{ metadata.authors[post.data.author].name }}
   </li>
 {% endfor %}
 </ul>
