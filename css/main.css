@@ -1137,6 +1137,13 @@ a {
   width: 75px;
 }
 
+.avatar-small {
+  width: 25px;
+  vertical-align: sub;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
 .flex { display: flex; }
 .items-center { align-items: center; }
 .justify-center { justify-content: center; }
