@@ -1,20 +1,20 @@
 {
   "title": "ErrorBaker 技術共筆部落格",
-  "url": "https://update-me.com",
-  "domain": "update-me.com",
+  "url": "https://blog.errorbaker.tw",
+  "domain": "blog.errorbaker.tw",
   "description": "錯誤烘焙師，從錯誤中學習",
   "genre": "Insert a schema.org genre",
   "googleAnalyticsId": "",
   "sendWebVitals": false,
   "feed": {
-    "subtitle": "Subtitle. Update me.",
+    "subtitle": "ErrorBaker 技術共筆部落格",
     "filename": "feed.xml",
     "path": "/feed/feed.xml",
-    "id": "https://update-me.com"
+    "id": "https://blog.errorbaker.tw"
   },
   "jsonfeed": {
     "path": "/feed/feed.json",
-    "url": "https://update-me.com/feed/feed.json"
+    "url": "https://blog.errorbaker.tw/feed/feed.json"
   },
   "author": {
     "name": "ErrorBaker 技術共筆部落格",
