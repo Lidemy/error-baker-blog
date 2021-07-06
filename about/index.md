@@ -1,16 +1,19 @@
 ---
 layout: layouts/about.njk
-title: About
+title: 關於我們
 eleventyNavigation:
   key: About
   order: 3
 ---
 
-<p>
-  Hi，這是 ErrorBaker 技術共筆部落格，由一群希望藉由共筆部落格督促自己寫文章的人們組成。
-</p>
-<p>
-  部落格的主題以 web 前後端主題居多，但其實只要是跟技術有關的主題都有可能出現。
-</p>
+## 緣起
+
+一群因為某些原因聚集在一起的工程師（或準工程師）決定合寫一個技術共筆部落格，藉此督促自己做點事，以每人每個月至少一篇的形式發佈文章。
+
+名字的由來是為了跟 TechBridge 以及 StarBugs 一樣，由兩個單字組成，第二個單字 B 開頭，然後單字要跟程式有關（像是 Tech 與 Bugs），最後就找到了 ErrorBaker，錯誤烘培師，很適合常常寫出 error 的我們。
+
+## 作者列表
+
+<!-- 底下交給 layout 來自動渲染 -->
 
 

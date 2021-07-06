@@ -10,7 +10,6 @@ templateClass: tmpl-about
 
 {{ content | safe }}
 
-<h3>作者列表</h3>
 {% for key, author in metadata.authors %}
   <div class="flex items-center">
     <img class="avatar avatar-large" src="{{ author.avatarUrl }}">
