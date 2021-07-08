@@ -1179,6 +1179,9 @@ nav a:hover {
   header nav {
     padding: 0;
   }
+  #nav {
+    position: relative;
+  }
   #nav  h1 {
     padding: .375rem 1.5rem;
     width: 100%;
@@ -1194,7 +1197,7 @@ nav a:hover {
     width: 1.5rem;
     height: 1.5rem;
     border: 1px solid #191919;
-    border-radius: .2rem;
+    border-radius: .3rem;
     position: relative;
   }
   .menu__btn::before {
@@ -1216,22 +1219,24 @@ nav a:hover {
     align-items: center;
     width: 100%;
     position: absolute;
-    top: 2.38rem;
-    left: -100%;
-    transition: all .3s ease;
+    left: 0;
+    top: -400px;
+    transition: all .4s ease;
     margin: 0;
     padding: 0;
+    z-index: -1;
     background: rgba(255,255,255,0.9);
   }
   .nav__links a {
     text-align: center;
     width: 100%;
+    margin: .5rem 0;
     transition:all .3s ease-out;
   }
   .nav__links a:hover {
     color:#f9c412;
   }
   #menu__control:checked+.nav__links {
-    left:0;
+    top: 2.24em;
   }
 }
