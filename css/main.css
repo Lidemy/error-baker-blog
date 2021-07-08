@@ -1150,3 +1150,22 @@ a {
 .justify-between { justify-content: space-between; }
 .w-full { width: 100%; }
 .f-monospace { font-family: monospace;  }
+
+/* navbar RWD -------------------- */
+@media screen and (max-width: 768px) {
+	#nav .nav__links a {
+    margin-right: .5rem;
+    margin-left: .5rem;
+	}
+}
+@media screen and (max-width: 600px) {
+  #nav  h1 {
+    text-align: center;
+    width: 100vw;
+  }
+  .nav__links {
+    width: 100vw;
+    display: flex;
+    justify-content:space-around;
+  }
+}
