@@ -1165,18 +1165,22 @@ a {
 #menu__control {
   display: none;
 }
+nav a:hover {
+  color: #595959;
+}
 
 @media screen and (max-width: 960px) {
 	#nav .nav__links a {
     margin-right: .5rem;
     margin-left: .5rem;
 	}
-  div.nav__links {
-    top: 2.18rem;
-  }
 }
 @media screen and (max-width: 750px) {
+  header nav {
+    padding: 0;
+  }
   #nav  h1 {
+    padding: .375rem 1.5rem;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -1210,12 +1214,14 @@ a {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 80%;
+    width: 100%;
     position: absolute;
-    top: 2rem;
+    top: 2.38rem;
     left: -100%;
     transition: all .3s ease;
-    background: rgba(0,0,0,0.6);
+    margin: 0;
+    padding: 0;
+    background: rgba(255,255,255,0.9);
   }
   .nav__links a {
     text-align: center;
@@ -1223,7 +1229,7 @@ a {
     transition:all .3s ease-out;
   }
   .nav__links a:hover {
-    color: #f9c412;
+    color:#f9c412;
   }
   #menu__control:checked+.nav__links {
     left:0;
