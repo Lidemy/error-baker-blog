@@ -269,3 +269,28 @@ document.body.addEventListener(
   },
   /* capture */ "true"
 );
+
+// light/dark theme switch
+const toggleEl = document.querySelector('#color-scheme-toggle')
+const bodyEl = document.querySelector('body');
+const DARK = 'dark';
+const LIGHT = 'light';
+const currentTheme = localStorage.getItem("theme") ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? DARK : LIGHT);
+setTheme(currentTheme)
+toggleEl.addEventListener("click", handleToggleEvent)
+
+function handleToggleEvent(){
+  const isDark = bodyEl.classList.toggle(DARK);
+  const theme = isDark ? DARK : LIGHT;
+  setTheme(theme)
+  localStorage.setItem('theme', theme);
+}
+function setTheme(theme){
+  if (theme === DARK) {
+    bodyEl.classList.add(DARK);
+    toggleEl.src = toggleEl.src.replace(DARK, LIGHT);
+  }else{
+    toggleEl.src = toggleEl.src.replace(LIGHT, DARK);
+  }
+}
