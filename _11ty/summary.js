@@ -1,4 +1,4 @@
-tag = "<!-- summary -->"
+const tag = "<!-- summary -->"
 const hasSummary = content => content.split(tag).length === 3;
 const excerpt = (content) => content.split(tag)[1];
 const delHtmlTag = str => str.replace(/<[^>]+>/g,"");
@@ -17,12 +17,18 @@ module.exports = function(eleventyConfig) {
     );
 
     eleventyConfig.addShortcode("summary", function(content) {
-    if ( hasSummary(content.post) ){
-      let summary = excerpt(content.post)
-      if(summary.indexOf('<!--') > 0){
-        return `<div class="summary">${summary.slice(6, -5)}</div>`
-      }
-      return `<div class="summary">${delHtmlTag(summary)}</div>`
-    } else return '';
-  });
+    if (!hasSummary(content.post)) return ''
+    const part = excerpt(content.post)
+    const startIndex = part.indexOf('<!--')
+    const endIndex = part.indexOf('-->')
+    let summary = ''
+
+    if( startIndex >= 0){
+      summary = part.slice(startIndex+4, endIndex)
+    } else {
+      summary = delHtmlTag(part)
+    }
+    summary = summary.trim().replace(/(\r\n\t|\n|\r\t)/g,"")
+    return `<div class="summary">${summary}</div>`
+    });
 };
