@@ -61,13 +61,14 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPlugin(pluginSyntaxHighlight);
   eleventyConfig.addPlugin(pluginNavigation);
 
-  eleventyConfig.addPlugin(localImages, {
-    distPath: "_site",
-    assetPath: "/img/remote",
-    selector:
-      "img,amp-img,amp-video,meta[property='og:image'],meta[name='twitter:image'],amp-story",
-    verbose: false,
-  });
+  // NOTE: we don't need this plugin for now
+  // eleventyConfig.addPlugin(localImages, {
+  //   distPath: "_site",
+  //   assetPath: "/img/remote",
+  //   selector:
+  //     "img,amp-img,amp-video,meta[property='og:image'],meta[name='twitter:image'],amp-story",
+  //   verbose: false,
+  // });
 
   eleventyConfig.addPlugin(require("./_11ty/summary.js"));
   eleventyConfig.addPlugin(require("./_11ty/link-target.js"));
