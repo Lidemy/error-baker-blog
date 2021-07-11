@@ -50,14 +50,28 @@ share-widget {
   right: 20px;
   bottom: 20px;
   opacity: 0.9;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 2px 3px 5px 2px rgba(0, 0, 0, 0.2);
+}
+
+@media screen and (max-width: 376px) {
+  share-widget {
+    display: none;
+  }
 }
 
 share-widget div {
-  width: 30px;
-  height: 30px;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 20px;
   background-image: url("/img/share.svg");
   background-repeat: no-repeat;
   background-position: center;
+  background-size: contain;
 }
 
 .apple share-widget div {
@@ -66,6 +80,10 @@ share-widget div {
 
 share-widget button {
   margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  transition: 0.3s;
 }
 
 share-widget button:active {
@@ -73,10 +91,11 @@ share-widget button:active {
 }
 
 dialog {
-  background-color: #8dff80;
+  background-color: var(--primary-dark);
   position: fixed;
-  opacity: 0.9;
+  opacity: 0.8;
   z-index: 1000;
+  font-size: 10px;
 }
 
 img[align="left"] {
@@ -1286,4 +1305,8 @@ nav a:hover {
     height: auto;
     max-height: 100vh;
   }
+}
+
+#rss {
+  vertical-align: text-top;
 }

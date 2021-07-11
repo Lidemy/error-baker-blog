@@ -69,6 +69,7 @@ module.exports = function (eleventyConfig) {
     verbose: false,
   });
 
+  eleventyConfig.addPlugin(require("./_11ty/summary.js"));
   eleventyConfig.addPlugin(require("./_11ty/link-target.js"));
   eleventyConfig.addPlugin(require("./_11ty/img-dim.js"));
   eleventyConfig.addPlugin(require("./_11ty/json-ld.js"));
