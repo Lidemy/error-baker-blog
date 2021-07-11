@@ -47,7 +47,7 @@ function share(anchor) {
     });
   } else if (navigator.clipboard) {
     navigator.clipboard.writeText(url);
-    message("Article URL copied to clipboard.");
+    message("文章連結已複製");
   } else {
     tweet_(url);
   }
@@ -152,14 +152,14 @@ const sendWebVitals = document.currentScript.getAttribute("data-cwv-src");
 
 if (/web-vitals.js/.test(sendWebVitals)) {
   dynamicScriptInject(`${window.location.origin}/js/web-vitals.js`)
-  .then(() => {
-    webVitals.getCLS(sendToGoogleAnalytics);
-    webVitals.getFID(sendToGoogleAnalytics);
-    webVitals.getLCP(sendToGoogleAnalytics);
-  })
-  .catch((error) => {
-    console.error(error);
-  });
+    .then(() => {
+      webVitals.getCLS(sendToGoogleAnalytics);
+      webVitals.getFID(sendToGoogleAnalytics);
+      webVitals.getLCP(sendToGoogleAnalytics);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 }
 
 addEventListener(
