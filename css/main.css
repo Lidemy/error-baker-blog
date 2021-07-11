@@ -712,7 +712,7 @@ html {
   --font-family: "Open Sans", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Helvetica, Arial, "Noto Sans TC", "PingFang TC", "Hiragino Sans GB", "Heiti TC", "Microsoft YaHei", "Microsoft Jhenghei", sans-serif;
 }
 @supports (font-variation-settings: normal) {
-  
+
 }
 form {
   padding: 1.5em 1.5em 0;
@@ -1265,4 +1265,8 @@ nav a:hover {
     height: auto;
     max-height: 100vh;
   }
+}
+
+#rss{
+  vertical-align: text-top;
 }
