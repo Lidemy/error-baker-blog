@@ -1256,9 +1256,6 @@ nav a:hover {
   display: inline-block;
   margin-right: 1em;
 }
-body {
-    transition: background-color 300ms ease-in-out 0s;
-}
 body.dark {
     background: var(--fgColor);
     color: var(--bgColor);
@@ -1269,9 +1266,4 @@ body.dark {
       color: var(--bgColor);
     }
 }
-@media (prefers-color-scheme: light) {
-    body {
-      background: var(--bgColor);
-      color: var(--fgColor);
-    }
-}
+
