@@ -273,6 +273,7 @@ document.body.addEventListener(
 // light/dark theme switch
 const toggleEl = document.querySelector('#color-scheme-toggle')
 const bodyEl = document.querySelector('body');
+const root = document.documentElement;
 const DARK = 'dark';
 const LIGHT = 'light';
 const currentTheme = localStorage.getItem("theme") ||
@@ -290,7 +291,11 @@ function setTheme(theme){
   if (theme === DARK) {
     bodyEl.classList.add(DARK);
     toggleEl.src = toggleEl.src.replace(DARK, LIGHT);
+    root.style.setProperty('--primary', '#e7bf60');
+    root.style.setProperty('--primary-dark', '#2250b2');
   }else{
     toggleEl.src = toggleEl.src.replace(LIGHT, DARK);
+    root.style.setProperty('--primary', '#2250b2');
+    root.style.setProperty('--primary-dark', '#e7bf60');
   }
 }
