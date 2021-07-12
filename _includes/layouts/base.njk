@@ -8,7 +8,6 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="{{ csp.regular | safe }}">
     {% if isdevelopment %}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     {% else %}
@@ -65,7 +64,7 @@
               <span>選單</span>
             </label>
           </h1>
-          <img id="color-scheme-toggle" src="{{ '/img/dark.svg' | url }}" alt="" />
+          <img id="color-scheme-toggle" src="{{ '/img/dark.svg' | url }}" alt="switch dark mode" />
           {#- Read more about `eleventy-navigation` at https://www.11ty.dev/docs/plugins/navigation/ #}
           <input id="menu__control" type="checkbox" />
           <div class ="nav__links">

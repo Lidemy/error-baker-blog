@@ -1310,3 +1310,26 @@ nav a:hover {
 #rss {
   vertical-align: text-top;
 }
+
+#nav{
+  display: flex;
+}
+#color-scheme-toggle{
+  cursor: pointer;
+  vertical-align: text-top;
+  display: inline-block;
+  margin-right: 1em;
+}
+body.dark {
+    background: var(--fgColor);
+    color: var(--bgColor);
+    --primary:#e7bf60;
+}
+@media (prefers-color-scheme: dark) {
+    body.dark {
+      background: var(--fgColor);
+      color: var(--bgColor);
+      --primary:#e7bf60;
+    }
+}
+
