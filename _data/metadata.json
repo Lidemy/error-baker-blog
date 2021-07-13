@@ -55,7 +55,12 @@
       "name": "Umer",
       "intro": "This is Umer，烏瑪。",
       "avatarUrl": "/img/authors/umer.png"
-    }
+    },
+    "Lavi": {
+      "name": "lavi",
+      "intro": "努力學習努力，積極學習積極。",
+      "avatarUrl": "/img/authors/lavi.jpg"
+    },
   },
   "publisher": {
     "name": "ErrorBaker 技術共筆部落格"
