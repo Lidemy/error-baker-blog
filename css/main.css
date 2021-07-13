@@ -3,7 +3,7 @@
   --primary: #2250b2;
   --primary-dark: #e7bf60;
   --fgColor: #181818;
-  --bgColor: #eee;
+  --bgColor: #f6efdb42;
   --progressColor: #f9c412;
 }
 
@@ -954,13 +954,15 @@ main {
   min-height: 60vh;
 }
 footer {
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
+  font-size: 14px;
   padding: 3em;
   text-align: center;
 }
+.copyright {
+  display: inline-block;
+}
 footer > * {
-  margin: 1.5em;
+  margin: 0.5em;
 }
 footer nav a img {
   vertical-align: middle;
@@ -1155,6 +1157,7 @@ a {
   width: 50px;
   border-radius: 50%;
   overflow: hidden;
+  margin: inherit;
 }
 
 .avatar-large {
