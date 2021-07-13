@@ -3,7 +3,7 @@
   --primary: #2250b2;
   --primary-dark: #e7bf60;
   --fgColor: #181818;
-  --bgColor: #f6efdb42;
+  --bgColor: #eee;
   --progressColor: #f9c412;
 }
 
@@ -1172,7 +1172,7 @@ a {
 }
 
 /*
-  utterances styling 
+  utterances styling
 */
 .utterances {
   position: relative;
@@ -1313,3 +1313,26 @@ nav a:hover {
 #rss {
   vertical-align: text-top;
 }
+
+#nav{
+  display: flex;
+}
+#color-scheme-toggle{
+  cursor: pointer;
+  vertical-align: text-top;
+  display: inline-block;
+  margin-right: 1em;
+}
+body.dark {
+    background: var(--fgColor);
+    color: var(--bgColor);
+    --primary:#e7bf60;
+}
+@media (prefers-color-scheme: dark) {
+    body.dark {
+      background: var(--fgColor);
+      color: var(--bgColor);
+      --primary:#e7bf60;
+    }
+}
+

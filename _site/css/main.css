@@ -954,13 +954,15 @@ main {
   min-height: 60vh;
 }
 footer {
-  background: rgba(0, 0, 0, 0.8);
-  color: #fff;
+  font-size: 14px;
   padding: 3em;
   text-align: center;
 }
+.copyright {
+  display: inline-block;
+}
 footer > * {
-  margin: 1.5em;
+  margin: 0.5em;
 }
 footer nav a img {
   vertical-align: middle;
@@ -1155,6 +1157,7 @@ a {
   width: 50px;
   border-radius: 50%;
   overflow: hidden;
+  margin: inherit;
 }
 
 .avatar-large {
@@ -1169,7 +1172,7 @@ a {
 }
 
 /*
-  utterances styling 
+  utterances styling
 */
 .utterances {
   position: relative;
@@ -1310,3 +1313,26 @@ nav a:hover {
 #rss {
   vertical-align: text-top;
 }
+
+#nav{
+  display: flex;
+}
+#color-scheme-toggle{
+  cursor: pointer;
+  vertical-align: text-top;
+  display: inline-block;
+  margin-right: 1em;
+}
+body.dark {
+    background: var(--fgColor);
+    color: var(--bgColor);
+    --primary:#e7bf60;
+}
+@media (prefers-color-scheme: dark) {
+    body.dark {
+      background: var(--fgColor);
+      color: var(--bgColor);
+      --primary:#e7bf60;
+    }
+}
+
