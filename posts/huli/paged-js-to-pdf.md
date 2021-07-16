@@ -4,8 +4,9 @@ date: 2018-09-30
 tags: [Front-end, JavaScript]
 author: huli
 layout: layouts/post.njk
+image: https://upload.wikimedia.org/wikipedia/en/a/a9/Example.jpg
 ---
-
+<!-- summary -->
 ## 前言
 
 之前在公司內接到了一個需求，需要產生出一份 PDF 格式的報告。想要產一份 PDF 有很多種做法，例如說可以先用 Word 做，做完之後再轉成 PDF。但我聽到這需求時，最先出現的想法就是寫成網頁，然後再利用列印功能轉成 PDF。
@@ -16,6 +17,7 @@ layout: layouts/post.njk
 
 直到我後來接觸到網頁轉 PDF，才發現事情不像我想的這麼簡單。
 
+<!-- summary -->
 <!-- more -->
 
 ## 目標

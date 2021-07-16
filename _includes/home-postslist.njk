@@ -1,0 +1,36 @@
+{% for post in postslist | reverse %}
+{% set author = metadata.authors[post.data.author] %} 
+{% if post.data.image %}
+<article class="post">
+  <div class="post-left">
+    <h3 class="post-title">{{ post.data.title | safe }}</h3>
+    {% summary post=post.templateContent %}
+    <div class="post-info">
+        <a href="{{ post.url | url }}"><img src="{{ author.avatarUrl}}" class="avatar-small" /></a>
+        <span class="post-author"><a href="/posts/{{ author.name }}">{{ author.name }}</a></span>
+        <time class="f-monospace post-date" datetime="{{ post.date | htmlDateString }}">{{ post.date | htmlDateString }}</time>
+    </div>
+  </div>
+  <div class="post-right">
+    <div
+      alt=""
+      onclick="window.location = '{{ post.url | url }}';"
+      class="post-cover"
+      style="background-image: url('{{ post.data.image | absoluteUrl(metadata.url) }}');"
+    ></div>
+  </div>
+</article>
+{% else %}
+<article class="post">
+  <div class="post-plain">
+    <h3 class="post-title">{{ post.data.title | safe }}</h3>
+    {% summary post=post.templateContent %}
+    <div class="post-info">
+        <a href="{{ post.url | url }}"><img src="{{ author.avatarUrl}}" class="avatar-small" /></a>
+        <span class="post-author"><a href="/posts/{{ author.name }}">{{ author.name }}</a></span>
+        <time class="f-monospace post-date" datetime="{{ post.date | htmlDateString }}">{{ post.date | htmlDateString }}</time>
+    </div>
+  </div>
+</article>
+{% endif %}
+{% endfor %}
