@@ -1345,7 +1345,7 @@ body.dark {
 .post {
   display: flex;
   margin-bottom: 1em;
-  padding: 1.5em 0;
+  padding: 1em 0px;
 }
 
 .post-body {
@@ -1354,7 +1354,6 @@ body.dark {
 
 .post-date {
   font-size: 1.125rem;
-  font-style: italic;
 }
 
 .post-title {
@@ -1362,11 +1361,11 @@ body.dark {
 }
 
 .post-author {
-  margin-left: 1ex;
+  margin-left: 4px;
 }
 
 .post-date {
-  margin-left: 1ex;
+  margin-left: 4px;
 }
 
 .summary {
@@ -1419,6 +1418,10 @@ body.dark {
 }
 
 @media (max-width: 480px) {
+  .post {
+    padding: 0;
+  }
+
   .summary {
     display: none;
   }
