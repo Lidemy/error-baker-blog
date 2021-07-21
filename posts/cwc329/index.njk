@@ -1,0 +1,9 @@
+---
+layout: layouts/home.njk
+title: cwc329 的文章列表
+eleventyExcludeFromCollections: true
+---
+
+{% set postslist = collections.posts %}
+{% set author = 'cwc329' %}
+{% include "author-postslist.njk" %}
