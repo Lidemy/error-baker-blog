@@ -5,6 +5,8 @@
   --fgColor: #181818;
   --bgColor: #eee;
   --progressColor: #f9c412;
+  --fg: var(--fgColor);
+  --bg: var(--bgColor);
 }
 
 .test-dead-code-elimination-sentinel {
@@ -865,8 +867,8 @@ video {
 }
 body {
   font-family: var(--font-family);
-  background: var(--bgColor);
-  color: var(--fgColor);
+  background: var(--bg);
+  color: var(--fg);
 }
 section {
   margin-left: auto;
@@ -1325,15 +1327,15 @@ nav a:hover {
   margin-right: 1em;
 }
 body.dark {
-    background: var(--fgColor);
-    color: var(--bgColor);
-    --primary:#e7bf60;
+    --fg: var(--bgColor);
+    --bg: var(--fgColor);
+    --primary: var(--primary-dark);
 }
 @media (prefers-color-scheme: dark) {
     body.dark {
-      background: var(--fgColor);
-      color: var(--bgColor);
-      --primary:#e7bf60;
+      --fg: var(--bgColor);
+      --bg: var(--fgColor);
+      --primary: var(--primary-dark);
     }
 }
 
