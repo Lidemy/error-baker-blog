@@ -1,6 +1,7 @@
 {
   "title": "ErrorBaker 技術共筆部落格",
   "url": "https://blog.errorbaker.tw",
+  "ogimage": "https://blog.errorbaker.tw/img/ogimage.png",
   "domain": "blog.errorbaker.tw",
   "description": "錯誤烘焙師，從錯誤中學習",
   "genre": "Insert a schema.org genre",
