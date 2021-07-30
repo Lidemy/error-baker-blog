@@ -1325,6 +1325,8 @@ nav a:hover {
   vertical-align: text-top;
   display: inline-block;
   margin-right: 1em;
+  width: 24px;
+  transform: translateY(2.5px);
 }
 body.dark {
     --fg: var(--bgColor);
