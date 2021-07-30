@@ -1,6 +1,7 @@
 {
   "title": "ErrorBaker 技術共筆部落格",
   "url": "https://blog.errorbaker.tw",
+  "ogimage": "https://blog.errorbaker.tw/img/ogimage.png",
   "domain": "blog.errorbaker.tw",
   "description": "錯誤烘焙師，從錯誤中學習",
   "genre": "Insert a schema.org genre",
@@ -33,7 +34,7 @@
     },
     "clay": {
       "name": "Clay",
-      "intro": "大家好我是 clay",
+      "intro": "我是 Clay，不算是一位正統的工程師，曾經就讀資管系四年，卻沒寫過半點程式。在經歷過職場的風風雨雨之後，才突然對程式感到興趣，並開始一步一步慢慢學習。現職前端工程師，認為過程永遠比結果來得更有價值，並可以帶來更多可歌可泣的故事。",
       "avatarUrl": "/img/authors/clay.png"
     },
     "minw": {

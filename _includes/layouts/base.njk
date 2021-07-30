@@ -30,6 +30,8 @@
     <meta name="twitter:creator" content="@{{ metadata.author.twitterHandle }}">
     {% if image %}
       <meta property="og:image" content="{{ image | absoluteUrl(metadata.url) }}">
+    {% else %}
+      <meta property="og:image" content="{{ metadata.ogimage }}">
     {% endif %}
 
     <link rel="canonical" href="{{ metadata.url }}{{ canonicalUrl or page.url }}">
