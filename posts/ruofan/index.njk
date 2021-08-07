@@ -1,0 +1,9 @@
+---
+layout: layouts/home.njk
+title: Ruofan 的文章列表
+eleventyExcludeFromCollections: true
+---
+
+{% set postslist = collections.posts %}
+{% set author = 'Ruofan' %}
+{% include "author-postslist.njk" %}
