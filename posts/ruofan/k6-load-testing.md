@@ -1,15 +1,18 @@
 ---
-title: 用k6為api做Load Testing
+title: 用 k6 為 api 做 Load Testing
 date: 2021-08-07
 tags: [Back-end]
 author: Ruofan
 layout: layouts/post.njk
+image: https://k6.io/static/d34aede268b85c2821a801227fc9e696/80926/cloud-stub.webp
 ---
-
+<!-- summary -->
 ## 前言
-HI，大家好！前陣子在研究可以為api做Load Testing的工具。
+Hi，大家好！前陣子在研究可以為api做Load Testing的工具。
 如果你對於這個工具感到好奇，可以看看這篇。
 
+<!-- summary -->
+<!-- more -->
 ## 什麼是k6 ?
 以下為k6官方文件上對自己的介紹：
 > k6 is a developer-centric, free and open-source load testing tool built for making performance testing a productive and enjoyable experience.
