@@ -1,0 +1,9 @@
+---
+layout: layouts/home.njk
+title: sixwings 的文章列表
+eleventyExcludeFromCollections: true
+---
+
+{% set postslist = collections.posts %}
+{% set author = 'sixwings' %}
+{% include "author-postslist.njk" %}
