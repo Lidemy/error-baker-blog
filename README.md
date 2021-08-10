@@ -82,8 +82,12 @@ Hi，這是 ErrorBaker 技術共筆部落格，由一群希望藉由共筆部落
 
 css/main.css 所有的樣式都在裡面，有新增的都放在最下面
 
+## 文章規範
 
+### Tags 
 
+- tags 採用 kabab case 來命名 e.g. back-end
+- 若遇到有連詞或分詞疑問，依循前者來決定 e.g. backend vs back-end，如果已經有人使用 backend 則使用 backend。
 
 ## 參考資源
 

@@ -1,7 +1,7 @@
 ---
 title: 初探用 Nest.js 做出一個 CRUD 服務
 date: 2021-08-08
-tags: [backend]
+tags: [back-end]
 author: minw
 layout: layouts/post.njk
 ---
@@ -35,7 +35,7 @@ layout: layouts/post.njk
 
 ```shell
 npm i -g @nestjs/cli 
-nest new login-project // 其中會提供 pacakge manager 選擇看要選擇 npm, yarn 還是其他
+nest new login-project // 其中會提供 package manager 選擇看要選擇 npm, yarn 還是其他
 ```
 
 從上面的 CLI 就可以簡單得到一個下列專案架構的 Nest 專案：
@@ -132,7 +132,7 @@ npx typeorm init
 ├─ ...
 ```
 
-這邊 entity 是用來定義 Table 的結構，而 migration 則是 DB 更動的版本紀錄，所以簡潔一點我們可以直接接著我們可以開一個使用 typeorm 提供的 ormconfig.json 內的設定，在 module 中引入。
+這邊 entity 是用來定義 Table 的結構，而 migration 則是 DB 更動的版本紀錄，所以簡潔一點我們可以直接接著使用 typeorm 提供的 ormconfig.json 內的設定，在 module 中引入。
 
 ```ts
 import { Module } from '@nestjs/common';
@@ -191,7 +191,7 @@ export class AppModule {
 
 這邊 Entity 我們可以透過不同的裝飾器來定義資料的特性，其中裝飾器都可以帶入諸如 `nullable` 這樣的參數去設定 Column 的內容。
 
-```
+```ts
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
