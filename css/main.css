@@ -25,6 +25,8 @@
   --bold: 700;
   --normal: 400;
 
+  /* prevent compiler from removing --p */
+  font-size: var(--p);
   font-size: var(--rem);
   font-weight: var(--normal);
 }
