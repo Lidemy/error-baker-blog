@@ -13,7 +13,7 @@
   --rem: calc(var(--base-font-size) + var(--fluid-typography-ratio) * 1vw);
 
   --small: 0.6rem;
-  --p: 0.8rem;
+  --p: 1rem;
   --h6: 1rem;
   --h5: 1.2rem;
   --h4: 1.4rem;
@@ -30,6 +30,13 @@
   font-size: var(--rem);
   font-weight: var(--normal);
 }
+
+@media (min-width: 1168px) {
+  :root {
+    --p: 0.8rem;
+  }
+}
+
 
 .test-dead-code-elimination-sentinel {
   color: red;
