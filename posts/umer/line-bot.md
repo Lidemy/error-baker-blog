@@ -1,9 +1,9 @@
 ---
 title: 結合 Line bot 與 twitter 爬蟲的研究紀錄 實戰篇
 date: 2021-08-15 // 發文日期
-tags: [JavaScript, line-bot] // 標籤
-author: umer // 作者 key
-layout: layouts/post.njk // 這固定不變
+tags: [JavaScript, line-bot]
+author: umer
+layout: layouts/post.njk
 ---
 
 <!-- summary -->
@@ -70,7 +70,7 @@ Webhook UR 的運作方式大概如下圖，為了要提供 webhook URL，下一
 安裝 express，`npm i express`，作為這次的 server。
 
 寫程式碼，如下，先跟著 linebot 文件的範例來測試，寫一個會復述使用者傳送的訊息的 line bot。
-```javascript=
+```js=
 // example.js
 const express = require('express')
 const linebot = require('linebot')
@@ -179,7 +179,7 @@ Twint 是一個使用 Python 來寫的 scraping tool，使用的好處是 setup 
 
 安裝 twint，`pip3 install --user --upgrade git+https://github.com/twintproject/twint.git@origin/master#egg=twint`
 
-```python=
+```python
 # parse.py
 import twint
 # Configure
@@ -199,7 +199,7 @@ twint.run.Search(c)
 ### 讓 Line-bot 取得推特資料
 
 在前面段落 [開始寫 line bot 程式碼](https://hackmd.io/syL5QgITQZO7OWazmaZfCQ?both#%E9%96%8B%E5%A7%8B%E5%AF%AB-line-bot-%E7%A8%8B%E5%BC%8F%E7%A2%BC) 示範了如何讓 lie-bot 復述使用者傳來的訊息，在 [開始使用 twint](https://hackmd.io/syL5QgITQZO7OWazmaZfCQ?both#%E9%96%8B%E5%A7%8B%E4%BD%BF%E7%94%A8-twint) 則示範了如何取得推特資料。現在我們要讓 line-bot 在使用者傳來任何訊息時，都回覆特定推特的最新三篇推文，如下
-```javascript=
+```js=
 const express = require('express')
 const linebot = require('linebot')
 const utils = require('./utils')
