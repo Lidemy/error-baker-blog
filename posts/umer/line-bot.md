@@ -242,12 +242,12 @@ app.listen(port, () => {
 ### shell script
 
 `delOld.sh` >
-```c=
+```c
 #!/bin/bash
 rm /home/ubuntu/my_project/line-bot/Tweets.txt
 ```
 `twitterParse.sh` >
-```c=
+```c
 #!/bin/bash
 PATH=/usr/bin:/bin
 python3.8 parse.py
