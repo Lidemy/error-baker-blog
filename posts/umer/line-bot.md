@@ -1,8 +1,8 @@
 ---
 title: 結合 Line bot 與 twitter 爬蟲的研究紀錄 實戰篇
-date: 2021-08-15 // 發文日期
+date: 2021-08-15
 tags: [JavaScript, line-bot]
-author: umer
+author: Umer
 layout: layouts/post.njk
 ---
 
@@ -70,7 +70,7 @@ Webhook UR 的運作方式大概如下圖，為了要提供 webhook URL，下一
 安裝 express，`npm i express`，作為這次的 server。
 
 寫程式碼，如下，先跟著 linebot 文件的範例來測試，寫一個會復述使用者傳送的訊息的 line bot。
-```js=
+```js
 // example.js
 const express = require('express')
 const linebot = require('linebot')
@@ -118,7 +118,7 @@ app.listen(port, () => {
 sudo apt install nodejs`
 
 把 github 的專案複製一份下來，用環境變數輸入 channel 的`CHANNEL_ID`、`CHANNEL_SECRET`、`CHANNEL_ACCESS_TOKEN`並執行剛剛寫的程式。
-```
+```c
 git clone <project_repo>
 cd yourproject
 npm install
@@ -135,7 +135,7 @@ CHANNEL_ID='123' CHANNEL_SECRET='123' CHANNEL_ACCESS_TOKEN='123' node index.js n
 ### 安裝 pm2
 
 接著安裝 pm2，目的是讓 line-bot 可以背景執行，
-```
+```c
 sudo npm i pm2 -g
 CHANNEL_ID='123' CHANNEL_SECRET='123' CHANNEL_ACCESS_TOKEN='123' node index.js node example.js pm2 start example.js
 ```
@@ -146,7 +146,7 @@ CHANNEL_ID='123' CHANNEL_SECRET='123' CHANNEL_ACCESS_TOKEN='123' node index.js n
 ![](https://i.imgur.com/0W0xWdR.png)
 
 安裝 nginx，`udo apt install Nginx`，然後去做代理的設定，新建一個設定檔`sudo nano /etc/nginx/sites-available/line` 並寫入
-```
+```c
 server_name yourdomain.com www.yourdomain.com;
 
     location / {
@@ -199,7 +199,7 @@ twint.run.Search(c)
 ### 讓 Line-bot 取得推特資料
 
 在前面段落 [開始寫 line bot 程式碼](https://hackmd.io/syL5QgITQZO7OWazmaZfCQ?both#%E9%96%8B%E5%A7%8B%E5%AF%AB-line-bot-%E7%A8%8B%E5%BC%8F%E7%A2%BC) 示範了如何讓 lie-bot 復述使用者傳來的訊息，在 [開始使用 twint](https://hackmd.io/syL5QgITQZO7OWazmaZfCQ?both#%E9%96%8B%E5%A7%8B%E4%BD%BF%E7%94%A8-twint) 則示範了如何取得推特資料。現在我們要讓 line-bot 在使用者傳來任何訊息時，都回覆特定推特的最新三篇推文，如下
-```js=
+```js
 const express = require('express')
 const linebot = require('linebot')
 const utils = require('./utils')
@@ -255,7 +255,7 @@ python3.8 parse.py
 
 ### crontab
 
-```
+```c
 0 16 * * * /your path to file/delOld.sh
 5 16 * * * /your path to file/twitterParse.sh >> /your path to file/out.txt  2>&1
 ```
