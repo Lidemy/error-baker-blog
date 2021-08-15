@@ -14,9 +14,12 @@ const linkTarget = async (rawContent, outputPath) => {
         if (
           href === '' ||
           href.startsWith('/') ||
+          href.startsWith('#') ||
+          href.startsWith('about:blank') ||
           href.startsWith(BASE_URL)
         ) continue
         link.setAttribute('target', '_blank')
+        link.setAttribute('rel', 'noopener noreferrer')
       }
       content = dom.serialize();
     }
