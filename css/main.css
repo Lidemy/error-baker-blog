@@ -744,6 +744,7 @@ body {
   font-family: var(--font-family);
   background: var(--bg);
   color: var(--fg);
+  transition: all .3s;
 }
 section {
   margin-left: auto;
