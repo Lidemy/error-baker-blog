@@ -535,7 +535,7 @@ pre code:not([class]) {
 code,
 kbd {
   border-radius: 0.3em;
-  color: #e2777a;
+  color: #d1d551;
   padding: 0 0.3em;
   font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
   font-size: 90%;
@@ -1312,3 +1312,75 @@ body.dark {
 }
 
 /* home article end */
+
+.nav-pagination {
+  text-align: center;
+  margin-top: 72px;
+  padding: 0 28px;
+}
+
+.nav-pagination ol {
+  display: inline-flex;
+  flex-direction: row;
+  list-style: none;
+  padding: 0;
+}
+
+.nav-pagination li {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #cccccc;
+  background: #fff;
+  border-radius: 6px;
+}
+
+.nav-pagination li.current {
+  border-color: #5789d3;
+}
+
+.nav-pagination li a, .nav-pagination li span{
+  font-size: 14px;
+  color: var(--fgColor);
+  height: 32px;
+  line-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.nav-pagination li a:hover {
+  text-decoration: none;
+  color: #5789D3;
+}
+
+.nav-pagination li:not(:first-child) {
+  margin-left: 8px;
+}
+
+.nav-pagination li.nav-pagination__prev, .nav-pagination li.nav-pagination__next {
+  background: #5789d3;
+  border-color: #5789d3;
+}
+
+.nav-pagination li.nav-pagination__prev *,
+.nav-pagination li.nav-pagination__next * {
+  color: #fff;
+  margin-top: -1px;
+}
+
+.nav-pagination li.nav-pagination__prev *:hover,
+.nav-pagination li.nav-pagination__next *:hover {
+  color: #fff;
+}
+
+.nav-pagination li.nav-pagination__prev:hover,
+.nav-pagination li.nav-pagination__next:hover {
+  background: #7FB1FB;
+}
+
+.nav-pagination li.nav-pagination__prev--disable, .nav-pagination li.nav-pagination__next--disable {
+  background: #ccc;
+  border-color: #ccc;
+  pointer-events: none;
+}
