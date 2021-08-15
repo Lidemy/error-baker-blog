@@ -4,7 +4,7 @@ date: 2021-08-15
 tags: [Front-end, JavaScript]
 author: Xiang
 layout: layouts/post.njk
-image: https://static.coderbridge.com/img/posts/xiang/wc-table.png
+image: https://blog.errorbaker.tw/img/posts/xiang/wc-table.png
 ---
 
 <!-- summary -->
@@ -41,7 +41,7 @@ shadow DOM 允許我們創建一些完全獨立於其他元素的 sub-DOM trees�
 
 可以參考下圖：我們可以利用 shadow-host 這個節點，裝上一個 shadow-tree
 
-![](https://static.coderbridge.com/img/posts/xiang/shadow-tree.png)
+![](https://blog.errorbaker.tw/img/posts/xiang/shadow-tree.png)
 
 (圖片來源： https://developer.mozilla.org/zh-CN/docs/Web/Web_Components/Using_shadow_DOM)
 
@@ -241,7 +241,7 @@ function findColumnNodes(slot) {
 
 我們將 slot 底下的 `<wc-table-column>` 整理成一個新的陣列 nodes，這樣一來我們就會有一組 column 的資料，印出來看的話它會是兩個 HTMLElement
 
-![](https://static.coderbridge.com/img/posts/xiang/console-wc-table-column.png)
+![](https://blog.errorbaker.tw/img/posts/xiang/console-wc-table-column.png)
 
 到目前為止，Web Component 有 tableData 的資料，以及使用者 column 的設定，我們只要把它們拼接起來，就可以繪製出我們所想要的表格出來了。
 
