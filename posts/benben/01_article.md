@@ -110,7 +110,7 @@ layout: layouts/post.njk
 
 最最最基本的筆記結構，如下
 
-```
+```markdown
 ### 我的前端技能
 - HTML
 - CSS
@@ -158,7 +158,7 @@ layout: layouts/post.njk
 2. 加入標題
 3. 加入自身的故事
 
-```
+```markdown
 ### 淺談天氣
 
 遇見妳的那天，是七月悶熱的天氣，如今又到七月。
