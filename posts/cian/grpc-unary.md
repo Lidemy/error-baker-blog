@@ -23,7 +23,7 @@ Client 和 Server 都會有一個 Stub（樁），這個 Stub 會把底下的處
 ![](/img/posts/cian/grpc-unary/rpc.png)
 
 這張圖簡單描述了整個 RPC 的過程：
-1. Client 的 Application 是這個 Procedure 的調用、，他會調用 Client Stub 中的 Method
+1. Client 的 Application 是這個 Procedure 的調用，他會調用 Client Stub 中的 Method
 2. Client Stub 是一個把調用過程包裝起來的代理對象，他其實並不擁有 Client Application 想要調用的 Method，所以他會向外進行 RPC 的調用。
 3. Client Run-time Library 是一個實現 RPC 調用的工具包
 4. 最後我們會透過底層網路實現 data 的傳輸。
@@ -413,7 +413,9 @@ func main() {
 
 ![](/img/posts/cian/grpc-unary/result.png)
 
+到這裡就做到了簡單的 Unary，完成可以連接的前後端。
 
+### 重構
 因為之後需要再開其他 api ，所以這裡先把 Unary 的相關處理放到函式 `getFeat` 裡面。
 
 ```go
@@ -453,8 +455,7 @@ func main () {
 
 ```
 
-今天先做到簡單的 Unary，完成可以連接的前後端。
-下一篇文章會繼續嘗試剩下三種生命週期。
+今天就到這裡，下一篇文章會繼續嘗試剩下三種生命週期。
 
 ---
 
