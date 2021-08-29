@@ -1,0 +1,15 @@
+---
+layout: layouts/home.njk
+title: minw 
+eleventyExcludeFromCollections: true
+---
+
+<h2>關於我</h2>
+
+<p>嗨！我是 simon198</p>
+
+<h2>文章列表</h2>
+
+{% set postslist = collections.posts %}
+{% set author = 'simon198' %}
+{% include "author-postslist.njk" %}
