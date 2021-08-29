@@ -466,3 +466,7 @@ func main () {
 [Day20-Go modules - iT 邦幫忙](https://ithelp.ithome.com.tw/articles/10207937)
 [神奇代码在哪里Go实战#9：gRPC](https://www.bilibili.com/video/BV1DV411s7ij)
 [「 gRPC Web 」で gRPC 実践！ Go と gRPC で WebAPI を作ってみよう！！](https://www.youtube.com/watch?v=hlyNZoaXvqU)
+
+---
+
+同步刊載於個人部落格 [使用 Golang 建立一個 gRPC 架構](https://keronscribe.tw/golang-grpc-unary)
