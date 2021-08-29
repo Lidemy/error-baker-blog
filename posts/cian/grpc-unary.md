@@ -1,7 +1,7 @@
 ---
-title: 建立一個 Unary 的 gRPC 架構｜使用 Golang
+title: 使用 Golang 建立一個 gRPC 架構
 date: 2021-08-28
-tags: [back-end]
+tags: [back-end, JavaScript, golang]
 author: Cian
 layout: layouts/post.njk
 ---
