@@ -75,7 +75,7 @@ const firebaseConfig = {
 }
 ```
 
-此外區分 development 和 production 環境的話是透過下方的環境變數。
+區分 development 和 production 環境的話是透過下方的環境變數。
 
 ```js
 console.log(`${import.meta.env.PROD}`) // production
