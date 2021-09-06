@@ -12,14 +12,14 @@
   --fluid-typography-ratio: 0.7;
   --rem: calc(var(--base-font-size) + var(--fluid-typography-ratio) * 1vw);
 
-  --small: 0.6rem;
-  --p: 1rem;
-  --h6: 1rem;
-  --h5: 1.2rem;
-  --h4: 1.4rem;
-  --h3: 1.6rem;
-  --h2: 1.8rem;
-  --h1: 2rem;
+  --small: 0.5rem;
+  --p: 0.9rem;
+  --h6: 0.9rem;
+  --h5: 0.9rem;
+  --h4: 1.0rem;
+  --h3: 1.1rem;
+  --h2: 1.2rem;
+  --h1: 1.6rem;
 
   --black: 900;
   --bold: 700;
@@ -489,7 +489,7 @@ p,
 pre,
 ul {
   font-size: var(--p);
-  line-height: 1.5;
+  line-height: 1.65;
 }
 ol,
 p,
@@ -538,7 +538,7 @@ kbd {
   color: #d1d551;
   padding: 0 0.3em;
   font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
-  font-size: 90%;
+  font-size: 70%;
 }
 code,
 kbd {
@@ -818,6 +818,7 @@ header nav a {
   font-family: var(--font-family);
   color: #181818;
   margin-left: 1.5em;
+  font-size: 0.7rem;
 }
 header nav a:first-of-type {
   margin-left: auto;
@@ -921,7 +922,7 @@ pre[class*="language-"] {
   word-spacing: normal;
   word-break: normal;
   word-wrap: normal;
-  line-height: 1.5;
+  line-height: 1.1;
   -moz-tab-size: 4;
   -o-tab-size: 4;
   tab-size: 4;
