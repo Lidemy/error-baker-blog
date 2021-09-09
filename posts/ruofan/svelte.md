@@ -47,6 +47,7 @@ $npx degit sveltejs/template svelte-app
 ## 開始實作吧！
 
 這邊先從 xstate 的 machine 開始設定，筆者使用的是 firebase 9 的版本，用法會跟 firebase 8 有些許差異，詳細資訊可以看 firebase 的 [官方文件](https://firebase.google.com/docs/auth/web/google-signin)。
+
 下方程式碼 services 中 checkLogin 內的 onAuthStateChanged 可以用來檢查 user 是否 sign in。
 
 login 內的 setCustomParameters 有些參數可以設定，像是 hd(hosted domain) 可以設定你期望登入的使用者帳號。更多參數設定可以看 google identity 的 [文件](https://developers.google.com/identity/protocols/oauth2/openid-connect#authenticationuriparameters)。
@@ -145,7 +146,7 @@ const authMachine = createMachine(
           const auth = getAuth();
 
           provider.setCustomParameters({
-            hd: "damaiapp.com.tw",
+            hd: "errorBaker.com.tw",
             prompt: "select_account",
           });
 
