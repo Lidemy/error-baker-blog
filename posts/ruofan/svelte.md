@@ -11,7 +11,7 @@ image: https://i.imgur.com/JIy4LhV.png
 
 ## 前言
 
-Hi，大家好！最近初次嘗試使用 svelte 開發一個新的專案，這篇文章會分享架構的建設。
+Hi，大家好！最近初次嘗試使用 svelte 開發一個新的專案，這篇文章會分享使用 firebase google login 以及搭配 xstate 的實作。
 
 <!-- summary -->
 <!-- more -->
@@ -25,7 +25,7 @@ svelte 和其他前端框架的不同，在 svelte 的官網上是這樣介紹�
 > Instead, Svelte runs at build time, converting your components into highly efficient imperative code that surgically updates the DOM. As a result, you're able to write ambitious applications with excellent performance characteristics.
 
 簡單來說，svelte 會在 build time 的時後編譯元件，performance 的表現上是不錯的。
-想了解更多的話，推薦看 svelte 的官網。
+想了解更多的話，推薦看 svelte 的 [官方文件](https://svelte.dev/blog/svelte-3-rethinking-reactivity)。
 
 ## QuickStart
 
@@ -37,171 +37,213 @@ $npx degit sveltejs/template svelte-app
 
 ## SetUp
 
-使用 vite 作為 dev server，svelte 官方有提供一個 plugin 讓我們安裝 vite。
+首先，需要先到 firebase console 新增一個新的專案，再進入 project setting 內設定 App nickname 後就會生成 firebaseConfig。
+這邊的 firebaseConfig 需要記下來，接下來專案中戶需要用到。
+![](/img/posts/ruofan/firebase-project-setting.png)
 
-```bash
-$yarn add -D @sveltejs/vite-plugin-svelte
-```
+接著到 Authentication 設定 provider。
+![](/img/posts/ruofan/firebase-auth.png)
 
-同時也需要設定檔 vite.config.js
+## 開始實作吧！
 
-###### **vite.config.js**
+這邊先從 xstate 的 machine 開始設定，筆者使用的是 firebase 9 的版本，用法會跟 firebase 8 有些許差異，詳細資訊可以看 firebase 的 [官方文件](https://firebase.google.com/docs/auth/web/google-signin)。
+下方程式碼 services 中 checkLogin 內的 onAuthStateChanged 可以用來檢查 user 是否 sign in。
 
-```js
-import { defineConfig } from "vite";
-import { svelte } from "@sveltejs/vite-plugin-svelte";
+login 內的 setCustomParameters 有些參數可以設定，像是 hd(hosted domain) 可以設定你期望登入的使用者帳號。更多參數設定可以看 google identity 的 [文件](https://developers.google.com/identity/protocols/oauth2/openid-connect#authenticationuriparameters)。
 
-export default defineConfig({
-  plugins: [svelte()],
-  server: {
-    port: 5000,
-  },
-});
-```
+接著用 visualizer 來看一下登入的流程，logout 的部分因為還沒有想到好的寫法因此先沒有放在 machine 裡面，讀者如果有更好的寫法，歡迎留言分享！
 
-在使用環境變數上，因應 vite 使用上也需要特別注意。
-舉例來說：
-在 .env.development 加上了下方的 key
+![](/img/posts/ruofan/xstate.gif)
 
-```json
-VITE_FIREBASE_KEY='theKey'
-```
-
-如果要引用環境變數的話，就需要像下方的方式引用。
+###### **authMachine.js**
 
 ```js
+import { createMachine, assign } from "xstate";
+import { initializeApp } from "firebase/app";
+import {
+  getAuth,
+  signInWithRedirect,
+  signOut,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+} from "firebase/auth";
+
 const firebaseConfig = {
-  key: `${import.meta.env.VITE_FIREBASE_KEY}`
-}
-```
+  apiKey: `${import.meta.env.VITE_FIREBASE_KEY}`,
+  authDomain: `${import.meta.env.VITE_FIREBASE_DOMAIN}`,
+  projectId: `${import.meta.env.VITE_FIREBASE_PROJECT}`,
+  storageBucket: `${import.meta.env.VITE_FIREBASE_STORAGE}`,
+  messagingSenderId: `${import.meta.env.VITE_FIREBASE_SENDERID}`,
+  appId: `${import.meta.env.VITE_FIREBASE_APPID}`,
+};
 
-區分 development 和 production 環境的話是透過下方的環境變數。
+initializeApp(firebaseConfig);
 
-```js
-console.log(`${import.meta.env.PROD}`) // production
-console.log(`${import.meta.env.DEV}`) // development
-```
-
-此外，package.json 中的 script 也需要設定
-
-###### **package.json**
-
-```json
- "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview"
-  },
-```
-
-css 的部分選擇了 Tailwind CSS。
-
-```bash
-$yarn add tailwindcss@npm:@tailwindcss/postcss7-compat postcss@^7 autoprefixer@^9
-```
-
-同時也需要實作設定檔 tailwind.config.js
-
-###### **tailwind.config.js**
-
-```js
-module.exports = {
-  mode: "jit", // Just-in-Time Mode
-  purge: ["./index.html", "./src/**/*.{svelte,js,ts,jsx,tsx}"],
-  darkMode: false,
-  theme: {
-    extend: {
-      colors: {
-        primary: "#FBF6EB",
-        secondary: "#6498C0",
+const authMachine = createMachine(
+  {
+    id: "auth",
+    initial: "checkAuth",
+    context: {
+      auth: null,
+      error: null,
+    },
+    states: {
+      checkAuth: {
+        invoke: {
+          id: "authChecker",
+          src: "checkLogin",
+          onDone: { target: "signedIn", actions: "setAuth" },
+          onError: {
+            actions: ["setError", "clearAuth"],
+          },
+        },
+        on: {
+          LOGIN: { target: "signingIn" },
+        },
+      },
+      signedIn: {},
+      signingIn: {
+        invoke: {
+          id: "authenticator",
+          src: "login",
+          onDone: {
+            target: "checkAuth",
+            // clear error if successful login
+            actions: "clearError",
+          },
+          onError: {
+            // set an error
+            actions: "setError",
+          },
+        },
       },
     },
-    fontFamily: {
-      sans: ["Averia Libre"],
+  },
+  {
+    actions: {
+      clearAuth: assign({ user: null, auth: null }),
+      clearError: assign({ error: null }),
+      setAuth: assign({ auth: (_, event) => event.data }),
+      setError: assign({
+        error: (_, event) => event.data,
+      }),
     },
-  },
-  variants: {
-    extend: {},
-  },
-  plugins: [],
+    services: {
+      checkLogin: () => {
+        return new Promise((resolve, reject) => {
+          const auth = getAuth();
+          const unsubscribe = onAuthStateChanged(auth, (user) => {
+            unsubscribe();
+
+            return user ? resolve(user) : reject();
+          });
+        });
+      },
+      login: (_, event) => {
+        if (event.provider === "google") {
+          const provider = new GoogleAuthProvider();
+          const auth = getAuth();
+
+          provider.setCustomParameters({
+            hd: "damaiapp.com.tw",
+            prompt: "select_account",
+          });
+
+          return signInWithRedirect(auth, provider);
+        }
+      },
+    },
+  }
+);
+
+export const logout = async () => {
+  const auth = getAuth();
+  await signOut(auth);
 };
+
+export default authMachine;
 ```
 
-透過下方指令就可以產生一個 postcss.config.js
-```bash
-$npx tailwindcss init -p
-```
-###### **postcss.config.js**
+把上方的 machine 包在 svelte 的 store 中，onTransition 可以監聽每一次 state 的轉變。
+
+###### **useMachine.js**
+
 ```js
-module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
+import { readable } from "svelte/store";
+import { interpret } from "xstate";
+
+export const useMachine = (machine, options) => {
+  const service = interpret(machine, options);
+
+  // wrap machine in a svelte readable store with
+  const store = readable(service.initialState, (set) => {
+    // every time change state onTransition
+    // hook is triggered
+    service.onTransition((state) => {
+      set(state);
+    });
+
+    // start the machine service
+    service.start();
+
+    return () => {
+      service.stop();
+    };
+  });
+
+  // return a custom Svelte store
+  return {
+    state: store,
+    send: service.send,
+  };
 };
 ```
 
-在路由的部分使用了 Svelte Routing
-
-```bash
-$yarn add svelte-routing
-```
-
-設定上蠻簡便的，這邊會先從 layout 開始實作。
-
-###### **Layout.svelte**
-
-```html
-<script>
-  import { Router, Route } from "svelte-routing";
-
-  // components for this layout
-  import SideBar from "../components/SideBar.svelte";
-  // pages for this layout
-  import Store from "../pages/Store.svelte";
-  import StoreDetail from "../pages/StoreDetail.svelte";
-
-  export const admin = "";
-  export let location;
-</script>
-<div
-  class="relative min-h-screen h-screen overflow-hidden md:flex"
-  data-dev-hint="container"
->
-  <SideBar location="{location}" />
-  <main id="content" class="flex-1 p-6 lg:px-8 h-screen overflow-auto">
-    <div style="position: absolute; right: 1em;"></div>
-    <Router url="admin">
-      <Route path="/store" component="{Store}" />
-      <Route path="/store/:id" let:params><StoreDetail id="{params.id}"/></Route>
-    </Router>
-  </main>
-</div>
-```
-
-接著實作 App.svelte 中的路由。
+machine 設定完成後，我們來實作 App.svelte 。
+透過 是否是 signedIn 的狀態來限制使用者進入頁面。
 
 ###### **App.svelte**
 
 ```html
 <script>
-  import { Router, Route } from "svelte-routing";
+  import { Router, Link, Route, navigate } from "svelte-routing";
   import Login from "./pages/Login.svelte";
-  // Layout
+  import NotFound from "./pages/NotFound.svelte";
+  import Loading from "./components/Loading.svelte";
+
+  // Admin Layout
   import Layout from "./layout/Layout.svelte";
-  import Home from "./layout/Home.svelte";
+  import Report from "./layout/Report.svelte";
+  import { beforeUpdate } from "svelte";
+  import { currentUser } from "./utils/stores";
+  import authMachine from "./utils/lib/authMachine";
+  import { useMachine } from "./utils/lib/useMachine";
+  const { state } = useMachine(authMachine);
+
+  // use custom auth machine store
+  beforeUpdate(() => {
+    if (!$state.matches("signedIn") && !$state.matches("checkAuth")) {
+      navigate("/login");
+    }
+  });
+
   export let url = "";
 </script>
 
 <div>
   <Router url="{url}">
-    <Route path="/" component="{Home}" />
-    <Route path="admin/*admin" component="{Layout}" />
+    {#if $state.matches('signedIn')}
+    <Route path="/" component="{Report}" />
+    <Route path="admin/*" component="{Layout}" />
+    {:else if $state.matches('checkAuth')}
+    <Loading />
+    {/if}
 
     <Route path="/login" component="{Login}" />
+
+    <Route path="*" component="{NotFound}" />
   </Router>
 </div>
-
 <style global lang="postcss">
   @tailwind base;
   @tailwind components;
@@ -209,111 +251,133 @@ $yarn add svelte-routing
 </style>
 ```
 
-最後安裝 eslint 跟 prettier。
+接著實作 Login.svelte ！
+這邊只需要使用 `send({type:'LOGIN', provider: 'google'})` 並且偵測是否是在 signedIn 的狀態。
+可以特別注意導頁的時間點，以及出現 loading 的時間，讓使用體驗更流暢。
 
-```bash
-$yarn add -D prettier eslint prettier-plugin-svelte eslint-plugin-svelte3 babel-eslint
-```
+###### **Login.svelte**
 
-接著實作設定檔 .eslintrc.js
-###### **.eslintrc.js**
-```js
-module.exports = {
-  parser: "babel-eslint",
-  parserOptions: {
-    ecmaVersion: 2019,
-    sourceType: "module",
-    allowImportExportEverywhere: true,
-  },
-  env: {
-    browser: true,
-    es6: true,
-  },
-  plugins: ["svelte3"],
-  ignorePatterns: ["public/build/"],
-  overrides: [
-    {
-      files: ["**/*.svelte"],
-      processor: "svelte3/svelte3",
-    },
-  ],
-  extends: "eslint:recommended",
-  rules: {
-    indent: ["error", 2],
-    quotes: ["error", "double"],
-  },
-};
-```
-###### **.prettierrc**
-```json
-{
-  "svelteSortOrder": "options-styles-scripts-markup",
-  "svelteStrictMode": true,
-  "svelteBracketNewLine": false,
-  "svelteAllowShorthand": false,
-  "svelteIndentScriptAndStyle": false
-}
-```
-
-在架構的建設上大致上完成了，先來看一下檔案結構。
-
-```bash
-├── src
-│   ├── App.svelte
-│   ├── main.js
-│   ├── pages
-│   │   ├── Home.svelte
-│   │   ├── Store.svelte
-│   │   ├── StoreDetail.svelte
-│   │   └── Login.svelte
-│   ├── components
-│   │   └── SideBar.svelte
-│   └── layout
-│       └── Layout.svelte
-│
-├── tailwind.config.js
-├── vite.config.js
-├── package.json
-├── postcss.config.js
-└── yarn.lock
-```
-## 回顧
-看一下 package.json 我們安裝了哪些吧！
-```json
-{
-  "name": "svelte-app",
-  "version": "0.0.0",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "serve": "vite preview",
-    "lint": "eslint . --ext .js,.svelte --fix"
-  },
-  "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.11",
-    "autoprefixer": "^10.3.1",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^7.32.0",
-    "eslint-plugin-svelte3": "^3.2.0",
-    "postcss": "^8.3.6",
-    "prettier": "^2.3.2",
-    "prettier-plugin-svelte": "^2.4.0",
-    "svelte": "^3.37.0",
-    "svelte-check": "^2.1.0",
-    "svelte-routing": "^1.6.0",
-    "vite": "^2.4.4",
-  },
-  "dependencies": {
-    "postcss-preset-env": "^6.7.0",
-    "svelte-preprocess": "^4.8.0",
-    "tailwindcss": "^2.2.7",
+```html
+<style lang="postcss">
+  .title {
+    font-family: "Ribeye Marrow", cursive;
   }
-}
+</style>
+
+<script>
+  import { fade } from "svelte/transition";
+  import Google from "../components/Google.svelte";
+  import { navigate } from "svelte-routing";
+  import { currentUser } from "../utils/stores";
+  import authMachine from "../utils/lib/authMachine";
+  import { useMachine } from "../utils/lib/useMachine";
+  const { state, send } = useMachine(authMachine);
+  async function loginProcess() {
+    send({ type: "LOGIN", provider: "google" });
+  }
+  state.subscribe((state) => {
+    if (state.value === "signedIn") {
+      navigate("/");
+      currentUser.set({
+        username: state.context.auth.displayName,
+        email: state.context.auth.email,
+        picture: state.context.auth.photoURL,
+        accessToken: state.context.auth.accessToken,
+        isLogin: true,
+      });
+    }
+  });
+</script>
+
+<div in:fade id="Login" class="h-screen  flex items-center justify-center">
+  <!-- card -->
+  <section
+    class="max-w-2xl mx-auto p-6 overflow-hidden bg-white rounded-lg  dark:bg-gray-800"
+  >
+    <div
+      class="title md:text-4xl text-3xl flex items-center justify-center flex-wrap	"
+    >
+      <span class="mr-2 whitespace-nowrap">Login with</span>
+      <Google className="inline-block" />
+    </div>
+
+    <img
+      class="object-cover w-3/4 md:w-3/4 sm:w-3/4 lg:w-2/3  m-auto  mb-20"
+      src="../images/login.png"
+      alt="login"
+    />
+    <div class="flex items-center justify-center">
+      {#if $state.matches('checkAuth')}
+      <button
+        type="button"
+        class=" w-full flex items-center cursor-not-allowed justify-center capitalize transition-colors tracking-wide py-2 bg-yellow px-4 focus:outline-none  text-white text-base font-semibold rounded-lg transition shadow-md  ease-in-out duration-500"
+        disabled
+      >
+        <svg
+          class="animate-spin h-5 w-5 mr-3 "
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            opacity="0.2"
+            fill-rule="evenodd"
+            clip-rule="evenodd"
+            d="M12 19C15.866 19 19 15.866 19 12C19 8.13401 15.866 5 12 5C8.13401 5 5 8.13401 5 12C5 15.866 8.13401 19 12 19ZM12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+            fill="#FBF6EB"
+          />
+          <path
+            d="M2 12C2 6.47715 6.47715 2 12 2V5C8.13401 5 5 8.13401 5 12H2Z"
+            fill="#FBF6EB"
+          />
+        </svg>
+
+        Processing
+      </button>
+      {:else}
+      <button
+        on:click="{loginProcess}"
+        class="
+        w-2/3
+        text-base
+        font-semibold
+        py-2
+        px-4
+        text-white
+        bg-yellow
+        hover:bg-yellow
+        rounded-lg
+        shadow-md
+        focus:outline-none
+        transition
+        duration-500
+        ease-in-out
+      "
+      >
+        Login
+      </button>
+      {/if}
+    </div>
+  </section>
+</div>
 ```
+
+最後來看一下實際完成的流程吧！
+![](/img/posts/ruofan/svelte.gif)
+
+## 回顧
+一開始在 firebase 開啟的 google login 設定，在使用者登入後我們可以在 firebase 看得到使用者被新增的時間點跟最後一次登入的時間點。
+
+![](/img/posts/ruofan/firebase-auth-user.png)
+
 ## 小結
-很快速的帶大家 run 過建設一個新的 svelte 專案，下一篇會分享在這個專案中實作 google login 以及設定權限的部分。
+在 google login 成功後可以拿到 idToken 來使用，但須特別注意的是 token 有效時限是 一個小時，因此還需要實作 refresh token 的部分。
+整體使用 svelte 實作的過程，渡過熟悉規則上的使用後，覺得還蠻不錯的，推薦給大家！
 
 在閱讀文章時如果有遇到什麼問題，或是有什麼建議，都歡迎留言告訴我，謝謝。😃
 
 ## 參考資料
+
 - [Documentation | Svelte 3: Rethinking reactivity](https://svelte.dev/blog/svelte-3-rethinking-reactivity)
