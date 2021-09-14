@@ -1,5 +1,5 @@
 ---
-title: 初探 svelte
+title: svelte 結合 firebase 實作登入
 date: 2021-09-04
 tags: [Front-end]
 author: Ruofan
@@ -38,7 +38,7 @@ $npx degit sveltejs/template svelte-app
 ## SetUp
 
 首先，需要先到 firebase console 新增一個新的專案，再進入 project setting 內設定 App nickname 後就會生成 firebaseConfig。
-這邊的 firebaseConfig 需要記下來，接下來專案中戶需要用到。
+這邊的 firebaseConfig 需要記下來，接下來專案中會需要用到。
 ![](/img/posts/ruofan/firebase-project-setting.png)
 
 接著到 Authentication 設定 provider。
@@ -52,7 +52,7 @@ $npx degit sveltejs/template svelte-app
 
 login 內的 setCustomParameters 有些參數可以設定，像是 hd(hosted domain) 可以設定你期望登入的使用者帳號。更多參數設定可以看 google identity 的 [文件](https://developers.google.com/identity/protocols/oauth2/openid-connect#authenticationuriparameters)。
 
-接著用 visualizer 來看一下登入的流程，logout 的部分因為還沒有想到好的寫法因此先沒有放在 machine 裡面，讀者如果有更好的寫法，歡迎留言分享！
+接著用 [visualizer](https://stately.ai/viz/920210a6-93b5-41e6-af00-efbba67e299b) 來看一下登入的流程，logout 的部分因為還沒有想到好的寫法因此先沒有放在 machine 裡面，讀者如果有更好的寫法，歡迎留言分享！
 
 ![](/img/posts/ruofan/xstate.gif)
 
