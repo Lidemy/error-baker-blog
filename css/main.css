@@ -355,7 +355,7 @@ abbr[title] {
 }
 b,
 strong {
-  font-weight: var(--strong);
+  font-weight: var(--bold);
 }
 code,
 kbd,
