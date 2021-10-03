@@ -379,6 +379,7 @@ machine 設定完成後，我們來實作 App.svelte 。
 
 在閱讀文章時如果有遇到什麼問題，或是有什麼建議，都歡迎留言告訴我，謝謝。😃
 
+- [Github | Repo: Svelte](https://github.com/ruofanwei/svelte-xstate-app)
 ## 參考資料
 
 - [Documentation | Svelte 3: Rethinking reactivity](https://svelte.dev/blog/svelte-3-rethinking-reactivity)
