@@ -398,6 +398,7 @@ const { fields, prepend, remove } = useFieldArray({ name, control }); // 經常�
 ## 備註
 
 [1]紀錄那些我笨拙的時刻
+我第一個用 React 做的 Todo List（轉職前）https://github.com/futianshen/js-react-class-component-todo-list
 完成功能 https://github.com/futianshen/react-hook-form
 不斷優化 https://github.com/futianshen/ts-react-hook-form-nested-todo-list
 改完收工 https://github.com/futianshen/nested-todo-list
