@@ -196,4 +196,4 @@ func calcDistance(p1 *pb.Point, p2 *pb.Point) int32 {
 如果不幸文章有一些錯誤，請不吝指正，我會盡可能將修正意見補進內文中。
 非常感謝各位的閱讀，之後會主要寫前端相關內容，也請多多支持！感謝～
 
-全文同步刊載於個人部落格 [gRPC 和 HTTP2 Streaming](http://localhost:8080/posts/cian/grpc-streaming-n-http2/)
+全文同步刊載於個人部落格 [gRPC 和 HTTP2 Streaming](https://keronscribe.tw/grpc-he-http2-streaming)
