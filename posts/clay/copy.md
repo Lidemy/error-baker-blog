@@ -1,5 +1,5 @@
 ---
-title: 聊聊 JavaScript 中的深拷貝與淺拷貝 (上)
+title: 聊聊 JavaScript 中的深拷貝 (上)
 date: 2021-10-08
 tags: [JavaScript, Shallow Copy, Deep Copy]
 author: clay
@@ -7,7 +7,7 @@ layout: layouts/post.njk
 ---
 
 <!-- summary -->
-<!-- 一起探討深淺拷貝中的幾種概念 -->
+<!-- 簡單來理解一下做深拷貝時會遇到的幾個問題 -->
 <!-- summary -->
 
 ### 緣起
