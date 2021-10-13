@@ -1363,7 +1363,7 @@ ul#post-list li {
 .nav-pagination li a,
 .nav-pagination li span {
   font-size: 14px;
-  color: var(--fgColor);
+  color: #000;
   height: 32px;
   line-height: 32px;
   display: flex;
