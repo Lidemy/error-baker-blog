@@ -542,6 +542,9 @@ kbd {
   font-family: Consolas, Monaco, Andale Mono, Ubuntu Mono, monospace;
   font-size: 70%;
 }
+code > span:first-of-type {
+  margin-left: -0.3em;
+}
 code,
 kbd {
   background: var(--codeBg);
