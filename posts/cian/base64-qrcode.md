@@ -1,6 +1,6 @@
 ---
 title: 淺談 Base64 與應用實例分享
-date: 2021-10-17
+date: 2021-10-21
 tags: [encode, HTML, image, QRcode]
 author: Cian
 layout: layouts/post.njk
