@@ -39,7 +39,7 @@ Base64 是一種基於 64 個可列印字元來表示二進位資料的表示方
 
 維基百科提供了這樣的一個例子：
 我們將「Man」進行 Base64 的編碼，首先，M A N 分別會對應到 ASCII 的 77、97 和 110。
-將 77、97 和 110 分別用一個 byte ( 8 bit )表示，接著將這一共 24 個 bit 在進行 6 個一組，得到一組新的數字19、22、5	 和 46，這一組數字就是 base64 的索引，用這些索引在 ASCII 中找到對應的文字 T、W、F、u 就是 Base64 編碼的結果。
+將 77、97 和 110 分別用一個 byte ( 8 bit )表示，接著將這一共 24 個 bit 再進行 6 個一組，得到一組新的數字19、22、5	 和 46，這一組數字就是 base64 的索引，用這些索引在 ASCII 中找到對應的文字 T、W、F、u 就是 Base64 編碼的結果。
 ![](/img/posts/cian/base64-qrcode/base64-encode-progress.png)
 
 另外，如果要編碼的 byte 數不能被 3 整除（結果無法為 4 個一組），那麼就會在最後補上一個或兩個 byte 的 0，並在生成的 Base64 字串最後補上一或兩個 `=` 表示。
@@ -63,13 +63,13 @@ data URIs 是在 August 1998 新增的 RFC標準，[rfc2397](https://datatracker
 
 在這個標準中，定義了一個新的 URL 格式。這個新的格式允許直接傳輸小型 data 的內容。
 
-一般來說， URI(Uniform Resource Identifier) 通常是代表一個檔案位置的標示，我們需要再取得 URI 之後另外取得內容，然而，在這個新的 Scheme 出現之後，再取得 URI 的同時，我們就已經取得經過 base64 編碼的檔案內容了。
+一般來說， URI(Uniform Resource Identifier) 通常是代表一個檔案位置的標示，我們需要在取得 URI 之後另外取得內容，然而，在這個新的 Scheme 出現之後，再取得 URI 的同時，我們就已經取得經過 base64 編碼的檔案內容了。
 
 ### 語法和範例
 這個結構的語法長這樣
 `data:[<mediatype>][;base64],<data>`
 
-在 `<mediatype>` 中會填入媒體類型，接著是固定的 `;base64` 表明他的 encode 方式，最後則是 encode 後的結果，這會是前面說倒的由可以印出來的 64 個字元組成的內容。
+在 `<mediatype>` 中會填入媒體類型，接著是固定的 `;base64` 表明他的 encode 方式，最後則是 encode 後的結果，這會是前面說到的由可以印出來的 64 個字元組成的內容。
 
 在標準中提供的範例長這樣：
 ```text
@@ -87,7 +87,7 @@ data:image/gif;base64,R0lGODdhMAAwAPAAAAAAAP///ywAAAAAMAAw
 ![](/img/posts/cian/base64-qrcode/no-response.png)
 
 ### 和 HTML 結合
-這種資料格式可以使用在 HTML 的 `<img>` 中。直接在 `src` 中放上內容，就可以正確顯示圖片。
+這種資料格式可以使用放在 HTML 的 `<img>`、`<iframe>` 等等標籤中，直接在 `src` 中放上內容，就可以正確顯示圖片。另外在 CSS 的 `background: url()` 中也可以填入這種格式的 URI 來顯示圖片。
 
 ## 用 Base64 顯示 QRCode 實例
 知道了編碼方式和 DATA URI 格式，就可以理解這次使用 base64 顯示QRcode 的過程都發生了些什麼事。
