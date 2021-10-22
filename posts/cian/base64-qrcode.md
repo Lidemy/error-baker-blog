@@ -51,6 +51,7 @@ Base64 是一種基於 64 個可列印字元來表示二進位資料的表示方
 現在大多數 SMTP 伺服器已經都都援 8 位元 MIME 擴充，就沒有必要使用這個方式傳輸。另外，在 2018 年也有基於這種傳輸方式的[漏洞](https://exim.org/static/doc/security/CVE-2018-6789.txt)被發現，這個漏洞讓攻擊者可以遠端執行程式，不過提供服務的 Exim 表示這個漏洞很難被利用，並且已經被修正。
 有些像是垃圾郵件依然會使用 Base64 encode 信件內容，因為經過轉換的內容比較容易通過垃圾郵件的審查機制。
 
+
 ## Data URIs
 
 ### Data URIs 簡介
@@ -69,7 +70,7 @@ data URIs 是在 August 1998 新增的 RFC標準，[rfc2397](https://datatracker
 這個結構的語法長這樣
 `data:[<mediatype>][;base64],<data>`
 
-在 `<mediatype>` 中會填入媒體類型，接著是固定的 `;base64` 表明他的 encode 方式，最後則是 encode 後的結果，這會是前面說到的由可以印出來的 64 個字元組成的內容。
+在 `<mediatype>` 中會填入媒體類型，接著是 `;base64` 表明他的 encode 方式，最後則是 encode 後的結果，這會是前面說到的由可以印出來的 64 個字元組成的內容。
 
 在標準中提供的範例長這樣：
 ```text
@@ -86,10 +87,22 @@ data:image/gif;base64,R0lGODdhMAAwAPAAAAAAAP///ywAAAAAMAAw
 
 ![](/img/posts/cian/base64-qrcode/no-response.png)
 
+另外，除了圖片之外 Data URIs 也可以用來傳輸其他檔案類型像是 HTML 或者 JavaScript。其相應的編碼格式也不一定都是 base64，不過最常見的應用還是結合 Data URIs 和 Base64 用來進行圖片效能優化。
+
 ### 和 HTML 結合
-這種資料格式可以使用放在 HTML 的 `<img>`、`<iframe>` 等等標籤中，直接在 `src` 中放上內容，就可以正確顯示圖片。另外在 CSS 的 `background: url()` 中也可以填入這種格式的 URI 來顯示圖片。
+ Data URI 其實可以用在任何需要指定 URL 的地方，包括 `<script>` 標籤和 `<a>` 標籤，但它最常被用來進行圖片的效能優化，所以經常被放在 HTML 的 `<img>`、`<iframe>` 等等標籤中。直接在 `src` 中放上內容，就可以正確顯示圖片。另外在 CSS 的 `background: url()` 中也可以填入這種格式的 URI 來顯示圖片。
+
+不過使用 Data URI 也是有一些缺點：
+
+- 由於 base64 的特性，在 encode 之後整體檔案會變大，所以需要傳輸量也會變大
+- 可讀性很差
+- 因為瀏覽器不會認知 Data URI 是一張圖片，所以不會進行快取。
+- 如果選擇放在 CSS 中，會增加 CSS tree 解析的時間
+
+在考慮使用時可以作為參考。
 
 ## 用 Base64 顯示 QRCode 實例
+
 知道了編碼方式和 DATA URI 格式，就可以理解這次使用 base64 顯示QRcode 的過程都發生了些什麼事。
 
 首先，根據需要的網址轉換出 QRCode 之後，我們直接在後端對它進行 Base64 encode。
@@ -115,5 +128,7 @@ data:image/gif;base64,R0lGODdhMAAwAPAAAAAAAP///ywAAAAAMAAw
 [Base64 - Wikipedia（日文）](https://ja.wikipedia.org/wiki/Base64)
 [Base64 - 維基百科，自由的百科全書](https://zh.wikipedia.org/wiki/Base64)
 [CVE-2018-6789](https://exim.org/static/doc/security/CVE-2018-6789.txt)
+[Base64 - MDN Web Docs Glossary: Definitions of Web-related terms | MDN](https://developer.mozilla.org/en-US/docs/Glossary/Base64)
+[MIME types (IANA media types) - HTTP | MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types)
 
 全文同步刊載於個人部落格 [淺談 Base64 與應用實例分享](https://keronscribe.tw/base64-qrcode)
