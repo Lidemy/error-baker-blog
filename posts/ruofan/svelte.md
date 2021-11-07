@@ -9,7 +9,6 @@ image: https://i.imgur.com/JIy4LhV.png
 
 <!-- summary -->
 
-## 前言
 
 Hi，大家好！最近初次嘗試使用 svelte 開發一個新的專案，這篇文章會分享使用 firebase google login 以及搭配 xstate 的實作。
 

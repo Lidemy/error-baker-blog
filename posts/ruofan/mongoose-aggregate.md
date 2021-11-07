@@ -9,7 +9,7 @@ image: /img/posts/ruofan/mongoose.png
 
 <!-- summary -->
 
-## 前言
+
 
 Hi，大家好！前陣子在研究專案上從 MySQL migrate 到 MongoDB 的可能性，選擇了 Mongoose 作為這次的主題，這篇文章會帶著大家認識 aggregate 的基本操作。
 

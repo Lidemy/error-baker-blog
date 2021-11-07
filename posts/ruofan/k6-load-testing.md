@@ -7,7 +7,7 @@ layout: layouts/post.njk
 image: https://k6.io/static/d34aede268b85c2821a801227fc9e696/80926/cloud-stub.webp
 ---
 <!-- summary -->
-## 前言
+
 Hi，大家好！前陣子在研究可以為 api 做 Load Testing 的工具。
 如果你對於這個工具感到好奇，可以看看這篇。
 
