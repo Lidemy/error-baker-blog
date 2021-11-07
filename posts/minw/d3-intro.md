@@ -107,7 +107,7 @@ const yExtent = d3.extent(data, d => Number(d.value))
 
 接著定義數據的邊界大小，通常是數據的最大最小值。這兩個步驟是為了讓我們做到這件事情：
 
-![](https://imgur.com/T40fZnA)
+![](https://i.imgur.com/T40fZnA.png)
 
 ```js
 const x = d3.scaleBand()
@@ -122,7 +122,7 @@ const y = d3.scaleLinear()
 
 接著透過 D3 提供的 scale 代入兩者的邊界轉換關係，D3 有提供不同的 Scale 類型，剛好處理的就是我們提到的數據種類的議題，舉例來說：分類資料的縮放就會是離散的、一個個的、有邊界的，而線性資料就會是連續的對應，而這邊的這個轉換方程式就可以用於將數據對應到圖像資訊：
 
-![](https://imgur.com/6vqRAAb)
+![](https://i.imgur.com/6vqRAAb.png)
 
 當我們把數據轉換器設定好後，接下來透過 D3 提供的 data method 來將數據狀態對應到剛剛的 svg 元素中，並執行轉換：
 
@@ -139,7 +139,6 @@ svg.append("g")
       .attr("y", d => y(d.value))
       .attr("height", d => y(0) - y(d.value))
       .attr("width", x.bandwidth());
-
 ```
 
 使用 D3 選取 svg 後，因為是柱狀圖，我們先設定選取 rect 這類型 svg 元素，接著 `data(data)` 塞入資料，可以理解成把數據狀態丟進去作為原料，接著使用 `join` 指示這筆資料最終要與 rect 作轉換，但怎麼轉換呢，在 rect 會有的 attribute x, y, height, width 中丟進轉換公式跟對應的資料，這樣就能產生出 Bar Chart 中的一個個 Bar 了。
@@ -312,14 +311,14 @@ const Chart = () => {
 
 每每接觸 D3 Layout 有一種看一個是一個的感覺嗎？現在重新從轉換的角度看，要接觸 D3 Layout 應該要先知道怎麼轉：
 
-1. 了解每一個 Layout Method 需要輸入的資料型態與輸出的對應 SVG
-2. 知道哪一些圖表元素適合直接 DOM 操作、哪些不。
+- 了解每一個 Layout Method 需要輸入的資料型態與輸出的對應 SVG
+- 知道哪一些圖表元素適合直接 DOM 操作、哪些不。
 
-舉個例子，假設今天突然經歷到比較少見的甜甜圈圖，我會先去 [Graph Gallery](https://www.d3-graph-gallery.com/) 或 [Observable](https://observablehq.com/) 比較直覺地看對應到 D3 的哪一種 Layout：
+舉個例子，假設今天突然經歷到比較少見的甜甜圈圖，我會先去 [Graph Gallery](https://www.d3-graph-gallery.com/) 或 [Observable](https://observablehq.com/) 比較直覺地看對應到 D3 的哪一種 Layout。
 
 接著釐清這個 Layout 最終對應的 SVG 為何，需要的資料型態為何，以甜甜圈圖為例，最終產出的資料區塊會是 path，而 path 需要的 input 資料是 path 的路徑，
 
-![](https://imgur.com/iFGqS7d)
+![](https://i.imgur.com/iFGqS7d.png)
 
 另外對應在 D3 的 Layout 是 arc，arc 會產出 path 對應的路徑資料，更前置 arc 需要的 input 是 d3.pie data，pie data 則需要 Array 形式的 key value object ... etc，一路轉換逆推就可以形成這樣的架構。
 
@@ -340,7 +339,7 @@ const radius = Math.min(width, height) / 4 ;
 }));
 ```
 
-綜合以上拆解就能有系統的上手各式各樣的圖表，
+綜合以上拆解就能有系統的上手各式各樣的圖表。
 
 ## 參考資料
 
