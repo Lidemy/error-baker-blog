@@ -174,6 +174,8 @@ function MemberPage() {
 
 此外，還在觀望 react router v6 的讀者可以先觀察一下 [react router github 上 提出的 issue](https://reactrouter.com/) 再做 upgrade。
 
+在閱讀文章時如果有遇到什麼問題，或是有什麼建議，都歡迎留言告訴我，謝謝。😃
+
 ## 參考資料
 
 - [Documentation | react router v6](https://reactrouter.com/docs/en/v6)
