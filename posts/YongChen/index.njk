@@ -1,0 +1,13 @@
+---
+layout: layouts/home.njk
+title: YongChen 
+eleventyExcludeFromCollections: true
+---
+
+<h2>關於我</h2>
+<p>嗨，我是 YongChen</p>
+<h2>文章列表</h2>
+
+{% set postslist = collections.posts %}
+{% set author = 'YongChen' %}
+{% include "author-postslist.njk" %}
