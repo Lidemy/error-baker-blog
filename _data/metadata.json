@@ -86,6 +86,11 @@
       "name": "Tian",
       "intro": "紀錄那些我笨拙可愛的時刻",
       "avatarUrl": "/img/authors/tian.jpg"
+    },
+    "YongChen": {
+      "name": "YongChen",
+      "intro": "程式即創作",
+      "avatarUrl": "/img/authors/yongchen-avatar.png"
     }
   },
   "publisher": {
