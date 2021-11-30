@@ -23,20 +23,20 @@ Hi，大家好！ 前陣子在專案上使用了 NextAuth 實作第三方登入�
 
 ## LINE 的環境設定
 
-首先會需要進入 [Line developer console](https://developers.line.biz/en/)，接著新增一個 provider。在新的 provider 中新增 LINE login 的 channel。在剛剛新增好的 login channel，我們可以拿到 Channel ID 以及 Channel secret，這兩個號碼可以先記著，待會會用到。
+進入 [Line developer console](https://developers.line.biz/en/)，接著新增一個 provider。在新的 provider 中新增 LINE login 的 channel。在剛剛新增好的 login channel，我們可以拿到 Channel ID 以及 Channel secret，這兩個號碼可以先記著，待會會用到。
 接著在 LINE Login settings 中，設定 `Callback URL = http://localhost:{port}/api/auth/callback/line`。這邊視相對應的 port 填入。
 
 ![](/img/posts/ruofan/line-login.png)
 
 ## Google 的環境設定
 
-首先會需要進入 [Google cloud console](https://cloud.google.com/)，新增一個專案。在新的專案中進入 api & services 的 Credentials，新增一個 OAuth client ID，設定 `Authorized JavaScript origins URIs = http://localhost:{port}`; `Authorized redirect URIs = http://localhost:{port}/api/auth/callback/google`，新增成功後也記著這邊拿到的 Client ID 以及 Client secret。
+進入 [Google cloud console](https://cloud.google.com/)，新增一個專案。在新的專案中進入 api & services 的 Credentials，新增一個 OAuth client ID，設定 `Authorized JavaScript origins URIs = http://localhost:{port}`; `Authorized redirect URIs = http://localhost:{port}/api/auth/callback/google`，新增成功後也記著這邊拿到的 Client ID 以及 Client secret。
 
 ![](/img/posts/ruofan/google-login.png)
 
 ## Facebook 的環境設定
 
-首先會需要進入 [Facebook developer](https://developers.facebook.com/)，新增一個 app，在 basic setting 的 domain 新增 `http://localhost:{port}`。接著在右上角按下 create test app ，這是剛剛新增的 app 的測試版。
+進入 [Facebook developer](https://developers.facebook.com/)，新增一個 app，在 basic setting 的 domain 新增 `http://localhost:{port}`。接著在右上角按下 create test app ，這是剛剛新增的 app 的測試版。
 
 ![](</img/posts/ruofan/facebook-login(1).png>)
 
