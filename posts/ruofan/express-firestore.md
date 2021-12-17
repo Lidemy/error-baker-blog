@@ -337,6 +337,12 @@ export default router;
 
 ```
 
+## firestore database
+
+成功新增完資料後，進到 Firestore database 看一下吧！
+這邊可以注意到 id 跟 mongoDB 一樣是自動生成的。
+![](/img/posts/ruofan/firestore-2.png)
+
 ## 小結
 
 這次實作的過程認識了不同的架構設計概念，整體來說蠻有趣的！
