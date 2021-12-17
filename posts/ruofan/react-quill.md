@@ -1,5 +1,5 @@
 ---
-title: 用 Quill 實作 text editor
+title: Example for how to render a quill delta
 date: 2021-11-07
 tags: [Front-end]
 author: Ruofan
