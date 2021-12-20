@@ -1,5 +1,5 @@
 ---
-title: Example for how to render a quill delta
+title: render quill delta 的方式
 date: 2021-11-07
 tags: [Front-end]
 author: Ruofan
