@@ -1,5 +1,5 @@
 ---
-title: Use Fireorm to interact with Cloud Firestore
+title: 用 Fireorm interact with Cloud Firestore
 date: 2022-12-17
 tags: [back-end]
 author: Ruofan
@@ -340,7 +340,6 @@ export default router;
 ## firestore database
 
 成功新增完資料後，進到 Firestore database 看一下吧！
-這邊可以注意到 id 跟 mongoDB 一樣是自動生成的。
 ![](/img/posts/ruofan/firestore-2.png)
 
 ## 小結
