@@ -1,6 +1,6 @@
 ---
 title: 用 Fireorm interact with Cloud Firestore
-date: 2022-12-17
+date: 2021-12-17
 tags: [back-end]
 author: Ruofan
 layout: layouts/post.njk
@@ -119,13 +119,17 @@ export default class CompanySchema
   implements ICompanySchema
 {
   id: string;
-  uuid: string;
   name: string;
 
   stores: Array<string>;
 }
 
 ```
+##### 從上面這段程式碼，看一下我們如何使用 fireorm 簡便的定義 schema
+-  在範例中 companys collection 中預計會存放 name, stores 等資料，但是為什麼會有一個 type 是 string 的 id 呢？ 因為這是 Firestore 會用 id 來辨識 document!想了解更多，推薦看 Firebase [官方文件](https://firebase.google.com/docs/firestore/manage-data/add-data)。
+
+- 在 Firestore 中我們儲存資料在 document，而 documents 組成 Collection! 這邊 fireorm 使用了 decorate 的方式宣告 Collection。 fireorm 在背後做了哪些事呢？ 他會讓我們宣告的 Collection 中的 instance 變成 Firestore 的 Document！想了解更多，推薦看 Fireorm [官方文件](https://fireorm.js.org/#/globals?id=collection)。
+
 
 #### 實作 interface
 ```typescript
@@ -153,13 +157,11 @@ export interface createCompanyRes
   extends Omit<
     ICompanySchema,
     'createdAt' | 'updatedAt' | 'deletedAt' | 'paranoid'
-  > {
-
-}
+  > {}
 ```
 #### 實作 repository
 
-##### 什麼是 InversifyJS ?
+##### 在開始之前先來看一下，什麼是 InversifyJS ?
 以下為 InversifyJS [官方文件](https://inversify.io/) 上對自己的介紹：
 
 > InversifyJS is a lightweight (4KB) inversion of control (IoC) container for TypeScript and JavaScript apps. A IoC container uses a class constructor to identify and inject its dependencies.
@@ -212,6 +214,10 @@ export class CompanyRepository implements ICompanyRepository {
 }
 
 ```
+###### 從上面這段程式碼，看一下我們如何使用 fireorm 在 getRepository 中提供的 CRUD 方法
+- 在 Repository 方面 fireorm 應用了 [Repository Pattern](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/microservice-ddd-cqrs-patterns/infrastructure-persistence-layer-design)，因此上方的 companyTranRepository 可以直接使用 create 方法在 Firestore 的 collection 中新增 documents。
+
+- 使用 `@injectable` & `@inject` decorators 宣告 dependencies。
 
 #### 實作 service
 
@@ -274,6 +280,8 @@ container.bind<CompanyRepository>('CompanyRepository').to(CompanyRepository);
 export default container;
 
 ```
+從上面這段程式碼可以看到，在 inversify.config.ts 中，我們新增和定義了 Container。
+
 
 #### 實作 controller
 
@@ -318,6 +326,7 @@ export class StoreController {
 export default StoreController;
 
 ```
+從上面這段程式碼可以看到，controller 中我們將 container 使用 `get<T>` 方法，在這邊 resolve 了 dependency。
 #### 實作 route
 
 ```typescript
