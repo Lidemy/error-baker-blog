@@ -22,8 +22,7 @@ mono 的意思是 single，repo 是 repository 的縮寫，這個意思就是在
 
 **_monorepo_**
 
-```
-.
+```ts
 ├── docs                # Documents
 │   ├── api             # API spec
 │   ├── archived        # Archived documents
@@ -43,7 +42,7 @@ mono 的意思是 single，repo 是 repository 的縮寫，這個意思就是在
 
 **_polyrepo_**
 
-```
+```ts
 ui
 ├── docs                # Documents
 │   └── ...
