@@ -126,9 +126,9 @@ export default class CompanySchema
 
 ```
 ##### 從上面這段程式碼，看一下我們如何使用 fireorm 簡便的定義 schema
--  在範例中 companys collection 中預計會存放 name, stores 等資料，但是為什麼會有一個 type 是 string 的 id 呢？ 因為這是 Firestore 會用 id 來辨識 document!想了解更多，推薦看 Firebase [官方文件](https://firebase.google.com/docs/firestore/manage-data/add-data)。
+-  在範例中 companys collection 中預計會存放 name, stores 等資料，但是為什麼會有一個 type 是 string 的 id 呢？ 因為這是 Firestore 會用 id 來辨識 document！ 想了解更多，推薦看 Firebase [官方文件](https://firebase.google.com/docs/firestore/manage-data/add-data)。
 
-- 在 Firestore 中我們儲存資料在 document，而 documents 組成 Collection! 這邊 fireorm 使用了 decorate 的方式宣告 Collection。 fireorm 在背後做了哪些事呢？ 他會讓我們宣告的 Collection 中的 instance 變成 Firestore 的 Document！想了解更多，推薦看 Fireorm [官方文件](https://fireorm.js.org/#/globals?id=collection)。
+- 在 Firestore 中我們儲存資料在 document，而 documents 組成 Collection！ 這邊 fireorm 使用了 decorate 的方式宣告 Collection。 fireorm 在背後做了哪些事呢？ 他會讓我們宣告的 Collection 中的 instance 變成 Firestore 的 Document！想了解更多，推薦看 Fireorm [官方文件](https://fireorm.js.org/#/globals?id=collection)。
 
 
 #### 實作 interface
