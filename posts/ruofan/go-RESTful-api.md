@@ -1,5 +1,5 @@
 ---
-title: a simple rest api with Go
+title: a simple RESTful api with Go
 date: 2022-01-01
 tags: [back-end]
 author: Ruofan
