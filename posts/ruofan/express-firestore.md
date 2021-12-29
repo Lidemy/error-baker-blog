@@ -18,7 +18,7 @@ Hi，大家好！ 前陣子在研究專案上從 MySQL migrate 到 Cloud Firesto
 
 > Cloud Firestore is a flexible, scalable database for mobile, web, and server development from Firebase and Google Cloud.
 
-簡單來說，Cloud Firestore 是一個有彈性與擴展性的 NoSQL cloud database。想了解更多的話，推薦看 Cloud Firestore [官方文件](https://firebase.google.com/docs/firestore)。
+簡單來說，Cloud Firestore 是一個有彈性與擴展性的 NoSQL cloud database。推薦看 Cloud Firestore [官方文件](https://firebase.google.com/docs/firestore) 瞭解更多。
 
 ## 什麼是 Fireorm ?
 以下為 Fireorm [官方文件](https://fireorm.js.org/#/) 上對自己的介紹：
@@ -43,7 +43,7 @@ Hi，大家好！ 前陣子在研究專案上從 MySQL migrate 到 Cloud Firesto
 
 先來看一下如何 initialize firebase。
 
-> 這邊特別值得注意的是 筆者使用的 firebase-admin 版本是 v10，引用的方法跟 v9 有些許的不同，想了解更多的話，推薦看 [官方文件](https://firebase.google.com/docs/admin/migrate-node-v10)。
+> 這邊特別值得注意的是 筆者使用的 firebase-admin 版本是 v10，引用的方法跟 v9 有些許的不同，推薦看 [官方文件](https://firebase.google.com/docs/admin/migrate-node-v10) 瞭解更多。
 
 剛剛記下來的 project 名稱跟 service account key 這邊使用在 initialize firebase。
 ```typescript
@@ -126,9 +126,9 @@ export default class CompanySchema
 
 ```
 ##### 從上面這段程式碼，看一下我們如何使用 fireorm 簡便的定義 schema
--  在範例中 companys collection 中預計會存放 name, stores 等資料，但是為什麼會有一個 type 是 string 的 id 呢？ 因為這是 Firestore 會用 id 來辨識 document!想了解更多，推薦看 Firebase [官方文件](https://firebase.google.com/docs/firestore/manage-data/add-data)。
+-  在範例中 companys collection 中預計會存放 name, stores 等資料，但是為什麼會有一個 type 是 string 的 id 呢？ 因為這是 Firestore 會用 id 來辨識 document！ 推薦看 Firebase [官方文件](https://firebase.google.com/docs/firestore/manage-data/add-data) 瞭解更多。
 
-- 在 Firestore 中我們儲存資料在 document，而 documents 組成 Collection! 這邊 fireorm 使用了 decorate 的方式宣告 Collection。 fireorm 在背後做了哪些事呢？ 他會讓我們宣告的 Collection 中的 instance 變成 Firestore 的 Document！想了解更多，推薦看 Fireorm [官方文件](https://fireorm.js.org/#/globals?id=collection)。
+- 在 Firestore 中我們儲存資料在 document，而 documents 組成 Collection！ 這邊 fireorm 使用了 decorate 的方式宣告 Collection。 fireorm 在背後做了哪些事呢？ 他會讓我們宣告的 Collection 中的 instance 變成 Firestore 的 Document！推薦看 Fireorm [官方文件](https://fireorm.js.org/#/globals?id=collection) 瞭解更多。
 
 
 #### 實作 interface
@@ -166,13 +166,13 @@ export interface createCompanyRes
 
 > InversifyJS is a lightweight (4KB) inversion of control (IoC) container for TypeScript and JavaScript apps. A IoC container uses a class constructor to identify and inject its dependencies.
 
-簡單來說，InversifyJS 讓我們可以簡便的實作 Dependency injection。想了解更多的話，推薦看 InversifyJS [官方文件](https://inversify.io/)。
+簡單來說，InversifyJS 讓我們可以簡便的實作 Dependency injection。 推薦看 InversifyJS [官方文件](https://inversify.io/) 瞭解更多。
 
 ##### 什麼是 Dependency injection ?
 
 > Dependency injection (DI) is a very simple concept that aims to decouple components of your software and ease their integration and testing.
 
-簡單來說，Dependency injection 的概念是讓我們在設計架構上可以提高可測試性與重用性 。想了解更多的話，推薦看 [Introduction to Design Patterns and Dependency Injection](https://hackernoon.com/introduction-to-design-patterns-and-dependency-injection)。
+簡單來說，Dependency injection 的概念是讓我們在設計架構上可以提高可測試性與重用性 。 推薦看 [Introduction to Design Patterns and Dependency Injection](https://hackernoon.com/introduction-to-design-patterns-and-dependency-injection) 瞭解更多。
 
 ```typescript
 import {

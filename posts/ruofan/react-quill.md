@@ -267,7 +267,7 @@ export default function Product() {
 在實作過程中反覆審視是否是目前的最佳作法，整體來說蠻有趣的！
 在閱讀文章時如果有遇到什麼問題，或是有什麼建議，都歡迎留言告訴我，謝謝。😃
 
-- [Github | Repo: Next-app](https://github.com/ruofanwei/next-app)
+- [Github | Repo: Next-app](https://github.com/ruofanwei/next-app/tree/feature/quill-delta)
 
 ## 參考資料
 
