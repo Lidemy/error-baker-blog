@@ -96,7 +96,7 @@ type Director struct {
 #### 實作 main func
 1. 透過 `append function` 來新增兩筆假資料進入 `movies array`。
 2. 透過 `net/http package` 中的 `ListenAndServe function starts an HTTP server`
-    - `func ListenAndServe(addr string, handler Handler) error` 第一個參數接收一個 type 是 string 的 addr, 第二個參數接收一個 type 是 `Handler` 的 handler 處理進來的 request。
+    - `func ListenAndServe(addr string, handler Handler) error` 第一個參數接收一個 type 是 `string` 的 addr, 第二個參數接收一個 type 是 `Handler` 的 handler 處理進來的 request。
 3. `gorilla/mux package` 中 `mux.Router `會讓進來的 request 對應到正確的 router，並且會去 call 對應到的 route 的 handler。
     - `r := mux.NewRouter()` 在這邊可以看到 `:=` 代表同時做了宣告和賦值兩件事。
 4. `log.Fatal(http.ListenAndServe(":8000", r))` 如果有非預期的錯誤出現，在這邊會透過 `log.Fatal()` 印出來。
@@ -152,7 +152,7 @@ func main() {
     因此在這邊可以使用 `ServeHTTP()` 的方法，從相關的 [source code](https://github.com/golang/go/blob/f8a8a73096a4d36ce7d35e9643db89e669bbee1f/src/net/http/server.go#L2076) 可以看到這邊實作的方式相當簡潔。
 
     - 透過 `encoding/json package` 的 `func NewEncoder(w io.Writer) *Encoder` 方法讓 struct 解析成 Json。
-2. `deleteMovie func` 中可以看到使用了 `gorilla/mux package `的 `mux.Vars()` 方法取得我們在 route 設定的 id。
+2. `deleteMovie func` 中可以看到使用了 `gorilla/mux package` 的 `mux.Vars()` 方法取得我們在 route 設定的 id。
     - 在迴圈中透過 `range array`，我們可以拿到 array 中的 index 跟 value。
     - 這邊的 `movies[:index]` 透過 `slices` 方法將目標 index 移除。
 
