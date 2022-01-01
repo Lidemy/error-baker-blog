@@ -10,8 +10,8 @@ layout: layouts/post.njk
 <!-- 師父領進門，修行在個人，你的 CLI 是否還有在修行？ -->
 <!-- summary -->
 
-<!-- ![](https://i.imgur.com/PfIQ0Lq.png)
-> 圖片來源：我的 window terminal (imgur) -->
+![](https://i.imgur.com/PfIQ0Lq.png)
+> 圖片來源：我的 window terminal (imgur)
 
 ### 前言
 
