@@ -1,7 +1,7 @@
 ---
 title: 等等我還想學 CLI - 微進階的 CLI
 date: 2022-01-02
-tags: [javaScript, CLI]
+tags: [JavaScript, CLI]
 author: benben
 layout: layouts/post.njk
 ---
