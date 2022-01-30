@@ -16,7 +16,7 @@ https://blog.errorbaker.tw/
 ```
 npm install
 npm run watch
-``` 
+```
 
 ## 部署
 
@@ -84,7 +84,7 @@ css/main.css 所有的樣式都在裡面，有新增的都放在最下面
 
 ## 文章規範
 
-### Tags 
+### Tags
 
 - tags 採用 kabab case 來命名 e.g. back-end
 - 若遇到有連詞或分詞疑問，依循前者來決定 e.g. backend vs back-end，如果已經有人使用 backend 則使用 backend。
