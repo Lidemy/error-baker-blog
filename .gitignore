@@ -4,5 +4,6 @@ node_modules/
 js/min.js
 js/min.js.map
 .vscode/
+.idea/
 .netlify/
 export
