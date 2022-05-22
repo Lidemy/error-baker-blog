@@ -49,7 +49,7 @@ function onExport() {
 ![](/img/posts/ruofan/saucelabs.svg)
 圖片來源： [saucelabs](https://app.saucelabs.com/open_sauce/user/sheetjs/tests/vdc)
 
-#### 從 source code 來觀察 sheetJS 背後的實作
+#### 從 [source code](https://github.com/SheetJS/sheetjs/blob/b7d3eae3b7a02de1d03f0e627140c616443e40b0/bits/90_utils.js#L252) 來觀察 sheetJS 背後的實作
 
 ```javascript
 function onExport() {
@@ -63,11 +63,22 @@ function onExport() {
 }
 ```
 
-- [`json_to_sheet`](https://github.com/SheetJS/sheetjs/blob/b7d3eae3b7a02de1d03f0e627140c616443e40b0/bits/90_utils.js#L252) 透過 [`sheet_add_json Fn`](https://github.com/SheetJS/sheetjs/blob/b7d3eae3b7a02de1d03f0e627140c616443e40b0/bits/90_utils.js#L192) 實作
+- [json_to_sheet](https://github.com/SheetJS/sheetjs/blob/b7d3eae3b7a02de1d03f0e627140c616443e40b0/bits/90_utils.js#L252) 透過 [sheet_add_json Fn](https://github.com/SheetJS/sheetjs/blob/b7d3eae3b7a02de1d03f0e627140c616443e40b0/bits/90_utils.js#L192) 實作
   傳入的資料格式是 `array of objects`， xlsx 欄位的順序透過 `Object.keys` 來排序
+  ```javascript
+  function json_to_sheet(js/*:Array<any>*/, opts)/*:Worksheet*/ { return sheet_add_json(null, js, opts); }
+  ```
 
-- [`writeFileXLSX`](https://github.com/SheetJS/sheetjs/blob/b7d3eae3b7a02de1d03f0e627140c616443e40b0/bits/98_exports.js#L12) 透過 [`writeFileSyncXLSX`](https://github.com/SheetJS/sheetjs/blob/b7d3eae3b7a02de1d03f0e627140c616443e40b0/bits/88_write.js#L188) 實作
-  在 `writeFileSyncXLSX Fn` 中使用的 [`s2ab Fn`](https://github.com/SheetJS/sheetjs/blob/b7d3eae3b7a02de1d03f0e627140c616443e40b0/bits/05_buf.js#L32) 這邊的實作使用到了 `new ArrayBuffer` ，稍微研究了一下。
+- [writeFileXLSX](https://github.com/SheetJS/sheetjs/blob/b7d3eae3b7a02de1d03f0e627140c616443e40b0/bits/98_exports.js#L12) 透過 [writeFileSyncXLSX](https://github.com/SheetJS/sheetjs/blob/b7d3eae3b7a02de1d03f0e627140c616443e40b0/bits/88_write.js#L188) 實作
+  在 [writeSyncXLSX Fn](https://github.com/SheetJS/sheetjs/blob/b7d3eae3b7a02de1d03f0e627140c616443e40b0/bits/88_write.js#L112) 中使用的 [s2ab Fn](https://github.com/SheetJS/sheetjs/blob/b7d3eae3b7a02de1d03f0e627140c616443e40b0/bits/05_buf.js#L32) 這邊的實作使用到了 `new ArrayBuffer` ，稍微研究了一下。
+  ```javascript
+  function s2ab(s/*:string*/)/*:any*/ {
+	if(typeof ArrayBuffer === 'undefined') return s2a(s);
+	var buf = new ArrayBuffer(s.length), view = new Uint8Array(buf);
+	for (var i=0; i!=s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+	return buf;
+  }
+  ```
 
 下方是來自 [mdn](https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer) 的介紹
 > The ArrayBuffer is a data type that is used to represent a generic, fixed-length binary data buffer.
