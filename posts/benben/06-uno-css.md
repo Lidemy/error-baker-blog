@@ -23,7 +23,7 @@ image: https://i.imgur.com/XRsgu8H.png
 
 > 圖片來源： [Uno CSS Github](https://github.com/unocss/unocss)
 
-簡單說，他是一個 **Tailwind** 的替代 CSS 解決方案，沒有繁鎖的設定（~~我沒有說 Tailwind 的設定很繁鎖喔~~），可以直接使用，你可以說他抄襲 Tailwind ，但是他還有更強大的功能，例如：`正則表達式` 的配置 等等（這邊容筆者先賣的關子），看完這篇或許會有不一樣的想法喔！
+簡單說，他是一個 **Tailwind** 的替代 CSS 解決方案，沒有繁瑣的設定（~~我沒有說 Tailwind 的設定很繁瑣喔~~），可以直接使用，你可以說他抄襲 Tailwind ，但是他還有更強大的功能，例如：`正則表達式` 的配置 等等（這邊容筆者先賣的關子），看完這篇或許會有不一樣的想法喔！
 
 比起目前前端的三大框架， CSS 的寫法百百種（SASS/SCSS, Bootstrap, Tailwind, WindyCSS, CSS in JS 系列 ... 等），那要學還是不學 Uno CSS？我覺得就看個人囉！但是如果說，你已經會了 Bootstrap 或是 Tailwind 了，那麼學習 Uno CSS 非常 **直覺** ，因為 Uno CSS 整合了這些習慣用法！
 
@@ -31,7 +31,7 @@ image: https://i.imgur.com/XRsgu8H.png
 
 ### TL;DR
 
-> 成為工程師時，學到的新潮用語 Too Long; Don't Read
+> 成為工程師時，學到的新潮用語 Too Long; Didn't Read
 
 剛剛說學習 Uno CSS 很直覺？怎麼說呢？以 Tailwind 為例，剛接觸 Tailwind 的開發者（甚至熟練的開發者也還是常碰到），在開發一定遇到的錯折。
 
