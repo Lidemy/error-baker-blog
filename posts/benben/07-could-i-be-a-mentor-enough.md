@@ -1,5 +1,5 @@
 ---
-title: RE: [前端引路人計劃] - 我也能夠當個 mentor 嗎？
+title: RE [前端引路人計劃] - 我也能夠當個 mentor 嗎？
 date: 2022-06-31
 tags: [mentor, Front-end]
 author: benben
