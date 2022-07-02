@@ -11,7 +11,7 @@ image: https://i.imgur.com/XRsgu8H.png
 <!-- 用 Uno CSS 統一天下 CSS！？ -->
 <!-- summary -->
 
-### Intro
+## Intro
 
 嗨嗨！又是我！
 
@@ -19,7 +19,7 @@ image: https://i.imgur.com/XRsgu8H.png
 
 那麼直接進入正題，這次要分享的是：**Uno CSS** ！
 
-![](https://i.imgur.com/LQrk0DN.png)
+![uno css logo](https://i.imgur.com/LQrk0DN.png)
 
 > 圖片來源： [Uno CSS Github](https://github.com/unocss/unocss)
 
@@ -29,7 +29,7 @@ image: https://i.imgur.com/XRsgu8H.png
 
 有點心動了嗎？還是還在猶豫呢？那麼我稍為介紹一下作者：[antfu (Anthony Fu)](https://github.com/antfu) ，如果是熟悉 Vue 生態圈的讀者們，一定聽過他的大名，他是 Vue、Vite 核心成員之一；Windi CSS、VueUse 開發者之一，我也是學習 Vue 才開始 follow 他的，大大呢非常的狂，有機會再寫一篇介紹 antfu 大大的文章。
 
-### TL;DR
+## TL;DR
 
 > 成為工程師時，學到的新潮用語 Too Long; Didn't Read
 
@@ -38,27 +38,37 @@ image: https://i.imgur.com/XRsgu8H.png
 例如：
 
 > in tailwind css
+
 ```html
 <div class="w-25"></div>
 <!-- error!: no `w-25` class -->
+<!-- notice!: this `w-25` class mean 6.25rem, because 1 : 0.25rem in tailwind -->
 ```
 
-首先，在 tailwind 中，沒有 `w-25` 這個 class ，因為他通常是 2 的倍數，1, 2, 3, 4 ,5, 6, 12, 24, 48, 60, 96 ... 等（有可能還會漏掉）。
+首先，在 tailwind 中，沒有 `w-25` 這個 class ，因為他通常是 2 的倍數，1, 2, 3, 4 ,5, 6, 12, 24, 48, 60, 96 ... 等（有可能還會漏掉），有個比較要注意的小地方，這邊的 `w-25` 指的是 `6.25 rem` 的寬，因為在 tailwind 中 w 的單位是 `1 : 0.25 rem`。
 
-再來，還很常碰到一種狀況，你不知道數字代表的單位是什麼，看同一個例子：`w-25` 的 25 是什麼？%？px？rem？0.5rem？除非去看文件或裝 tailwind 的插件，才知道是什麼，而且常常不同的單位都不一樣，`m-4`, `border-3`, `text-lg`, `shadow-sm` ，你能夠用看得就說出分別是多少嗎？如果能夠直接說出來的人，筆者給你拍拍手。
+再來，還很常碰到一種狀況，你不知道數字代表的單位是什麼，看同一個例子：`w-25` 的 25 是什麼單位？%？px？rem？0.25rem？除非去看文件或裝 tailwind 的插件，才知道是什麼，而且常常不同的單位都不一樣，`m-4`, `border-3`, `text-lg`, `shadow-sm` ，你能夠用看得就說出分別是多少嗎？如果能夠直接說出來的人，筆者給你拍拍手。
 
 最後，如果我就是要用 `w-25` 這個 class 怎麼辨？必須要去翻文件找設定檔，然後加了一堆設定檔，一時加一時爽，一直加一直爽，最後你的設定檔可能比你自己寫 CSS 之類的還來的多，這時的你一定會冒出：我為什麼要用 tailwind ？還不如自己寫？這是對於新手如我來說很常碰到的狀況，但這部分隨著熟悉度還會越來越好的啦！
 
 另一方面，來看看 Uno CSS 的情況：
 
 > in uno css
+
 ```html
 <div class="w-25"></div>
 <!-- ok!: auto generate `w-25` class -->
+<!-- notice!: this `w-25` class mean 6.25rem, uno css take care this for us -->
 
 <!-- If I want to `25px` width -->
 <div class="w-25px"></div>
 <!-- ok!: auto generate `w-25px` class -->
+<!-- notice!: this `w-25px` class mean 25px, uno css take care this for us without other syntax -->
+
+<!-- If I want to `25rem` width -->
+<div class="w-25rem"></div>
+<!-- ok!: auto generate `w-25rem` class -->
+<!-- notice!: this `w-25rem` class mean 25rem, uno css take care this for us without other syntax -->
 ```
 
 用了 Uno CSS 上述的問題全部解決：數字問題、單位問題、設定檔問題。
@@ -70,12 +80,13 @@ image: https://i.imgur.com/XRsgu8H.png
 再來牛刀小試一下：
 
 > in uno css
+
 ```html
 <div class="w-777"></div>
 <!-- ok!: auto generate `w-777` class -->
 ```
 
-![](https://i.imgur.com/4Rnomte.png)
+![uno css class](https://i.imgur.com/4Rnomte.png)
 
 > 圖片來源： 筆者的 VScode
 
@@ -87,7 +98,7 @@ image: https://i.imgur.com/XRsgu8H.png
 
 > 延伸閱讀：[簡易 Regular Expression 入門指南 - Huli](https://blog.huli.tw/2020/05/16/introduction-to-regular-expression/)
 
-### Efficacy
+## Efficacy
 
 光上述正則表達式的能功就打動我的心了！其實自動推導的功能在 Windi CSS 就有了，但 Uno CSS 在效能方面也是非常之神速啊！
 
@@ -102,6 +113,7 @@ unocss       v0.30.6             20.98 ms / delta.      8.57 ms (x1.00)
 tailwindcss  v3.0.23           1621.38 ms / delta.   1608.96 ms (x187.79)
 windicss     v3.5.1            1855.86 ms / delta.   1843.45 ms (x215.16)
 ```
+
 > 資料來源：[uno css github](https://github.com/unocss/unocss)
 
 哇！這速度可以說是海放所有人了吧！
@@ -115,6 +127,7 @@ windicss     v3.5.1            1855.86 ms / delta.   1843.45 ms (x215.16)
 例如： ml-3 (Tailwind), ms-2 (Bootstrap), ma4 (Tachyons), and mt-10px (Windi CSS) 全部都可以用啦！
 
 > in Uno CSS
+
 ```css
 .ma4 { margin: 1rem; }
 .ml-3 { margin-left: 0.75rem; }
@@ -125,7 +138,7 @@ windicss     v3.5.1            1855.86 ms / delta.   1843.45 ms (x215.16)
 
 這也是為什麼筆者說，只要學了 Tailwind, Bootstrap ... 等，在學習 Uno CSS 的時候會很快了，因為你已經熟悉了某些樣式的寫法了，但是如果 `只學了 Bootstrap 再學 Tailwind` 或是 `只學了 Tailwind 再學 Bootstrap` 都會多一個時間成本！因為不同工具寫法略有不同。
 
-### Document
+## Document
 
 一個好的 Library 怎麼可以沒有文件！
 
@@ -150,7 +163,7 @@ React 的官網 - [React](https://reactjs.org/) 目前 React `18.1.0` 版（約 
 
 回來看看這次 Uno CSS 的文件吧！
 
-![](https://i.imgur.com/sdBwpo0.png)
+![uno css document](https://i.imgur.com/sdBwpo0.png)
 
 > 圖片來源：[UnoCSS Interactive Docs](https://uno.antfu.me/)
 
@@ -158,7 +171,7 @@ React 的官網 - [React](https://reactjs.org/) 目前 React `18.1.0` 版（約 
 
 來查查剛剛的 `w-25` class ...
 
-![](https://i.imgur.com/qKurIGO.png)
+![uno css document search](https://i.imgur.com/qKurIGO.png)
 
 > 圖片來源：[UnoCSS Interactive Docs](https://uno.antfu.me/)
 
@@ -166,7 +179,7 @@ React 的官網 - [React](https://reactjs.org/) 目前 React `18.1.0` 版（約 
 
 真的是目前為止 DX 體驗最棒的文件，開發時間不多的話查到想要的資訊就可以閃了，時間多的話可以深入了解一下 CSS 的原理、複習一下 regex 用法等等，真的閒到發荒的話（~~可以跟我說是哪間公司嗎~~），可以試試按 `random` 看看。
 
-### Summary
+## Summary
 
 在前端的路上，一路從學習 React 到默默變成 Vue 形狀了，我覺得蠻棒的，可以同時學習兩邊的一些技巧，沒有哪個好哪個不好，優缺點可以一起比較，在前端這個快速發展的領域中，更要保持開放的心態，通常會去爭論哪個框架好的，通常也只有學那一個框架，少有看到有人各框架都精通了，然後說哪個框架最棒，各有不同的 `trade off` ，爭論該用哪個框架，應該已經是個偽議題了，就如你不會說我學了 HTML ，不學 CSS 一樣，只是你要先學哪個？又要學得多深？
 
@@ -178,7 +191,7 @@ React 的官網 - [React](https://reactjs.org/) 目前 React `18.1.0` 版（約 
 
 個人是覺得，不管有沒有要用都可以觀注一下！想了解更多的話，非常推薦看一下 `Uno CSS` 作者 AntFu 寫的這一篇：[重新构想原子化 CSS](https://antfu.me/posts/reimagine-atomic-css-zh)，就算沒有要用 `Uno CSS` 也可以學到很多東西。
 
-### References
+## Ref
 
 - [UnoCSS Interactive Docs](https://uno.antfu.me/)
 - [Windi CSS](https://windicss.org/)
@@ -188,7 +201,7 @@ React 的官網 - [React](https://reactjs.org/) 目前 React `18.1.0` 版（約 
 - [Vite](https://vitejs.dev/)
 - [重新构想原子化 CSS](https://antfu.me/posts/reimagine-atomic-css-zh)
 
-###### 免責聲名
+> 免責聲名
 
 以上均為筆者自身經驗，難免小有主觀意見，供讀者們參考，也歡迎分享經驗交流。
 如果有錯誤的地方再請大大們指正，筆者會立刻修改，再次感謝大家！
