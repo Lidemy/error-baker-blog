@@ -4,16 +4,18 @@ date: 2022-01-02
 tags: [JavaScript, CLI]
 author: benben
 layout: layouts/post.njk
+image: https://i.imgur.com/PfIQ0Lq.png
 ---
 
 <!-- summary -->
 <!-- 師父領進門，修行在個人，你的 CLI 是否還有在修行？ -->
 <!-- summary -->
 
-![](https://i.imgur.com/PfIQ0Lq.png)
+![window terminal](https://i.imgur.com/PfIQ0Lq.png)
+
 > 圖片來源：我的 window terminal (imgur)
 
-### 前言
+## 前言
 
 （因為工作太忙，拖稿中）
 
@@ -35,7 +37,7 @@ Lidemy 第五期的求職期到 12/12 ，也要來到最後的句點了，不少
 
 > 以下正題
 
-### 師父領進門
+## 師父領進門
 
 一開始，會接觸 CLI （Command-Line interface）應該是在 Lidemy 的中，最初的 week1，當中老師簡單的介紹 CLI 的操作，原來只用鍵盤就可以做這邊多事！我對此深深著迷，因為離 **心中想像中的駭客** 又更接近了，你說有點中二（？）我敢說你小時候一定也想像過，但有時候就是這種微不足道的小動力反而一直推著你前進。
 
@@ -47,8 +49,7 @@ Lidemy 第五期的求職期到 12/12 ，也要來到最後的句點了，不少
 
 > 延伸學習：[Command Line 超新手入門 | Lidemy](https://www.lidemy.com/p/cmd101-command-line)
 
-
-### 先求能用就好！
+## 先求能用就好
 
 工作上其實用滑鼠就可以做到很多事了，但有時候非 CLI 不可的時候，你就會覺得「書到用時方恨少」，例如：需要遠端操作主機的時候（好吧，純前端工程師可能真的不太用到）。
 
@@ -73,11 +74,12 @@ Lidemy 第五期的求職期到 12/12 ，也要來到最後的句點了，不少
 
 很多指令都是有意議的，看完上面的 `whoami` ，是不是不用特別記，你下次就記得了，是吧？
 
-### 修行在個人
+## 修行在個人
 
 再來之後會用到 CLI 的地方大概就是專案了吧，很多文件也都會寫一點基本的用法。
 
 例如：
+
 ```bash
 # 開啟專案
 npm run start
@@ -101,7 +103,7 @@ npm run watch
 - rm
   刪除檔案
 
-### 微進階的 CLI
+## 微進階的 CLI
 
 上以的基本的部分都熟悉了，就可以尋找自己喜歡的指令，然後慢慢擴充他，很像玩遊戲練技能的感覺，哇今天又多學了一個指令，感覺像是多學了一個技能，這樣才能一直往前，不會固定在這邊。
 
@@ -126,10 +128,9 @@ npm run watch
 如果也有興趣的朋友也可以 google 一下這兩個關鍵字，應該也是很多資源，之是都很摧眠就是了，例如：git 只會 pull/push 的話真的很可惜，還有很多強大的功能、vim 的話，可能只有會用的人才知道他的好
 
 > 延伸學習：[Git - document](https://git-scm.com/doc)
-
 > 延伸學習：[Vim - document](https://www.vim.org/docs.php)
 
-### 總結
+## 總結
 
 以上稍為簡單地介紹了一些 CLI ，當然這水還很深，等著你我去探索，雖然我也還只是個小小的 junior ，但我認為熟悉 CLI 是前往 senior 的門票之一，除了效率之外，CLI 也是跨入後端的必備技能，所以當然不能只停留在這！
 
@@ -137,12 +138,12 @@ npm run watch
 
 為什麼要學這個？因為我開心、我喜歡這個，比起盲目的去學一堆，我認為無壓力去學一個 `whoami` 指令開心多了，你說是吧？
 
+## Ref
 
-### 參考資料 Ref.
 - [鳥哥私房菜](http://linux.vbird.org/)
 - [Git - document](https://git-scm.com/doc)
 - [Vim - document](https://www.vim.org/docs.php)
 
-###### 免責聲名
+> 免責聲名
 以上內容均非業配，均為筆者自身經驗，難免小有主觀意見，請讀者自行參考閱讀，也歡迎分享經驗。
 如有侵權再麻煩告知，筆者立刻移除，再次感謝大家。
