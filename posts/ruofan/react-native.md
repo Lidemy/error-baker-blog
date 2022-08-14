@@ -33,7 +33,7 @@ Hi，大家好！ 前陣子在設置 react native 不同 simulator 的環境時�
 
 ## 什麼是 `Expo Go` ？
 
-下方是 [react native 官方文件](https://docs.expo.dev/get-started/installation/#2-expo-go-app-for-ios-and) 上對於 Expo 的介紹：
+下方是 [react native 官方文件](https://docs.expo.dev/get-started/installation/#2-expo-go-app-for-ios-and) 上對於 `Expo Go` 的介紹：
 >The fastest way to get up and running is to use the Expo Go client app on your iOS or Android device. It allows you to open up apps served through Expo CLI and run your projects faster when developing them. It is available on both the iOS App Store and Android Play Store.
 
 透過 `Expo Go` 可以直接在手機上將專案跑起來。
