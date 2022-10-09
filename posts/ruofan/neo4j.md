@@ -87,7 +87,7 @@ CREATE CONSTRAINT ON (n:Movie) ASSERT (n.title) IS UNIQUE
 
 ## 哪些資料不適合使用 neo4j 儲存？
 
-圖檔和影片檔 neo4j 官方建議處存在 aws s3，建議 node 儲存 s3 的 url 就好。
+圖檔和影片檔 neo4j 官方建議存在 aws s3，node 儲存 s3 的 url 就好。
 
 
 ## 總結
