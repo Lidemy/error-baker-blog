@@ -60,7 +60,7 @@ Hi 大家好！ 前陣子到了新環境花了些時間適應，日常的學習�
 
 >Cypher is a declarative graph query language that allows for expressive and efficient data querying in a property graph.
 
-```nosql
+```c
 # 以下方 query 為例可以看到這邊寫了一個 query 去取得在 2005年之後發行的所有電影。
 Match (m:Movie) where m.released > 2005 RETURN m
 
