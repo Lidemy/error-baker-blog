@@ -92,7 +92,7 @@ CREATE CONSTRAINT ON (n:Movie) ASSERT (n.title) IS UNIQUE
 
 ## 總結
 
-閱讀文獻的過程中花了許多時間在理解 pwa 以及 service worker，整體來說蠻有趣的！
+在準備 tech sharing 的過程中不斷的梳理如何表達得更清楚也是很棒的磨練呢！
 在閱讀文章時如果有遇到什麼問題，或是有什麼建議，都歡迎留言告訴我，謝謝。😃
 
 ## 參考資料
