@@ -1,5 +1,5 @@
 ---
-title: At a glance of Noe4j
+title: At a glance of Neo4j
 date: 2022-10-09
 tags: [back-end]
 author: Ruofan
