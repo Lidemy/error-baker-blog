@@ -17,14 +17,14 @@ Hi 大家好！ 前陣子到了新環境花了些時間適應，日常的學習�
 <!-- more -->
 
 >以下是這篇文章會談到的內容
-[No sql overview](#no-sql-overview)
+[NoSQL overview](#nosql-overview)
 [Graph database](#graph-database)
 [Neo4j](#neo4j)
 
 
-## No sql overview
+## NoSQL overview
 
-在談什麼是 graph DB 之前，先帶大家總覽不同類型的 database，有別於一般常見的關聯式資料庫，NoSQL (Not Only SQL) 依據不同的資料儲存型態又可細分為下方圖中的幾種類型。
+在談什麼是 graph DB 之前，先帶大家總覽不同類型的 database，有別於一般常見的關聯式資料庫，NoSQL (Not Only SQL) 依據不同的型態又可細分為下方圖中的幾種類型。
 
 ![](/img/posts/ruofan/sql-no-sql.png)
 
