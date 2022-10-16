@@ -145,5 +145,12 @@ Library 跟 Framework 簡單說都是可以使用別人寫好的程式碼，但�
 - [Is React a Library or a Framework? Here's Why it Matters](https://www.freecodecamp.org/news/is-react-a-library-or-a-framework/)
 
 > 免責聲名
-以上內容均非業配，均為筆者自身經驗，難免小有主觀意見，請讀者自行參考閱讀，也迎歡分享經驗。
-如有侵權再麻煩告知，筆者立刻移除，再次感謝大家。
+
+以上均為筆者自身經驗，難免小有主觀意見，供讀者們參考，也歡迎分享經驗交流。
+如果有錯誤的地方還請大大們指正，筆者會立刻修改，再次感謝大家！
+
+[![Creative Commons License](https://i.creativecommons.org/l/by/4.0/88x31.png)](https://creativecommons.org/licenses/by/4.0/)
+
+本著作係採用 [創用 CC 姓名標示 4.0 國際授權條款](https://creativecommons.org/licenses/by/4.0/) 授權。您可以在 <benben.me> 找到我。
+
+This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). You can find me at <benben.me>
