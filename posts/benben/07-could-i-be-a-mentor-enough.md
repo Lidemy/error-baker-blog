@@ -8,7 +8,7 @@ image: https://camo.githubusercontent.com/c110c0c2bf1812ae1c8669b897e8d8a724fc29
 ---
 
 <!-- summary -->
-<!-- 烽火連天、民不聊生，就在這時候，有一個人發起了了「前端引路人計畫」 -->
+<!-- 烽火連天、民不聊生，就在這時候，有一個人發起了「前端引路人計畫」 -->
 <!-- summary -->
 
 ## 前言
@@ -40,7 +40,7 @@ K 說他那邊也找了 2 ~ 3 還在學習的 junior 打算開讀書會互相學
 
 那時候的前端世界，還處於各種大戰時期，瀏覽器大戰、編輯器大戰、前端框架大戰 ... 各種大戰（~~當然還有星際大戰~~），戰到老子學不動了，戰到孩子都出生了，總之戰的你不要不要的。
 
-烽火連天、民不聊生，就在這時候，有一個人發起了了「前端引路人計畫」
+烽火連天、民不聊生，就在這時候，有一個人發起了「前端引路人計畫」
 
 > 延伸閱讀： [真正的 Mentorship program：前端引路人計畫 | by Huli | Medium](https://hulitw.medium.com/mentorship-program-350db93d5c9c)
 
@@ -110,3 +110,12 @@ $ .
 - [真正的 Mentorship program：前端引路人計畫 | by Huli | Medium](https://hulitw.medium.com/mentorship-program-350db93d5c9c)
 - [Zero To Mastery (ZTM)](https://zerotomastery.io/community/developer-community-discord)
 - [VoiceTube hero](https://hero.voicetube.com/challenge-youth)
+
+以上均為筆者自身經驗，難免小有主觀意見，供讀者們參考，也歡迎分享經驗交流。
+如果有錯誤的地方還請大大們指正，筆者會立刻修改，再次感謝大家！
+
+[![Creative Commons License](https://i.creativecommons.org/l/by/4.0/88x31.png)](https://creativecommons.org/licenses/by/4.0/)
+
+本著作係採用 [創用 CC 姓名標示 4.0 國際授權條款](https://creativecommons.org/licenses/by/4.0/) 授權。您可以在 <benben.me> 找到我。
+
+This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). You can find me at <benben.me>
