@@ -34,7 +34,7 @@ image: https://blog.errorbaker.tw/img/posts/xiang/wc-table.png
 ## 初探 Web Component
 
 考量到希望引入元件是獨立的，不會與專案當中其他的程式碼相互干擾而發生悲劇，所以參考了利用 web component 的方法來實作元件。它可以讓我們自定義元件，包含 HTML 結構、CSS 樣式、JavaScript，並且取一個自己喜歡的標籤名稱（例如：`<wc-table></wc-table`），插入到頁面上就能得到一個封裝好的組件。
-
+
 由於 Web Component 是利用 Browser 原生支援的 Custom Elements 來渲染共用元件的，所以能共用在任何前端框架上，非常符合我們對於元件庫的需求。它的概念其實跟 React 的 class component 有幾分類似，都能讓我們自定義一個元件的架構跟樣式，並使用在其他地方，只是它還有一些需要另外去熟悉的特性，例如 shadow DOM 的概念。
 
 shadow DOM 允許我們創建一些完全獨立於其他元素的 sub-DOM trees，什麼意思呢？有點像我們組裝模型一樣，有一個可以組裝用的接口，讓我們裝上別的手臂或武器之類的，而且裝上去的部位跟模型本身不會相互影響。
@@ -273,7 +273,7 @@ const tableHTML = `
             )}
           </tr>
         `
-      )}      
+      )}
     </tbody>
   </table>
 `;

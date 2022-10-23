@@ -70,7 +70,7 @@ image: https://hackmd.io/_uploads/rJWJgRQ1i.gif
 
 但如果是合作的專案可就不是開玩笑的了，例如：開發時程很趕，產生某個 typo ，結果就一直延用下去，環境變數也延用，後端也很延用，DateBase 也延用，這就不是自己改好就好的問題了。所以千萬不要 typo ，甚至用 typo 於雷到別人好嗎？自動防禦開下去就對了！
 
-技能：不要使用 **Tab 狂擊**
+- 技能：不要使用 **Tab 狂擊**
 
 再來是 **不要使用 Tab (auto complete)** 、還有在 Terminal 中一直按 "上" 只為了找一段 `npm run dev`，也這是很多新手開發者遇到的雷，反正現在的 IDE 都很強了，可以一路「Tab」到底，當一個 Tab 工程師，開發上是很快沒錯，但隨之而來的是：打字就是不快、甚至連常用的 Api 都記不起來（如：`document.getElementById('#app')`），測試自己看看不使用 Tab 能完成嗎？如果能完成那是花了多少秒？
 
@@ -127,7 +127,9 @@ VScode 設定 -> 輸入「powermode」 -> 往下滑，找到「Shake:Enabled」 
 
 但好像 GIF 的截圖，因為有壓縮過，所以不明顯 QQ
 
-## 翻外篇：商人篇
+仔細看的話，使用後的滑鼠游標，會變得 **比較滑順**。
+
+## 番外篇：商人篇
 
 - 技能：**買啦！哪次不買！**
 
@@ -175,6 +177,6 @@ Happy Typing, Happy Hacking!
 
 [![Creative Commons License](https://i.creativecommons.org/l/by/4.0/88x31.png)](https://creativecommons.org/licenses/by/4.0/)
 
-本著作係採用 [創用 CC 姓名標示 4.0 國際授權條款](https://creativecommons.org/licenses/by/4.0/) 授權。您可以在 <benben.me> 找到我。
+本著作係採用 [創用 CC 姓名標示 4.0 國際授權條款](https://creativecommons.org/licenses/by/4.0/) 授權。您可以在 [benben.me](https://benben.me) 找到我。
 
-This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). You can find me at <benben.me>
+This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). You can find me at [benben.me](https://benben.me)

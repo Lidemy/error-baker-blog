@@ -46,7 +46,7 @@ private _onFileDrop = (e: DragEvent & { dataTransfer?: any }) => {
 };
 ```
 
-只有一個事件監聽，而且也做了 `stopPropagation` 跟 `preventDefault`，那為何檔案上傳會跟預期的不一樣？
+只有一個事件監聽，而且也做了 `stopPropagation` 跟 `preventDefault`，那為何檔案上傳會跟預期的不一樣？
 我們在呼叫 `_onFileDrop` 的時候把 `e` 印出來看看：
 
 ```js
@@ -65,7 +65,7 @@ event Event {isTrusted: false, _constructor-name_: 'Event', type: 'drop', targe
 #### ☞ 案例二： tab 導致的頁面跑版
 
 這個案例很有趣，也很感謝辛苦的 PM 詳細的測試抓出了這次的錯誤。
-這個頁面本身是一個外部無法滾動，但中間元件可以滾動的頁面（就像 gmail 一樣），
+這個頁面本身是一個外部無法滾動，但中間元件可以滾動的頁面（就像 gmail 一樣），
 
 上方的 Navbar 是 `fix` 的，所以會固定在螢幕上方，中間的表單是 `overflow: scroll` 的，所以可以滾動。那外層的背景呢，它的高度其實有超過 view height，但是我不想讓它滾動，所以我設置了 `overflow: hidden` 來防止滾動，依照我們正常的理解，這樣子的設定可以讓整個頁面只有中間的表單是可以滾的，其他都不會動。
 

@@ -113,7 +113,7 @@ class MyButton extends LitElement {
 #### 特殊情境
 
 ☞ 條件渲染
-如果遇到需要依照條件來決定 html 結構的情況，我們可以利用「三元運算子」來實作：
+如果遇到需要依照條件來決定 html 結構的情況，我們可以利用「三元運算子」來實作：
 
 ```js
 class MyButton extends LitElement {
@@ -167,9 +167,9 @@ class MyElement extends LitElement {
       div { color: red; }
     `;
   }
-  render() { 
+  render() {
     return html`
-      <div>I'm styled!</div> 
+      <div>I'm styled!</div>
     `;
   }
 }
@@ -226,13 +226,13 @@ customElements.define('my-element', MyElement);
 static get styles() {
   return css`
     /* Selects the host element */
-    :host { 
-      display: block; 
+    :host {
+      display: block;
     }
 
     /* Selects the host element if it is hidden */
-    :host([hidden]) { 
-      display: none; 
+    :host([hidden]) {
+      display: none;
     }
   `;
 }
@@ -323,7 +323,7 @@ static get styles() {
 要定義元件的 properties，我們可以透過這個寫法：
 
 ```js
-@property(options) 
+@property(options)
 propertyName;
 ```
 
@@ -407,7 +407,7 @@ disconnectedCallback() {
 }
 ```
 
-☞ 加在 firstUpdated 
+☞ 加在 firstUpdated
 
 ```js
 async firstUpdated() {
@@ -434,7 +434,7 @@ export class MyElement extends LitElement {
   @eventOptions({passive: true})
   private _handleTouchStart() { ... }
 
-  render() { 
+  render() {
     return html`
       <div @touchstart=${this._handleTouchStart}><div>
     `;
@@ -497,12 +497,12 @@ shouldUpdate(changedProperties) {
 
 ```js
 public firstUpdated() {
-  if (!this.hasAttribute('role')) {
-    this.setAttribute('role', 'textbox');
-  }
-  if (!this.inputEl.hasAttribute('tabindex')) {
-    this.inputEl.setAttribute('tabindex', '0');
-  }
+  // if (!this.hasAttribute('role')) {
+  //   this.setAttribute('role', 'textbox');
+  // }
+  // if (!this.inputEl.hasAttribute('tabindex')) {
+  //   this.inputEl.setAttribute('tabindex', '0');
+  // }
 
   this.inputEl.style.minHeight = this.minHeight + 'px';
   this._initHeight = this.inputEl.style.height;
