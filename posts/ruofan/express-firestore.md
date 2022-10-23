@@ -32,7 +32,7 @@ Hi，大家好！ 前陣子在研究專案上從 MySQL migrate 到 Cloud Firesto
 
 #### 可以不使用 Fireorm 嗎？
 筆者認為，Fireorm 不一定要用。這邊使用的原因單純是因為 fireorm 可以簡便的定義 schema。
-值得注意的是，在 Fireorm 的 [Roadmap](https://github.com/wovalle/fireorm/issues/1) 還有很多 功能 pending 中。
+值得注意的是，在 Fireorm 的 [Roadmap](https://github.com/wovalle/fireorm/issues/1) 還有很多 功能 pending 中。
 
 ## Firebase 環境設定
 

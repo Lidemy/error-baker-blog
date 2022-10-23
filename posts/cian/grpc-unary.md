@@ -205,7 +205,7 @@ type RouteGuideServer interface {
 }
 ```
 
-以及 Client 
+以及 Client
 
 ```go
 // RouteGuideClient is the client API for RouteGuide service.
@@ -262,7 +262,7 @@ Dial 是 grpc 提供的一個方法，會是一個 dail 請求，第一個參數
 
 NewRouteGuideClient 是 grpc 自動生成在 Client stub 產生的一個方法，可以在 `route_grpc.go` 找到它的定義，不過總之他會接收一個連接的 Interface，並且回傳一個 RouteGuideClient 類型的東西。
 
-在製作時，會有像這樣的 suggest，調用 Server 的 GetFeature 就像是調用 local 的 method 一樣方便。
+在製作時，會有像這樣的 suggest，調用 Server 的 GetFeature 就像是調用 local 的 method 一樣方便。
 
 ![](/img/posts/cian/grpc-unary/get-feature-suggest.png)
 
