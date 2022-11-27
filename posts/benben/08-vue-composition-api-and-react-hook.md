@@ -322,3 +322,7 @@ Cheer and be happy codding.
 - [A Complete Guide to useEffect — Overreacted | by Dan](https://overreacted.io/a-complete-guide-to-useeffect/)
 - [Composition API FAQ | Vue.js](https://vuejs.org/guide/extras/composition-api-faq.html)
 - [React Docs Beta](https://beta.reactjs.org/)
+
+[![Creative Commons License](https://i.creativecommons.org/l/by/4.0/88x31.png)](https://creativecommons.org/licenses/by/4.0/)
+
+This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). You can find me at [benben.me](https://benben.me)

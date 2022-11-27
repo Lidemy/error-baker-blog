@@ -43,7 +43,7 @@ layout: layouts/post.njk
 - 偶爾寫一些的日記等等 ( 現在比較少就是了 )
 - 聽歌或是看電影到哭 ( 天啊！太害羞了 )
 
-各位廣大的男性們，知道怎麼讓女生心動了嗎 ( 對喔，就是男人的眼淚？ )
+各位廣大的男性們，知道怎麼讓女生心動了嗎 (對喔，就是男人的眼淚？)
 
 其實我也在思考要不要寫這一段，有點矯情又有點搞笑 (？) ，但是天知地知你知我知，「自我介紹」還真的是很重要的技能，就跟書到用時方恨少一樣，比起那種：「我是 XXX，OO 大學畢業，今年 18 歲，會 HTML/CSS 跟一點 JavaScript。」一個好的自我介紹，能夠讓面試官瞇起來眼睛稍微打開一點，因為現在大家會的技能都一樣，HTML/CSS/JavaScript 這些 ( 以前端為例 )，我會、你會、連隔壁老王都會。
 
@@ -198,5 +198,12 @@ layout: layouts/post.njk
 - [深度數位大掃除](https://www.books.com.tw/products/0010843512)
 
 > 免責聲名
-以上文章、書藉，均非業配，均為筆者自經驗，難免小有主觀意見，請讀者自行參考閱讀，也迎歡分享經驗。
-如有侵權再麻煩告知，筆者立刻移除，再次感謝大家。
+
+以上均為筆者自身經驗，難免小有主觀意見，供讀者們參考，也歡迎分享經驗交流。
+如果有錯誤的地方還請大大們指正，筆者會立刻修改，再次感謝大家！
+
+[![Creative Commons License](https://i.creativecommons.org/l/by/4.0/88x31.png)](https://creativecommons.org/licenses/by/4.0/)
+
+本著作係採用 [創用 CC 姓名標示 4.0 國際授權條款](https://creativecommons.org/licenses/by/4.0/) 授權。您可以在 [benben.me](https://benben.me) 找到我。
+
+This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). You can find me at [benben.me](https://benben.me)

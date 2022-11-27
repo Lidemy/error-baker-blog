@@ -25,7 +25,7 @@ image: https://i.imgur.com/ZmEEvep.png
 
 ## 緣起
 
-為什麼會有這個共筆讀書會活動呢？緣起是這樣的，因為筆者還在 Lidemy 學習時，一直都會做筆記，相信大家都跟筆者一樣認真的。有一天大家在聊天時（在 gather.twon 上面，可以想成是比較自由版本的 google meet，可以自由去別的空間聊天、開會等等），我推薦大家 **JavaScript30** 這個免費的學習資源，但我其實也才看了 5 篇左右，但是真的覺得這個資源很不錯，於是突發奇想「還是我們來辨一個讀書會」主題就是：JavaScript30 ，剛好這也是適合新手的學習資源，非常適合還是新手的我們，找了幾個人一起輪流分享，順便練習自己的解說能力，然後再分享給其他人聽，聽的人可以不只我們自己人，其他 gather.town 上的人也都可以聽。
+為什麼會有這個共筆讀書會活動呢？緣起是這樣的，因為筆者還在 Lidemy 學習時，一直都會做筆記，相信大家都跟筆者一樣認真的。有一天大家在聊天時（在 gather.town 上面，可以想成是比較自由版本的 google meet，可以自由去別的空間聊天、開會等等），我推薦大家 **JavaScript30** 這個免費的學習資源，但我其實也才看了 5 篇左右，但是真的覺得這個資源很不錯，於是突發奇想「還是我們來辨一個讀書會」主題就是：JavaScript30 ，剛好這也是適合新手的學習資源，非常適合還是新手的我們，找了幾個人一起輪流分享，順便練習自己的解說能力，然後再分享給其他人聽，聽的人可以不只我們自己人，其他 gather.town 上的人也都可以聽。
 
 > 延伸學習：[JavaScript](https://javascript30.com/)
 
@@ -111,5 +111,12 @@ CodePen 使用起來像這樣：
 - [JS30 我要成為 JavaScript 大師 | 筆者 HackMD 範例](https://hackmd.io/@benben6515/javascript-30)
 
 > 免責聲名
-以上內容均非業配，均為筆者自身經驗，難免小有主觀意見，請讀者自行參考閱讀，也歡迎分享經驗。
-如有侵權再麻煩告知，筆者立刻移除，再次感謝大家。
+
+以上均為筆者自身經驗，難免小有主觀意見，供讀者們參考，也歡迎分享經驗交流。
+如果有錯誤的地方還請大大們指正，筆者會立刻修改，再次感謝大家！
+
+[![Creative Commons License](https://i.creativecommons.org/l/by/4.0/88x31.png)](https://creativecommons.org/licenses/by/4.0/)
+
+本著作係採用 [創用 CC 姓名標示 4.0 國際授權條款](https://creativecommons.org/licenses/by/4.0/) 授權。您可以在 [benben.me](https://benben.me) 找到我。
+
+This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). You can find me at [benben.me](https://benben.me)

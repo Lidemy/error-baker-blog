@@ -87,7 +87,7 @@ data:image/gif;base64,R0lGODdhMAAwAPAAAAAAAP///ywAAAAAMAAw
 
 ![](/img/posts/cian/base64-qrcode/no-response.png)
 
-另外，除了圖片之外 Data URIs 也可以用來傳輸其他檔案類型像是 HTML 或者 JavaScript。其相應的編碼格式也不一定都是 base64，不過最常見的應用還是結合 Data URIs 和 Base64 用來進行圖片效能優化。
+另外，除了圖片之外 Data URIs 也可以用來傳輸其他檔案類型像是 HTML 或者 JavaScript。其相應的編碼格式也不一定都是 base64，不過最常見的應用還是結合 Data URIs 和 Base64 用來進行圖片效能優化。
 
 ### 和 HTML 結合
  Data URI 其實可以用在任何需要指定 URL 的地方，包括 `<script>` 標籤和 `<a>` 標籤，但它最常被用來進行圖片的效能優化，所以經常被放在 HTML 的 `<img>`、`<iframe>` 等等標籤中。直接在 `src` 中放上內容，就可以正確顯示圖片。另外在 CSS 的 `background: url()` 中也可以填入這種格式的 URI 來顯示圖片。

@@ -218,7 +218,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
 export default MyApp;
 ```
 
-最後一步，在 header component 中設定拿到 session 跟沒有拿到 session 的狀態。
+最後一步，在 header component 中設定拿到 session 跟沒有拿到 session 的狀態。
 ```ts
 import { useSession, signIn, signOut } from 'next-auth/react';
 import React from 'react';
