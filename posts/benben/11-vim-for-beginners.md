@@ -11,7 +11,7 @@ image: https://hackmd.io/_uploads/BkbJbumEh.gif
 <!-- Some people don't want to learn vim. Some people want to learn vim, but ... -->
 <!-- summary -->
 
-**！ This article is about Vim for beginners. If you're a Pro with vim already, you are good to go now** :)
+**！ This is an article about Vim for beginners. If you're a Pro with vim already, you are good to go now** :)
 
 <img src="https://hackmd.io/_uploads/BkbJbumEh.gif" alt="vim-demo" width="360" />
 

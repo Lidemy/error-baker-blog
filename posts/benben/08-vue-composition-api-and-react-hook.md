@@ -11,7 +11,7 @@ image: https://dev-to-uploads.s3.amazonaws.com/i/296z018ivuyy4p3954at.png
 <!-- One side can't reach this altitude without another side. -->
 <!-- summary -->
 
-**! this article is about usage of Vue Composition API and React hooks. And assumes that you have knew some basic about one of them.**
+**! this is a article about usage of Vue Composition API and React hooks. And assumes that you have knew some basic about one of them.**
 
 ![vue/react](https://dev-to-uploads.s3.amazonaws.com/i/296z018ivuyy4p3954at.png)
 
