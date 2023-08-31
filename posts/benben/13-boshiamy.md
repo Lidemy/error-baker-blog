@@ -60,7 +60,7 @@ image: https://hackmd.io/_uploads/B1HXrmRTn.gif
   <img src="https://hackmd.io/_uploads/B1HXrmRTn.gif" width="600" alt="嘸蝦米 demo" />
 </center>
 
-> 對，就是封面的圖
+> 對，就是封面的圖（Gif 是原速度沒有加速喔）
 
 要嘛你切換了數次 「中/英」 模式；要嘛你使用獨立的數字鍵，但兩者都比較費時，世界上最遠的距離就是從鍵盤中間到方向鍵（獨立字鍵又更遠了），但是 **嘸蝦米可以直接打出數字**，因為它沒有佔用任何數字鍵，數字也是嘸蝦米有趣的地方，晚點會再提到。
 

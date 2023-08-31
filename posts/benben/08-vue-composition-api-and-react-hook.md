@@ -13,7 +13,11 @@ image: https://dev-to-uploads.s3.amazonaws.com/i/296z018ivuyy4p3954at.png
 
 **! this is a article about usage of Vue Composition API and React hooks. And assumes that you have knew some basic about one of them.**
 
+<center>
+
 ![vue/react](https://dev-to-uploads.s3.amazonaws.com/i/296z018ivuyy4p3954at.png)
+
+</center>
 
 > [image resource](https://dev.to/vuesomedev/write-vue-like-you-write-react-23p9)
 
@@ -227,7 +231,11 @@ const { globalCount } = useCounter()
 </template>
 ```
 
+<center>
+
 ![vite + vue](https://hackmd.io/_uploads/rJectHun5.gif)
+
+</center>
 
 > Check out [full source code]( https://github.com/benben6515/counters/tree/main/vue-counter)
 
@@ -284,7 +292,11 @@ function App() {
 export default App
 ```
 
+<center>
+
 ![vite + react](https://hackmd.io/_uploads/B1noYS_2c.gif)
+
+</center>
 
 > Check out [full source code]( https://github.com/benben6515/counters/tree/main/vue-counter)
 
