@@ -100,7 +100,7 @@ images: https://hackmd.io/_uploads/B1HXrmRTn.gif
 
 筆者會將常常遇到不會打的字、不熟的字，先用筆記軟體記下來（有要拿去練習的也歡迎），然後用「最簡碼」練習一次，隔天再練習一次，久而久之這些詞語就一個一個就熟了，會慢慢變成反射動作。
 
-> 筆者練習的字根： <https://hackmd.io/@benben6515/S10poEXG9>
+> [筆者練習的嘸蝦米字](https://hackmd.io/@benben6515/S10poEXG9)
 
 ## 一時打字一時爽，一直打字一直爽
 
@@ -177,7 +177,7 @@ J => 十
 10. 右鍵 > 內容，查字根或注音模式
 
 - 官網：[嘸蝦米輸入法](https://boshiamy.com/) （其實官網就有很多好用的資源了）
-- 嘸蝦米二碼表：<https://www.ptt.cc/bbs/Liu/M.1504856517.A.6F9.html>
+- [嘸蝦米二碼表](https://www.ptt.cc/bbs/Liu/M.1504856517.A.6F9.html)
 
 ## Ref
 
@@ -185,6 +185,7 @@ J => 十
 - [嘸蝦米輸入法](https://boshiamy.com/)
 - [嘸蝦米試用版下載](https://boshiamy.com/download_trial.php)
 - [嘸蝦米二碼表](https://www.ptt.cc/bbs/Liu/M.1504856517.A.6F9.html)
+- [筆者練習的嘸蝦米字](https://hackmd.io/@benben6515/S10poEXG9)
 
 > 免責聲名
 
