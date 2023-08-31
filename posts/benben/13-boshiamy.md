@@ -1,10 +1,10 @@
 ---
 title: 什麼時代了還在學 | 嘸蝦米輸入法
 date: 2023-08-31
-tags: [boshiamy, 嘸蝦米輸入法]
+tags: [boshiamy]
 author: benben
 layout: layouts/post.njk
-images: https://hackmd.io/_uploads/B1HXrmRTn.gif
+image: https://hackmd.io/_uploads/B1HXrmRTn.gif
 ---
 
 <!-- summary -->
@@ -16,7 +16,7 @@ images: https://hackmd.io/_uploads/B1HXrmRTn.gif
 ## 前言
 
 <center>
- <img src="https://hackmd.io/_uploads/B1HXrmRTn.gif" width="600" alt="嘸蝦米 demo" />
+  <img src="https://hackmd.io/_uploads/B1HXrmRTn.gif" width="600" alt="嘸蝦米 demo" />
 </center>
 
 > 嘸蝦米 demo, by @Benben
@@ -57,7 +57,7 @@ images: https://hackmd.io/_uploads/B1HXrmRTn.gif
 > 試試輸入以下：「1 生、 2 人、 3 餐、 4 季」
 
 <center>
- <img src="https://hackmd.io/_uploads/B1HXrmRTn.gif" width="600" alt="嘸蝦米 demo" />
+  <img src="https://hackmd.io/_uploads/B1HXrmRTn.gif" width="600" alt="嘸蝦米 demo" />
 </center>
 
 > 對，就是封面的圖
@@ -77,7 +77,7 @@ images: https://hackmd.io/_uploads/B1HXrmRTn.gif
 整體來說，我覺得官網的練習小網站還不錯，慢慢地一個一個從好記的字根開始，再到需要一些聯想力的字根，我差不多每天上個 10 ~ 30 分鐘，差不多一個月後，可以打 50% 的字了，心態上不要覺得它很難，把他當作遊戲，今天學了「A 技能」，一天一天學到了「Z 技能」，等到都學完了，就可以來個組合技降龍十八掌了（誤）。
 
 <center>
- <img src="https://hackmd.io/_uploads/BkAOrVA62.png" width="600" alt="輕鬆學會嘸蝦米" />
+  <img src="https://hackmd.io/_uploads/BkAOrVA62.png" width="600" alt="輕鬆學會嘸蝦米" />
 </center>
 
 > 官網的「輕鬆學會嘸蝦米」
@@ -91,7 +91,7 @@ images: https://hackmd.io/_uploads/B1HXrmRTn.gif
 嘸蝦米官網也很貼心的準備了試用版，不過它的試用版呢～很佛心，**是可以一直免費用的**，只是每三個月要重新安裝一次，筆者一開始直上也是先用試用版的，大概用了一年才換付費版的（這邊也可以先不買，文章最後會在提到免費的替代方案，但筆者還是有支持正版的）
 
 <center>
- <img src="https://hackmd.io/_uploads/rkyML4C6n.png" width="600" alt="輕鬆學會嘸蝦米" />
+  <img src="https://hackmd.io/_uploads/rkyML4C6n.png" width="600" alt="輕鬆學會嘸蝦米" />
 </center>
 
 > 試用版下載：<https://boshiamy.com/download_trial.php>
@@ -112,7 +112,7 @@ images: https://hackmd.io/_uploads/B1HXrmRTn.gif
 
 這些通常都是精挑細選的字或是不好打的常用字，還有一個特別的「中文數字」，嘸蝦米也通通都是一字搞定，因此很推薦給常常需要打中文字數字的讀者，如：公文、筆錄等等，注音很多字都是撞同音一定要選字的。
 
-```md
+```javascript
 E => 一
 R => 二
 S => 三
@@ -197,5 +197,3 @@ J => 十
 本著作係採用 [創用 CC 姓名標示 4.0 國際授權條款](https://creativecommons.org/licenses/by/4.0/) 授權。您可以在 [benben.me](https://benben.me) 找到我。
 
 This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). You can find me at [benben.me](https://benben.me)
-
----
