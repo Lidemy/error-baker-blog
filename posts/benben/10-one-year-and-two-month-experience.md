@@ -13,7 +13,9 @@ image: https://hackmd.io/_uploads/SJOHgbO3j.jpg
 
 **！這是一篇從廢物保全的轉職前端的心得，轉職 1 年又 2 個月，年薪破百的故事（？）可以當作充滿倖存者偏差的個版來看看就好，當然跟個各種大大相比，我真的還只是菜難，如果大大已是年薪百萬 or 資深工程師就直接跳過本文章吧。**
 
-![antfu](https://hackmd.io/_uploads/SJOHgbO3j.jpg)
+<center>
+<img src="https://hackmd.io/_uploads/SJOHgbO3j.jpg" alt="antfu" width="480" />
+</center>
 
 > 2022 Vue X Laravel Conf 上的 antfu 大神的簽名（第一個簽名啦）
 

@@ -1,5 +1,5 @@
 ---
-title: Warp | 你的 21 世紀 AI Terminal aaa
+title: Warp | 你的 21 世紀 AI Terminal
 date: 2023-05-31
 tags: [warp, terminal, ai]
 author: benben

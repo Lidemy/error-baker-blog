@@ -13,7 +13,11 @@ image: https://hackmd.io/_uploads/rJWJgRQ1i.gif
 
 **! 這一篇文章主要會講要提升打 Code 的速度，從各方面來說，包含物理、心理、視覺的方面，希望對大家有幫助！。**
 
+<center>
+
 ![typing](https://hackmd.io/_uploads/rJWJgRQ1i.gif)
+
+</center>
 
 ## 前言
 
@@ -27,7 +31,11 @@ image: https://hackmd.io/_uploads/rJWJgRQ1i.gif
 
 有人說最棒的 IDE （Integrated Development Environment） 是 VScode、有人說是 Notepad++ 、有人說是 VIM，有人說是 Office Word ，來聽看看前 Facebook 的工程師說說為什麼是 Office Word。
 
+<center>
+
 [![Best IDE](https://img.youtube.com/vi/X34ZmkeZDos/0.jpg)](https://www.youtube.com/watch?v=X34ZmkeZDos)
+
+</center>
 
 > Why Microsoft Word is the best IDE for programming | Joma Tech
 
