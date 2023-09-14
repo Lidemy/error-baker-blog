@@ -14,7 +14,7 @@ image: https://hackmd.io/_uploads/BkbJbumEh.gif
 **！ This is an article about Vim for beginners. If you're a Pro with vim already, you are good to go now** :)
 
 <center>
-<img src="https://hackmd.io/_uploads/BkbJbumEh.gif" alt="vim-demo" width="360" />
+<img src="https://hackmd.io/_uploads/BkbJbumEh.gif" alt="vim-demo" class="post-image-width" />
 </center>
 
 > Vim demo by myself
@@ -134,7 +134,7 @@ So you are excited and want to learn more about Vim.
 But when you saw the cheat sheet of Vim like this:
 
 <center>
-<img src="https://helloacm.com/wp-content/uploads/2015/09/vi-vim-cheat-sheet.jpg" alt="vim-cheat-sheet" width="480" />
+<img src="https://helloacm.com/wp-content/uploads/2015/09/vi-vim-cheat-sheet.jpg" alt="vim-cheat-sheet" class="post-image-width" />
 </center>
 
 > [Vim cheat sheet](https://helloacm.com/vi-vim-cheat-sheet-jpg/)

@@ -19,7 +19,9 @@ image: https://i.imgur.com/XRsgu8H.png
 
 那麼直接進入正題，這次要分享的是：**Uno CSS** ！
 
-![uno css logo](https://i.imgur.com/LQrk0DN.png)
+<center>
+  <img src="https://i.imgur.com/LQrk0DN.png" class="post-image-width" alt="uno css logo" />
+</center>
 
 > 圖片來源： [Uno CSS Github](https://github.com/unocss/unocss)
 
@@ -75,7 +77,7 @@ image: https://i.imgur.com/XRsgu8H.png
 
 （自從用了 Uno CSS 切板都 100 分呢！）
 
-筆者第一次遇到這種情行，非常之驚奇，這是什麼巫術！
+筆者第一次遇到這種情形，非常之驚奇，這是什麼巫術！
 
 再來牛刀小試一下：
 

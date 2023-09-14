@@ -16,7 +16,7 @@ image: https://hackmd.io/_uploads/HJsA77LE3.gif
 ## 前言
 
 <center>
-  <img src="https://hackmd.io/_uploads/HJsA77LE3.gif" alt="warp-demo" width="600" />
+  <img src="https://hackmd.io/_uploads/HJsA77LE3.gif" alt="warp-demo" class="post-image-width" />
 </center>
 
 > Warp demo by myself
@@ -72,7 +72,7 @@ image: https://hackmd.io/_uploads/HJsA77LE3.gif
 不過還是要先明聲，這不是業配（Warp 看到可以考慮一下，喂！），但是 warp 官方那邊也有提供一個小小推薦計劃，推滿 10 位好像會送一件衣服（比 leetcode 的衣服好拿太多了吧），但是不是一樣穿上就太 Nerd 到交不到女朋友，筆者就不好說了（汗），如果看完我的文章覺得有興趣的話，還是可以用一下筆者的連結唷。
 
 <center>
-  <img src="https://hackmd.io/_uploads/r1Atcp24n.png" alt="warp-referral" width="480" />
+  <img src="https://hackmd.io/_uploads/r1Atcp24n.png" alt="warp-referral" class="post-image-width" />
 </center>
 
 > 推薦連結：<https://app.warp.dev/referral/VLL959> (拜偷 拜偷 感蝦 感蝦 🥹)
@@ -102,7 +102,7 @@ image: https://hackmd.io/_uploads/HJsA77LE3.gif
 有內鍵多個主題，**萬一沒有喜歡的也可以自行設計**，並且有官方完整的教學，自由感十足。當然也可以設定字體、大小，比較特別的是他還可以直接設定 **透明度、Blur 效果**，以前筆者在 Windows （就是原生醜醜的黑白視窗）上搞了很久，後來改用 [`Window Terminal`](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701) 才有內鍵的設定。
 
 <center>
-  <img src="https://hackmd.io/_uploads/H1JZmAn43.png" alt="warp-setting" width="600" />
+<img src="https://hackmd.io/_uploads/H1JZmAn43.png" alt="warp-setting" class="post-image-width" />
 </center>
 
 > Warp 設定頁面
@@ -118,7 +118,7 @@ Warp 標旁 **零設定 (Zero Configuration)** 、開箱即用，完全不用另
 **自動路徑完成** 的功能：在根目錄 `/` 下，輸入 `cd` + 按 `Tab` 鍵就會呈現當前的資料夾，可以使用上、下切換，按 `Enter` 會自動完成
 
 <center>
-  <img src="https://hackmd.io/_uploads/BkqDHA2N3.png" alt="warp-setting" width="600" />
+<img src="https://hackmd.io/_uploads/BkqDHA2N3.png" alt="warp-setting" class="post-image-width" />
 </center>
 
 > 開箱即用 | 自動路徑完成
@@ -126,7 +126,7 @@ Warp 標旁 **零設定 (Zero Configuration)** 、開箱即用，完全不用另
 **Git 指令** 的功能：輸入 `git log` + 按下 `Tab` 鍵就會呈現當前可以用的指令，可以使用上、下切換，按 `Enter` 會自動完成
 
 <center>
-  <img src="https://hackmd.io/_uploads/BkKMUA24h.png" alt="warp-setting" width="600" />
+  <img src="https://hackmd.io/_uploads/BkKMUA24h.png" alt="warp-setting" class="post-image-width" />
 </center>
 
 > 開箱即用 | 自動 Git 指令完成
@@ -171,7 +171,7 @@ Warp 標旁 **零設定 (Zero Configuration)** 、開箱即用，完全不用另
 只要在輸入指令的地方前面加入 `#` ，就可以進入搜尋模式了，再輸入想查尋的內容，就可以輕鬆的使用 AI 查尋指令了，例如：
 
 <center>
-  <img src="https://hackmd.io/_uploads/HJsA77LE3.gif" alt="warp-demo" width="600" />
+  <img src="https://hackmd.io/_uploads/HJsA77LE3.gif" alt="warp-demo" class="post-image-width" />
 </center>
 
 > 在上面的圖片中，筆者查尋了如何將檔案移除 Git（How to remove file from git）
