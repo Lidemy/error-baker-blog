@@ -1412,3 +1412,9 @@ ul#post-list li {
   border-color: #ccc;
   pointer-events: none;
 }
+
+/* Global style */
+.post-image-width {
+  width: 800px;
+  max-width: 90%;
+}
