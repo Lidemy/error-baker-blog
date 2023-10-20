@@ -8,7 +8,7 @@ layout: layouts/post.njk
 
 <!-- summary -->
 
-大家好！在這篇文章中，我想帶領大家了解如何透過新的滾動驅動動畫 API 實作出絲滑流暢的動畫效果。
+大家好！在這篇文章中，我想帶大家認識新的滾動驅動動畫 API。
 
 <!-- summary -->
 
@@ -16,7 +16,7 @@ layout: layouts/post.njk
 
 ## scroll-driven animations
 什麼是捲動畫面時會驅動的動畫呢？
-當我們在網頁上滾動時，有些動畫會隨著滾動的動作而觸發。以下是兩個生動的範例：
+當我們在網頁上滾動時，有些動畫會隨著滾動的動作而觸發。以下是兩個範例：
 
 當使用者滑動畫面時，頁面最上方和最下方的物件會展現出平移和淡出的效果。
 
@@ -30,7 +30,7 @@ layout: layouts/post.njk
 
 ## Classic way
 
-傳統上，我們會使用 addEventListener 來監聽滾動事件，並在主執行緒上執行回調函數。例如，以下的程式碼展示了如何根據滾動的百分比調整進度條的寬度：
+傳統上，我們會使用 addEventListener 來監聽滾動事件，並在主執行緒 (main thread) 上執行 callback function。例如，以下的程式碼展示了如何根據滾動的百分比調整進度條的寬度：
 
 ```html
   <body>
