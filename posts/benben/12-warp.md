@@ -102,7 +102,7 @@ image: https://hackmd.io/_uploads/HJsA77LE3.gif
 有內鍵多個主題，**萬一沒有喜歡的也可以自行設計**，並且有官方完整的教學，自由感十足。當然也可以設定字體、大小，比較特別的是他還可以直接設定 **透明度、Blur 效果**，以前筆者在 Windows （就是原生醜醜的黑白視窗）上搞了很久，後來改用 [`Window Terminal`](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701) 才有內鍵的設定。
 
 <center>
-<img src="https://hackmd.io/_uploads/H1JZmAn43.png" alt="warp-setting" class="post-image-width" />
+  <img src="https://hackmd.io/_uploads/H1JZmAn43.png" alt="warp-setting" class="post-image-width" />
 </center>
 
 > Warp 設定頁面
