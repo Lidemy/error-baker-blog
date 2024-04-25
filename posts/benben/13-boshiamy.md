@@ -148,9 +148,9 @@ J => 十
 之前剛好有朋友遇到不會使用「加詞加字」功能（這算是官方就有的功能了，所以上面沒有特別提到），確實這對一般非開發者的人員來說，去改設定檔是有些困難的，可能少了一個空白設定檔就壞了（這是真的），所以筆者想想就簡單錄了一個教學給朋友，對我來說也算是一個紀錄，有需要的讀者也可以參考看看囉。
 
 <center>
-  <video src="https://cdn-user.veed.io/render/13ff0aa5-67e9-49cf-b470-98169cabab10.mp4" controls class="post-image-width" style="height: 400px;">
-  Your browser does not support the video tag.
-</video>
+
+[![嘸蝦米輸入法](https://img.youtube.com/vi/I9tlZFB2lvI/0.jpg)](https://www.youtube.com/watch?v=I9tlZFB2lvI)
+
 </center>
 
 > Rime 嘸蝦米的加詞加字功能教學, by @Benben
