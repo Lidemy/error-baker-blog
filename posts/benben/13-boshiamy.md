@@ -46,6 +46,8 @@ image: https://hackmd.io/_uploads/B1HXrmRTn.gif
 
 </center>
 
+> by @Papaya 老師的無蝦米介紹
+
 在此之前，我完完全全的是新手小白，以前只有在電腦課時不小心切換到嘸蝦米，胡亂打幾個字，然後就無緣了，可能小時候沒電腦，連一般的注音中打都打不快，想說反正本來中打就不快了，切換的成本也不高，就乾脆切換過去順便練一下好了。
 
 嘸蝦米吸引的我地方，除了最優勢的不用選字外，它可以只用「A ~ Z，共 **26 個字母**」就可以完成中打輸入，你可能覺得這沒什麼，除了比注音少了一些按鍵（ㄅ, ..., 一聲, ... 等等，**共 41 個**），更少的輸入可以打更快。
@@ -146,7 +148,9 @@ J => 十
 之前剛好有朋友遇到不會使用「加詞加字」功能（這算是官方就有的功能了，所以上面沒有特別提到），確實這對一般非開發者的人員來說，去改設定檔是有些困難的，可能少了一個空白設定檔就壞了（這是真的），所以筆者想想就簡單錄了一個教學給朋友，對我來說也算是一個紀錄，有需要的讀者也可以參考看看囉。
 
 <center>
-  <iframe src="https://www.veed.io/embed/8640877d-b536-4279-af39-b70a22025834" class="post-image-width" style="height: 400px;" frameborder="0" title="嘸蝦米加字加詞.mp4" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+  <video src="https://cdn-user.veed.io/render/13ff0aa5-67e9-49cf-b470-98169cabab10.mp4" controls class="post-image-width" style="height: 400px;">
+  Your browser does not support the video tag.
+</video>
 </center>
 
 > Rime 嘸蝦米的加詞加字功能教學, by @Benben
