@@ -1,7 +1,7 @@
 ---
 title: multipart/form-data 初探
 date: 2022-04-30
-tags: ["RFC 7578", OpenAPI, multipart/form-data, RCF]
+tags: ["RFC 7578", OpenAPI, multipart/form-data, RFC]
 author: cwc329
 layout: layouts/post.njk
 ---
@@ -54,10 +54,10 @@ Content-Type: application/octet-stream
 這是一份 http request 的內容，從第一行開始分別是 http request method 以及 發送到哪裡，
 第二、三行分別是這個 request 的 headers，最後則是 request body。
 
-這樣就可以看出一個 multipart/form-data request 到底是怎麼組成的，不過詳細到底是怎樣，需要什麼 header 以及 request body 要怎麼寫，這就要去看 RCF 了。
+這樣就可以看出一個 multipart/form-data request 到底是怎麼組成的，不過詳細到底是怎樣，需要什麼 header 以及 request body 要怎麼寫，這就要去看 RFC 了。
 
-# RCF 7578
-關於 multipart/form-data 的規格，記錄在 [RCF 7578](https://datatracker.ietf.org/doc/html/rfc7578)。這份文件詳細的紀錄 multipart/form-data 的用途、規格以及如果開發者想要傳送或者處理 multipart/form-data request 時需要注意的事情。筆者在這邊文章只會關心網頁中的 section 4，也就是其定義。
+# RFC 7578
+關於 multipart/form-data 的規格，記錄在 [RFC 7578](https://datatracker.ietf.org/doc/html/rfc7578)。這份文件詳細的紀錄 multipart/form-data 的用途、規格以及如果開發者想要傳送或者處理 multipart/form-data request 時需要注意的事情。筆者在這邊文章只會關心網頁中的 section 4，也就是其定義。
 
 ## Boundary
 從上方的 http request 範例可以看到，Content-Type 除了表示這個 request 所傳送的 body 是 multipart/form-data 之外，還有一個參數 boundary，並且標明這個參數的值。而在 request body 裡面可以看到參數的值會跟著 `--` 一起出現，並且分隔 form 的不同部分。
@@ -80,4 +80,4 @@ Content-Type: application/octet-stream
 接著則是要根據 spec 做出符合規範的並且合理的 request body。body 的開頭、結尾以及每個 part 之間都要有一行用 `--` 與 boundary 組成的分隔行。每個 part 都要先定義這個 part 的 Content-Disposition，以及如果需要的話再定義這個 part 的 Content-Type 以及 Content-Transfer-Encoding，接著再把這個 part 要傳送的資料放入。
 
 # 結論
-這次的介紹範圍較少，只侷限在 RCF 7578，不過在這篇 RCF 中其實有提到其他的 RCF，包含 RCF 的用詞定義以及 multipart 這個 media type 的 RCF 都在 RCF 7578 裡面被提到，我也有點開瀏覽。如果讀者有興趣的話，可以去看相關章節，可以對 http 有更深入的了解。這是我第一次認真讀 RCF 並且寫簡介文章，如果有不足或者錯誤的地方，請不吝留言指教。
+這次的介紹範圍較少，只侷限在 RFC 7578，不過在這篇 RFC 中其實有提到其他的 RFC，包含 RFC 的用詞定義以及 multipart 這個 media type 的 RFC 都在 RFC 7578 裡面被提到，我也有點開瀏覽。如果讀者有興趣的話，可以去看相關章節，可以對 http 有更深入的了解。這是我第一次認真讀 RFC 並且寫簡介文章，如果有不足或者錯誤的地方，請不吝留言指教。
