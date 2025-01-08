@@ -16,7 +16,7 @@ layout: layouts/post.njk
 
 ## Subsets Problem
 
-[Leetcode 78. Sutsets](https://leetcode.com/problems/subsets/description/) 給任意內容不重複的整數陣列，要求出所有這個陣列可能的子集合，
+[Leetcode 78. Subsets](https://leetcode.com/problems/subsets/description/) 給任意內容不重複的整數陣列，要求出所有這個陣列可能的子集合，
 ex:
 
 ```go
@@ -134,7 +134,7 @@ func printUnderlyingArray[T any](slice []T) {
 }
 ```
 
-可以看到不但兩個 `[1 2 3 5]` 都是指向同一個 unerllying array，就連 `[1 2 3]` 也是指向同一個。
+可以看到不但兩個 `[1 2 3 5]` 都是指向同一個 underlying array，就連 `[1 2 3]` 也是指向同一個。
 為了更細部看到底發生什麼事情，我在回圈中找尋結果，以下是重點部分：
 
 當從 stack pop 出 `{layer: 3, current: [1 2 3]}` 之後，會在 stack 放入 `{layer: 4, current: [1 2 3]}`, `{layer : 4, current: [1 2 3 4]}`，這時候 `[1 2 3]`, `[1 2 3 4]` 的 underlying array 都是一樣的。
@@ -167,7 +167,7 @@ func poc() {
 */
 ```
 
-上面的程式碼簡化整個過程，可以看到在沒有操作 slice2 的情況下，只是 apend slice1 就可以改變 slice2 的值。因為 append 雖然會回傳一個新的 slice，但是並不保證使用一個新的 underlying array，而是會在新的 slice capacity 大於 underlying array 時才會創建一個新的 underlying array，而這個什麼時候會發生就是 golang 底層決定的。
+上面的程式碼簡化整個過程，可以看到在沒有操作 slice2 的情況下，只是 append slice1 就可以改變 slice2 的值。因為 append 雖然會回傳一個新的 slice，但是並不保證使用一個新的 underlying array，而是會在新的 slice capacity 大於 underlying array 時才會創建一個新的 underlying array，而這個什麼時候會發生就是 golang 底層決定的。
 解決這個問題的方法也很簡單，就是使用 golang 內建的 `copy` function 就可以創建一個使用不同 underlying array 的 slice，如此就能確保不會有意料之外的 side effect。
 修正過後的程式碼為：
 
@@ -313,6 +313,6 @@ func subsets(nums []int) [][]int {
 
 這份程式碼最後跑出 0ms，雖然不排除有機器的差異，因為優化前後的程式碼都曾跑到 1ms 過，不過 append 的差異從上面的測試中是可以得到明顯的差異。
 
-## Conclustion
+## Conclusion
 
 從這個題目我意外地親身體驗 golang slice 可能遇到的 side effect 以及一些可以做的簡單優化，算是有些額外的小收穫，簡單地記錄並且分享給大家。
