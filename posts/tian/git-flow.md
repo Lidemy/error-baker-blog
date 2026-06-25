@@ -4,6 +4,8 @@ date: 2021-10-28
 tags: [git, flow]
 author: tian
 layout: layouts/post.njk
+lang: zh-TW
+translationKey: tian/git-flow
 ---
 
 <!-- summary -->

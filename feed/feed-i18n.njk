@@ -1,0 +1,39 @@
+---
+# Per-language Atom feeds: /en/feed/feed.xml, /ja/feed/feed.xml, /zh-CN/feed/feed.xml
+# (the zh-TW feed is feed/feed.njk at /feed/feed.xml).
+pagination:
+  data: langs
+  size: 1
+  alias: flang
+  filter:
+    - zh-TW
+permalink: "/{{ flang }}/feed/feed.xml"
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="utf-8"?>
+{%- set feedPosts = collections.posts | filterByLang(flang) %}
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<title>{{ i18n[flang].siteName }}</title>
+	<subtitle>{{ metadata.feed.subtitle }}</subtitle>
+	{% set absoluteUrl %}{{ ('/' + flang + metadata.feed.path) | url | absoluteUrl(metadata.url) }}{% endset %}
+	<link href="{{ absoluteUrl }}" rel="self"/>
+	<link href="{{ metadata.url }}/{{ flang }}/"/>
+	{% if feedPosts.length %}<updated>{{ feedPosts | rssLastUpdatedDate }}</updated>{% endif %}
+	<id>{{ metadata.url }}/{{ flang }}/</id>
+	<author>
+		<name>{{ metadata.author.name }}</name>
+		<email>{{ metadata.author.email }}</email>
+	</author>
+	{%- for post in feedPosts %}
+	{% set absolutePostUrl %}{{ post.url | url | absoluteUrl(metadata.url) }}{% endset %}
+	<entry>
+		<title>{{ post.data.title }}</title>
+		<link href="{{ absolutePostUrl }}"/>
+		<updated>{{ post.date | rssDate }}</updated>
+		<id>{{ absolutePostUrl }}</id>
+		<content type="html">
+		  {{ post.templateContent | htmlToAbsoluteUrls(absolutePostUrl) }}
+		</content>
+	</entry>
+	{%- endfor %}
+</feed>

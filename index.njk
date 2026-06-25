@@ -4,12 +4,16 @@ layout: layouts/home.njk
 description: 從錯誤中學習，從寫作中成長
 image: /img/ogimage.png
 date: Last Modified
+lang: zh-TW
 pagination:
-  data: collections.posts
+  data: collections.postsZhTW
   size: 8
   alias: posts
   reverse: true
 permalink: /{% if pagination.pageNumber > 0 %}articles/{{ pagination.pageNumber }}/{% endif %}
+eleventyComputed:
+  # Only the first page (/) represents the zh-TW home in the language switcher.
+  translationKey: "{% if pagination.pageNumber == 0 %}home{% endif %}"
 ---
 
 <section class="intro">

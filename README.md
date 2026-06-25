@@ -89,6 +89,57 @@ css/main.css 所有的樣式都在裡面，有新增的都放在最下面
 - tags 採用 kabab case 來命名 e.g. back-end
 - 若遇到有連詞或分詞疑問，依循前者來決定 e.g. backend vs back-end，如果已經有人使用 backend 則使用 backend。
 
+## 多國語系翻譯
+
+文章可以翻成多國語系（預設 `en` / `ja` / `zh-CN`）。翻譯由 AI 代理執行，**不需付費 API**，
+規範集中在根目錄的 [`AGENTS.md`](./AGENTS.md)。
+
+### 怎麼翻一篇文章
+
+1. 用 Claude Code 跑斜線指令（假設原文是 `posts/peter/foo.md`）：
+
+   ```
+   /translate-post posts/peter/foo.md          # 翻成預設的 en, ja, zh-CN
+   /translate-post posts/peter/foo.md en,ja    # 只翻指定語系
+   ```
+
+   （非 Claude Code 的代理：直接請它「依 AGENTS.md 翻譯 posts/peter/foo.md」即可。）
+
+2. 代理會產出 `posts/peter/foo.en.md` 等檔，標為 `draft: true`，並回報「回譯校驗」
+   讓你用中文檢查語意。
+3. 本機預覽 `npm run serve`（草稿在 dev 模式可見），確認沒問題後**移除譯文的
+   `draft: true`**，commit + push 即發佈。
+
+### 譯文不會混進中文首頁
+
+譯文有獨立路由（`/en/posts/...`）與語言切換器、`hreflang`；中文首頁、標籤頁、RSS
+只會列繁中文章。
+
+### 過期守門（pre-commit）
+
+提交時會自動檢查：被改動的原文若**缺對應譯文**或**譯文已過期**（原文內文變了），
+會擋下提交並提示你重跑 `/translate-post`。過期是用譯文 frontmatter 的 `sourceHash`
+與原文現況比對判斷的。
+
+WIP 想先略過檢查：
+
+```bash
+SKIP_TRANSLATION_CHECK=1 git commit ...
+# 或
+git commit --no-verify
+```
+
+> 機制說明：守門腳本是 `scripts/check-translations.js`，透過專案既有的 `pre-commit`
+> 套件掛在 git hook（不需額外裝 Husky）。新增語系時，請同步更新 `AGENTS.md`、
+> `_data/i18n.json`（含 `langName`/`noTranslation`）、`_data/langs.json`（切換器顯示順序）、
+> `.eleventy.js`（`SITE_LANGS`）與 `scripts/check-translations.js`（`TARGET_LANGS`）。
+
+### 導覽列語言切換器
+
+每頁導覽列都有全站語言切換器。**目前頁面有該語言版本**→ 可點連結；**沒有**→ 顯示為灰色
+停用並提示「此頁面尚無此語言版本」（不會產生壞連結）。等之後做了各語系首頁/列表頁
+（第二階段），這些停用項目會自動變成可點。
+
 ## 參考資源
 
 1. [Eleventy Documentation](https://www.11ty.dev/docs/collections/)

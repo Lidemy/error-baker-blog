@@ -11,12 +11,16 @@
     "js-build-watch": "rollup -c rollup.config.js -w",
     "debug": "DEBUG=* eleventy && npm run test",
     "test": "echo 'no test for now'",
-    "test-watch": "mocha test/test*.js --watch"
+    "test-watch": "mocha test/test*.js --watch",
+    "check-translations": "node scripts/check-translations.js",
+    "test:translations": "node scripts/check-translations.test.js"
   },
   "pre-push": [
     "build"
   ],
-  "pre-commit": [],
+  "pre-commit": [
+    "check-translations"
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/11ty/eleventy-base-blog.git"

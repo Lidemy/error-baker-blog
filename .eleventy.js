@@ -167,6 +167,85 @@ module.exports = function (eleventyConfig) {
     return array.slice(0, n);
   });
 
+  /* ---------------------------------------------------------------------------
+   * i18n / multilingual support
+   *
+   * Posts live as `posts/<author>/<slug>.md` (zh-TW source) with translations
+   * alongside as `posts/<author>/<slug>.<lang>.md`. Each translation declares
+   * `lang` and a shared `translationKey` in its frontmatter. These helpers let
+   * templates (a) keep each language's listings separate and (b) link the
+   * versions of one article together for the language switcher + hreflang.
+   * ------------------------------------------------------------------------- */
+  const SITE_LANGS = ["zh-TW", "en", "ja", "zh-CN"]; // source first; display order
+  const DEFAULT_LANG = "zh-TW";
+
+  const postLang = (item) => (item.data && item.data.lang) || DEFAULT_LANG;
+  const postTranslationKey = (item) => {
+    if (item.data && item.data.translationKey) return item.data.translationKey;
+    // Fallback: derive `<author>/<slug>` from the input path, dropping any
+    // `.<lang>` suffix so an original and its translations share one key.
+    const match = item.inputPath.match(/posts\/(.+?)(?:\.[A-Za-z-]+)?\.md$/);
+    return match ? match[1] : item.inputPath;
+  };
+
+  // Keep only the posts written in `lang` (defaults to zh-TW). Used by listing
+  // pages and feeds so translations don't leak into the Chinese homepage/RSS.
+  eleventyConfig.addFilter("filterByLang", function (posts, lang) {
+    const target = lang || DEFAULT_LANG;
+    return (posts || []).filter((item) => postLang(item) === target);
+  });
+
+  // Look up the URL of the `lang` version within a translations entry (the
+  // [{lang, url, title}] array). Returns null if that language isn't available.
+  // (A filter, not an in-template loop, because Nunjucks `set` inside a `for`
+  // doesn't escape the loop scope.)
+  eleventyConfig.addFilter("urlForLang", function (translations, lang) {
+    if (!translations) return null;
+    const hit = translations.find((v) => v.lang === lang);
+    return hit ? hit.url : null;
+  });
+
+  // The home pages exist for every language at deterministic URLs
+  // (zh-TW → /, others → /<lang>/). Build their translation set directly rather
+  // than via the `translations` collection — paginated pages aren't reliably
+  // visible to a collection consumed from another paginated template.
+  eleventyConfig.addFilter("homeVersions", function (langsArr) {
+    return (langsArr || []).map((code) => ({
+      lang: code,
+      url: code === DEFAULT_LANG ? "/" : `/${code}/`,
+    }));
+  });
+
+  // zh-TW-only posts — the source language listing (homepage, archive, feeds).
+  eleventyConfig.addCollection("postsZhTW", function (collectionApi) {
+    return collectionApi
+      .getFilteredByTag("posts")
+      .filter((item) => postLang(item) === DEFAULT_LANG);
+  });
+
+  // Map of translationKey -> [{ lang, url, title }], display-ordered by
+  // SITE_LANGS. Templates read collections.translations[translationKey].
+  // Spans ALL pages that declare a `translationKey` (posts AND the per-language
+  // home pages), so the site-wide switcher links home↔home and article↔article.
+  eleventyConfig.addCollection("translations", function (collectionApi) {
+    const map = {};
+    for (const item of collectionApi.getAll()) {
+      if (!item.data || !item.data.translationKey) continue;
+      const key = item.data.translationKey;
+      (map[key] = map[key] || []).push({
+        lang: postLang(item),
+        url: item.url,
+        title: item.data.title,
+      });
+    }
+    for (const key of Object.keys(map)) {
+      map[key].sort(
+        (a, b) => SITE_LANGS.indexOf(a.lang) - SITE_LANGS.indexOf(b.lang)
+      );
+    }
+    return map;
+  });
+
   eleventyConfig.addCollection("tagList", require("./_11ty/getTagList"));
 
   eleventyConfig.addPassthroughCopy("img");

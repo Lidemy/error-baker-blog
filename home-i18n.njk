@@ -1,0 +1,24 @@
+---
+# Per-language home pages: /en/, /ja/, /zh-CN/ (zh-TW home is index.njk at /).
+layout: layouts/home.njk
+pagination:
+  data: langs
+  size: 1
+  alias: hlang
+  filter:
+    - zh-TW
+permalink: "/{{ hlang }}/"
+eleventyComputed:
+  lang: "{{ hlang }}"
+  title: "{{ i18n[hlang].siteName }}"
+  translationKey: "home"
+---
+
+{% set ht = i18n[hlang] %}
+<section class="intro">
+<p>{{ ht.intro }}</p>
+</section>
+<section class="posts">
+  {% set postslist = collections.posts | filterByLang(hlang) %}
+  {% include "home-postslist.njk" %}
+</section>

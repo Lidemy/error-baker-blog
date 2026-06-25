@@ -5,12 +5,14 @@ templateClass: tmpl-post
 {% extends "layouts/base.njk" %}
 
 {% set postAuthor = metadata.authors[author] %}
+{% set pageLang = lang or 'zh-TW' %}
+{% set t = i18n[pageLang] or i18n['zh-TW'] %}
 
 {% block extraArticleHeader %}
    <aside class="w-full">
       <div class="flex items-center">
         <img class="avatar" src="{{ postAuthor.avatarUrl }}">
-        <span style="margin-left: 12px;"><a href="/posts/{{ author }}">{{ postAuthor.name }}</a> 於 {{ date | htmlDateString }} 發布</span>
+        <span style="margin-left: 12px;"><a href="/posts/{{ author }}">{{ postAuthor.name }}</a> · {{ t.publishedOn }} {{ date | htmlDateString }}</span>
       </div>
       <div style="text-align: left;">
       {% for tag in tags %}
@@ -18,7 +20,7 @@ templateClass: tmpl-post
           {% set tagUrl %}/tags/{{ tag | slug }}/{% endset %}
           <a href="{{ tagUrl | url }}" class="post-tag">#{{ tag }}</a>
         {% endif %}
-        
+
       {% endfor %}
       </div>
    </aside>
@@ -33,16 +35,17 @@ templateClass: tmpl-post
 
 <hr>
 <p>
-  <h3>關於作者</h3>
+  <h3>{{ t.aboutAuthor }}</h3>
   <div class="flex items-center">
     <img class="avatar avatar-large" src="{{ postAuthor.avatarUrl }}">
     <h3 style="margin-left: 12px;"><a href="/posts/{{ author }}">{{ postAuthor.name }}</a></h3>
   </div>
-  <p>{{ postAuthor.intro | safe }}</p>
+  {% set authorIntro = postAuthor['intro_' + pageLang] or postAuthor.intro %}
+  <p>{{ authorIntro | safe }}</p>
 </p>
 
 <p>
-  <a href="{{ shareUrl | safe }}" on-click="share">分享文章</a>
+  <a href="{{ shareUrl | safe }}" on-click="share">{{ t.shareArticle }}</a>
 </p>
 
 <script
