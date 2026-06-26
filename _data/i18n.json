@@ -19,7 +19,12 @@
     "allPosts": "瀏覽全部文章",
     "skipToContent": "跳到主要內容",
     "toggleTheme": "切換深色模式",
-    "ogLocale": "zh_TW"
+    "ogLocale": "zh_TW",
+    "nav_About": "關於",
+    "aboutTitle": "關於我們",
+    "aboutOriginHeading": "緣起",
+    "authorsHeading": "作者列表",
+    "aboutOriginBody": "<p>一群因為某些原因聚集在一起的工程師（或準工程師）決定合寫一個技術共筆部落格，藉此督促自己做點事，以每人每個月至少一篇的形式發佈文章。</p><p>名字的由來是為了跟 TechBridge 以及 StarBugs 一樣，由兩個單字組成，第二個單字 B 開頭，然後單字要跟程式有關（像是 Tech 與 Bugs），最後就找到了 ErrorBaker，錯誤烘培師，很適合常常寫出 error 的我們。</p>"
   },
   "en": {
     "langName": "English",
@@ -41,7 +46,12 @@
     "allPosts": "View all articles",
     "skipToContent": "Skip to content",
     "toggleTheme": "Toggle dark mode",
-    "ogLocale": "en_US"
+    "ogLocale": "en_US",
+    "nav_About": "About",
+    "aboutTitle": "About us",
+    "aboutOriginHeading": "Origin",
+    "authorsHeading": "Authors",
+    "aboutOriginBody": "<p>A group of engineers (and engineers-in-training) who came together for various reasons decided to write a shared technical blog — a way to keep each other accountable, publishing at least one article per person every month.</p><p>The name follows the same pattern as TechBridge and StarBugs: two words, the second starting with “B” and related to programming (like Tech &amp; Bugs). We landed on ErrorBaker — fitting for people who bake up errors as often as we do.</p>"
   },
   "ja": {
     "langName": "日本語",
@@ -63,7 +73,12 @@
     "allPosts": "すべての記事",
     "skipToContent": "本文へスキップ",
     "toggleTheme": "ダークモード切替",
-    "ogLocale": "ja_JP"
+    "ogLocale": "ja_JP",
+    "nav_About": "私たちについて",
+    "aboutTitle": "私たちについて",
+    "aboutOriginHeading": "由来",
+    "authorsHeading": "著者一覧",
+    "aboutOriginBody": "<p>さまざまな理由で集まったエンジニア（およびエンジニアの卵）たちが、技術共同ブログを書くことにしました。お互いを律するために、一人あたり毎月最低 1 本の記事を公開しています。</p><p>名前は TechBridge や StarBugs と同じく 2 つの単語からなり、2 つ目は B で始まりプログラミングに関係する語（Tech と Bugs のように）。最終的に ErrorBaker（エラーを焼く人）に決めました。しょっちゅう error を生み出す私たちにぴったりです。</p>"
   },
   "zh-CN": {
     "langName": "简体中文",
@@ -85,6 +100,11 @@
     "allPosts": "浏览全部文章",
     "skipToContent": "跳到主要内容",
     "toggleTheme": "切换深色模式",
-    "ogLocale": "zh_CN"
+    "ogLocale": "zh_CN",
+    "nav_About": "关于",
+    "aboutTitle": "关于我们",
+    "aboutOriginHeading": "缘起",
+    "authorsHeading": "作者列表",
+    "aboutOriginBody": "<p>一群因为某些原因聚集在一起的工程师（或准工程师）决定合写一个技术共笔博客，借此督促自己做点事，以每人每个月至少一篇的形式发布文章。</p><p>名字的由来是为了跟 TechBridge 以及 StarBugs 一样，由两个单词组成，第二个单词 B 开头，然后单词要跟程序有关（像是 Tech 与 Bugs），最后就找到了 ErrorBaker，错误烘焙师，很适合常常写出 error 的我们。</p>"
   }
 }

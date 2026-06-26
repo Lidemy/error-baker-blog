@@ -7,10 +7,13 @@ templateClass: tmpl-post
 {% set postAuthor = metadata.authors[author] %}
 {% set pageLang = lang or 'zh-TW' %}
 {% set t = i18n[pageLang] or i18n['zh-TW'] %}
+{# Author page in the article's language (the per-language page exists because
+   this article is in that language). #}
+{% set authorUrl = ('/posts/' + author + '/') if pageLang == 'zh-TW' else ('/' + pageLang + '/posts/' + author + '/') %}
 
 {% block extraArticleHeader %}
   <div class="byline">
-    <a class="byline-author" href="/posts/{{ author }}">
+    <a class="byline-author" href="{{ authorUrl }}">
       <img class="avatar" src="{{ postAuthor.avatarUrl }}" alt="" />
       <span>{{ postAuthor.name }}</span>
     </a>
@@ -33,7 +36,7 @@ templateClass: tmpl-post
   <h2>{{ t.aboutAuthor }}</h2>
   <div class="flex items-center">
     <img class="avatar avatar-large" src="{{ postAuthor.avatarUrl }}" alt="">
-    <h3 style="margin-left: 12px;"><a href="/posts/{{ author }}">{{ postAuthor.name }}</a></h3>
+    <h3 style="margin-left: 12px;"><a href="{{ authorUrl }}">{{ postAuthor.name }}</a></h3>
   </div>
   {% set authorIntro = postAuthor['intro_' + pageLang] or postAuthor.intro %}
   <div class="author-intro">{{ authorIntro | safe }}</div>

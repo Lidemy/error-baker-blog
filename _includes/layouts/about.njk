@@ -4,16 +4,21 @@ templateClass: tmpl-about
 ---
 {% extends "layouts/base.njk" %}
 
-{% set postAuthor = metadata.authors[author] %}
+{% set pageLang = lang or 'zh-TW' %}
+{% set t = i18n[pageLang] or i18n['zh-TW'] %}
 
 {% block article %}
 
-{{ content | safe }}
+<h2>{{ t.aboutOriginHeading }}</h2>
+{{ t.aboutOriginBody | safe }}
 
-{#- Authors, ranked by number of posts (collections.authorsByPostCount). -#}
+<h2>{{ t.authorsHeading }}</h2>
+{#- Authors, ranked by number of posts (collections.authorsByPostCount).
+    Author links go to the canonical zh-TW author page (always exists). -#}
 <ul class="author-list">
 {%- for a in collections.authorsByPostCount %}
   {%- set author = metadata.authors[a.key] %}
+  {%- set bio = author['intro_' + pageLang] or author.intro %}
   <li class="author-row">
     <a class="author-row__avatar" href="/posts/{{ a.key }}/">
       <img class="avatar avatar-large" src="{{ author.avatarUrl }}" alt="" loading="lazy" />
@@ -23,7 +28,7 @@ templateClass: tmpl-about
         <a href="/posts/{{ a.key }}/">{{ author.name }}</a>
         <span class="author-row__count">{{ a.count }} {{ t.postsUnit or '篇' }}</span>
       </h3>
-      <p class="author-row__intro">{{ author.intro | safe }}</p>
+      <p class="author-row__intro">{{ bio | safe }}</p>
     </div>
   </li>
 {%- endfor %}

@@ -245,6 +245,21 @@ module.exports = function (eleventyConfig) {
       .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
   });
 
+  // (lang, author) pairs that have at least one translated post — used to
+  // generate per-language author pages /<lang>/posts/<author>/ (zh-TW author
+  // pages are the manual posts/<author>/index.njk files).
+  eleventyConfig.addCollection("authorLangPages", function (collectionApi) {
+    const seen = {};
+    for (const item of collectionApi.getFilteredByTag("posts")) {
+      const lang = postLang(item);
+      if (lang === DEFAULT_LANG) continue;
+      const author = item.data.author;
+      if (!author) continue;
+      seen[lang + "|" + author] = { lang, author };
+    }
+    return Object.values(seen);
+  });
+
   // Map of translationKey -> [{ lang, url, title }], display-ordered by
   // SITE_LANGS. Templates read collections.translations[translationKey].
   // Spans ALL pages that declare a `translationKey` (posts AND the per-language

@@ -158,8 +158,14 @@
           {#- Read more about `eleventy-navigation` at https://www.11ty.dev/docs/plugins/navigation/ #}
           <input id="menu__control" type="checkbox" />
           <div class="nav__links">
+          {#- zh-TW shows the full chrome (Archive/Tags/About). Other languages
+              only have a translated About + Home, so Archive/Tags (zh-TW-only
+              browse) are hidden and About points at the per-language page. #}
           {%- for entry in collections.all | eleventyNavigation %}
-            <a class="nav__link" href="{{ entry.url | url }}">{{ i18n[pageLang]['nav_' + entry.key] or entry.title }}</a>
+            {%- if pageLang == 'zh-TW' or entry.key == 'About' %}
+            {%- set navHref = ('/' + pageLang + '/about/') if (pageLang != 'zh-TW' and entry.key == 'About') else entry.url %}
+            <a class="nav__link" href="{{ navHref | url }}">{{ i18n[pageLang]['nav_' + entry.key] or entry.title }}</a>
+            {%- endif %}
           {%- endfor %}
           {#- Language switcher as a compact dropdown (native <details>, no JS).
               Available languages link; missing ones are shown disabled. #}
