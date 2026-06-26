@@ -10,13 +10,23 @@ templateClass: tmpl-about
 
 {{ content | safe }}
 
-{% for key, author in metadata.authors %}
-  <div class="flex items-center">
-    <img class="avatar avatar-large" src="{{ author.avatarUrl }}">
-    <h4 style="margin-left: 12px;"><a href="/posts/{{ key }}">{{ author.name }}</a></h4>
-  </div>
-  
-  <p>{{ author.intro | safe }}</p>
-{% endfor %}
+{#- Authors, ranked by number of posts (collections.authorsByPostCount). -#}
+<ul class="author-list">
+{%- for a in collections.authorsByPostCount %}
+  {%- set author = metadata.authors[a.key] %}
+  <li class="author-row">
+    <a class="author-row__avatar" href="/posts/{{ a.key }}/">
+      <img class="avatar avatar-large" src="{{ author.avatarUrl }}" alt="" loading="lazy" />
+    </a>
+    <div class="author-row__body">
+      <h3 class="author-row__name">
+        <a href="/posts/{{ a.key }}/">{{ author.name }}</a>
+        <span class="author-row__count">{{ a.count }} {{ t.postsUnit or '篇' }}</span>
+      </h3>
+      <p class="author-row__intro">{{ author.intro | safe }}</p>
+    </div>
+  </li>
+{%- endfor %}
+</ul>
 
 {% endblock %}

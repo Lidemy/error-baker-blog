@@ -223,6 +223,28 @@ module.exports = function (eleventyConfig) {
       .filter((item) => postLang(item) === DEFAULT_LANG);
   });
 
+  // Authors ranked by number of (zh-TW source) posts — for the /authors/ index.
+  eleventyConfig.addCollection("authorsByPostCount", function (collectionApi) {
+    const authors = require("./_data/metadata.json").authors;
+    const counts = {};
+    collectionApi
+      .getFilteredByTag("posts")
+      .filter((item) => postLang(item) === DEFAULT_LANG)
+      .forEach((item) => {
+        const a = item.data.author;
+        if (a) counts[a] = (counts[a] || 0) + 1;
+      });
+    return Object.keys(authors)
+      .map((key) => ({
+        key,
+        name: authors[key].name,
+        avatarUrl: authors[key].avatarUrl,
+        count: counts[key] || 0,
+      }))
+      .filter((a) => a.count > 0)
+      .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+  });
+
   // Map of translationKey -> [{ lang, url, title }], display-ordered by
   // SITE_LANGS. Templates read collections.translations[translationKey].
   // Spans ALL pages that declare a `translationKey` (posts AND the per-language

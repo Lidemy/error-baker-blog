@@ -14,6 +14,11 @@
     "intro": "Hi，這是 ErrorBaker 技術共筆部落格，由一群希望藉由共筆部落格督促自己寫文章的人們組成。",
     "nav_Archive": "彙整",
     "nav_Tags": "標籤",
+    "postsUnit": "篇",
+    "toc": "目錄",
+    "allPosts": "瀏覽全部文章",
+    "skipToContent": "跳到主要內容",
+    "toggleTheme": "切換深色模式",
     "ogLocale": "zh_TW"
   },
   "en": {
@@ -31,6 +36,11 @@
     "intro": "Hi, this is the ErrorBaker tech blog — written by a group of people who use a shared blog to push themselves to keep writing.",
     "nav_Archive": "Archive",
     "nav_Tags": "Tags",
+    "postsUnit": "articles",
+    "toc": "Contents",
+    "allPosts": "View all articles",
+    "skipToContent": "Skip to content",
+    "toggleTheme": "Toggle dark mode",
     "ogLocale": "en_US"
   },
   "ja": {
@@ -48,6 +58,11 @@
     "intro": "ErrorBaker 技術ブログへようこそ。共同ブログを通じて執筆を継続しようとする人たちによって書かれています。",
     "nav_Archive": "アーカイブ",
     "nav_Tags": "タグ",
+    "postsUnit": "記事",
+    "toc": "目次",
+    "allPosts": "すべての記事",
+    "skipToContent": "本文へスキップ",
+    "toggleTheme": "ダークモード切替",
     "ogLocale": "ja_JP"
   },
   "zh-CN": {
@@ -65,6 +80,11 @@
     "intro": "Hi，这是 ErrorBaker 技术共笔博客，由一群希望借由共笔博客督促自己写文章的人们组成。",
     "nav_Archive": "归档",
     "nav_Tags": "标签",
+    "postsUnit": "篇",
+    "toc": "目录",
+    "allPosts": "浏览全部文章",
+    "skipToContent": "跳到主要内容",
+    "toggleTheme": "切换深色模式",
     "ogLocale": "zh_CN"
   }
 }

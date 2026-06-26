@@ -9,21 +9,16 @@ templateClass: tmpl-post
 {% set t = i18n[pageLang] or i18n['zh-TW'] %}
 
 {% block extraArticleHeader %}
-   <aside class="w-full">
-      <div class="flex items-center">
-        <img class="avatar" src="{{ postAuthor.avatarUrl }}">
-        <span style="margin-left: 12px;"><a href="/posts/{{ author }}">{{ postAuthor.name }}</a> · {{ t.publishedOn }} {{ date | htmlDateString }}</span>
-      </div>
-      <div style="text-align: left;">
-      {% for tag in tags %}
-        {% if tag !== "posts" %}
-          {% set tagUrl %}/tags/{{ tag | slug }}/{% endset %}
-          <a href="{{ tagUrl | url }}" class="post-tag">#{{ tag }}</a>
-        {% endif %}
-
-      {% endfor %}
-      </div>
-   </aside>
+  <div class="byline">
+    <a class="byline-author" href="/posts/{{ author }}">
+      <img class="avatar" src="{{ postAuthor.avatarUrl }}" alt="" />
+      <span>{{ postAuthor.name }}</span>
+    </a>
+    <time class="byline-date" datetime="{{ date | htmlDateString }}">{{ t.publishedOn }} {{ date | htmlDateString }}</time>
+    <span class="byline-tags">
+    {%- for tag in tags %}{% if tag !== "posts" %}{% set tagUrl %}/tags/{{ tag | slug }}/{% endset %}<a href="{{ tagUrl | url }}" class="post-tag">#{{ tag }}</a>{% endif %}{% endfor %}
+    </span>
+  </div>
 {% endblock %}
 
 
@@ -34,15 +29,15 @@ templateClass: tmpl-post
 {{ content | safe }}
 
 <hr>
-<p>
-  <h3>{{ t.aboutAuthor }}</h3>
+<section class="author-bio">
+  <h2>{{ t.aboutAuthor }}</h2>
   <div class="flex items-center">
     <img class="avatar avatar-large" src="{{ postAuthor.avatarUrl }}">
     <h3 style="margin-left: 12px;"><a href="/posts/{{ author }}">{{ postAuthor.name }}</a></h3>
   </div>
   {% set authorIntro = postAuthor['intro_' + pageLang] or postAuthor.intro %}
-  <p>{{ authorIntro | safe }}</p>
-</p>
+  <div class="author-intro">{{ authorIntro | safe }}</div>
+</section>
 
 <p>
   <a href="{{ shareUrl | safe }}" on-click="share">{{ t.shareArticle }}</a>
@@ -68,10 +63,15 @@ templateClass: tmpl-post
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "{{ title }}",
-  "image": [],
-  "author": "{{ postAuthor.name }}", 
-  "genre": "{{ metadata.genre }}", 
+  "headline": {{ title | dump | safe }},
+  "inLanguage": "{{ pageLang }}",
+  "image": ["{{ image | absoluteUrl(metadata.url) if image else metadata.ogimage }}"],
+  "author": {
+    "@type": "Person",
+    "name": {{ postAuthor.name | dump | safe }},
+    "url": "{{ metadata.url }}/posts/{{ author }}"
+  },
+  "genre": "{{ metadata.genre }}",
   "publisher": {
     "@type": "Organization",
     "name": "{{ metadata.publisher.name }}",
@@ -84,8 +84,17 @@ templateClass: tmpl-post
   "mainEntityOfPage": "{{ metadata.url }}{{ canonicalUrl or page.url }}",
   "datePublished": "{{ page.date | htmlDateString }}",
   "dateModified": "{{ page.inputPath | lastModifiedDate  | htmlDateString }}",
-  "description": "{{ content | striptags | truncate(140) }}"
+  "description": {{ content | striptags | truncate(140) | dump | safe }}
 }
 </script>
 
+{% endblock %}
+
+{% block aside %}
+  <nav class="toc" id="toc" aria-label="{{ t.toc or '目錄' }}">
+    <details class="toc-details" open>
+      <summary class="toc-title">{{ t.toc or '目錄' }}</summary>
+      <ul class="toc-list"></ul>
+    </details>
+  </nav>
 {% endblock %}

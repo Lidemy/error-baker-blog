@@ -74,6 +74,23 @@ const purifyCss = async (rawContent, outputPath) => {
       ],*/
       fontFace: true,
       variables: true,
+      // Classes/states toggled by JS (TOC scroll-spy, back-to-top) never appear
+      // in the server-rendered HTML PurgeCSS scans, so keep them explicitly.
+      // NOTE: purgecss@2 uses `whitelist`/`whitelistPatterns`; `safelist` is the
+      // v3+ name (kept here for forward-compatibility on a future upgrade).
+      whitelist: [
+        "active",
+        "visible",
+        "toc-ready",
+        "direct-link",
+        "skip-link",
+        "site-title",
+        "author-bio",
+        "author-intro",
+        "tmpl-post",
+      ],
+      whitelistPatterns: [/^toc/, /^lang-/],
+      safelist: ["active", "visible", "toc-ready", /^toc/, /^lang-/],
     });
 
     const after = csso.minify(purged[0].css).css;

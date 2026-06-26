@@ -272,3 +272,55 @@ document.body.addEventListener(
   /* capture */ "true"
 );
 
+// ── Table of contents (post pages) + scroll-spy ─────────────────────────
+// The TOC <nav id="toc"> is rendered (empty) by post.njk so its styles survive
+// PurgeCSS. We populate it from the article's heading anchors (which already
+// have ids from markdown-it-anchor). Manually-authored headings such as the
+// "About the author" section have no id and are intentionally skipped.
+(function () {
+  var toc = document.getElementById("toc");
+  if (!toc) return;
+  var article = document.querySelector("main > article");
+  var list = toc.querySelector(".toc-list");
+  if (!article || !list) return;
+  var headings = [].slice.call(article.querySelectorAll("h2[id], h3[id]"));
+  if (headings.length < 2) {
+    // Nothing worth a TOC. It is display:none, so removing it shifts nothing.
+    toc.parentNode && toc.parentNode.removeChild(toc);
+    return;
+  }
+  var byId = {};
+  headings.forEach(function (h) {
+    var li = document.createElement("li");
+    li.className = h.tagName === "H3" ? "toc-h3" : "toc-h2";
+    var a = document.createElement("a");
+    a.href = "#" + h.id;
+    a.textContent = (h.textContent || "").replace(/^#+\s*/, "").trim();
+    li.appendChild(a);
+    list.appendChild(li);
+    byId[h.id] = a;
+  });
+  // CSS reveals .toc.toc-ready only on >=1024px (desktop sidebar); on smaller
+  // screens it stays hidden, avoiding a bottom-of-page TOC and any layout shift.
+  toc.classList.add("toc-ready");
+
+  if ("IntersectionObserver" in window) {
+    var current = null;
+    var io = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          if (current) current.classList.remove("active");
+          current = byId[e.target.id];
+          if (current) current.classList.add("active");
+        });
+      },
+      { rootMargin: "0px 0px -75% 0px", threshold: 0 }
+    );
+    headings.forEach(function (h) {
+      io.observe(h);
+    });
+  }
+})();
+
+
