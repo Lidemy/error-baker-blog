@@ -1,0 +1,19 @@
+---
+permalink: /llms.txt
+eleventyExcludeFromCollections: true
+---
+# {{ metadata.title }}
+
+> {{ metadata.description }}。技術共筆部落格，由一群工程師共同撰寫，主題以 web 前後端為主，涵蓋 JavaScript、TypeScript、React、Node.js、Golang、CSS、工具與工程實踐等。提供繁體中文（原文）與 English / 日本語 / 简体中文 翻譯。
+
+## Articles
+{% for post in collections.postsZhTW | reverse -%}
+- [{{ post.data.title }}]({{ metadata.url }}{{ post.url }}){% if post.data.description %}: {{ post.data.description }}{% endif %}
+{% endfor %}
+## Pages
+- [Archive]({{ metadata.url }}/archive/): 全部文章的時間軸索引
+- [About]({{ metadata.url }}/about/): 關於 ErrorBaker 與作者列表（依文章數排序）
+- [Tags]({{ metadata.url }}/tags/): 依主題標籤瀏覽
+
+## Feeds
+- [Atom feed]({{ metadata.url }}{{ metadata.feed.path }})
