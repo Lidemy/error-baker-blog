@@ -32,7 +32,7 @@ templateClass: tmpl-post
 <section class="author-bio">
   <h2>{{ t.aboutAuthor }}</h2>
   <div class="flex items-center">
-    <img class="avatar avatar-large" src="{{ postAuthor.avatarUrl }}">
+    <img class="avatar avatar-large" src="{{ postAuthor.avatarUrl }}" alt="">
     <h3 style="margin-left: 12px;"><a href="/posts/{{ author }}">{{ postAuthor.name }}</a></h3>
   </div>
   {% set authorIntro = postAuthor['intro_' + pageLang] or postAuthor.intro %}
