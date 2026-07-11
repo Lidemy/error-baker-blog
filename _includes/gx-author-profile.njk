@@ -1,0 +1,31 @@
+{#- Per-author gamification profile: level badge + a condensed contribution bar
+    (one cell per quarter, newest first). Expects `stat` (one record from
+    collections.authorsByPostCount) and `t` (i18n strings for the page lang). -#}
+<section class="gx-profile">
+  <div class="gx-profile__head">
+    <span class="gx-level gx-tier-{{ stat.tier }}">Lv.{{ stat.level }} · {{ t.gx.tier[stat.tier] }}</span>
+    {%- if stat.rank %}<span class="gx-profile__rank">#{{ stat.rank }}</span>{% endif %}
+    <span class="gx-profile__count">{{ stat.count }} {{ t.postsUnit or '篇' }}</span>
+    {%- if stat.medal %}<span class="gx-profile__medal">{{ stat.medal }}</span>{% endif %}
+  </div>
+
+  {%- set cal = stat.calendar %}
+  {%- if cal %}
+  <h3 class="gx-profile__h">{{ t.gx.contributions }}</h3>
+  <div class="gx-cal">
+    <div class="gx-periods">
+      {%- for c in cal.cells %}
+      <div class="gx-period" title="{{ c.year }} Q{{ c.quarter }} · {{ c.count }} {{ t.postsUnit or '篇' }}">
+        <i class="gx-cell" data-level="{{ c.level }}"></i>
+        <span class="gx-period__lbl"><b>{% if c.quarter == 1 or loop.first %}{{ c.year }}{% endif %}</b>Q{{ c.quarter }}</span>
+      </div>
+      {%- endfor %}
+    </div>
+    <div class="gx-cal__legend">
+      <span>{{ t.gx.less }}</span>
+      <i class="gx-cell" data-level="0"></i><i class="gx-cell" data-level="1"></i><i class="gx-cell" data-level="2"></i><i class="gx-cell" data-level="3"></i><i class="gx-cell" data-level="4"></i>
+      <span>{{ t.gx.more }}</span>
+    </div>
+  </div>
+  {%- endif %}
+</section>

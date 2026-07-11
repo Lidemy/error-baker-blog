@@ -1,3 +1,8 @@
+{%- set pageLang = lang or 'zh-TW' %}
+{%- set t = i18n[pageLang] or i18n['zh-TW'] %}
+{%- set stat = collections.authorsByPostCount | authorStat(author) %}
+{%- if stat %}{% include "gx-author-profile.njk" %}{% endif %}
+
 <ul>
 {% for post in postslist | reverse %}
   {% if author == post.data.author%}

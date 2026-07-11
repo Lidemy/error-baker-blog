@@ -13,21 +13,29 @@ templateClass: tmpl-about
 {{ t.aboutOriginBody | safe }}
 
 <h2>{{ t.authorsHeading }}</h2>
-{#- Authors, ranked by number of posts (collections.authorsByPostCount).
-    Author links go to the canonical zh-TW author page (always exists). -#}
-<ul class="author-list">
+{#- Leaderboard ranked by post count, ties broken by most recent activity
+    (collections.authorsByPostCount, enriched in _11ty/authorStats.js). Author
+    links go to the canonical zh-TW author page (always exists). -#}
+{%- set tier = t.gx.tier %}
+<ul class="author-list gx-leaderboard">
 {%- for a in collections.authorsByPostCount %}
   {%- set author = metadata.authors[a.key] %}
   {%- set bio = author['intro_' + pageLang] or author.intro %}
-  <li class="author-row">
-    <a class="author-row__avatar" href="/posts/{{ a.key }}/">
+  {%- set authorUrl = ('/posts/' + a.key + '/') if pageLang == 'zh-TW' else ('/' + pageLang + '/posts/' + a.key + '/') %}
+  <li class="author-row gx-row gx-rank-{{ a.rank }}">
+    <span class="gx-rank" aria-label="{{ t.gx.rank }} {{ a.rank }}">{% if a.medal %}{{ a.medal }}{% else %}{{ a.rank }}{% endif %}</span>
+    <a class="author-row__avatar" href="{{ authorUrl }}">
       <img class="avatar avatar-large" src="{{ author.avatarUrl }}" alt="" loading="lazy" />
     </a>
     <div class="author-row__body">
       <h3 class="author-row__name">
-        <a href="/posts/{{ a.key }}/">{{ author.name }}</a>
+        <a href="{{ authorUrl }}">{{ author.name }}</a>
+        <span class="gx-level gx-tier-{{ a.tier }}" title="{{ tier[a.tier] }}">Lv.{{ a.level }}</span>
         <span class="author-row__count">{{ a.count }} {{ t.postsUnit or '篇' }}</span>
       </h3>
+      <div class="gx-bar" role="img" aria-label="{{ a.count }} {{ t.postsUnit or '篇' }}">
+        <span class="gx-bar__fill gx-tier-{{ a.tier }}" style="width: {{ a.pct }}%"></span>
+      </div>
       <p class="author-row__intro">{{ bio | safe }}</p>
     </div>
   </li>

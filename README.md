@@ -107,8 +107,9 @@ css/main.css 所有的樣式都在裡面，有新增的都放在最下面
 
 2. 代理會產出 `posts/peter/foo.en.md` 等檔，標為 `draft: true`，並回報「回譯校驗」
    讓你用中文檢查語意。
-3. 本機預覽 `npm run serve`（草稿在 dev 模式可見），確認沒問題後**移除譯文的
-   `draft: true`**，commit + push 即發佈。
+3. 本機預覽 `npm run serve`（草稿在 dev 模式可見），確認沒問題後才可移除譯文的
+   `draft: true`，並填入 `reviewedBy` 與 `reviewedAt`；這兩個審核欄位缺一時，
+   pre-commit 會拒絕發佈。
 
 ### 譯文不會混進中文首頁
 
@@ -117,9 +118,9 @@ css/main.css 所有的樣式都在裡面，有新增的都放在最下面
 
 ### 過期守門（pre-commit）
 
-提交時會自動檢查：被改動的原文若**缺對應譯文**或**譯文已過期**（原文內文變了），
-會擋下提交並提示你重跑 `/translate-post`。過期是用譯文 frontmatter 的 `sourceHash`
-與原文現況比對判斷的。
+提交時會自動檢查：被改動的原文或譯文若**缺對應譯文**、**譯文已過期**（原文內文變了），
+或已發佈譯文缺少人工審核紀錄，就會擋下提交並提示你修正。檢查一律讀取 Git 暫存區，
+不會被 working tree 的未暫存內容影響。
 
 WIP 想先略過檢查：
 

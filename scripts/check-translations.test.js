@@ -12,7 +12,10 @@ const {
   hashBody,
   isTranslationPath,
   translationPathFor,
+  sourcePathForTranslation,
   frontmatterField,
+  isTranslationManagedSource,
+  publicationReviewIssue,
 } = require("./check-translations.js");
 
 let passed = 0;
@@ -62,11 +65,42 @@ test("translationPathFor builds the sibling translation path", () => {
   );
 });
 
+test("sourcePathForTranslation maps a translation back to its source", () => {
+  assert.strictEqual(
+    sourcePathForTranslation("posts/tian/git-flow.zh-CN.md"),
+    "posts/tian/git-flow.md"
+  );
+  assert.strictEqual(sourcePathForTranslation("posts/tian/git-flow.md"), null);
+});
+
 test("frontmatterField parses a quoted or bare value", () => {
   const fm = 'sourceHash: abc123\nlang: "en"';
   assert.strictEqual(frontmatterField(fm, "sourceHash"), "abc123");
   assert.strictEqual(frontmatterField(fm, "lang"), "en");
   assert.strictEqual(frontmatterField(fm, "missing"), null);
+});
+
+test("only zh-TW sources with a translationKey opt into translation checks", () => {
+  assert.strictEqual(isTranslationManagedSource(SAMPLE), false);
+  assert.strictEqual(
+    isTranslationManagedSource(
+      "---\nlang: zh-TW\ntranslationKey: tian/example\n---\n\nBody\n"
+    ),
+    true
+  );
+  assert.strictEqual(
+    isTranslationManagedSource("---\nlang: en\ntranslationKey: tian/example\n---\n\nBody\n"),
+    false
+  );
+});
+
+test("published translations require an auditable human review", () => {
+  assert.strictEqual(publicationReviewIssue("draft: true"), null);
+  assert.strictEqual(publicationReviewIssue("draft: false"), "not-reviewed");
+  assert.strictEqual(
+    publicationReviewIssue("draft: false\nreviewedBy: May\nreviewedAt: 2026-07-11"),
+    null
+  );
 });
 
 console.log(`\n${passed} tests passed.`);

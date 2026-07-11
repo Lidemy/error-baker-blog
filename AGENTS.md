@@ -19,6 +19,8 @@
 - 若使用者指定語系（如 `/translate-post posts/benben/foo.md en,ja`），只翻指定的。
 - 支援的語系與顯示名稱定義於 `_data/i18n.json`；新增語系時需同步更新該檔與
   `.eleventy.js` 的 `SITE_LANGS`、`scripts/check-translations.js` 的 `TARGET_LANGS`。
+- 翻譯守門只會檢查已明確加入 i18n 的原文：frontmatter 同時具有 `lang: zh-TW` 與
+  `translationKey`。未加入這兩欄的既有文章不受影響。
 
 ---
 
@@ -63,6 +65,9 @@ image: <若原文有 image 則保留，否則省略>
   `posts/benben/15-raycast-101.md` → `benben/15-raycast-101`。
 - `permalink` 結尾務必有斜線。
 - 內文接在 frontmatter 之後，即翻譯後的文章本體。
+- `draft: true` 的譯文不會進 production build。人工審核通過後才可移除它，並且**必須**
+  補上可稽核欄位：`reviewedBy: <審核者>`、`reviewedAt: <YYYY-MM-DD>`。pre-commit 會拒絕
+  缺少這兩欄的已發佈譯文。
 
 ### `sourceHash`（過期偵測用，務必正確）
 
@@ -104,6 +109,7 @@ translationKey: <author>/<slug>
 
 ## 完成後
 
-- 提醒使用者：譯文為 `draft: true`，**經人工審核後再移除** `draft` 才會發佈。
+- 提醒使用者：譯文為 `draft: true`，**經人工審核後再移除** `draft`、填寫
+  `reviewedBy` 與 `reviewedAt` 才會發佈。
 - 本機預覽：`npm run serve`，草稿在 dev 模式可見；`npm run build`（production）不會輸出草稿。
 - 對外發佈內容建議經人工/法務或合規確認（公司規範）。

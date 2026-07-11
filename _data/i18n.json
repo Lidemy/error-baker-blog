@@ -1,5 +1,13 @@
 {
   "zh-TW": {
+    "gx": {
+      "level": "等級",
+      "rank": "名次",
+      "contributions": "發文紀錄",
+      "less": "少",
+      "more": "多",
+      "tier": { "diamond": "鑽石", "gold": "金牌", "silver": "銀牌", "bronze": "銅牌", "iron": "新手" }
+    },
     "langName": "繁體中文",
     "publishedOn": "發布於",
     "publishedBy": "作者",
@@ -27,6 +35,14 @@
     "aboutOriginBody": "<p>一群因為某些原因聚集在一起的工程師（或準工程師）決定合寫一個技術共筆部落格，藉此督促自己做點事，以每人每個月至少一篇的形式發佈文章。</p><p>名字的由來是為了跟 TechBridge 以及 StarBugs 一樣，由兩個單字組成，第二個單字 B 開頭，然後單字要跟程式有關（像是 Tech 與 Bugs），最後就找到了 ErrorBaker，錯誤烘培師，很適合常常寫出 error 的我們。</p>"
   },
   "en": {
+    "gx": {
+      "level": "Level",
+      "rank": "Rank",
+      "contributions": "Contributions",
+      "less": "Less",
+      "more": "More",
+      "tier": { "diamond": "Diamond", "gold": "Gold", "silver": "Silver", "bronze": "Bronze", "iron": "Rookie" }
+    },
     "langName": "English",
     "publishedOn": "published on",
     "publishedBy": "by",
@@ -54,6 +70,14 @@
     "aboutOriginBody": "<p>A group of engineers (and engineers-in-training) who came together for various reasons decided to write a shared technical blog — a way to keep each other accountable, publishing at least one article per person every month.</p><p>The name follows the same pattern as TechBridge and StarBugs: two words, the second starting with “B” and related to programming (like Tech &amp; Bugs). We landed on ErrorBaker — fitting for people who bake up errors as often as we do.</p>"
   },
   "ja": {
+    "gx": {
+      "level": "レベル",
+      "rank": "順位",
+      "contributions": "投稿記録",
+      "less": "少",
+      "more": "多",
+      "tier": { "diamond": "ダイヤ", "gold": "ゴールド", "silver": "シルバー", "bronze": "ブロンズ", "iron": "ルーキー" }
+    },
     "langName": "日本語",
     "publishedOn": "公開日",
     "publishedBy": "著者",
@@ -81,6 +105,14 @@
     "aboutOriginBody": "<p>さまざまな理由で集まったエンジニア（およびエンジニアの卵）たちが、技術共同ブログを書くことにしました。お互いを律するために、一人あたり毎月最低 1 本の記事を公開しています。</p><p>名前は TechBridge や StarBugs と同じく 2 つの単語からなり、2 つ目は B で始まりプログラミングに関係する語（Tech と Bugs のように）。最終的に ErrorBaker（エラーを焼く人）に決めました。しょっちゅう error を生み出す私たちにぴったりです。</p>"
   },
   "zh-CN": {
+    "gx": {
+      "level": "等级",
+      "rank": "名次",
+      "contributions": "发文记录",
+      "less": "少",
+      "more": "多",
+      "tier": { "diamond": "钻石", "gold": "金牌", "silver": "银牌", "bronze": "铜牌", "iron": "新手" }
+    },
     "langName": "简体中文",
     "publishedOn": "发布于",
     "publishedBy": "作者",

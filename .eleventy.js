@@ -54,6 +54,7 @@ const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
 const localImages = require("./third_party/eleventy-plugin-local-images/.eleventy.js");
 const CleanCSS = require("clean-css");
+const { buildAuthorStats } = require("./_11ty/authorStats");
 const GA_ID = require("./_data/metadata.json").googleAnalyticsId;
 
 module.exports = function (eleventyConfig) {
@@ -223,26 +224,21 @@ module.exports = function (eleventyConfig) {
       .filter((item) => postLang(item) === DEFAULT_LANG);
   });
 
-  // Authors ranked by number of (zh-TW source) posts — for the /authors/ index.
+  // Authors ranked by number of (zh-TW source) posts — for the /about/
+  // leaderboard and per-author profile. Each record is enriched by
+  // _11ty/authorStats.js with level/tier, achievements and a contribution
+  // calendar. Ties on post count are broken by most recent activity (not name).
   eleventyConfig.addCollection("authorsByPostCount", function (collectionApi) {
     const authors = require("./_data/metadata.json").authors;
-    const counts = {};
-    collectionApi
+    const posts = collectionApi
       .getFilteredByTag("posts")
-      .filter((item) => postLang(item) === DEFAULT_LANG)
-      .forEach((item) => {
-        const a = item.data.author;
-        if (a) counts[a] = (counts[a] || 0) + 1;
-      });
-    return Object.keys(authors)
-      .map((key) => ({
-        key,
-        name: authors[key].name,
-        avatarUrl: authors[key].avatarUrl,
-        count: counts[key] || 0,
-      }))
-      .filter((a) => a.count > 0)
-      .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+      .filter((item) => postLang(item) === DEFAULT_LANG);
+    return buildAuthorStats(posts, authors);
+  });
+
+  // Look up one author's enriched stats record by key (for author pages).
+  eleventyConfig.addFilter("authorStat", function (stats, key) {
+    return (stats || []).find((s) => s.key === key) || null;
   });
 
   // (lang, author) pairs that have at least one translated post — used to

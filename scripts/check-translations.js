@@ -2,11 +2,12 @@
 /**
  * Translation staleness guard (Husky pre-commit, Tier A).
  *
- * For every *staged* source post (`posts/<author>/<slug>.md`, zh-TW), this
- * checks that each target-language translation (a) exists and (b) is up to date
- * — its `sourceHash` frontmatter must equal the SHA-256 of the source post's
- * current body. Missing or stale translations block the commit and the author
- * is told to run `/translate-post`.
+ * For every affected *staged*, i18n-enabled source post
+ * (`posts/<author>/<slug>.md` with `lang: zh-TW` and `translationKey`), this
+ * checks that each target-language translation (a) exists, (b) is up to date,
+ * and (c) has an audit trail before it is published. All comparisons read Git's
+ * index, never the working tree, so a partially staged change cannot
+ * accidentally bypass the guard.
  *
  * It does NOT translate anything — translation is done by an agent following
  * AGENTS.md. The agent stamps each translation with the hash printed by:
@@ -62,10 +63,35 @@ function translationPathFor(sourcePath, lang) {
   return path.join(dir, `${base}.${lang}.md`);
 }
 
+/** Return the zh-TW source path for a translation path, or null if not one. */
+function sourcePathForTranslation(filePath) {
+  const base = path.basename(filePath, ".md");
+  const lang = ALL_LANG_SUFFIXES.find((code) => base.endsWith("." + code));
+  if (!lang) return null;
+  return filePath.slice(0, -(`.${lang}.md`.length)) + ".md";
+}
+
 function frontmatterField(frontmatter, field) {
   const re = new RegExp(`^${field}:\\s*["']?([^"'\\r\\n]+)["']?\\s*$`, "m");
   const m = frontmatter.match(re);
   return m ? m[1].trim() : null;
+}
+
+/** True when a source post has explicitly opted into the i18n workflow. */
+function isTranslationManagedSource(raw) {
+  const frontmatter = extractFrontmatter(raw);
+  return (
+    frontmatterField(frontmatter, "lang") === "zh-TW" &&
+    Boolean(frontmatterField(frontmatter, "translationKey"))
+  );
+}
+
+/** Return a publication-review error for a translation frontmatter block. */
+function publicationReviewIssue(frontmatter) {
+  if (frontmatterField(frontmatter, "draft") === "true") return null;
+  const reviewer = frontmatterField(frontmatter, "reviewedBy");
+  const reviewedAt = frontmatterField(frontmatter, "reviewedAt");
+  return reviewer && reviewedAt ? null : "not-reviewed";
 }
 
 module.exports = {
@@ -74,7 +100,10 @@ module.exports = {
   hashBody,
   isTranslationPath,
   translationPathFor,
+  sourcePathForTranslation,
   frontmatterField,
+  isTranslationManagedSource,
+  publicationReviewIssue,
   TARGET_LANGS,
 };
 
@@ -115,33 +144,54 @@ try {
   process.exit(0);
 }
 
-const sourcePosts = staged.filter(
-  (f) =>
-    f.startsWith("posts/") &&
-    f.endsWith(".md") &&
-    !isTranslationPath(f)
-);
+const sourcePosts = new Set();
+for (const file of staged) {
+  if (!file.startsWith("posts/") || !file.endsWith(".md")) continue;
+  if (isTranslationPath(file)) {
+    sourcePosts.add(sourcePathForTranslation(file));
+  } else {
+    sourcePosts.add(file);
+  }
+}
+
+/** Read the version that is about to be committed, not the working copy. */
+function readIndexFile(filePath) {
+  try {
+    return execFileSync("git", ["show", `:${filePath}`], { encoding: "utf8" });
+  } catch (e) {
+    return null;
+  }
+}
 
 const problems = [];
 for (const sourcePath of sourcePosts) {
-  if (!fs.existsSync(sourcePath)) continue; // staged delete edge case
-  const raw = fs.readFileSync(sourcePath, "utf8");
+  const raw = readIndexFile(sourcePath);
+  if (raw === null) continue; // staged delete edge case
   // Skip source posts that are themselves drafts — not ready to translate.
   if (frontmatterField(extractFrontmatter(raw), "draft") === "true") continue;
+  // Translation is opt-in so unrelated authors' existing posts are unaffected.
+  if (!isTranslationManagedSource(raw)) continue;
 
   const expected = hashBody(raw);
   for (const lang of TARGET_LANGS) {
     const tPath = translationPathFor(sourcePath, lang);
-    if (!fs.existsSync(tPath)) {
+    const translation = readIndexFile(tPath);
+    if (translation === null) {
       problems.push({ sourcePath, lang, reason: "missing" });
       continue;
     }
-    const actual = frontmatterField(
-      extractFrontmatter(fs.readFileSync(tPath, "utf8")),
-      "sourceHash"
-    );
+    const frontmatter = extractFrontmatter(translation);
+    const actual = frontmatterField(frontmatter, "sourceHash");
     if (actual !== expected) {
       problems.push({ sourcePath, lang, reason: actual ? "stale" : "no-hash" });
+      continue;
+    }
+    // A published AI-assisted translation must record who approved it and when.
+    // This does not prove quality automatically, but makes the human review gate
+    // explicit and auditable instead of silently publishing machine output.
+    const reviewIssue = publicationReviewIssue(frontmatter);
+    if (reviewIssue) {
+      problems.push({ sourcePath, lang, reason: reviewIssue });
     }
   }
 }
