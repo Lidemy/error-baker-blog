@@ -72,8 +72,9 @@ const purifyCss = async (rawContent, outputPath) => {
       variables: true,
       // Classes/states toggled by JS (TOC scroll-spy, back-to-top) never appear
       // in the server-rendered HTML PurgeCSS scans, so keep them explicitly.
-      // NOTE: purgecss@2 uses `whitelist`/`whitelistPatterns`; `safelist` is the
-      // v3+ name (kept here for forward-compatibility on a future upgrade).
+      // NOTE: purgecss@2 only honors `whitelist`/`whitelistPatterns` and
+      // silently ignores v3's `safelist` — don't add one; on a purgecss
+      // upgrade, rename these keys instead.
       whitelist: [
         "active",
         "visible",
@@ -86,7 +87,6 @@ const purifyCss = async (rawContent, outputPath) => {
         "tmpl-post",
       ],
       whitelistPatterns: [/^toc/, /^lang-/],
-      safelist: ["active", "visible", "toc-ready", /^toc/, /^lang-/],
     });
 
     const after = csso.minify(purged[0].css).css;

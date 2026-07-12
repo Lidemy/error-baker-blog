@@ -3,7 +3,7 @@
   # Allows overriding metadata.json via env var
   command = "[ \"$METADATA_JSON\" ] && echo $METADATA_JSON > _data/metadata.json; npm run build"
   functions = "functions/"
-  environment = { NODE_VERSION = "24" }
+  environment = { NODE_VERSION = "24", ELEVENTY_ENV = "production" }
 
 [[plugins]]
   package = "@netlify/plugin-functions-install-core"
