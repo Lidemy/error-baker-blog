@@ -27,10 +27,13 @@ const srcset = require("./srcset");
 const path = require("path");
 const fs = require("fs");
 const { gif2mp4 } = require("./video-gif");
+const AVATAR_WIDTH = 320;
+const AVATAR_CLASSES = ["avatar", "avatar-small", "avatar-large"];
 
 /**
- * Sets `width` and `height` on each image, adds blurry placeholder
- * and generates a srcset if none present.
+ * Sets `width` and `height` on each image and generates responsive sources.
+ * Content images receive a blurry placeholder and the full width set; small
+ * avatars use a compact, fixed-width path to avoid oversized repeated markup.
  * Note, that the static `sizes` string would need to change for a different
  * blog layout.
  */
@@ -92,27 +95,35 @@ const processImage = async (img, outputPath) => {
     return;
   }
   if (img.tagName == "IMG") {
+    const isAvatar = AVATAR_CLASSES.some((className) =>
+      img.classList.contains(className)
+    );
     img.setAttribute("decoding", "async");
     img.setAttribute("loading", "lazy");
-    img.setAttribute(
-      "style",
-      `background-size:cover;` +
-        `background-image:url("${await blurryPlaceholder(localUrlPath(src))}")`
-    );
+    if (!isAvatar) {
+      img.setAttribute(
+        "style",
+        `background-size:cover;` +
+          `background-image:url("${await blurryPlaceholder(localUrlPath(src))}")`
+      );
+    }
     const doc = img.ownerDocument;
     const picture = doc.createElement("picture");
-    const avif = doc.createElement("source");
     const webp = doc.createElement("source");
-    const jpeg = doc.createElement("source");
-    // await setSrcset(avif, src, "avif");
-    // avif.setAttribute("type", "image/avif");
-    await setSrcset(webp, src, "webp");
     webp.setAttribute("type", "image/webp");
-    const fallback = await setSrcset(jpeg, src, "jpeg");
-    jpeg.setAttribute("type", "image/jpeg");
-    // picture.appendChild(avif);
+    let fallback;
+    let jpeg;
+    if (isAvatar) {
+      await setSrcset(webp, src, "webp", [AVATAR_WIDTH], "64px");
+      fallback = (await srcset(src, "jpeg", [AVATAR_WIDTH])).fallback;
+    } else {
+      await setSrcset(webp, src, "webp");
+      jpeg = doc.createElement("source");
+      fallback = await setSrcset(jpeg, src, "jpeg");
+      jpeg.setAttribute("type", "image/jpeg");
+    }
     picture.appendChild(webp);
-    picture.appendChild(jpeg);
+    if (jpeg) picture.appendChild(jpeg);
     img.parentElement.replaceChild(picture, img);
     picture.appendChild(img);
     img.setAttribute("src", fallback);
@@ -143,14 +154,15 @@ function localFilePath(src) {
   return fs.existsSync(sourcePath) ? sourcePath : "_site/" + decoded;
 }
 
-async function setSrcset(img, src, format) {
-  const setInfo = await srcset(src, format);
+async function setSrcset(img, src, format, widths, sizes) {
+  const setInfo = await srcset(src, format, widths);
   img.setAttribute("srcset", setInfo.srcset);
   img.setAttribute(
     "sizes",
-    img.getAttribute("align")
-      ? "(max-width: 608px) 50vw, 187px"
-      : "(max-width: 608px) 100vw, 608px"
+    sizes ||
+      (img.getAttribute("align")
+        ? "(max-width: 608px) 50vw, 187px"
+        : "(max-width: 608px) 100vw, 608px")
   );
   return setInfo.fallback;
 }

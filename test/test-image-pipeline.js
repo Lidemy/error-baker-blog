@@ -1,6 +1,7 @@
 "use strict";
 
 const assert = require("assert").strict;
+const { JSDOM } = require("jsdom");
 const imagePlugin = require("../_11ty/img-dim.js");
 
 function getTransform() {
@@ -32,5 +33,27 @@ describe("image build pipeline", () => {
         ),
       /Cannot read local image.*definitely-missing\.png/
     );
+  });
+
+  it("uses a compact responsive pipeline for local avatars", async () => {
+    const output = await transform(
+      '<!doctype html><img class="avatar avatar-large" alt="" src="/img/authors/tian.jpg">',
+      "_site/avatar-test/index.html"
+    );
+    const doc = new JSDOM(output).window.document;
+    const image = doc.querySelector("picture > img.avatar");
+    assert.ok(image, "Expected the local avatar to be wrapped in a picture");
+    assert.match(image.getAttribute("width"), /^\d+$/);
+    assert.match(image.getAttribute("height"), /^\d+$/);
+    assert.equal(image.getAttribute("loading"), "lazy");
+    assert.equal(image.getAttribute("decoding"), "async");
+    assert.equal(image.getAttribute("style"), null);
+    assert.equal(image.getAttribute("src"), "/img/authors/tian-320w.jpg");
+
+    const sources = [...image.closest("picture").querySelectorAll("source")];
+    assert.equal(sources.length, 1);
+    assert.equal(sources[0].getAttribute("type"), "image/webp");
+    assert.equal(sources[0].getAttribute("srcset"), "/img/authors/tian-320w.webp 320w");
+    assert.equal(sources[0].getAttribute("sizes"), "64px");
   });
 });

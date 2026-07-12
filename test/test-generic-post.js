@@ -97,7 +97,14 @@ describe("representative post build output", () => {
   });
 
   it("adds dimensions and responsive sources to local raster images", () => {
-    const image = doc.querySelector("picture img[src^='/img/']");
+    assert.ok(
+      fs.existsSync(IMAGE_POST_FILENAME),
+      `Missing build output: ${IMAGE_POST_FILENAME}`
+    );
+    const imageDoc = new JSDOM(
+      fs.readFileSync(IMAGE_POST_FILENAME, "utf8")
+    ).window.document;
+    const image = imageDoc.querySelector("picture img[src^='/img/']:not(.avatar)");
     assert.ok(image, "Expected at least one optimized local image");
     assert.match(image.getAttribute("width"), /^\d+$/);
     assert.match(image.getAttribute("height"), /^\d+$/);

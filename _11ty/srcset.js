@@ -28,7 +28,7 @@ const sharp = require("sharp");
  * Generates sensible sizes for each image for use in a srcset.
  */
 
-const widths = [1920, 1280, 640, 320];
+const defaultWidths = [1920, 1280, 640, 320];
 
 const extension = {
   jpeg: "jpg",
@@ -42,7 +42,16 @@ const quality = {
 };
 const resizeCache = new Map();
 
-module.exports = async function srcset(filename, format) {
+module.exports = async function srcset(filename, format, widths = defaultWidths) {
+  if (
+    !Array.isArray(widths) ||
+    widths.length === 0 ||
+    widths.some((width) => !Number.isInteger(width) || width <= 0)
+  ) {
+    throw new Error(
+      "srcset widths must be a non-empty array of positive integers"
+    );
+  }
   const sourceUrl = filename.split(/[?#]/, 1)[0];
   const names = await Promise.all(
     widths.map((w) => resize(sourceUrl, w, format))
