@@ -111,6 +111,16 @@ css/main.css 所有的樣式都在裡面，有新增的都放在最下面
    `draft: true`，並填入 `reviewedBy` 與 `reviewedAt`；這兩個審核欄位缺一時，
    pre-commit 會拒絕發佈。
 
+### 其他作者如何加入多語系
+
+翻譯是**逐篇 opt-in**，未加入的文章完全不受影響。想讓自己的文章有譯文時：
+
+1. 跑 `/translate-post posts/<author>/<slug>.md`；代理會在原文 frontmatter 補
+   `lang: zh-TW` 與 `translationKey`，並產出各語系草稿譯文。
+2. 人工審核譯文後移除 `draft: true`，填入 `reviewedBy` 與 `reviewedAt`。
+3. （建議）在 `_data/metadata.json` 自己的作者條目加上 `intro_en`、`intro_ja`、
+   `intro_zh-CN`；譯文頁的作者簡介才會跟著在地化（缺少時顯示中文 `intro`）。
+
 ### 譯文不會混進中文首頁
 
 譯文有獨立路由（`/en/posts/...`）與語言切換器、`hreflang`；中文首頁、標籤頁、RSS
@@ -131,9 +141,10 @@ git commit --no-verify
 ```
 
 > 機制說明：守門腳本是 `scripts/check-translations.js`，透過專案既有的 `pre-commit`
-> 套件掛在 git hook（不需額外裝 Husky）。新增語系時，請同步更新 `AGENTS.md`、
-> `_data/i18n.json`（含 `langName`/`noTranslation`）、`_data/langs.json`（切換器顯示順序）、
-> `.eleventy.js`（`SITE_LANGS`）與 `scripts/check-translations.js`（`TARGET_LANGS`）。
+> 套件掛在 git hook（不需額外裝 Husky）。語系清單以 `_data/langs.json` 為唯一來源
+> （第一個元素是預設語系，其餘為翻譯目標；順序即切換器顯示順序），`.eleventy.js`、
+> 守門腳本與測試都由它推導。新增語系只需兩步：在 `_data/langs.json` 加語系代碼、
+> 在 `_data/i18n.json` 補該語系完整字串區塊（缺必要欄位時 build 會直接失敗提示）。
 
 ### 導覽列語言切換器
 

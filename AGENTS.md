@@ -17,8 +17,10 @@
 
 - 預設目標語系：`en`（英文）、`ja`（日文）、`zh-CN`（簡體中文）。
 - 若使用者指定語系（如 `/translate-post posts/benben/foo.md en,ja`），只翻指定的。
-- 支援的語系與顯示名稱定義於 `_data/i18n.json`；新增語系時需同步更新該檔與
-  `.eleventy.js` 的 `SITE_LANGS`、`scripts/check-translations.js` 的 `TARGET_LANGS`。
+- 語系清單以 `_data/langs.json` 為唯一來源（第一個元素是預設語系，其餘為翻譯
+  目標語系）；顯示名稱等 UI 字串定義於 `_data/i18n.json`。新增語系只需更新這兩個
+  檔案——`.eleventy.js`、`scripts/check-translations.js` 與測試會自動推導，
+  `i18n.json` 缺必要欄位時 build 會直接失敗提示。
 - 翻譯守門只會檢查已明確加入 i18n 的原文：frontmatter 同時具有 `lang: zh-TW` 與
   `translationKey`。未加入這兩欄的既有文章不受影響。
 
@@ -111,5 +113,7 @@ translationKey: <author>/<slug>
 
 - 提醒使用者：譯文為 `draft: true`，**經人工審核後再移除** `draft`、填寫
   `reviewedBy` 與 `reviewedAt` 才會發佈。
+- 檢查 `_data/metadata.json` 中該作者是否已有 `intro_<lang>`（如 `intro_en`）欄位；
+  沒有的話提醒使用者補上在地化簡介，否則譯文頁的作者簡介會顯示中文原文。
 - 本機預覽：`npm run serve`，草稿在 dev 模式可見；`npm run build`（production）不會輸出草稿。
 - 對外發佈內容建議經人工/法務或合規確認（公司規範）。
