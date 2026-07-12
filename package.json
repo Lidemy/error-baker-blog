@@ -3,17 +3,23 @@
   "version": "5.0.2",
   "license": "MIT",
   "description": "A starter repository for a blog web site using the Eleventy static site generator.",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
-    "build": "npm run js-build && eleventy && npm run test",
+    "clean": "node scripts/clean-output.js",
+    "build": "npm run clean && npm run js-build && eleventy && npm run test",
     "watch": "concurrently \"eleventy --serve\" \"npm run js-build-watch\"",
     "serve": "eleventy --serve",
     "js-build": "rollup -c rollup.config.js",
     "js-build-watch": "rollup -c rollup.config.js -w",
     "debug": "DEBUG=* eleventy && npm run test",
-    "test": "echo 'no test for now'",
+    "test": "npm run test:site && npm run test:translations",
+    "test:site": "mocha test/test*.js",
     "test-watch": "mocha test/test*.js --watch",
     "check-translations": "node scripts/check-translations.js",
-    "test:translations": "node scripts/check-translations.test.js"
+    "check-translations:all": "node scripts/check-translations.js --all",
+    "test:translations": "node scripts/check-translations.test.js && npm run check-translations:all"
   },
   "pre-push": [
     "build"
