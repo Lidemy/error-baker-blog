@@ -27,6 +27,7 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const { execFileSync } = require("child_process");
+const { isDateOnly } = require("../_11ty/publication-dates");
 
 // The language list is single-sourced from _data/langs.json (source language
 // first); .eleventy.js and the tests derive from the same file. A JSON require
@@ -202,10 +203,72 @@ function translationTargetsForSource(raw) {
 
 /** Return a publication-review error for a translation frontmatter block. */
 function publicationReviewIssue(frontmatter) {
-  if (frontmatterBoolean(frontmatter, "draft") === true) return null;
-  const reviewer = frontmatterField(frontmatter, "reviewedBy");
+  return (
+    publicationMetadataIssues(frontmatter, null).find(
+      (issue) => issue === "not-reviewed" || issue === "invalid-reviewed-at"
+    ) || null
+  );
+}
+
+/** Validate version-specific dates without imposing translation review fields. */
+function publicationVersionDateIssues(frontmatter, sourceDate = null) {
+  const issues = [];
+  const publishedAt = frontmatterField(frontmatter, "publishedAt");
+  const updatedAt = frontmatterField(frontmatter, "updatedAt");
+  const validPublishedAt = publishedAt && isDateOnly(publishedAt);
+  const validUpdatedAt = updatedAt && isDateOnly(updatedAt);
+  const validSourceDate = sourceDate && isDateOnly(sourceDate);
+
+  if (publishedAt && !validPublishedAt) issues.push("invalid-published-at");
+  if (updatedAt && !validUpdatedAt) issues.push("invalid-updated-at");
+
+  if (validPublishedAt && validSourceDate && publishedAt < sourceDate) {
+    issues.push("published-before-source");
+  }
+
+  let effectivePublishedAt = null;
+  if (validPublishedAt) effectivePublishedAt = publishedAt;
+  else if (validSourceDate) effectivePublishedAt = sourceDate;
+  if (validUpdatedAt && effectivePublishedAt && updatedAt < effectivePublishedAt) {
+    issues.push("updated-before-published");
+  }
+
+  return issues;
+}
+
+/**
+ * Validate one translation version's original date, public release date,
+ * optional update date, and human-review audit trail.
+ */
+function publicationMetadataIssues(frontmatter, sourceDate) {
+  const issues = [];
+  const draft = frontmatterBoolean(frontmatter, "draft") === true;
+  const translationDate = frontmatterField(frontmatter, "date");
+  const publishedAt = frontmatterField(frontmatter, "publishedAt");
   const reviewedAt = frontmatterField(frontmatter, "reviewedAt");
-  return reviewer && reviewedAt ? null : "not-reviewed";
+  const reviewer = frontmatterField(frontmatter, "reviewedBy");
+
+  if (sourceDate !== null) {
+    if (!translationDate) {
+      issues.push("missing-date");
+    } else if (!isDateOnly(translationDate)) {
+      issues.push("invalid-date");
+    } else if (translationDate !== sourceDate) {
+      issues.push("date-mismatch");
+    }
+  }
+
+  issues.push(...publicationVersionDateIssues(frontmatter, sourceDate));
+  if (reviewedAt && !isDateOnly(reviewedAt)) {
+    issues.push("invalid-reviewed-at");
+  }
+
+  if (!draft) {
+    if (!reviewer || !reviewedAt) issues.push("not-reviewed");
+    if (!publishedAt) issues.push("missing-published-at");
+  }
+
+  return [...new Set(issues)];
 }
 
 /**
@@ -231,6 +294,8 @@ module.exports = {
   isTranslationManagedSource,
   translationTargetsForSource,
   publicationReviewIssue,
+  publicationVersionDateIssues,
+  publicationMetadataIssues,
   sourceHashIssue,
   TARGET_LANGS,
 };
@@ -316,6 +381,13 @@ function readCheckedFile(filePath) {
 }
 
 const problems = [];
+const sourceVersionDateDetails = {
+  "invalid-published-at": "publishedAt must be a valid YYYY-MM-DD calendar date",
+  "invalid-updated-at": "updatedAt must be a valid YYYY-MM-DD calendar date",
+  "published-before-source": "publishedAt cannot be before the original date",
+  "updated-before-published":
+    "updatedAt cannot be before publishedAt (or date when publishedAt is omitted)",
+};
 for (const sourcePath of sourcePosts) {
   const raw = readCheckedFile(sourcePath);
   const translations = TARGET_LANGS.map((lang) => ({
@@ -337,6 +409,22 @@ for (const sourcePath of sourcePosts) {
     continue;
   }
 
+  const sourceFrontmatter = extractFrontmatter(raw);
+  const sourceDate = frontmatterField(sourceFrontmatter, "date");
+  // Eleventy's YAML parser converts date-like scalars to Date objects and can
+  // normalize an impossible value such as 2026-02-30. Inspect the raw scalar
+  // for the new fields on every post so that correction cannot reach output.
+  for (const reason of publicationVersionDateIssues(
+    sourceFrontmatter,
+    sourceDate
+  )) {
+    problems.push({
+      sourcePath,
+      reason: `source-${reason}`,
+      detail: sourceVersionDateDetails[reason],
+    });
+  }
+
   // Translation is opt-in so unrelated authors' existing posts are unaffected.
   // Once translations exist, removing the source's opt-in metadata must not turn
   // the guard off while those translations continue to build.
@@ -347,12 +435,26 @@ for (const sourcePath of sourcePosts) {
     continue;
   }
 
-  const sourceFrontmatter = extractFrontmatter(raw);
+  // Date is the original work's publication date and every translation must
+  // copy it verbatim. Limit strict legacy-date validation to opted-in sources
+  // so unrelated historical posts are not blocked by this new contract.
+  if (!sourceDate || !isDateOnly(sourceDate)) {
+    problems.push({
+      sourcePath,
+      reason: "invalid-source-date",
+      detail: "managed source date must be a valid YYYY-MM-DD calendar date",
+    });
+    continue;
+  }
+
   // A draft source may have draft translations for work-in-progress previews,
   // but it cannot anchor translations that production is allowed to publish.
   if (frontmatterBoolean(sourceFrontmatter, "draft") === true) {
     for (const { lang, raw: translation } of existingTranslations) {
       const frontmatter = extractFrontmatter(translation);
+      for (const reason of publicationMetadataIssues(frontmatter, sourceDate)) {
+        problems.push({ sourcePath, lang, reason });
+      }
       if (frontmatterBoolean(frontmatter, "draft") !== true) {
         problems.push({ sourcePath, lang, reason: "source-unpublished" });
       }
@@ -389,12 +491,11 @@ for (const sourcePath of sourcePosts) {
       problems.push({ sourcePath, lang, reason: hashIssue });
       continue;
     }
-    // A published AI-assisted translation must record who approved it and when.
-    // This does not prove quality automatically, but makes the human review gate
-    // explicit and auditable instead of silently publishing machine output.
-    const reviewIssue = publicationReviewIssue(frontmatter);
-    if (reviewIssue) {
-      problems.push({ sourcePath, lang, reason: reviewIssue });
+    // `date` identifies the original work. The version-specific publication and
+    // update dates are separate, and public AI-assisted translations also need
+    // an explicit human-review audit trail.
+    for (const reason of publicationMetadataIssues(frontmatter, sourceDate)) {
+      problems.push({ sourcePath, lang, reason });
     }
   }
 }
@@ -462,7 +563,30 @@ for (const [sourcePath, items] of bySource) {
   if (langs.length > 0) {
     console.error(`    Run: /translate-post ${sourcePath} ${langs.join(",")}\n`);
   } else {
-    console.error("");
+    const metadataIssues = items.filter(
+      (i) =>
+        i.lang &&
+        ![
+          "not-declared",
+          "orphaned-translation",
+          "unmanaged-source",
+          "source-unpublished",
+          "not-reviewed",
+        ].includes(i.reason)
+    );
+    const sourceMetadataIssues = items.filter(
+      (i) =>
+        !i.lang &&
+        (i.reason === "invalid-source-date" || i.reason.startsWith("source-"))
+    );
+    if (metadataIssues.length > 0 || sourceMetadataIssues.length > 0) {
+      console.error(
+        "    Fix the post or translation frontmatter dates/review fields shown above; " +
+          "retranslation is not required.\n"
+      );
+    } else {
+      console.error("");
+    }
   }
 }
 console.error(

@@ -17,6 +17,15 @@ const POST_FILENAME = path.resolve(
   "git-flow",
   "index.html"
 );
+const IMAGE_POST_FILENAME = path.resolve(
+  __dirname,
+  "..",
+  "_site",
+  "posts",
+  "ruofan",
+  "go-RESTful-api",
+  "index.html"
+);
 
 describe("representative post build output", () => {
   let doc;
@@ -60,7 +69,31 @@ describe("representative post build output", () => {
     assert.equal(article.url, POST_URL);
     assert.equal(article.mainEntityOfPage, POST_URL);
     assert.equal(article.datePublished, "2021-10-28");
+    assert.equal(article.dateModified, article.datePublished);
+    assert.deepEqual(article.image, [metadata.ogimage]);
     assert.equal(article.author.name, "Tian");
+    assert.equal(article.author.url, `${metadata.url}/posts/tian/`);
+    assert.equal(article.publisher.name, metadata.publisher.name);
+    assert.equal(article.publisher.url, metadata.url);
+    assert.equal(article.publisher.logo.url, metadata.url + metadata.publisher.logo);
+    assert.equal(article.publisher.logo.width, 512);
+    assert.equal(article.publisher.logo.height, 512);
+    assert.equal(Object.hasOwn(article, "genre"), false);
+  });
+
+  it("uses exactly the declared hero image when a post has one", () => {
+    assert.ok(
+      fs.existsSync(IMAGE_POST_FILENAME),
+      `Missing build output: ${IMAGE_POST_FILENAME}`
+    );
+    const imagePost = new JSDOM(fs.readFileSync(IMAGE_POST_FILENAME, "utf8"))
+      .window.document;
+    const article = JSON.parse(
+      imagePost.querySelector("script[type='application/ld+json']").textContent
+    );
+    assert.deepEqual(article.image, [
+      `${metadata.url}/img/posts/ruofan/go-1.png`,
+    ]);
   });
 
   it("adds dimensions and responsive sources to local raster images", () => {

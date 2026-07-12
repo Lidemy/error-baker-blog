@@ -20,51 +20,110 @@
  */
 
 const { JSDOM } = require("jsdom");
-const BASE_URL = require("../_data/metadata.json").url;
+const { isDateOnly } = require("./publication-dates");
 
-/**
- * Validate json-ld being valid JSON and add the document images to the JSON.
- */
+function isHttpUrl(value) {
+  if (typeof value !== "string") return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch (error) {
+    return false;
+  }
+}
 
-const jsonLd = (rawContent, outputPath) => {
-  let content = rawContent;
+function articleIssues(article) {
+  const issues = [];
+  const images = Array.isArray(article.image) ? article.image : [];
 
-  if (outputPath && outputPath.endsWith(".html")) {
-    const dom = new JSDOM(content);
-    const jsonLd = dom.window.document.querySelector(
-      "script[type='application/ld+json']"
-    );
-    if (!jsonLd) {
-      return content;
-    }
-
-    const images = [
-      ...dom.window.document.querySelectorAll("main img,amp-img"),
-    ];
-    try {
-      const obj = JSON.parse(jsonLd.textContent);
-
-      if (images.length) {
-        obj.image = images.map(img => {
-            if (img.src.startsWith('http://') || img.src.startsWith('https://')) {
-              return img.src
-            }
-            return BASE_URL + img.src
-        });
-        jsonLd.textContent = JSON.stringify(obj);
-        content = dom.serialize();
-      }
-    } catch (e) {
-      throw new Error(`Failed to parse json-ld: ${e.message}`);
-    }
+  if (!article.headline) issues.push("headline is required");
+  if (!isHttpUrl(article.url)) issues.push("url must be absolute HTTP(S)");
+  if (!isHttpUrl(article.mainEntityOfPage)) {
+    issues.push("mainEntityOfPage must be absolute HTTP(S)");
+  }
+  if (images.length !== 1 || !isHttpUrl(images[0])) {
+    issues.push("image must contain exactly one absolute HTTP(S) URL");
+  }
+  if (!article.author || !article.author.name || !isHttpUrl(article.author.url)) {
+    issues.push("author name and absolute URL are required");
+  }
+  if (
+    !article.publisher ||
+    !article.publisher.name ||
+    !isHttpUrl(article.publisher.url)
+  ) {
+    issues.push("publisher name and absolute URL are required");
+  }
+  if (
+    !article.publisher ||
+    !article.publisher.logo ||
+    !isHttpUrl(article.publisher.logo.url)
+  ) {
+    issues.push("publisher logo must have an absolute HTTP(S) URL");
+  }
+  if (!isDateOnly(article.datePublished)) {
+    issues.push("datePublished must be a valid YYYY-MM-DD date");
+  }
+  if (!isDateOnly(article.dateModified)) {
+    issues.push("dateModified must be a valid YYYY-MM-DD date");
+  }
+  if (
+    isDateOnly(article.datePublished) &&
+    isDateOnly(article.dateModified) &&
+    article.dateModified < article.datePublished
+  ) {
+    issues.push("dateModified cannot be before datePublished");
+  }
+  if (Object.prototype.hasOwnProperty.call(article, "genre")) {
+    issues.push("placeholder genre must not be emitted");
   }
 
-  return content;
+  return issues;
+}
+
+/** Validate every JSON-LD block without mutating the generated HTML. */
+const validateJsonLd = (rawContent, outputPath) => {
+  if (!outputPath || !outputPath.endsWith(".html")) return rawContent;
+  if (!rawContent.includes("application/ld+json")) return rawContent;
+
+  const dom = new JSDOM(rawContent);
+  const blocks = [
+    ...dom.window.document.querySelectorAll("script[type='application/ld+json']"),
+  ];
+
+  blocks.forEach((block, index) => {
+    let value;
+    try {
+      value = JSON.parse(block.textContent);
+    } catch (error) {
+      throw new Error(
+        `Invalid JSON-LD in ${outputPath} (block ${index + 1}): ${error.message}`
+      );
+    }
+
+    const types = Array.isArray(value && value["@type"])
+      ? value["@type"]
+      : [value && value["@type"]];
+    if (types.includes("Article")) {
+      const issues = articleIssues(value);
+      if (issues.length > 0) {
+        throw new Error(
+          `Invalid Article JSON-LD in ${outputPath} (block ${index + 1}): ${issues.join(
+            "; "
+          )}`
+        );
+      }
+    }
+  });
+
+  return rawContent;
 };
 
 module.exports = {
   initArguments: {},
+  validateJsonLd,
+  articleIssues,
   configFunction: async (eleventyConfig, pluginOptions = {}) => {
-    eleventyConfig.addTransform("jsonLd", jsonLd);
+    eleventyConfig.addTransform("jsonLd", validateJsonLd);
   },
 };

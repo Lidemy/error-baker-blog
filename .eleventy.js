@@ -55,6 +55,10 @@ const markdownItAnchor = require("markdown-it-anchor");
 const localImages = require("./third_party/eleventy-plugin-local-images/.eleventy.js");
 const CleanCSS = require("clean-css");
 const { buildAuthorStats } = require("./_11ty/authorStats");
+const {
+  effectivePublishedDate,
+  effectiveModifiedDate,
+} = require("./_11ty/publication-dates");
 const GA_ID = require("./_data/metadata.json").googleAnalyticsId;
 
 module.exports = function (eleventyConfig) {
@@ -74,8 +78,10 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPlugin(require("./_11ty/summary.js"));
   eleventyConfig.addPlugin(require("./_11ty/link-target.js"));
   eleventyConfig.addPlugin(require("./_11ty/img-dim.js"));
-  eleventyConfig.addPlugin(require("./_11ty/json-ld.js"));
   eleventyConfig.addPlugin(require("./_11ty/optimize-html.js"));
+  // Validate structured data after every HTML-mutating transform so CI checks
+  // the exact minified document that will be deployed.
+  eleventyConfig.addPlugin(require("./_11ty/json-ld.js"));
   // NOTE: disable CSP because we don't need it
   // eleventyConfig.addPlugin(require("./_11ty/apply-csp.js"));
   eleventyConfig.setDataDeepMerge(true);
@@ -150,6 +156,13 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addFilter("htmlDateString", (dateObj) => {
     return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat("yyyy-LL-dd");
   });
+
+  // Keep Article JSON-LD and the upcoming per-language feeds on one explicit
+  // date contract. The first filter argument is `page.date`; version-specific
+  // metadata is optional for source posts and mandatory at the publish gate for
+  // translations.
+  eleventyConfig.addFilter("effectivePublishedDate", effectivePublishedDate);
+  eleventyConfig.addFilter("effectiveModifiedDate", effectiveModifiedDate);
 
   eleventyConfig.addFilter("sitemapDateTimeString", (dateObj) => {
     const dt = DateTime.fromJSDate(dateObj, { zone: "utc" });

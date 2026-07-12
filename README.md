@@ -109,8 +109,8 @@ css/main.css 所有的樣式都在裡面，有新增的都放在最下面
    `posts/peter/foo.en.md` 等檔並標為 `draft: true`，再回報「回譯校驗」讓你用中文
    檢查語意。指定 `en,ja` 時，守門只要求這兩個譯文。
 3. 本機預覽 `npm run serve`（草稿在 dev 模式可見），確認沒問題後才可移除譯文的
-   `draft: true`，並填入 `reviewedBy` 與 `reviewedAt`；這兩個審核欄位缺一時，
-   pre-commit 會拒絕發佈。
+   `draft: true`，並填入 `reviewedBy`、`reviewedAt` 與 `publishedAt`；欄位缺少或日期
+   不是有效的 `YYYY-MM-DD` 時，pre-commit 會拒絕發佈。
 
 ### 其他作者如何加入多語系
 
@@ -118,7 +118,8 @@ css/main.css 所有的樣式都在裡面，有新增的都放在最下面
 
 1. 跑 `/translate-post posts/<author>/<slug>.md`；代理會在原文 frontmatter 補
    `lang: zh-TW`、`translationKey` 與 `translationTargets`，並產出指定語系的草稿譯文。
-2. 人工審核譯文後移除 `draft: true`，填入 `reviewedBy` 與 `reviewedAt`。
+2. 人工審核譯文後移除 `draft: true`，填入 `reviewedBy`、`reviewedAt` 與
+   `publishedAt`。
 3. （建議）在 `_data/metadata.json` 自己的作者條目加上 `intro_en`、`intro_ja`、
    `intro_zh-CN`；譯文頁的作者簡介才會跟著在地化（缺少時顯示中文 `intro`）。
 
@@ -130,9 +131,10 @@ css/main.css 所有的樣式都在裡面，有新增的都放在最下面
 ### 過期守門（pre-commit）
 
 提交時會自動檢查：被改動的原文或譯文若**缺少 `translationTargets` 指定的譯文**、
-**存在未列入清單的譯文**、**譯文已過期**（原文標題或內文變了），或已發佈譯文缺少
-人工審核紀錄，就會擋下提交並提示你修正。檢查一律讀取 Git 暫存區，不會被 working tree
-的未暫存內容影響。
+**存在未列入清單的譯文**、**譯文已過期**（原文標題或內文變了）、譯文 `date` 與原文
+不同，或已發佈譯文缺少有效的 `publishedAt`／人工審核紀錄，就會擋下提交並提示你修正。
+`updatedAt` 若存在也必須有效且不早於 `publishedAt`。檢查一律讀取 Git 暫存區，不會被
+working tree 的未暫存內容影響。
 
 譯文不能脫離繁中原文獨立存在：刪除文章時要在同一個 commit 刪除所有語系；原文若是
 草稿，譯文也必須是草稿。這能避免無法再以 `sourceHash` 稽核、卻仍留在 production 的譯文。

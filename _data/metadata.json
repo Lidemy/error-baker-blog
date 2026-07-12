@@ -4,7 +4,6 @@
   "ogimage": "https://blog.errorbaker.tw/img/ogimage.png",
   "domain": "blog.errorbaker.tw",
   "description": "錯誤烘焙師，從錯誤中學習",
-  "genre": "Insert a schema.org genre",
   "googleAnalyticsId": "",
   "sendWebVitals": false,
   "feed": {
@@ -97,6 +96,7 @@
     }
   },
   "publisher": {
-    "name": "ErrorBaker 技術共筆部落格"
+    "name": "ErrorBaker 技術共筆部落格",
+    "logo": "/img/favicon/favicon-512x512.png"
   }
 }

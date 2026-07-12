@@ -23,6 +23,8 @@ const {
   isTranslationManagedSource,
   translationTargetsForSource,
   publicationReviewIssue,
+  publicationVersionDateIssues,
+  publicationMetadataIssues,
   sourceHashIssue,
   TARGET_LANGS,
 } = require("./check-translations.js");
@@ -171,6 +173,64 @@ test("published translations require an auditable human review", () => {
   );
 });
 
+test("publication metadata separates original, review, publish, and update dates", () => {
+  const sourceDate = "2021-10-28";
+  assert.deepStrictEqual(
+    publicationMetadataIssues("draft: true\ndate: 2021-10-28", sourceDate),
+    []
+  );
+  assert.deepStrictEqual(
+    publicationMetadataIssues(
+      "draft: false\ndate: 2021-10-28\nreviewedBy: May\nreviewedAt: 2026-07-11",
+      sourceDate
+    ),
+    ["missing-published-at"]
+  );
+  assert.deepStrictEqual(
+    publicationMetadataIssues(
+      "draft: false\ndate: 2021-10-28\nreviewedBy: May\nreviewedAt: 2026-07-11\npublishedAt: 2026-07-13\nupdatedAt: 2026-07-14",
+      sourceDate
+    ),
+    []
+  );
+});
+
+test("publication metadata rejects invalid or contradictory dates", () => {
+  const sourceDate = "2021-10-28";
+  assert.deepStrictEqual(
+    publicationMetadataIssues("draft: true\ndate: 2021-10-29", sourceDate),
+    ["date-mismatch"]
+  );
+  assert.deepStrictEqual(
+    publicationMetadataIssues(
+      "draft: false\ndate: 2021-10-28\nreviewedBy: May\nreviewedAt: 2026-02-30\npublishedAt: 2021/10/28\nupdatedAt: 2026-07-13T10:00:00Z",
+      sourceDate
+    ),
+    ["invalid-published-at", "invalid-updated-at", "invalid-reviewed-at"]
+  );
+  assert.deepStrictEqual(
+    publicationMetadataIssues(
+      "draft: false\ndate: 2021-10-28\nreviewedBy: May\nreviewedAt: 2026-07-11\npublishedAt: 2021-10-27\nupdatedAt: 2021-10-26",
+      sourceDate
+    ),
+    ["published-before-source", "updated-before-published"]
+  );
+});
+
+test("version dates are validated independently of translation review", () => {
+  assert.deepStrictEqual(
+    publicationVersionDateIssues(
+      "publishedAt: 2026-02-30\nupdatedAt: 2026/07/13",
+      "2021-10-28"
+    ),
+    ["invalid-published-at", "invalid-updated-at"]
+  );
+  assert.deepStrictEqual(
+    publicationVersionDateIssues("updatedAt: 2021-10-27", "2021-10-28"),
+    ["updated-before-published"]
+  );
+});
+
 test("sourceHashIssue requires the title-aware source hash", () => {
   const source =
     "---\ntitle: Original\nlang: zh-TW\ntranslationKey: tian/example\n---\n\nBody\n";
@@ -204,6 +264,7 @@ function sourcePost(
   return (
     "---\n" +
     `title: ${title}\n` +
+    "date: 2021-10-28\n" +
     "lang: zh-TW\n" +
     "translationKey: tester/example\n" +
     `translationTargets: [${targets.join(", ")}]\n` +
@@ -217,17 +278,22 @@ function translationPost(
   lang,
   sourceHash,
   body = "Translated body.\n",
-  draft = true
+  draft = true,
+  metadata = {}
 ) {
   return (
     "---\n" +
     `title: Translation ${lang}\n` +
+    "date: 2021-10-28\n" +
     `lang: ${lang}\n` +
     "sourceLang: zh-TW\n" +
     "translationKey: tester/example\n" +
     (draft
       ? `draft: ${draft === true ? "true" : draft}\n`
-      : "reviewedBy: Translation Reviewer\nreviewedAt: 2026-07-13\n") +
+      : `reviewedBy: ${metadata.reviewedBy || "Translation Reviewer"}\n` +
+        `reviewedAt: ${metadata.reviewedAt || "2026-07-13"}\n` +
+        (metadata.publishedAt ? `publishedAt: ${metadata.publishedAt}\n` : "") +
+        (metadata.updatedAt ? `updatedAt: ${metadata.updatedAt}\n` : "")) +
     `sourceHash: ${sourceHash}\n` +
     "---\n\n" +
     body
@@ -391,7 +457,9 @@ test("integration: an unreviewed translation requests metadata, not retranslatio
     write(
       repo,
       translations.en,
-      translationPost("en", sourceHash, "Translated body.\n", false).replace(
+      translationPost("en", sourceHash, "Translated body.\n", false, {
+        publishedAt: "2026-07-13",
+      }).replace(
         "reviewedBy: Translation Reviewer\nreviewedAt: 2026-07-13\n",
         ""
       )
@@ -538,6 +606,67 @@ test("integration: --all validates the working checkout", () => {
     const fullRepository = runGuard(repo, ["--all"]);
     assert.strictEqual(fullRepository.status, 1);
     assert.match(fullRepository.stderr, /en \(stale\)/);
+  });
+});
+
+test("integration: --all rejects an impossible managed source date", () => {
+  withTranslationRepo(({ repo, sourcePath }) => {
+    write(
+      repo,
+      sourcePath,
+      sourcePost("Original title").replace(
+        "date: 2021-10-28",
+        "date: 2022-06-31"
+      )
+    );
+
+    const result = runGuard(repo, ["--all"]);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /invalid-source-date/);
+    assert.doesNotMatch(result.stderr, /Run: \/translate-post/);
+  });
+});
+
+test("integration: --all rejects impossible new dates on a legacy post", () => {
+  withTranslationRepo(({ repo }) => {
+    const legacyPath = "posts/legacy/example.md";
+    write(
+      repo,
+      legacyPath,
+      "---\ntitle: Legacy\ndate: 2021-10-28\npublishedAt: 2026-02-30\n---\n\nBody\n"
+    );
+    git(repo, ["add", legacyPath]);
+
+    const result = runGuard(repo, ["--all"]);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /source-invalid-published-at/);
+    assert.match(result.stderr, /publishedAt must be a valid YYYY-MM-DD/);
+    assert.doesNotMatch(result.stderr, /Run: \/translate-post/);
+  });
+});
+
+test("integration: --all requires publishedAt before a translation is public", () => {
+  withTranslationRepo(({ repo, sourceHash, translations }) => {
+    write(
+      repo,
+      translations.en,
+      translationPost("en", sourceHash, "Translated body.\n", false)
+    );
+
+    const missingDate = runGuard(repo, ["--all"]);
+    assert.strictEqual(missingDate.status, 1);
+    assert.match(missingDate.stderr, /en \(missing-published-at\)/);
+    assert.doesNotMatch(missingDate.stderr, /Run: \/translate-post/);
+
+    write(
+      repo,
+      translations.en,
+      translationPost("en", sourceHash, "Translated body.\n", false, {
+        publishedAt: "2026-07-13",
+      })
+    );
+    const valid = runGuard(repo, ["--all"]);
+    assert.strictEqual(valid.status, 0, valid.stderr);
   });
 });
 

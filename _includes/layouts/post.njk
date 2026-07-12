@@ -10,6 +10,13 @@ templateClass: tmpl-post
 {# Author page in the article's language (the per-language page exists because
    this article is in that language). #}
 {% set authorUrl = ('/posts/' + author + '/') if pageLang == 'zh-TW' else ('/' + pageLang + '/posts/' + author + '/') %}
+{% set versionPublishedDate = page.date | effectivePublishedDate(publishedAt) %}
+{% set versionModifiedDate = page.date | effectiveModifiedDate(publishedAt, updatedAt) %}
+{% set articleImagePath = image or metadata.ogimage %}
+{% set articleImageUrl = articleImagePath | absoluteUrl(metadata.url) %}
+{% set articleUrl = (canonicalUrl or page.url) | absoluteUrl(metadata.url) %}
+{% set articleAuthorUrl = authorUrl | absoluteUrl(metadata.url) %}
+{% set publisherLogoUrl = metadata.publisher.logo | absoluteUrl(metadata.url) %}
 
 {% block extraArticleHeader %}
   <div class="byline">
@@ -17,7 +24,7 @@ templateClass: tmpl-post
       <img class="avatar" src="{{ postAuthor.avatarUrl }}" alt="" />
       <span>{{ postAuthor.name }}</span>
     </a>
-    <time class="byline-date" datetime="{{ date | htmlDateString }}">{{ t.publishedOn }} {{ date | htmlDateString }}</time>
+    <time class="byline-date" datetime="{{ versionPublishedDate | htmlDateString }}">{{ t.publishedOn }} {{ versionPublishedDate | htmlDateString }}</time>
     <span class="byline-tags">
     {%- for tag in tags %}{% if tag !== "posts" %}{% set tagUrl %}/tags/{{ tag | slug }}/{% endset %}<a href="{{ tagUrl | url }}" class="post-tag">#{{ tag }}</a>{% endif %}{% endfor %}
     </span>
@@ -67,26 +74,28 @@ templateClass: tmpl-post
   "@context": "https://schema.org",
   "@type": "Article",
   "headline": {{ title | dump | safe }},
-  "inLanguage": "{{ pageLang }}",
-  "image": ["{{ image | absoluteUrl(metadata.url) if image else metadata.ogimage }}"],
+  "inLanguage": {{ pageLang | dump | safe }},
+  "image": [{{ articleImageUrl | dump | safe }}],
   "author": {
     "@type": "Person",
     "name": {{ postAuthor.name | dump | safe }},
-    "url": "{{ metadata.url }}/posts/{{ author }}"
+    "url": {{ articleAuthorUrl | dump | safe }}
   },
-  "genre": "{{ metadata.genre }}",
   "publisher": {
     "@type": "Organization",
-    "name": "{{ metadata.publisher.name }}",
+    "name": {{ metadata.publisher.name | dump | safe }},
+    "url": {{ metadata.url | dump | safe }},
     "logo": {
       "@type": "ImageObject",
-      "url": "{{ '/img/favicon/favicon-192x192.png' | addHash }}"
+      "url": {{ publisherLogoUrl | dump | safe }},
+      "width": 512,
+      "height": 512
     }
   },
-  "url": "{{ metadata.url }}{{ canonicalUrl or page.url }}",
-  "mainEntityOfPage": "{{ metadata.url }}{{ canonicalUrl or page.url }}",
-  "datePublished": "{{ page.date | htmlDateString }}",
-  "dateModified": "{{ page.inputPath | lastModifiedDate  | htmlDateString }}",
+  "url": {{ articleUrl | dump | safe }},
+  "mainEntityOfPage": {{ articleUrl | dump | safe }},
+  "datePublished": "{{ versionPublishedDate | htmlDateString }}",
+  "dateModified": "{{ versionModifiedDate | htmlDateString }}",
   "description": {{ content | striptags | truncate(140) | dump | safe }}
 }
 </script>
