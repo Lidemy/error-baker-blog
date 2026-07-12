@@ -155,7 +155,40 @@ function localFilePath(src) {
     throw new Error(`[img-dim] Invalid URL encoding in local image "${src}"`);
   }
   const sourcePath = "." + (decoded.startsWith("/") ? decoded : "/" + decoded);
-  return fs.existsSync(sourcePath) ? sourcePath : "_site/" + decoded;
+  if (fs.existsSync(sourcePath)) {
+    assertExactCase(sourcePath, src);
+    return sourcePath;
+  }
+  return "_site/" + decoded;
+}
+
+const dirEntriesCache = new Map();
+
+/**
+ * Fail on filename-case mismatches that a case-insensitive filesystem
+ * (macOS/Windows) would silently tolerate but case-sensitive Linux CI
+ * rejects with ENOENT.
+ */
+function assertExactCase(filePath, src) {
+  let dir = ".";
+  for (const segment of filePath.split("/").filter((s) => s && s !== ".")) {
+    let entries = dirEntriesCache.get(dir);
+    if (!entries) {
+      entries = fs.readdirSync(dir);
+      dirEntriesCache.set(dir, entries);
+    }
+    if (!entries.includes(segment)) {
+      const actual = entries.find(
+        (e) => e.toLowerCase() === segment.toLowerCase()
+      );
+      throw new Error(
+        `[img-dim] Filename case mismatch for local image "${src}": ` +
+          `referenced as "${segment}" but the file on disk is "${actual}". ` +
+          `This passes on case-insensitive filesystems but fails on Linux CI.`
+      );
+    }
+    dir += "/" + segment;
+  }
 }
 
 async function setSrcset(img, src, format, widths, sizes) {
