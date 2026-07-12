@@ -22,4 +22,24 @@ siteWideUpdate: 2020-07-12
     <lastmod>{{ lastmod }}</lastmod>
   </url>
 {%- endfor %}
+{%- set homePages = langs | homeVersions %}
+{%- set aboutPages = langs | aboutVersions %}
+{%- set missingPages = collections.all | missingSitemapPages(homePages, aboutPages) %}
+{%- for page in missingPages %}
+  {% set absoluteUrl %}{{ page.url | url | absoluteUrl(metadata.url) }}{% endset %}
+  {% set pageDate = page.date | sitemapDateTimeString %}
+  {% set lastModifiedDate = page.inputPath | lastModifiedDate  | sitemapDateTimeString %}
+  {% set siteWide = siteWideUpdate| sitemapDateTimeString %}
+  {% set lastmod = siteWide %}
+  {% if pageDate > lastmod %}
+    {% set lastmod = pageDate %}
+  {% endif %}
+  {% if lastModifiedDate > lastmod %}
+    {% set lastmod = lastModifiedDate %}
+  {% endif %}
+  <url>
+    <loc>{{ absoluteUrl }}</loc>
+    <lastmod>{{ lastmod }}</lastmod>
+  </url>
+{%- endfor %}
 </urlset>

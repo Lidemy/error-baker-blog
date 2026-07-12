@@ -229,6 +229,7 @@ module.exports = function (eleventyConfig) {
     return (langsArr || []).map((code) => ({
       lang: code,
       url: code === DEFAULT_LANG ? "/" : `/${code}/`,
+      inputPath: code === DEFAULT_LANG ? "./index.njk" : "./home-i18n.njk",
     }));
   });
 
@@ -238,7 +239,28 @@ module.exports = function (eleventyConfig) {
     return (langsArr || []).map((code) => ({
       lang: code,
       url: code === DEFAULT_LANG ? "/about/" : `/${code}/about/`,
+      inputPath:
+        code === DEFAULT_LANG ? "./about/index.md" : "./about-i18n.njk",
     }));
+  });
+
+  // Return only controlled pagination records missing from collections.all.
+  // Never return collections.all itself here: computed draft exclusions are
+  // applied later in Eleventy's lifecycle and must remain handled by Eleventy.
+  eleventyConfig.addFilter("missingSitemapPages", function (
+    pages,
+    ...extraGroups
+  ) {
+    const seen = new Set((pages || []).map((page) => page.url));
+    const missing = [];
+    for (const group of extraGroups) {
+      for (const page of group || []) {
+        if (seen.has(page.url)) continue;
+        missing.push(page);
+        seen.add(page.url);
+      }
+    }
+    return missing;
   });
 
   // zh-TW-only posts — the source language listing (homepage, archive, feeds).
