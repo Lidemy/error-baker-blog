@@ -27,6 +27,7 @@ const sharp = require("sharp");
 const sizeOf = promisify(require("image-size"));
 const DatauriParser = require("datauri/parser");
 const parser = new DatauriParser();
+const fsSync = require("fs");
 const readFile = promisify(require("fs").readFile);
 const writeFile = promisify(require("fs").writeFile);
 const exists = promisify(require("fs").exists);
@@ -113,8 +114,12 @@ async function buildPlaceholder(src) {
       encoding: "utf-8",
     });
   }
+  // Read from the source tree when possible: the `_site/` copy is written by
+  // passthrough copy concurrently with transforms and may be incomplete.
+  const sourceName = "." + (decodedSrc.startsWith("/") ? decodedSrc : "/" + decodedSrc);
+  const inputName = fsSync.existsSync(sourceName) ? sourceName : filename;
   // We wrap the blurred image in a SVG to avoid rasterizing the filter on each layout.
-  const dataURI = await getCachedDataURI(filename);
+  const dataURI = await getCachedDataURI(inputName);
   let svg = `<svg xmlns="http://www.w3.org/2000/svg"
                   xmlns:xlink="http://www.w3.org/1999/xlink"
                   viewBox="0 0 ${dataURI.width} ${dataURI.height}">

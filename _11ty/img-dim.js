@@ -25,6 +25,7 @@ const sizeOf = promisify(require("image-size"));
 const blurryPlaceholder = require("./blurry-placeholder");
 const srcset = require("./srcset");
 const path = require("path");
+const fs = require("fs");
 const { gif2mp4 } = require("./video-gif");
 
 /**
@@ -126,7 +127,11 @@ function localUrlPath(src) {
   return src.split(/[?#]/, 1)[0];
 }
 
-/** Map a local URL path to the decoded path written below `_site/`. */
+/**
+ * Map a local URL path to a readable file. Prefer the source tree: the
+ * `_site/` copy is produced by passthrough copy, which runs concurrently with
+ * HTML transforms, so reading it can hit a half-written file.
+ */
 function localFilePath(src) {
   let decoded;
   try {
@@ -134,7 +139,8 @@ function localFilePath(src) {
   } catch (e) {
     throw new Error(`[img-dim] Invalid URL encoding in local image "${src}"`);
   }
-  return "_site/" + decoded;
+  const sourcePath = "." + (decoded.startsWith("/") ? decoded : "/" + decoded);
+  return fs.existsSync(sourcePath) ? sourcePath : "_site/" + decoded;
 }
 
 async function setSrcset(img, src, format) {

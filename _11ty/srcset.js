@@ -20,6 +20,7 @@
  */
 
 const { promisify } = require("util");
+const fsSync = require("fs");
 const exists = promisify(require("fs").exists);
 const sharp = require("sharp");
 
@@ -62,7 +63,9 @@ async function resize(filename, width, format) {
 
 async function resizeOnce(filename, width, format) {
   const out = sizedName(filename, width, format);
-  const inputPath = filePath(filename);
+  // Read from the source tree when possible: the `_site/` copy is written by
+  // passthrough copy concurrently with transforms and may be incomplete.
+  const inputPath = sourceFilePath(filename);
   const outputPath = filePath(out);
   if (await exists(outputPath)) {
     return out;
@@ -86,6 +89,12 @@ function filePath(urlPath) {
   } catch (e) {
     throw new Error(`Invalid URL encoding in local image "${urlPath}"`);
   }
+}
+
+function sourceFilePath(urlPath) {
+  const sitePath = filePath(urlPath);
+  const sourcePath = sitePath.replace(/^_site/, ".");
+  return fsSync.existsSync(sourcePath) ? sourcePath : sitePath;
 }
 
 function sizedName(filename, width, format) {
