@@ -7,16 +7,25 @@
 
 const assert = require("assert");
 const crypto = require("crypto");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+const { execFileSync, spawnSync } = require("child_process");
 const {
   extractBody,
   hashBody,
+  hashSource,
   isTranslationPath,
   translationPathFor,
   sourcePathForTranslation,
   frontmatterField,
   isTranslationManagedSource,
   publicationReviewIssue,
+  sourceHashIssue,
+  TARGET_LANGS,
 } = require("./check-translations.js");
+
+const GUARD_SCRIPT = path.join(__dirname, "check-translations.js");
 
 let passed = 0;
 function test(name, fn) {
@@ -49,6 +58,18 @@ test("hashBody ignores frontmatter changes, reacts to body changes", () => {
   assert.strictEqual(hashBody(otherFm), hashBody(SAMPLE)); // same body
   const otherBody = "---\ntitle: Hi\n---\n\nBody line TWO.\n";
   assert.notStrictEqual(hashBody(otherBody), hashBody(SAMPLE));
+});
+
+test("hashSource reacts to title and body changes but ignores copied metadata", () => {
+  const sameContent =
+    "---\ntitle: Hi\ndate: 2026-07-12\ntags: [javascript]\n---\n\nBody line one.\n";
+  const changedTitle = "---\ntitle: Hello\n---\n\nBody line one.\n";
+  const changedBody = "---\ntitle: Hi\n---\n\nBody line TWO.\n";
+
+  assert.strictEqual(hashSource(sameContent), hashSource(SAMPLE));
+  assert.notStrictEqual(hashSource(changedTitle), hashSource(SAMPLE));
+  assert.notStrictEqual(hashSource(changedBody), hashSource(SAMPLE));
+  assert.notStrictEqual(hashSource(SAMPLE), hashBody(SAMPLE));
 });
 
 test("isTranslationPath detects .<lang>.md but not source posts", () => {
@@ -101,6 +122,172 @@ test("published translations require an auditable human review", () => {
     publicationReviewIssue("draft: false\nreviewedBy: May\nreviewedAt: 2026-07-11"),
     null
   );
+});
+
+test("sourceHashIssue requires the title-aware source hash", () => {
+  const source =
+    "---\ntitle: Original\nlang: zh-TW\ntranslationKey: tian/example\n---\n\nBody\n";
+
+  assert.strictEqual(sourceHashIssue(hashSource(source), source), null);
+  assert.strictEqual(sourceHashIssue(hashBody(source), source), "stale");
+  assert.strictEqual(sourceHashIssue(null, source), "no-hash");
+});
+
+function git(repo, args) {
+  return execFileSync("git", args, {
+    cwd: repo,
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+}
+
+function write(repo, relativePath, contents) {
+  const absolutePath = path.join(repo, relativePath);
+  fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
+  fs.writeFileSync(absolutePath, contents, "utf8");
+}
+
+function sourcePost(title, body = "Source body.\n") {
+  return (
+    "---\n" +
+    `title: ${title}\n` +
+    "lang: zh-TW\n" +
+    "translationKey: tester/example\n" +
+    "---\n\n" +
+    body
+  );
+}
+
+function translationPost(lang, sourceHash, body = "Translated body.\n") {
+  return (
+    "---\n" +
+    `title: Translation ${lang}\n` +
+    `lang: ${lang}\n` +
+    "sourceLang: zh-TW\n" +
+    "translationKey: tester/example\n" +
+    "draft: true\n" +
+    `sourceHash: ${sourceHash}\n` +
+    "---\n\n" +
+    body
+  );
+}
+
+function runGuard(repo, args = []) {
+  return spawnSync(process.execPath, [GUARD_SCRIPT, ...args], {
+    cwd: repo,
+    encoding: "utf8",
+  });
+}
+
+function runHash(repo, sourcePath) {
+  return spawnSync(process.execPath, [GUARD_SCRIPT, "--hash", sourcePath], {
+    cwd: repo,
+    encoding: "utf8",
+  });
+}
+
+function withTranslationRepo(fn) {
+  const repo = fs.mkdtempSync(path.join(os.tmpdir(), "translation-guard-"));
+  const sourcePath = "posts/tester/example.md";
+  const initialSource = sourcePost("Original title");
+  const sourceHash = hashSource(initialSource);
+  const translations = {};
+
+  try {
+    git(repo, ["init", "--quiet"]);
+    git(repo, ["config", "user.name", "Translation Guard Test"]);
+    git(repo, ["config", "user.email", "translation-guard@example.test"]);
+    write(repo, sourcePath, initialSource);
+    for (const lang of TARGET_LANGS) {
+      const translationPath = `posts/tester/example.${lang}.md`;
+      translations[lang] = translationPath;
+      write(repo, translationPath, translationPost(lang, sourceHash));
+    }
+    git(repo, ["add", "."]);
+    git(repo, ["commit", "--quiet", "-m", "initial translations"]);
+
+    fn({ repo, sourcePath, initialSource, sourceHash, translations });
+  } finally {
+    fs.rmSync(repo, { recursive: true, force: true });
+  }
+}
+
+test("integration: a staged title change makes translations stale", () => {
+  withTranslationRepo(({ repo, sourcePath, translations }) => {
+    const retitledSource = sourcePost("Retitled source");
+    write(repo, sourcePath, retitledSource);
+    git(repo, ["add", sourcePath]);
+
+    const stale = runGuard(repo);
+    assert.strictEqual(stale.status, 1);
+    for (const lang of TARGET_LANGS) {
+      assert.match(stale.stderr, new RegExp(`${lang} \\(stale\\)`));
+    }
+
+    const hashResult = runHash(repo, sourcePath);
+    assert.strictEqual(hashResult.status, 0, hashResult.stderr);
+    assert.strictEqual(hashResult.stdout.trim(), hashSource(retitledSource));
+    for (const lang of TARGET_LANGS) {
+      write(repo, translations[lang], translationPost(lang, hashResult.stdout.trim()));
+      git(repo, ["add", translations[lang]]);
+    }
+
+    const repaired = runGuard(repo);
+    assert.strictEqual(repaired.status, 0, repaired.stderr);
+  });
+});
+
+test("integration: a staged translation deletion is reported from the index", () => {
+  withTranslationRepo(({ repo, translations }) => {
+    const deletedContents = fs.readFileSync(path.join(repo, translations.ja), "utf8");
+    git(repo, ["rm", "--quiet", translations.ja]);
+    // Recreate an unstaged working-tree copy. The staged deletion must still win.
+    write(repo, translations.ja, deletedContents);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /ja \(missing\)/);
+  });
+});
+
+test("integration: source comparisons use staged content, not the working tree", () => {
+  withTranslationRepo(({ repo, sourcePath, initialSource }) => {
+    write(repo, sourcePath, sourcePost("Staged title"));
+    git(repo, ["add", sourcePath]);
+    // Make the working tree look current again without changing the index.
+    write(repo, sourcePath, initialSource);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /en \(stale\)/);
+  });
+});
+
+test("integration: --all validates the working checkout", () => {
+  withTranslationRepo(({ repo, sourcePath }) => {
+    write(repo, sourcePath, sourcePost("Unstaged title change"));
+
+    const stagedOnly = runGuard(repo);
+    assert.strictEqual(stagedOnly.status, 0, stagedOnly.stderr);
+
+    const fullRepository = runGuard(repo, ["--all"]);
+    assert.strictEqual(fullRepository.status, 1);
+    assert.match(fullRepository.stderr, /en \(stale\)/);
+  });
+});
+
+test("integration: --all catches a missing translation in a clean checkout", () => {
+  withTranslationRepo(({ repo, translations }) => {
+    git(repo, ["rm", "--quiet", translations.ja]);
+    git(repo, ["commit", "--quiet", "-m", "delete Japanese translation"]);
+
+    const stagedOnly = runGuard(repo);
+    assert.strictEqual(stagedOnly.status, 0, stagedOnly.stderr);
+
+    const fullRepository = runGuard(repo, ["--all"]);
+    assert.strictEqual(fullRepository.status, 1);
+    assert.match(fullRepository.stderr, /ja \(missing\)/);
+  });
 });
 
 console.log(`\n${passed} tests passed.`);

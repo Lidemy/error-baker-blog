@@ -2,7 +2,8 @@
 /**
  * Translation staleness guard (Husky pre-commit, Tier A).
  *
- * For every affected *staged*, i18n-enabled source post
+ * For every affected *staged*, i18n-enabled source post (or every managed
+ * source when invoked with `--all` in CI)
  * (`posts/<author>/<slug>.md` with `lang: zh-TW` and `translationKey`), this
  * checks that each target-language translation (a) exists, (b) is up to date,
  * and (c) has an audit trail before it is published. All comparisons read Git's
@@ -46,9 +47,28 @@ function extractFrontmatter(raw) {
   return m ? m[1] : "";
 }
 
-/** SHA-256 (hex) of a source post's body — the staleness key. */
+/** SHA-256 (hex) of a source post's body. Kept exported for focused tests. */
 function hashBody(raw) {
   return crypto.createHash("sha256").update(extractBody(raw), "utf8").digest("hex");
+}
+
+/**
+ * SHA-256 (hex) of the translatable source content.
+ *
+ * `title` is deliberately parsed from frontmatter while the rest of the
+ * frontmatter is ignored: title and prose are translated, but metadata such as
+ * date, tags, and layout is copied verbatim. The domain separator prevents this
+ * newer hash from being confused with the legacy body-only hash.
+ */
+function hashSource(raw) {
+  const title = frontmatterField(extractFrontmatter(raw), "title") || "";
+  return crypto
+    .createHash("sha256")
+    .update("translation-source-v2\0", "utf8")
+    .update(title, "utf8")
+    .update("\0", "utf8")
+    .update(extractBody(raw), "utf8")
+    .digest("hex");
 }
 
 /** True if the path is a `.<lang>.md` translation rather than a source post. */
@@ -72,9 +92,18 @@ function sourcePathForTranslation(filePath) {
 }
 
 function frontmatterField(frontmatter, field) {
-  const re = new RegExp(`^${field}:\\s*["']?([^"'\\r\\n]+)["']?\\s*$`, "m");
+  const re = new RegExp(`^${field}:\\s*(.*?)\\s*$`, "m");
   const m = frontmatter.match(re);
-  return m ? m[1].trim() : null;
+  if (!m) return null;
+  const value = m[1].trim();
+  if (
+    value.length >= 2 &&
+    ((value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'")))
+  ) {
+    return value.slice(1, -1);
+  }
+  return value;
 }
 
 /** True when a source post has explicitly opted into the i18n workflow. */
@@ -94,16 +123,28 @@ function publicationReviewIssue(frontmatter) {
   return reviewer && reviewedAt ? null : "not-reviewed";
 }
 
+/**
+ * Return a sourceHash error, or null when it is current. All managed
+ * translations use the title-aware v2 hash so CI can detect title changes from
+ * a clean checkout without relying on Git history.
+ */
+function sourceHashIssue(actual, currentSource) {
+  if (!actual) return "no-hash";
+  return actual === hashSource(currentSource) ? null : "stale";
+}
+
 module.exports = {
   extractBody,
   extractFrontmatter,
   hashBody,
+  hashSource,
   isTranslationPath,
   translationPathFor,
   sourcePathForTranslation,
   frontmatterField,
   isTranslationManagedSource,
   publicationReviewIssue,
+  sourceHashIssue,
   TARGET_LANGS,
 };
 
@@ -120,8 +161,13 @@ if (args[0] === "--hash") {
     console.error("usage: check-translations.js --hash <source-post.md>");
     process.exit(2);
   }
-  process.stdout.write(hashBody(fs.readFileSync(file, "utf8")) + "\n");
+  process.stdout.write(hashSource(fs.readFileSync(file, "utf8")) + "\n");
   process.exit(0);
+}
+const checkAll = args[0] === "--all";
+if (args.length > 0 && !checkAll) {
+  console.error("usage: check-translations.js [--all | --hash <source-post.md>]");
+  process.exit(2);
 }
 
 // --- Mode 2: pre-commit guard over staged source posts.
@@ -129,13 +175,18 @@ if (process.env.SKIP_TRANSLATION_CHECK) {
   process.exit(0);
 }
 
-let staged = [];
+let affectedFiles = [];
 try {
-  staged = execFileSync(
-    "git",
-    ["diff", "--cached", "--name-only", "--diff-filter=ACM"],
-    { encoding: "utf8" }
-  )
+  const gitArgs = checkAll
+    ? ["ls-files", "--cached", "--", "posts"]
+    : [
+        "diff",
+        "--cached",
+        "--name-only",
+        "--diff-filter=ACMD",
+        "--no-renames",
+      ];
+  affectedFiles = execFileSync("git", gitArgs, { encoding: "utf8" })
     .split("\n")
     .map((s) => s.trim())
     .filter(Boolean);
@@ -145,7 +196,7 @@ try {
 }
 
 const sourcePosts = new Set();
-for (const file of staged) {
+for (const file of affectedFiles) {
   if (!file.startsWith("posts/") || !file.endsWith(".md")) continue;
   if (isTranslationPath(file)) {
     sourcePosts.add(sourcePathForTranslation(file));
@@ -163,27 +214,41 @@ function readIndexFile(filePath) {
   }
 }
 
+/**
+ * Pre-commit checks must inspect exactly what will be committed; full build
+ * checks must inspect the checkout that Eleventy is about to build.
+ */
+function readCheckedFile(filePath) {
+  if (!checkAll) return readIndexFile(filePath);
+  try {
+    return fs.readFileSync(filePath, "utf8");
+  } catch (e) {
+    if (e.code === "ENOENT") return null;
+    throw e;
+  }
+}
+
 const problems = [];
 for (const sourcePath of sourcePosts) {
-  const raw = readIndexFile(sourcePath);
+  const raw = readCheckedFile(sourcePath);
   if (raw === null) continue; // staged delete edge case
   // Skip source posts that are themselves drafts — not ready to translate.
   if (frontmatterField(extractFrontmatter(raw), "draft") === "true") continue;
   // Translation is opt-in so unrelated authors' existing posts are unaffected.
   if (!isTranslationManagedSource(raw)) continue;
 
-  const expected = hashBody(raw);
   for (const lang of TARGET_LANGS) {
     const tPath = translationPathFor(sourcePath, lang);
-    const translation = readIndexFile(tPath);
+    const translation = readCheckedFile(tPath);
     if (translation === null) {
       problems.push({ sourcePath, lang, reason: "missing" });
       continue;
     }
     const frontmatter = extractFrontmatter(translation);
     const actual = frontmatterField(frontmatter, "sourceHash");
-    if (actual !== expected) {
-      problems.push({ sourcePath, lang, reason: actual ? "stale" : "no-hash" });
+    const hashIssue = sourceHashIssue(actual, raw);
+    if (hashIssue) {
+      problems.push({ sourcePath, lang, reason: hashIssue });
       continue;
     }
     // A published AI-assisted translation must record who approved it and when.
@@ -216,8 +281,10 @@ for (const [sourcePath, items] of bySource) {
   console.error(`    Run: /translate-post ${sourcePath} ${items.map((i) => i.lang).join(",")}\n`);
 }
 console.error(
-  "Translate the posts above (see AGENTS.md), or bypass for a WIP commit with:\n" +
-    "  SKIP_TRANSLATION_CHECK=1 git commit ...\n" +
-    "  git commit --no-verify\n"
+  checkAll
+    ? "Fix the translations above before this build can be published.\n"
+    : "Translate the posts above (see AGENTS.md), or bypass for a WIP commit with:\n" +
+        "  SKIP_TRANSLATION_CHECK=1 git commit ...\n" +
+        "  git commit --no-verify\n"
 );
 process.exit(1);

@@ -78,8 +78,8 @@ image: <若原文有 image 則保留，否則省略>
 node scripts/check-translations.js --hash posts/<author>/<slug>.md
 ```
 
-（此值是原文「frontmatter 之後內文」的 SHA-256；原文之後若更新，雜湊會變，
-守門腳本即會要求重新翻譯。）
+（此值是原文「標題與 frontmatter 之後內文」的 SHA-256；標題或內文之後若更新，
+雜湊會變，守門腳本即會要求重新翻譯。）
 
 ### 原文也要補欄位（首次翻譯時）
 
