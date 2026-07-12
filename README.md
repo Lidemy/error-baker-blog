@@ -123,10 +123,17 @@ css/main.css 所有的樣式都在裡面，有新增的都放在最下面
 3. （建議）在 `_data/metadata.json` 自己的作者條目加上 `intro_en`、`intro_ja`、
    `intro_zh-CN`；譯文頁的作者簡介才會跟著在地化（缺少時顯示中文 `intro`）。
 
-### 譯文不會混進中文首頁
+### 譯文不會混進中文首頁或訂閱 Feed
 
-譯文有獨立路由（`/en/posts/...`）與語言切換器、`hreflang`；中文首頁、標籤頁、RSS
-只會列繁中文章。
+譯文有獨立路由（`/en/posts/...`）與語言切換器、`hreflang`；中文首頁、標籤頁與繁中
+Feed 只會列繁中文章。每個已有公開譯文的語系會同時提供 Atom 與 JSON Feed：
+
+- 繁中：`/feed/feed.xml`、`/feed/feed.json`（保留既有訂閱 URL）。
+- 其他語系：`/<lang>/feed/feed.xml`、`/<lang>/feed/feed.json`。
+
+頁面會透過 `<link rel="alternate">` 自動宣告當前語系的兩種 Feed；尚無公開譯文的語系
+不會產生空 Feed。兩種格式都依各語言版本的 `publishedAt`／`updatedAt` 顯示最近活動，
+並輸出 `_data/metadata.json` 中 `feed.limit` 指定的最新篇數。
 
 ### 過期守門（pre-commit）
 

@@ -58,7 +58,15 @@ const { buildAuthorStats } = require("./_11ty/authorStats");
 const {
   effectivePublishedDate,
   effectiveModifiedDate,
+  postPublishedDate,
+  sortByPublishedDate,
 } = require("./_11ty/publication-dates");
+const {
+  feedPublishedDate,
+  feedModifiedDate,
+  sortFeedPosts,
+  feedUpdatedDate,
+} = require("./_11ty/feed-data");
 const GA_ID = require("./_data/metadata.json").googleAnalyticsId;
 
 module.exports = function (eleventyConfig) {
@@ -157,12 +165,18 @@ module.exports = function (eleventyConfig) {
     return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat("yyyy-LL-dd");
   });
 
-  // Keep Article JSON-LD and the upcoming per-language feeds on one explicit
-  // date contract. The first filter argument is `page.date`; version-specific
+  // Keep Article JSON-LD, listings, and per-language feeds on one explicit date
+  // contract. The first filter argument is `page.date`; version-specific
   // metadata is optional for source posts and mandatory at the publish gate for
   // translations.
   eleventyConfig.addFilter("effectivePublishedDate", effectivePublishedDate);
   eleventyConfig.addFilter("effectiveModifiedDate", effectiveModifiedDate);
+  eleventyConfig.addFilter("postPublishedDate", postPublishedDate);
+  eleventyConfig.addFilter("sortByPublishedDate", sortByPublishedDate);
+  eleventyConfig.addFilter("feedPublishedDate", feedPublishedDate);
+  eleventyConfig.addFilter("feedModifiedDate", feedModifiedDate);
+  eleventyConfig.addFilter("sortFeedPosts", sortFeedPosts);
+  eleventyConfig.addFilter("feedUpdatedDate", feedUpdatedDate);
 
   eleventyConfig.addFilter("sitemapDateTimeString", (dateObj) => {
     const dt = DateTime.fromJSDate(dateObj, { zone: "utc" });
@@ -382,11 +396,13 @@ module.exports = function (eleventyConfig) {
 
   // zh-TW-only posts — the source language listing (homepage, archive, feeds).
   eleventyConfig.addCollection("postsZhTW", function (collectionApi) {
-    return collectionApi
-      .getFilteredByTag("posts")
-      .filter(
-        (item) => isVisible(item) && postLang(item) === DEFAULT_LANG
-      );
+    return sortByPublishedDate(
+      collectionApi
+        .getFilteredByTag("posts")
+        .filter(
+          (item) => isVisible(item) && postLang(item) === DEFAULT_LANG
+        )
+    );
   });
 
   // Activate a localized section only after that language has at least one

@@ -91,7 +91,9 @@
           -->
     <meta name="referrer" content="always">
     {%- set feedPath = metadata.feed.path if pageLang == 'zh-TW' else '/' + pageLang + metadata.feed.path %}
-    <link rel="alternate" href="{{ feedPath | url }}" type="application/atom+xml" title="{{ t.siteName or metadata.title }}">
+    {%- set jsonFeedPath = metadata.jsonfeed.path if pageLang == 'zh-TW' else '/' + pageLang + metadata.jsonfeed.path %}
+    <link rel="alternate" href="{{ feedPath | url }}" type="application/atom+xml" title="{{ t.siteName or metadata.title }} (Atom)">
+    <link rel="alternate" href="{{ jsonFeedPath | url }}" type="application/feed+json" title="{{ t.siteName or metadata.title }} (JSON Feed)">
 
     <link rel="preconnect" href="/" crossorigin>
     <script async defer src="{{ "/js/min.js" | addHash }}"

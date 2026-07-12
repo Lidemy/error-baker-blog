@@ -5,6 +5,8 @@ const {
   isDateOnly,
   effectivePublishedDate,
   effectiveModifiedDate,
+  postPublishedDate,
+  sortByPublishedDate,
 } = require("../_11ty/publication-dates");
 
 describe("publication date contract", () => {
@@ -50,6 +52,27 @@ describe("publication date contract", () => {
     assert.throws(
       () => effectivePublishedDate(new Date("invalid")),
       /date must be a valid YYYY-MM-DD date/
+    );
+  });
+
+  it("sorts collection items by version publication without mutating input", () => {
+    const posts = [
+      { url: "/new-source/", date: new Date("2025-01-01"), data: {} },
+      {
+        url: "/new-translation/",
+        date: new Date("2021-01-01"),
+        data: { publishedAt: "2026-07-13" },
+      },
+    ];
+
+    assert.equal(postPublishedDate(posts[1]).toISOString(), "2026-07-13T00:00:00.000Z");
+    assert.deepEqual(
+      sortByPublishedDate(posts).map((post) => post.url),
+      ["/new-source/", "/new-translation/"]
+    );
+    assert.deepEqual(
+      posts.map((post) => post.url),
+      ["/new-source/", "/new-translation/"]
     );
   });
 });

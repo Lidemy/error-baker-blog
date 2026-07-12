@@ -2,7 +2,7 @@
 {% for post in postslist %}
   {% set author = metadata.authors[post.data.author] %}
   <li class="archive-row">
-    <time class="archive-date f-monospace" datetime="{{ post.date | htmlDateString }}">{{ post.date | htmlDateString }}</time>
+    <time class="archive-date f-monospace" datetime="{{ post | postPublishedDate | htmlDateString }}">{{ post | postPublishedDate | htmlDateString }}</time>
     <a class="archive-title" href="{{ post.url | url }}">{% if post.data.title %}{{ post.data.title }}{% else %}<code>{{ post.url }}</code>{% endif %}</a>
     <span class="archive-by">
       <img class="avatar avatar-small" src="{{ author.avatarUrl }}" alt="" loading="lazy" />

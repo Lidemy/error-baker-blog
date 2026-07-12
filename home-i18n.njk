@@ -19,6 +19,6 @@ eleventyComputed:
 <p>{{ ht.intro }}</p>
 </section>
 <section class="posts">
-  {% set postslist = collections.posts | filterByLang(hlang) %}
+  {% set postslist = collections.posts | filterByLang(hlang) | sortByPublishedDate | reverse | head(8) %}
   {% include "home-postslist.njk" %}
 </section>

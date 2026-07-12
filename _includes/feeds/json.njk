@@ -1,0 +1,39 @@
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": {{ feedTitle | dump | safe }},
+  "home_page_url": {{ feedHomeUrl | dump | safe }},
+  "feed_url": {{ feedSelfUrl | dump | safe }},
+  "description": {{ feedDescription | dump | safe }},
+  "icon": {{ metadata.publisher.logo | absoluteUrl(metadata.url) | dump | safe }},
+  "language": {{ feedLang | dump | safe }},
+  "authors": [
+    {
+      "name": {{ metadata.publisher.name | dump | safe }},
+      "url": {{ metadata.url | dump | safe }},
+      "avatar": {{ metadata.publisher.logo | absoluteUrl(metadata.url) | dump | safe }}
+    }
+  ],
+  "items": [
+    {%- for post in feedPosts %}
+    {% set absolutePostUrl = post.url | url | absoluteUrl(metadata.url) %}
+    {% set postAuthor = metadata.authors[post.data.author] %}
+    {% set postAuthorUrl = collections.authorLangPages | authorUrlForLang(feedLang, post.data.author) | url | absoluteUrl(metadata.url) %}
+    {
+      "id": {{ absolutePostUrl | dump | safe }},
+      "url": {{ absolutePostUrl | dump | safe }},
+      "title": {{ post.data.title | dump | safe }},
+      "content_html": {% if post.templateContent %}{{ post.templateContent | htmlToAbsoluteUrls(absolutePostUrl) | dump | safe }}{% else %}""{% endif %},
+      "date_published": "{{ post | feedPublishedDate | dateToRfc3339 }}",
+      "date_modified": "{{ post | feedModifiedDate | dateToRfc3339 }}",
+      "language": {{ feedLang | dump | safe }},
+      "authors": [
+        {
+          "name": {{ postAuthor.name | dump | safe }},
+          "url": {{ postAuthorUrl | dump | safe }}
+        }
+      ]{% if post.data.image %},
+      "image": {{ post.data.image | absoluteUrl(metadata.url) | dump | safe }}{% endif %}
+    }{% if not loop.last %},{% endif %}
+    {%- endfor %}
+  ]
+}

@@ -57,8 +57,30 @@ function effectiveModifiedDate(pageDate, publishedAt, updatedAt) {
     : effectivePublishedDate(pageDate, publishedAt);
 }
 
+/** Resolve an Eleventy collection item's version publication date. */
+function postPublishedDate(post) {
+  if (!post) throw new Error("post is required");
+  const data = post.data || {};
+  return effectivePublishedDate(post.date, data.publishedAt);
+}
+
+/** Match Eleventy's oldest-to-newest collection order using version dates. */
+function sortByPublishedDate(posts) {
+  return [...(posts || [])].sort((left, right) => {
+    const dateDifference =
+      postPublishedDate(left).getTime() - postPublishedDate(right).getTime();
+    if (dateDifference !== 0) return dateDifference;
+
+    const leftKey = String(left.url || left.inputPath || "");
+    const rightKey = String(right.url || right.inputPath || "");
+    return leftKey.localeCompare(rightKey);
+  });
+}
+
 module.exports = {
   isDateOnly,
   effectivePublishedDate,
   effectiveModifiedDate,
+  postPublishedDate,
+  sortByPublishedDate,
 };

@@ -34,9 +34,10 @@ module.exports = {
 
 function localizedShellIsActive(data) {
   const inputPath = data.page && data.page.inputPath;
-  const localizedShell = /(?:home-i18n|about-i18n|feed\/feed-i18n|author-langs)\.njk$/.test(
-    inputPath || ""
-  );
+  const localizedShell =
+    /(?:home-i18n|about-i18n|feed\/(?:feed|json)-i18n|author-langs)\.njk$/.test(
+      inputPath || ""
+    );
   if (!localizedShell) return true;
 
   const lang = data.hlang || data.alang || data.flang || (data.ap && data.ap.lang);

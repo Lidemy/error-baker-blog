@@ -10,6 +10,7 @@ const computedData = require("../_data/eleventyComputed.js");
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const SITE_ROOT = path.join(PROJECT_ROOT, "_site");
 const { TARGET_LANGS } = require("../scripts/check-translations.js");
+const { isDateOnly } = require("../_11ty/publication-dates.js");
 
 function walk(directory) {
   if (!fs.existsSync(directory)) return [];
@@ -42,7 +43,12 @@ function activeTranslationLanguages() {
     const lang = TARGET_LANGS.find((code) => normalized.endsWith(`.${code}.md`));
     if (!lang) continue;
     const raw = fs.readFileSync(filename, "utf8");
-    if (frontmatterValue(raw, "draft") !== "true") active.add(lang);
+    const publishable =
+      frontmatterValue(raw, "draft") !== "true" &&
+      Boolean(frontmatterValue(raw, "reviewedBy")) &&
+      isDateOnly(frontmatterValue(raw, "reviewedAt")) &&
+      isDateOnly(frontmatterValue(raw, "publishedAt"));
+    if (publishable) active.add(lang);
   }
   return active;
 }
@@ -79,6 +85,7 @@ describe("production output boundaries", () => {
         path.join(SITE_ROOT, lang, "index.html"),
         path.join(SITE_ROOT, lang, "about", "index.html"),
         path.join(SITE_ROOT, lang, "feed", "feed.xml"),
+        path.join(SITE_ROOT, lang, "feed", "feed.json"),
       ];
       for (const output of outputs) {
         assert.equal(
@@ -141,5 +148,14 @@ describe("production output boundaries", () => {
       computedData.permalink({ ...base, ap: { lang: "ja", author: "tian" } }),
       false
     );
+  });
+
+  it("enables both localized feed formats only for active languages", () => {
+    const collections = { siteLangsWithPublishedPosts: ["zh-TW", "en"] };
+    for (const inputPath of ["./feed/feed-i18n.njk", "./feed/json-i18n.njk"]) {
+      const base = { page: { inputPath }, collections, permalink: "/en/feed/" };
+      assert.equal(computedData.permalink({ ...base, flang: "en" }), base.permalink);
+      assert.equal(computedData.permalink({ ...base, flang: "ja" }), false);
+    }
   });
 });

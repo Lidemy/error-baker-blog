@@ -7,7 +7,7 @@
 {% for post in postslist | reverse %}
   {% if author == post.data.author%}
     <li>
-      <time datetime="{{ post.date | htmlDateString }}">{{ post.date | htmlDateString }}</time>&nbsp;&nbsp;
+      <time datetime="{{ post | postPublishedDate | htmlDateString }}">{{ post | postPublishedDate | htmlDateString }}</time>&nbsp;&nbsp;
       <a href="{{ post.url | url }}">{% if post.data.title %}{{ post.data.title }}{% else %}<code>{{ post.url }}</code>{% endif %}</a>
     </li>
   {% endif %}
