@@ -2,6 +2,8 @@
 {%- set t = i18n[pageLang] or i18n['zh-TW'] %}
 {%- if translationKey == 'home' %}
   {%- set langVersions = langs | homeVersions %}
+{%- elif translationKey == 'about' %}
+  {%- set langVersions = langs | aboutVersions %}
 {%- elif translationKey %}
   {%- set langVersions = collections.translations[translationKey] %}
 {%- else %}

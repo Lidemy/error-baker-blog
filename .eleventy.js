@@ -232,6 +232,15 @@ module.exports = function (eleventyConfig) {
     }));
   });
 
+  // About pages use the same pagination pattern and therefore need the same
+  // deterministic version set for hreflang and the language switcher.
+  eleventyConfig.addFilter("aboutVersions", function (langsArr) {
+    return (langsArr || []).map((code) => ({
+      lang: code,
+      url: code === DEFAULT_LANG ? "/about/" : `/${code}/about/`,
+    }));
+  });
+
   // zh-TW-only posts — the source language listing (homepage, archive, feeds).
   eleventyConfig.addCollection("postsZhTW", function (collectionApi) {
     return collectionApi
