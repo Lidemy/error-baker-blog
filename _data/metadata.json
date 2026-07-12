@@ -85,6 +85,9 @@
     "tian": {
       "name": "Tian",
       "intro": "紀錄那些我笨拙可愛的時刻",
+      "intro_en": "A record of my clumsy but endearing moments",
+      "intro_ja": "不器用で愛おしい瞬間の記録",
+      "intro_zh-CN": "记录那些我笨拙可爱的时刻",
       "avatarUrl": "/img/authors/tian.jpg"
     },
     "YongChen": {
