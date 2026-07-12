@@ -28,6 +28,7 @@ const path = require("path");
 const fs = require("fs");
 const { gif2mp4 } = require("./video-gif");
 const AVATAR_WIDTH = 320;
+const SMALL_AVATAR_WIDTH = 96;
 const AVATAR_CLASSES = ["avatar", "avatar-small", "avatar-large"];
 
 /**
@@ -98,6 +99,7 @@ const processImage = async (img, outputPath) => {
     const isAvatar = AVATAR_CLASSES.some((className) =>
       img.classList.contains(className)
     );
+    const isSmallAvatar = img.classList.contains("avatar-small");
     img.setAttribute("decoding", "async");
     img.setAttribute("loading", "lazy");
     if (!isAvatar) {
@@ -114,8 +116,10 @@ const processImage = async (img, outputPath) => {
     let fallback;
     let jpeg;
     if (isAvatar) {
-      await setSrcset(webp, src, "webp", [AVATAR_WIDTH], "64px");
-      fallback = (await srcset(src, "jpeg", [AVATAR_WIDTH])).fallback;
+      const avatarWidth = isSmallAvatar ? SMALL_AVATAR_WIDTH : AVATAR_WIDTH;
+      const avatarSizes = isSmallAvatar ? "22px" : "64px";
+      await setSrcset(webp, src, "webp", [avatarWidth], avatarSizes);
+      fallback = (await srcset(src, "jpeg", [avatarWidth])).fallback;
     } else {
       await setSrcset(webp, src, "webp");
       jpeg = doc.createElement("source");

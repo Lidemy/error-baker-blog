@@ -56,4 +56,21 @@ describe("image build pipeline", () => {
     assert.equal(sources[0].getAttribute("srcset"), "/img/authors/tian-320w.webp 320w");
     assert.equal(sources[0].getAttribute("sizes"), "64px");
   });
+
+  it("caps small local avatars at 96px without downsizing larger avatars", async () => {
+    const output = await transform(
+      '<!doctype html><img class="avatar avatar-small" alt="" src="/img/authors/tian.jpg">',
+      "_site/small-avatar-test/index.html"
+    );
+    const doc = new JSDOM(output).window.document;
+    const image = doc.querySelector("picture > img.avatar-small");
+    assert.ok(image, "Expected the small avatar to be wrapped in a picture");
+    assert.equal(image.getAttribute("src"), "/img/authors/tian-96w.jpg");
+
+    const sources = [...image.closest("picture").querySelectorAll("source")];
+    assert.equal(sources.length, 1);
+    assert.equal(sources[0].getAttribute("type"), "image/webp");
+    assert.equal(sources[0].getAttribute("srcset"), "/img/authors/tian-96w.webp 96w");
+    assert.equal(sources[0].getAttribute("sizes"), "22px");
+  });
 });
