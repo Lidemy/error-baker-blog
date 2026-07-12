@@ -162,6 +162,8 @@ test("translationTargets rejects malformed, empty, duplicate, or unsupported lis
 
 test("published translations require an auditable human review", () => {
   assert.strictEqual(publicationReviewIssue("draft: true"), null);
+  assert.strictEqual(publicationReviewIssue("draft: TRUE # WIP"), null);
+  assert.strictEqual(publicationReviewIssue('draft: "true"'), null);
   assert.strictEqual(publicationReviewIssue("draft: false"), "not-reviewed");
   assert.strictEqual(
     publicationReviewIssue("draft: false\nreviewedBy: May\nreviewedAt: 2026-07-11"),
@@ -380,6 +382,26 @@ test("integration: a draft source cannot anchor a published translation", () => 
     assert.strictEqual(result.status, 1);
     assert.match(result.stderr, /en \(source-unpublished\)/);
     assert.match(result.stderr, /Set these translations back to draft: true/);
+    assert.doesNotMatch(result.stderr, /Run: \/translate-post/);
+  }, ["en"]);
+});
+
+test("integration: an unreviewed translation requests metadata, not retranslation", () => {
+  withTranslationRepo(({ repo, sourceHash, translations }) => {
+    write(
+      repo,
+      translations.en,
+      translationPost("en", sourceHash, "Translated body.\n", false).replace(
+        "reviewedBy: Translation Reviewer\nreviewedAt: 2026-07-13\n",
+        ""
+      )
+    );
+    git(repo, ["add", translations.en]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /en \(not-reviewed\)/);
+    assert.match(result.stderr, /Add reviewedBy and reviewedAt/);
     assert.doesNotMatch(result.stderr, /Run: \/translate-post/);
   }, ["en"]);
 });

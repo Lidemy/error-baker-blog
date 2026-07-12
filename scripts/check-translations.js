@@ -202,7 +202,7 @@ function translationTargetsForSource(raw) {
 
 /** Return a publication-review error for a translation frontmatter block. */
 function publicationReviewIssue(frontmatter) {
-  if (frontmatterField(frontmatter, "draft") === "true") return null;
+  if (frontmatterBoolean(frontmatter, "draft") === true) return null;
   const reviewer = frontmatterField(frontmatter, "reviewedBy");
   const reviewedAt = frontmatterField(frontmatter, "reviewedAt");
   return reviewer && reviewedAt ? null : "not-reviewed";
@@ -445,15 +445,20 @@ for (const [sourcePath, items] of bySource) {
         "or remove the corresponding translation file(s)."
     );
   }
-  const nonTranslationReasons = new Set([
-    "not-declared",
-    "orphaned-translation",
-    "unmanaged-source",
-    "source-unpublished",
-  ]);
-  const langs = items
-    .filter((i) => i.lang && !nonTranslationReasons.has(i.reason))
-    .map((i) => i.lang);
+  const unreviewed = languagesFor("not-reviewed");
+  if (unreviewed.length > 0) {
+    console.error(
+      `    Add reviewedBy and reviewedAt to the published translations: ${unreviewed.join(",")}.`
+    );
+  }
+  const retranslationReasons = new Set(["missing", "no-hash", "stale"]);
+  const langs = [
+    ...new Set(
+      items
+        .filter((i) => i.lang && retranslationReasons.has(i.reason))
+        .map((i) => i.lang)
+    ),
+  ];
   if (langs.length > 0) {
     console.error(`    Run: /translate-post ${sourcePath} ${langs.join(",")}\n`);
   } else {
