@@ -8,6 +8,21 @@
 [[plugins]]
   package = "@netlify/plugin-functions-install-core"
 
+# The home page and archive used to be paginated at /articles/<page>/ and
+# /archive/<page>/. Keep those indexed URLs alive after consolidating the
+# archive into a single page.
+[[redirects]]
+  from = "/articles/:page"
+  to = "/archive/"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "/archive/:page"
+  to = "/archive/"
+  status = 301
+  force = true
+
 [[headers]]
   for = "*.avif"
     [headers.values]
