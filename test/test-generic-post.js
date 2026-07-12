@@ -118,5 +118,6 @@ describe("representative post build output", () => {
 
   it("does not advertise draft translations", () => {
     assert.equal(doc.querySelectorAll("link[rel='alternate'][hreflang]").length, 0);
+    assert.equal(doc.querySelector("#lang-suggest"), null);
   });
 });

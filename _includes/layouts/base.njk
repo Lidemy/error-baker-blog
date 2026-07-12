@@ -217,16 +217,18 @@
       {% block aside %}{% endblock %}
     </main>
 
-    {#- Locale-suggestion banner: stays hidden unless src/main.js finds a
-        better match for the reader among this page's hreflang alternates in
-        <head>. Server-rendered so PurgeCSS keeps the classes; fixed-position
-        so revealing it causes no layout shift. No auto-redirect (SEO-safe). #}
+    {#- Locale-suggestion banner: only render when this page has another visible
+        language version, then stay hidden unless src/main.js finds a better
+        match among the hreflang alternates in <head>. Fixed-position so
+        revealing it causes no layout shift. No auto-redirect (SEO-safe). #}
+    {%- if langVersions and langVersions.length > 1 %}
     <aside id="lang-suggest" class="lang-suggest" hidden
       data-strings="{{ i18n | langSuggestStrings(langs) }}">
       <span class="lang-suggest__text"></span>
       <a class="lang-suggest__link" href="#"></a>
       <button class="lang-suggest__dismiss" type="button" aria-label="{{ t.suggestDismiss }}">&#10005;</button>
     </aside>
+    {%- endif %}
 
     <footer>
       <div class="copyright">&copy; 2021&ndash;{{ year }} {{ t.copyright }}</div>

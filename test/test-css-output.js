@@ -17,11 +17,11 @@ function inlinedCss(relativeOutputPath) {
 }
 
 describe("purged CSS output", () => {
-  it("drops the retired language nav while keeping the current switcher", () => {
+  it("drops inactive language UI while keeping the current switcher", () => {
     const css = inlinedCss("index.html");
     assert.doesNotMatch(css, /\.lang-nav/);
     assert.match(css, /\.lang-switch/);
-    assert.match(css, /\.lang-suggest/);
+    assert.doesNotMatch(css, /\.lang-suggest/);
   });
 
   it("keeps classes added dynamically by the table-of-contents script", () => {
@@ -34,5 +34,6 @@ describe("purged CSS output", () => {
   it("contains no retired language-nav selectors in the source stylesheet", () => {
     const css = fs.readFileSync(path.join(PROJECT_ROOT, "css", "main.css"), "utf8");
     assert.doesNotMatch(css, /\.lang-nav/);
+    assert.match(css, /\.lang-suggest/);
   });
 });
