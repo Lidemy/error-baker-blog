@@ -2,7 +2,7 @@
 title: 介紹 WeakMap
 date: 2021-11-12
 tags: [JavaScript, weap-map]
-author: Umer
+author: umer
 layout: layouts/post.njk
 ---
 

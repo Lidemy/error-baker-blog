@@ -10,7 +10,7 @@
     <h2 class="post-title"><a href="{{ post.url | url }}">{{ post.data.title | safe }}</a></h2>
     {% summary post=post.templateContent %}
     <div class="post-info">
-      <a href="/posts/{{ author.name }}" class="author-link">
+      <a href="/posts/{{ post.data.author }}" class="author-link">
         <img src="{{ author.avatarUrl }}" class="avatar-small" alt="" />
         <span class="post-author">{{ author.name }}</span>
       </a>

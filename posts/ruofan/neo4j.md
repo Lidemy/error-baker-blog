@@ -2,7 +2,7 @@
 title: At a glance of Neo4j
 date: 2022-10-09
 tags: [back-end]
-author: Ruofan
+author: ruofan
 layout: layouts/post.njk
 ---
 

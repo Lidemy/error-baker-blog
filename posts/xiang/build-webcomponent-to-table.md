@@ -2,7 +2,7 @@
 title: 用 Web Component 製作客製化表格元件
 date: 2021-08-15
 tags: [Front-end, JavaScript]
-author: Xiang
+author: xiang
 layout: layouts/post.njk
 image: https://blog.errorbaker.tw/img/posts/xiang/wc-table.png
 ---
