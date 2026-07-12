@@ -177,8 +177,43 @@ module.exports = function (eleventyConfig) {
    * templates (a) keep each language's listings separate and (b) link the
    * versions of one article together for the language switcher + hreflang.
    * ------------------------------------------------------------------------- */
-  const SITE_LANGS = ["zh-TW", "en", "ja", "zh-CN"]; // source first; display order
-  const DEFAULT_LANG = "zh-TW";
+  // Single source of truth for the language list (source language first,
+  // display order). check-translations.js and the tests derive from the same
+  // file, so adding a locale means editing langs.json + i18n.json only.
+  const SITE_LANGS = require("./_data/langs.json");
+  const DEFAULT_LANG = SITE_LANGS[0];
+
+  // A half-added language (declared in langs.json but missing its UI strings)
+  // must fail the build instead of rendering `undefined` into pages.
+  const I18N_STRINGS = require("./_data/i18n.json");
+  const REQUIRED_I18N_KEYS = [
+    "langName",
+    "ogLocale",
+    "siteName",
+    "noTranslation",
+    "intro",
+    "nav_About",
+    "suggestAvailable",
+    "suggestRead",
+    "suggestDismiss",
+  ];
+  if (!Array.isArray(SITE_LANGS) || SITE_LANGS.length === 0) {
+    throw new Error("_data/langs.json must be a non-empty array of language codes");
+  }
+  for (const lang of SITE_LANGS) {
+    const strings = I18N_STRINGS[lang];
+    if (!strings) {
+      throw new Error(
+        `_data/i18n.json has no entry for "${lang}" (declared in _data/langs.json)`
+      );
+    }
+    const missing = REQUIRED_I18N_KEYS.filter((key) => !strings[key]);
+    if (missing.length > 0) {
+      throw new Error(
+        `_data/i18n.json["${lang}"] is missing required keys: ${missing.join(", ")}`
+      );
+    }
+  }
   const IS_DEVELOPMENT = process.argv.some((arg) => /(^|-)serve(?:$|=)/.test(arg));
   const draftCache = new Map();
 
@@ -194,7 +229,11 @@ module.exports = function (eleventyConfig) {
     // drafts can never leak into feeds, hreflang, or sitemap collections.
     const inputPath = item.inputPath;
     if (!inputPath || !inputPath.endsWith(".md")) return false;
-    if (draftCache.has(inputPath)) return draftCache.get(inputPath);
+    // Cache only for one-shot builds: a --serve rebuild must observe draft
+    // toggles in frontmatter, so dev reads the file every time.
+    if (!IS_DEVELOPMENT && draftCache.has(inputPath)) {
+      return draftCache.get(inputPath);
+    }
     let draft = false;
     try {
       const raw = fs.readFileSync(inputPath, "utf8");
@@ -205,15 +244,20 @@ module.exports = function (eleventyConfig) {
     } catch (error) {
       throw new Error(`Unable to inspect draft state for ${inputPath}: ${error.message}`);
     }
-    draftCache.set(inputPath, draft);
+    if (!IS_DEVELOPMENT) draftCache.set(inputPath, draft);
     return draft;
   };
   const isVisible = (item) => !isDraft(item) || IS_DEVELOPMENT;
+  // Only strip suffixes that are actual site languages, so a legitimately
+  // dotted slug (e.g. `intro.v2.md`) keeps its full key.
+  const LANG_SUFFIX_RE = new RegExp(
+    `posts/(.+?)(?:\\.(?:${SITE_LANGS.join("|")}))?\\.md$`
+  );
   const postTranslationKey = (item) => {
     if (item.data && item.data.translationKey) return item.data.translationKey;
     // Fallback: derive `<author>/<slug>` from the input path, dropping any
     // `.<lang>` suffix so an original and its translations share one key.
-    const match = item.inputPath.match(/posts\/(.+?)(?:\.[A-Za-z-]+)?\.md$/);
+    const match = item.inputPath.match(LANG_SUFFIX_RE);
     return match ? match[1] : item.inputPath;
   };
 
@@ -249,6 +293,21 @@ module.exports = function (eleventyConfig) {
     return hasLocalizedPage
       ? `/${target}/posts/${author}/`
       : `/posts/${author}/`;
+  });
+
+  // Per-language strings for the locale-suggestion banner, embedded as a JSON
+  // data attribute so the client script can render the suggestion in the
+  // reader's own language rather than the current page's.
+  eleventyConfig.addFilter("langSuggestStrings", function (i18nData, langsArr) {
+    const out = {};
+    for (const code of langsArr || []) {
+      const strings = i18nData[code] || {};
+      out[code] = {
+        available: strings.suggestAvailable,
+        read: strings.suggestRead,
+      };
+    }
+    return JSON.stringify(out);
   });
 
   // The home pages exist for every language at deterministic URLs

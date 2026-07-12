@@ -28,12 +28,16 @@ const path = require("path");
 const crypto = require("crypto");
 const { execFileSync } = require("child_process");
 
-// Languages every source post is expected to be translated into. Edit to taste;
-// keep in sync with SITE_LANGS in .eleventy.js and AGENTS.md.
-const TARGET_LANGS = ["en", "ja", "zh-CN"];
+// The language list is single-sourced from _data/langs.json (source language
+// first); .eleventy.js and the tests derive from the same file. A JSON require
+// keeps this script free of third-party dependencies.
+const SITE_LANGS = require(path.join(__dirname, "..", "_data", "langs.json"));
+const DEFAULT_LANG = SITE_LANGS[0];
+// Languages every source post is expected to be translated into.
+const TARGET_LANGS = SITE_LANGS.filter((lang) => lang !== DEFAULT_LANG);
 // Any filename suffix `.<lang>.md` with one of these is treated as a translation
 // (so it is never itself mistaken for a source post).
-const ALL_LANG_SUFFIXES = TARGET_LANGS.concat(["zh-TW"]);
+const ALL_LANG_SUFFIXES = SITE_LANGS;
 
 /** Strip a leading YAML frontmatter block and return the remaining body. */
 function extractBody(raw) {
@@ -110,7 +114,7 @@ function frontmatterField(frontmatter, field) {
 function isTranslationManagedSource(raw) {
   const frontmatter = extractFrontmatter(raw);
   return (
-    frontmatterField(frontmatter, "lang") === "zh-TW" &&
+    frontmatterField(frontmatter, "lang") === DEFAULT_LANG &&
     Boolean(frontmatterField(frontmatter, "translationKey"))
   );
 }

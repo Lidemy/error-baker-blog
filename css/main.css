@@ -2707,3 +2707,44 @@ body.tmpl-home .intro {
 body.tmpl-home .intro p {
   text-wrap: balance;
 }
+
+/* ── Locale-suggestion banner (revealed by src/main.js) ────────────────── */
+/* Fixed to the viewport bottom so revealing it causes no layout shift. */
+.lang-suggest {
+  position: fixed;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  max-width: calc(100vw - 2rem);
+  padding: 0.6em 1em;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+  font-size: 0.9rem;
+}
+.lang-suggest[hidden] {
+  display: none;
+}
+.lang-suggest__link {
+  white-space: nowrap;
+  font-weight: 600;
+}
+.lang-suggest__dismiss {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+  font-size: 1em;
+  line-height: 1;
+  padding: 0.2em;
+}
+body.dark .lang-suggest {
+  background: #333;
+  color: #eee;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.6);
+}

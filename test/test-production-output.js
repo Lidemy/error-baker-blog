@@ -9,7 +9,7 @@ const computedData = require("../_data/eleventyComputed.js");
 
 const PROJECT_ROOT = path.resolve(__dirname, "..");
 const SITE_ROOT = path.join(PROJECT_ROOT, "_site");
-const TARGET_LANGS = ["en", "ja", "zh-CN"];
+const { TARGET_LANGS } = require("../scripts/check-translations.js");
 
 function walk(directory) {
   if (!fs.existsSync(directory)) return [];
