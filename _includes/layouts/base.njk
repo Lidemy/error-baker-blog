@@ -41,8 +41,8 @@
     <meta name="theme-color" content="#d04444">
     {%- set pageTitle = renderData.title or title or metadata.title %}
     <title>{% if templateClass == 'tmpl-post' and (renderData.title or title) %}{{ pageTitle | escape }}｜{{ t.siteName or metadata.title }}{% else %}{{ pageTitle | escape }}{% endif %}</title>
-    <meta property="og:title" content="{{ renderData.title or title or metadata.title | escape  }}">
-    <meta name="twitter:title" content="{{ renderData.title or title or metadata.title | escape  }}">
+    <meta property="og:title" content="{{ pageTitle | escape }}">
+    <meta name="twitter:title" content="{{ pageTitle | escape }}">
     {% set desc = renderData.description or description %}
     {% if not desc %}
       {% set desc = content | striptags | truncate(140) %}

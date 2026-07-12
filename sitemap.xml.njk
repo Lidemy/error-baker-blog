@@ -1,7 +1,6 @@
 ---
 permalink: /sitemap.xml
 eleventyExcludeFromCollections: true
-siteWideUpdate: 2020-07-12
 ---
 <?xml version="1.0" encoding="utf-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -10,17 +9,15 @@ siteWideUpdate: 2020-07-12
   {% set absoluteUrl %}{{ page.url | url | absoluteUrl(metadata.url) }}{% endset %}
   {% set pageDate = page.date | sitemapDateTimeString %}
   {% set lastModifiedDate = page.inputPath | lastModifiedDate  | sitemapDateTimeString %}
-  {% set siteWide = siteWideUpdate| sitemapDateTimeString %}
-  {% set lastmod = siteWide %}
-  {% if pageDate > lastmod %}
-    {% set lastmod = pageDate %}
-  {% endif %}
+  {% set lastmod = pageDate %}
   {% if lastModifiedDate > lastmod %}
     {% set lastmod = lastModifiedDate %}
   {% endif %}
   <url>
     <loc>{{ absoluteUrl | safe }}</loc>
+    {%- if lastmod %}
     <lastmod>{{ lastmod }}</lastmod>
+    {%- endif %}
   </url>
 {%- endfor %}
 {%- set activeLangs = collections.siteLangsWithPublishedPosts %}
@@ -31,17 +28,15 @@ siteWideUpdate: 2020-07-12
   {% set absoluteUrl %}{{ page.url | url | absoluteUrl(metadata.url) }}{% endset %}
   {% set pageDate = page.date | sitemapDateTimeString %}
   {% set lastModifiedDate = page.inputPath | lastModifiedDate  | sitemapDateTimeString %}
-  {% set siteWide = siteWideUpdate| sitemapDateTimeString %}
-  {% set lastmod = siteWide %}
-  {% if pageDate > lastmod %}
-    {% set lastmod = pageDate %}
-  {% endif %}
+  {% set lastmod = pageDate %}
   {% if lastModifiedDate > lastmod %}
     {% set lastmod = lastModifiedDate %}
   {% endif %}
   <url>
     <loc>{{ absoluteUrl | safe }}</loc>
+    {%- if lastmod %}
     <lastmod>{{ lastmod }}</lastmod>
+    {%- endif %}
   </url>
 {%- endfor %}
 </urlset>
