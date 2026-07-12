@@ -27,6 +27,14 @@ const {
 
 const GUARD_SCRIPT = path.join(__dirname, "check-translations.js");
 
+// Git hook runners (the pre-commit/pre-push packages) export GIT_DIR and
+// GIT_INDEX_FILE to their children. If the integration tests inherit them,
+// every `git add` in the temporary repo silently rewrites the REAL repository's
+// index instead. Strip all GIT_* variables so the temp repos stay hermetic.
+const ISOLATED_ENV = Object.fromEntries(
+  Object.entries(process.env).filter(([key]) => !key.startsWith("GIT_"))
+);
+
 let passed = 0;
 function test(name, fn) {
   fn();
@@ -136,6 +144,7 @@ test("sourceHashIssue requires the title-aware source hash", () => {
 function git(repo, args) {
   return execFileSync("git", args, {
     cwd: repo,
+    env: ISOLATED_ENV,
     encoding: "utf8",
     stdio: ["ignore", "pipe", "pipe"],
   });
@@ -175,6 +184,7 @@ function translationPost(lang, sourceHash, body = "Translated body.\n") {
 function runGuard(repo, args = []) {
   return spawnSync(process.execPath, [GUARD_SCRIPT, ...args], {
     cwd: repo,
+    env: ISOLATED_ENV,
     encoding: "utf8",
   });
 }
@@ -182,6 +192,7 @@ function runGuard(repo, args = []) {
 function runHash(repo, sourcePath) {
   return spawnSync(process.execPath, [GUARD_SCRIPT, "--hash", sourcePath], {
     cwd: repo,
+    env: ISOLATED_ENV,
     encoding: "utf8",
   });
 }
