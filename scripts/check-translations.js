@@ -113,10 +113,10 @@ function frontmatterField(frontmatter, field) {
 }
 
 /**
- * Parse a YAML boolean scalar without treating quoted strings as booleans.
- * js-yaml accepts case-insensitive true/false and ignores whitespace-prefixed
- * inline comments; matching that behavior keeps guard visibility aligned with
- * Eleventy's parsed `data.draft === true` check.
+ * Parse the site's draft scalar contract. Eleventy treats YAML boolean true and
+ * the exact quoted string "true" as drafts; it also ignores whitespace-prefixed
+ * inline comments. Matching that behavior keeps the guard aligned with
+ * production visibility.
  */
 function frontmatterBoolean(frontmatter, field) {
   const re = new RegExp(`^${field}:\\s*(.*?)\\s*$`, "m");
@@ -129,7 +129,7 @@ function frontmatterBoolean(frontmatter, field) {
     ((value.startsWith('"') && value.endsWith('"')) ||
       (value.startsWith("'") && value.endsWith("'")))
   ) {
-    return null;
+    return value.slice(1, -1) === "true" ? true : null;
   }
 
   if (/^true$/i.test(value)) return true;

@@ -111,11 +111,13 @@ test("frontmatterField parses a quoted or bare value", () => {
   assert.strictEqual(frontmatterField(fm, "missing"), null);
 });
 
-test("frontmatterBoolean matches YAML booleans without coercing quoted strings", () => {
+test("frontmatterBoolean matches the site's boolean and quoted draft contract", () => {
   assert.strictEqual(frontmatterBoolean("draft: true", "draft"), true);
   assert.strictEqual(frontmatterBoolean("draft: TRUE # WIP", "draft"), true);
   assert.strictEqual(frontmatterBoolean("draft: False", "draft"), false);
-  assert.strictEqual(frontmatterBoolean('draft: "true"', "draft"), null);
+  assert.strictEqual(frontmatterBoolean('draft: "true" # WIP', "draft"), true);
+  assert.strictEqual(frontmatterBoolean("draft: 'true'", "draft"), true);
+  assert.strictEqual(frontmatterBoolean('draft: "TRUE"', "draft"), null);
   assert.strictEqual(frontmatterBoolean("title: Example", "draft"), null);
 });
 
@@ -413,6 +415,45 @@ test("integration: YAML boolean variants keep source and translation drafts alig
       repo,
       translations.en,
       translationPost("en", sourceHash, "Translated body.\n", "True # WIP")
+    );
+    git(repo, ["add", sourcePath, translations.en]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 0, result.stderr);
+  }, ["en"]);
+});
+
+test("integration: quoted draft source cannot anchor a published translation", () => {
+  withTranslationRepo(({ repo, sourcePath, sourceHash, translations }) => {
+    write(
+      repo,
+      sourcePath,
+      sourcePost("Original title", "Source body.\n", ["en"], '"true"')
+    );
+    write(
+      repo,
+      translations.en,
+      translationPost("en", sourceHash, "Translated body.\n", false)
+    );
+    git(repo, ["add", sourcePath, translations.en]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /en \(source-unpublished\)/);
+  }, ["en"]);
+});
+
+test("integration: quoted source and translation drafts remain aligned", () => {
+  withTranslationRepo(({ repo, sourcePath, sourceHash, translations }) => {
+    write(
+      repo,
+      sourcePath,
+      sourcePost("Original title", "Source body.\n", ["en"], '"true"')
+    );
+    write(
+      repo,
+      translations.en,
+      translationPost("en", sourceHash, "Translated body.\n", "'true'")
     );
     git(repo, ["add", sourcePath, translations.en]);
 
