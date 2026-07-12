@@ -1337,37 +1337,6 @@ ul#post-list li {
   max-width: 90%;
 }
 
-/* ── Site-wide language switcher (nav) ───────────────────────────────── */
-.lang-nav {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  margin-left: 0.75rem;
-  font-size: 0.85rem;
-}
-.lang-nav__item {
-  padding: 0 0.15rem;
-}
-.lang-nav__item.is-current {
-  font-weight: 700;
-  text-decoration: underline;
-}
-.lang-nav__item.is-disabled {
-  color: #999;
-  cursor: not-allowed;
-}
-.lang-nav__item:not(:last-child)::after {
-  content: "·";
-  margin-left: 0.4rem;
-  color: #bbb;
-}
-@media screen and (max-width: 840px) {
-  .lang-nav {
-    margin: 0.5rem 0 0;
-    justify-content: center;
-  }
-}
-
 /* ════════════════════════════════════════════════════════════════════════
    READING EXPERIENCE / SEO / A11y ENHANCEMENTS  (layered overrides)
    Appended so the cascade lets these win over the base Bahunya rules above
@@ -1661,16 +1630,6 @@ main {
   }
 }
 
-/* ── Language switcher polish (was plain) ───────────────────────────────*/
-.lang-nav__item.is-disabled {
-  color: var(--muted);
-  opacity: 0.75;
-  cursor: not-allowed;
-}
-.lang-nav__item:not(:last-child)::after {
-  color: var(--hairline);
-}
-
 /* ── Post cards: robust clamp + gentle hover ────────────────────────────*/
 .summary {
   display: -webkit-box;
@@ -1795,7 +1754,6 @@ main {
 /* Touch devices: enlarge tap targets to >= 44px. */
 @media (pointer: coarse) {
   header nav a,
-  .lang-nav__item,
   .nav__links a,
   .toc-list a {
     min-height: 44px;
@@ -2280,32 +2238,6 @@ h6:hover > .direct-link {
 .post-tag:hover {
   color: var(--accent);
   border-color: transparent;
-}
-
-/* (3) Language switcher: even spacing, no stray dots/underline; current in
-   accent. */
-.lang-nav {
-  gap: 0.7rem;
-  margin-left: 1rem;
-  font-size: 0.82rem;
-}
-.lang-nav__item {
-  padding: 0;
-}
-.lang-nav__item::after {
-  content: none !important;
-}
-.lang-nav__item:not(.is-current):not(.is-disabled) {
-  color: var(--ink-soft);
-}
-.lang-nav__item.is-current {
-  font-weight: 700;
-  color: var(--accent);
-  text-decoration: none;
-}
-.lang-nav__item.is-disabled {
-  color: var(--ink-faint);
-  opacity: 0.55;
 }
 
 /* (7) Pagination: wrap instead of overflowing on phones;

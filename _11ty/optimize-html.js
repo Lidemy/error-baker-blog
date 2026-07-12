@@ -77,16 +77,10 @@ const purifyCss = async (rawContent, outputPath) => {
       // upgrade, rename these keys instead.
       whitelist: [
         "active",
-        "visible",
         "toc-ready",
-        "direct-link",
-        "skip-link",
-        "site-title",
-        "author-bio",
-        "author-intro",
-        "tmpl-post",
+        "toc-h2",
+        "toc-h3",
       ],
-      whitelistPatterns: [/^toc/, /^lang-/],
     });
 
     const after = csso.minify(purged[0].css).css;
