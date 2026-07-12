@@ -5,6 +5,7 @@
 _site/
 node_modules/
 package-lock.json
+AGENTS.md
 README.md
 _11ty/
 third_party
