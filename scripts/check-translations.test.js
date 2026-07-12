@@ -20,6 +20,7 @@ const {
   sourcePathForTranslation,
   frontmatterField,
   isTranslationManagedSource,
+  translationTargetsForSource,
   publicationReviewIssue,
   sourceHashIssue,
   TARGET_LANGS,
@@ -123,6 +124,31 @@ test("only zh-TW sources with a translationKey opt into translation checks", () 
   );
 });
 
+test("translationTargets selects a supported subset and defaults legacy sources to all", () => {
+  assert.deepStrictEqual(translationTargetsForSource(SAMPLE), {
+    langs: TARGET_LANGS,
+    issue: null,
+  });
+  assert.deepStrictEqual(
+    translationTargetsForSource(
+      "---\nlang: zh-TW\ntranslationTargets: [ja, en] # requested locales\n---\n\nBody\n"
+    ),
+    { langs: ["en", "ja"], issue: null }
+  );
+});
+
+test("translationTargets rejects malformed, empty, duplicate, or unsupported lists", () => {
+  const source = (value) =>
+    translationTargetsForSource(
+      `---\nlang: zh-TW\ntranslationTargets: ${value}\n---\n\nBody\n`
+    ).issue;
+
+  assert.match(source("en,ja"), /inline YAML list/);
+  assert.match(source("[]"), /at least one/);
+  assert.match(source("[en, en]"), /duplicate/);
+  assert.match(source("[en, fr]"), /unsupported.*fr/);
+});
+
 test("published translations require an auditable human review", () => {
   assert.strictEqual(publicationReviewIssue("draft: true"), null);
   assert.strictEqual(publicationReviewIssue("draft: false"), "not-reviewed");
@@ -156,12 +182,13 @@ function write(repo, relativePath, contents) {
   fs.writeFileSync(absolutePath, contents, "utf8");
 }
 
-function sourcePost(title, body = "Source body.\n") {
+function sourcePost(title, body = "Source body.\n", targets = TARGET_LANGS) {
   return (
     "---\n" +
     `title: ${title}\n` +
     "lang: zh-TW\n" +
     "translationKey: tester/example\n" +
+    `translationTargets: [${targets.join(", ")}]\n` +
     "---\n\n" +
     body
   );
@@ -197,10 +224,10 @@ function runHash(repo, sourcePath) {
   });
 }
 
-function withTranslationRepo(fn) {
+function withTranslationRepo(fn, targetLangs = TARGET_LANGS) {
   const repo = fs.mkdtempSync(path.join(os.tmpdir(), "translation-guard-"));
   const sourcePath = "posts/tester/example.md";
-  const initialSource = sourcePost("Original title");
+  const initialSource = sourcePost("Original title", "Source body.\n", targetLangs);
   const sourceHash = hashSource(initialSource);
   const translations = {};
 
@@ -209,7 +236,7 @@ function withTranslationRepo(fn) {
     git(repo, ["config", "user.name", "Translation Guard Test"]);
     git(repo, ["config", "user.email", "translation-guard@example.test"]);
     write(repo, sourcePath, initialSource);
-    for (const lang of TARGET_LANGS) {
+    for (const lang of targetLangs) {
       const translationPath = `posts/tester/example.${lang}.md`;
       translations[lang] = translationPath;
       write(repo, translationPath, translationPost(lang, sourceHash));
@@ -258,6 +285,37 @@ test("integration: a staged translation deletion is reported from the index", ()
     const result = runGuard(repo);
     assert.strictEqual(result.status, 1);
     assert.match(result.stderr, /ja \(missing\)/);
+  });
+});
+
+test("integration: an explicit target subset does not require other site languages", () => {
+  withTranslationRepo(({ repo }) => {
+    const result = runGuard(repo, ["--all"]);
+    assert.strictEqual(result.status, 0, result.stderr);
+  }, ["en", "ja"]);
+});
+
+test("integration: a translation outside the explicit target set is rejected", () => {
+  withTranslationRepo(({ repo, sourceHash }) => {
+    const translationPath = "posts/tester/example.ja.md";
+    write(repo, translationPath, translationPost("ja", sourceHash));
+    git(repo, ["add", translationPath]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /ja \(not-declared\)/);
+    assert.match(result.stderr, /Add ja to translationTargets/);
+  }, ["en"]);
+});
+
+test("integration: removing a target and its translation together is intentional", () => {
+  withTranslationRepo(({ repo, sourcePath, translations }) => {
+    write(repo, sourcePath, sourcePost("Original title", "Source body.\n", ["en", "zh-CN"]));
+    git(repo, ["add", sourcePath]);
+    git(repo, ["rm", "--quiet", translations.ja]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 0, result.stderr);
   });
 });
 

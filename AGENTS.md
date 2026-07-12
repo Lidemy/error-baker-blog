@@ -17,12 +17,15 @@
 
 - 預設目標語系：`en`（英文）、`ja`（日文）、`zh-CN`（簡體中文）。
 - 若使用者指定語系（如 `/translate-post posts/benben/foo.md en,ja`），只翻指定的。
+- 原文的 `translationTargets` 是預期譯文清單：首次翻譯時填入本次指定語系；未指定時
+  填入全部預設目標語系。之後新增語系要併入既有清單，不能覆蓋掉仍存在的譯文。
 - 語系清單以 `_data/langs.json` 為唯一來源（第一個元素是預設語系，其餘為翻譯
   目標語系）；顯示名稱等 UI 字串定義於 `_data/i18n.json`。新增語系只需更新這兩個
   檔案——`.eleventy.js`、`scripts/check-translations.js` 與測試會自動推導，
   `i18n.json` 缺必要欄位時 build 會直接失敗提示。
 - 翻譯守門只會檢查已明確加入 i18n 的原文：frontmatter 同時具有 `lang: zh-TW` 與
-  `translationKey`。未加入這兩欄的既有文章不受影響。
+  `translationKey`。它會要求 `translationTargets` 列出的譯文存在；舊文章若未填此欄，
+  為向下相容會沿用「全部目標語系」的規則。未加入 i18n 的既有文章不受影響。
 
 ---
 
@@ -85,12 +88,17 @@ node scripts/check-translations.js --hash posts/<author>/<slug>.md
 
 ### 原文也要補欄位（首次翻譯時）
 
-第一次翻某篇時，在**原文** frontmatter 補上下列兩欄（已存在則略過，不要重複）：
+第一次翻某篇時，在**原文** frontmatter 補上下列三欄（已存在則更新，不要重複）：
 
 ```yaml
 lang: zh-TW
 translationKey: <author>/<slug>
+translationTargets: [<本次要求的語系>]  # 例如 [en, ja]；未指定時為 [en, ja, zh-CN]
 ```
+
+`translationTargets` 必須是 `_data/langs.json` 支援的非預設語系，並與實際譯文檔案一致。
+若之後新增語系，將它併入清單；只有刻意停止支援某語系時，才在同一個 commit 同時移除
+清單項目與該譯文檔案。這讓守門能區分「只要求部分語系」和「譯文被意外刪除」。
 
 原文不需要 `permalink`（沿用 Eleventy 既有路由 `/posts/<author>/<slug>/`）、
 不需要 `draft`、不需要 `sourceHash`。

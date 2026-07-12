@@ -5,10 +5,10 @@
  * For every affected *staged*, i18n-enabled source post (or every managed
  * source when invoked with `--all` in CI)
  * (`posts/<author>/<slug>.md` with `lang: zh-TW` and `translationKey`), this
- * checks that each target-language translation (a) exists, (b) is up to date,
- * and (c) has an audit trail before it is published. All comparisons read Git's
- * index, never the working tree, so a partially staged change cannot
- * accidentally bypass the guard.
+ * checks that each translation declared by the source's `translationTargets`
+ * (a) exists, (b) is up to date, and (c) has an audit trail before it is
+ * published. All comparisons read Git's index, never the working tree, so a
+ * partially staged change cannot accidentally bypass the guard.
  *
  * It does NOT translate anything — translation is done by an agent following
  * AGENTS.md. The agent stamps each translation with the hash printed by:
@@ -33,7 +33,9 @@ const { execFileSync } = require("child_process");
 // keeps this script free of third-party dependencies.
 const SITE_LANGS = require(path.join(__dirname, "..", "_data", "langs.json"));
 const DEFAULT_LANG = SITE_LANGS[0];
-// Languages every source post is expected to be translated into.
+// Languages available as translation targets. Each source post may select a
+// subset with `translationTargets`; legacy sources without that field keep the
+// original all-languages behavior.
 const TARGET_LANGS = SITE_LANGS.filter((lang) => lang !== DEFAULT_LANG);
 // Any filename suffix `.<lang>.md` with one of these is treated as a translation
 // (so it is never itself mistaken for a source post).
@@ -119,6 +121,60 @@ function isTranslationManagedSource(raw) {
   );
 }
 
+/**
+ * Parse the source's explicit translation contract.
+ *
+ * The guide uses an inline YAML list so this dependency-free guard does not need
+ * a YAML parser. Missing `translationTargets` retains the pre-existing contract
+ * that every configured target language is required.
+ */
+function translationTargetsForSource(raw) {
+  const value = frontmatterField(extractFrontmatter(raw), "translationTargets");
+  if (value === null) return { langs: [...TARGET_LANGS], issue: null };
+
+  // YAML permits an inline comment after the list. Language codes cannot
+  // contain `#`, so stripping a whitespace-prefixed comment is unambiguous.
+  const normalized = value.replace(/\s+#.*$/, "").trim();
+  const list = normalized.match(/^\[(.*)\]$/);
+  if (!list) {
+    return {
+      langs: [],
+      issue: "translationTargets must be an inline YAML list, e.g. [en, ja]",
+    };
+  }
+
+  const langs = list[1]
+    .split(",")
+    .map((lang) => lang.trim().replace(/^(?:\"([^\"]*)\"|'([^']*)')$/, "$1$2"))
+    .filter(Boolean);
+  if (langs.length === 0) {
+    return { langs: [], issue: "translationTargets must contain at least one language" };
+  }
+
+  const duplicates = langs.filter((lang, index) => langs.indexOf(lang) !== index);
+  if (duplicates.length > 0) {
+    return {
+      langs: [],
+      issue: `translationTargets contains duplicate languages: ${[
+        ...new Set(duplicates),
+      ].join(", ")}`,
+    };
+  }
+
+  const unsupported = langs.filter((lang) => !TARGET_LANGS.includes(lang));
+  if (unsupported.length > 0) {
+    return {
+      langs: [],
+      issue: `translationTargets contains unsupported languages: ${unsupported.join(", ")}`,
+    };
+  }
+
+  return {
+    langs: TARGET_LANGS.filter((lang) => langs.includes(lang)),
+    issue: null,
+  };
+}
+
 /** Return a publication-review error for a translation frontmatter block. */
 function publicationReviewIssue(frontmatter) {
   if (frontmatterField(frontmatter, "draft") === "true") return null;
@@ -147,6 +203,7 @@ module.exports = {
   sourcePathForTranslation,
   frontmatterField,
   isTranslationManagedSource,
+  translationTargetsForSource,
   publicationReviewIssue,
   sourceHashIssue,
   TARGET_LANGS,
@@ -241,11 +298,28 @@ for (const sourcePath of sourcePosts) {
   // Translation is opt-in so unrelated authors' existing posts are unaffected.
   if (!isTranslationManagedSource(raw)) continue;
 
+  const targetSelection = translationTargetsForSource(raw);
+  if (targetSelection.issue) {
+    problems.push({
+      sourcePath,
+      reason: "invalid-targets",
+      detail: targetSelection.issue,
+    });
+    continue;
+  }
+
+  const expectedLangs = new Set(targetSelection.langs);
   for (const lang of TARGET_LANGS) {
     const tPath = translationPathFor(sourcePath, lang);
     const translation = readCheckedFile(tPath);
     if (translation === null) {
-      problems.push({ sourcePath, lang, reason: "missing" });
+      if (expectedLangs.has(lang)) {
+        problems.push({ sourcePath, lang, reason: "missing" });
+      }
+      continue;
+    }
+    if (!expectedLangs.has(lang)) {
+      problems.push({ sourcePath, lang, reason: "not-declared" });
       continue;
     }
     const frontmatter = extractFrontmatter(translation);
@@ -275,14 +349,28 @@ for (const p of problems) {
   bySource.get(p.sourcePath).push(p);
 }
 
-console.error("\n✖ Translations missing or out of date:\n");
+console.error("\n✖ Translation checks failed:\n");
 for (const [sourcePath, items] of bySource) {
-  const langs = items
-    .map((i) => `${i.lang} (${i.reason})`)
+  const issues = items
+    .map((i) => (i.lang ? `${i.lang} (${i.reason})` : `${i.reason}: ${i.detail}`))
     .join(", ");
   console.error(`  ${sourcePath}`);
-  console.error(`    → ${langs}`);
-  console.error(`    Run: /translate-post ${sourcePath} ${items.map((i) => i.lang).join(",")}\n`);
+  console.error(`    → ${issues}`);
+  const undeclared = items.filter((i) => i.reason === "not-declared");
+  if (undeclared.length > 0) {
+    console.error(
+      `    Add ${undeclared.map((i) => i.lang).join(",")} to translationTargets, ` +
+        "or remove the corresponding translation file(s)."
+    );
+  }
+  const langs = items
+    .filter((i) => i.lang && i.reason !== "not-declared")
+    .map((i) => i.lang);
+  if (langs.length > 0) {
+    console.error(`    Run: /translate-post ${sourcePath} ${langs.join(",")}\n`);
+  } else {
+    console.error("");
+  }
 }
 console.error(
   checkAll

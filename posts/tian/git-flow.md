@@ -6,6 +6,7 @@ author: tian
 layout: layouts/post.njk
 lang: zh-TW
 translationKey: tian/git-flow
+translationTargets: [en, ja, zh-CN]
 ---
 
 <!-- summary -->
