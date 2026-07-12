@@ -15,13 +15,14 @@ templateClass: tmpl-about
 <h2>{{ t.authorsHeading }}</h2>
 {#- Leaderboard ranked by post count, ties broken by most recent activity
     (collections.authorsByPostCount, enriched in _11ty/authorStats.js). Author
-    links go to the canonical zh-TW author page (always exists). -#}
+    links prefer an available page in pageLang, then fall back to the canonical
+    zh-TW author page. -#}
 {%- set tier = t.gx.tier %}
 <ul class="author-list gx-leaderboard">
 {%- for a in collections.authorsByPostCount %}
   {%- set author = metadata.authors[a.key] %}
   {%- set bio = author['intro_' + pageLang] or author.intro %}
-  {%- set authorUrl = ('/posts/' + a.key + '/') if pageLang == 'zh-TW' else ('/' + pageLang + '/posts/' + a.key + '/') %}
+  {%- set authorUrl = collections.authorLangPages | authorUrlForLang(pageLang, a.key) %}
   <li class="author-row gx-row gx-rank-{{ a.rank }}">
     <span class="gx-rank" aria-label="{{ t.gx.rank }} {{ a.rank }}">{% if a.medal %}{{ a.medal }}{% else %}{{ a.rank }}{% endif %}</span>
     <a class="author-row__avatar" href="{{ authorUrl }}">

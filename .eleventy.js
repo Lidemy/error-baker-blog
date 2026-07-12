@@ -206,6 +206,21 @@ module.exports = function (eleventyConfig) {
     return hit ? hit.url : null;
   });
 
+  // Link an author to their page in the current language when that page was
+  // actually generated. Otherwise fall back to the always-available zh-TW
+  // author page instead of emitting a broken localized URL.
+  eleventyConfig.addFilter("authorUrlForLang", function (authorPages, lang, author) {
+    const target = lang || DEFAULT_LANG;
+    const hasLocalizedPage =
+      target !== DEFAULT_LANG &&
+      (authorPages || []).some(
+        (page) => page.lang === target && page.author === author
+      );
+    return hasLocalizedPage
+      ? `/${target}/posts/${author}/`
+      : `/posts/${author}/`;
+  });
+
   // The home pages exist for every language at deterministic URLs
   // (zh-TW → /, others → /<lang>/). Build their translation set directly rather
   // than via the `translations` collection — paginated pages aren't reliably
@@ -241,12 +256,15 @@ module.exports = function (eleventyConfig) {
     return (stats || []).find((s) => s.key === key) || null;
   });
 
-  // (lang, author) pairs that have at least one translated post — used to
-  // generate per-language author pages /<lang>/posts/<author>/ (zh-TW author
-  // pages are the manual posts/<author>/index.njk files).
+  // (lang, author) pairs that have at least one visible translated post — used
+  // to generate per-language author pages /<lang>/posts/<author>/ (zh-TW author
+  // pages are the manual posts/<author>/index.njk files). Computed data is
+  // applied after custom collections, so mirror the production draft gate here
+  // to avoid treating a non-emitted draft author page as available.
   eleventyConfig.addCollection("authorLangPages", function (collectionApi) {
     const seen = {};
     for (const item of collectionApi.getFilteredByTag("posts")) {
+      if (item.data.draft && !item.data.isdevelopment) continue;
       const lang = postLang(item);
       if (lang === DEFAULT_LANG) continue;
       const author = item.data.author;
