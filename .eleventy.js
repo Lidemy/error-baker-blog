@@ -179,8 +179,36 @@ module.exports = function (eleventyConfig) {
    * ------------------------------------------------------------------------- */
   const SITE_LANGS = ["zh-TW", "en", "ja", "zh-CN"]; // source first; display order
   const DEFAULT_LANG = "zh-TW";
+  const IS_DEVELOPMENT = process.argv.some((arg) => /(^|-)serve(?:$|=)/.test(arg));
+  const draftCache = new Map();
 
   const postLang = (item) => (item.data && item.data.lang) || DEFAULT_LANG;
+  const isDraft = (item) => {
+    if (!item) return false;
+    if (item.data && (item.data.draft === true || item.data.draft === "true")) {
+      return true;
+    }
+
+    // Eleventy 0.12 constructs custom collections before global computed data
+    // has finished. Read the source frontmatter as a deterministic fallback so
+    // drafts can never leak into feeds, hreflang, or sitemap collections.
+    const inputPath = item.inputPath;
+    if (!inputPath || !inputPath.endsWith(".md")) return false;
+    if (draftCache.has(inputPath)) return draftCache.get(inputPath);
+    let draft = false;
+    try {
+      const raw = fs.readFileSync(inputPath, "utf8");
+      const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+      draft = Boolean(
+        match && /^draft:\s*(?:true|["']true["'])\s*$/m.test(match[1])
+      );
+    } catch (error) {
+      throw new Error(`Unable to inspect draft state for ${inputPath}: ${error.message}`);
+    }
+    draftCache.set(inputPath, draft);
+    return draft;
+  };
+  const isVisible = (item) => !isDraft(item) || IS_DEVELOPMENT;
   const postTranslationKey = (item) => {
     if (item.data && item.data.translationKey) return item.data.translationKey;
     // Fallback: derive `<author>/<slug>` from the input path, dropping any
@@ -193,7 +221,9 @@ module.exports = function (eleventyConfig) {
   // pages and feeds so translations don't leak into the Chinese homepage/RSS.
   eleventyConfig.addFilter("filterByLang", function (posts, lang) {
     const target = lang || DEFAULT_LANG;
-    return (posts || []).filter((item) => postLang(item) === target);
+    return (posts || []).filter(
+      (item) => isVisible(item) && postLang(item) === target
+    );
   });
 
   // Look up the URL of the `lang` version within a translations entry (the
@@ -263,11 +293,43 @@ module.exports = function (eleventyConfig) {
     return missing;
   });
 
+  // Keep sitemap input limited to pages that are both visible and intended for
+  // indexing. Draft computed data is applied late in Eleventy 0.12, so mirror
+  // the production gate here instead of relying on collection timing.
+  eleventyConfig.addFilter("indexablePages", function (pages) {
+    return (pages || []).filter((page) => {
+      if (!page || !page.url) return false;
+      const data = page.data || {};
+      if (data.sitemapExclude) return false;
+      if ((data.draft === true || data.draft === "true") && !IS_DEVELOPMENT) {
+        return false;
+      }
+      return true;
+    });
+  });
+
   // zh-TW-only posts — the source language listing (homepage, archive, feeds).
   eleventyConfig.addCollection("postsZhTW", function (collectionApi) {
     return collectionApi
       .getFilteredByTag("posts")
-      .filter((item) => postLang(item) === DEFAULT_LANG);
+      .filter(
+        (item) => isVisible(item) && postLang(item) === DEFAULT_LANG
+      );
+  });
+
+  // Activate a localized section only after that language has at least one
+  // visible translated post. Draft translations count in local `--serve`
+  // previews but never create empty, indexable production home/About/feed URLs.
+  eleventyConfig.addCollection("siteLangsWithPublishedPosts", function (
+    collectionApi
+  ) {
+    const active = new Set([DEFAULT_LANG]);
+    for (const item of collectionApi.getFilteredByTag("posts")) {
+      if (!isVisible(item)) continue;
+      const lang = postLang(item);
+      if (SITE_LANGS.includes(lang)) active.add(lang);
+    }
+    return SITE_LANGS.filter((lang) => active.has(lang));
   });
 
   // Authors ranked by number of (zh-TW source) posts — for the /about/
@@ -295,7 +357,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addCollection("authorLangPages", function (collectionApi) {
     const seen = {};
     for (const item of collectionApi.getFilteredByTag("posts")) {
-      if (item.data.draft && !item.data.isdevelopment) continue;
+      if (!isVisible(item)) continue;
       const lang = postLang(item);
       if (lang === DEFAULT_LANG) continue;
       const author = item.data.author;
@@ -313,6 +375,7 @@ module.exports = function (eleventyConfig) {
     const map = {};
     for (const item of collectionApi.getAll()) {
       if (!item.data || !item.data.translationKey) continue;
+      if (!isVisible(item)) continue;
       const key = item.data.translationKey;
       (map[key] = map[key] || []).push({
         lang: postLang(item),

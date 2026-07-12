@@ -16,12 +16,33 @@ module.exports = {
     if (data.draft && !data.isdevelopment) {
       return false;
     }
+    if (!localizedShellIsActive(data)) {
+      return false;
+    }
     return data.permalink;
   },
   eleventyExcludeFromCollections: (data) => {
     if (data.draft && !data.isdevelopment) {
       return true;
     }
+    if (!localizedShellIsActive(data)) {
+      return true;
+    }
     return data.eleventyExcludeFromCollections || false;
   },
 };
+
+function localizedShellIsActive(data) {
+  const inputPath = data.page && data.page.inputPath;
+  const localizedShell = /(?:home-i18n|about-i18n|feed\/feed-i18n|author-langs)\.njk$/.test(
+    inputPath || ""
+  );
+  if (!localizedShell) return true;
+
+  const lang = data.hlang || data.alang || data.flang || (data.ap && data.ap.lang);
+  const active =
+    data.collections && data.collections.siteLangsWithPublishedPosts
+      ? data.collections.siteLangsWithPublishedPosts
+      : ["zh-TW"];
+  return Boolean(lang && active.includes(lang));
+}

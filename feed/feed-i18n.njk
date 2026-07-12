@@ -2,7 +2,7 @@
 # Per-language Atom feeds: /en/feed/feed.xml, /ja/feed/feed.xml, /zh-CN/feed/feed.xml
 # (the zh-TW feed is feed/feed.njk at /feed/feed.xml).
 pagination:
-  data: langs
+  data: collections.siteLangsWithPublishedPosts
   size: 1
   alias: flang
   filter:
@@ -18,7 +18,7 @@ eleventyExcludeFromCollections: true
 	{% set absoluteUrl %}{{ ('/' + flang + metadata.feed.path) | url | absoluteUrl(metadata.url) }}{% endset %}
 	<link href="{{ absoluteUrl }}" rel="self"/>
 	<link href="{{ metadata.url }}/{{ flang }}/"/>
-	{% if feedPosts.length %}<updated>{{ feedPosts | rssLastUpdatedDate }}</updated>{% endif %}
+		<updated>{{ feedPosts | rssLastUpdatedDate }}</updated>
 	<id>{{ metadata.url }}/{{ flang }}/</id>
 	<author>
 		<name>{{ metadata.author.name }}</name>
