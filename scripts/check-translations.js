@@ -112,6 +112,31 @@ function frontmatterField(frontmatter, field) {
   return value;
 }
 
+/**
+ * Parse a YAML boolean scalar without treating quoted strings as booleans.
+ * js-yaml accepts case-insensitive true/false and ignores whitespace-prefixed
+ * inline comments; matching that behavior keeps guard visibility aligned with
+ * Eleventy's parsed `data.draft === true` check.
+ */
+function frontmatterBoolean(frontmatter, field) {
+  const re = new RegExp(`^${field}:\\s*(.*?)\\s*$`, "m");
+  const match = frontmatter.match(re);
+  if (!match) return null;
+
+  const value = match[1].replace(/\s+#.*$/, "").trim();
+  if (
+    value.length >= 2 &&
+    ((value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'")))
+  ) {
+    return null;
+  }
+
+  if (/^true$/i.test(value)) return true;
+  if (/^false$/i.test(value)) return false;
+  return null;
+}
+
 /** True when a source post has explicitly opted into the i18n workflow. */
 function isTranslationManagedSource(raw) {
   const frontmatter = extractFrontmatter(raw);
@@ -202,6 +227,7 @@ module.exports = {
   translationPathFor,
   sourcePathForTranslation,
   frontmatterField,
+  frontmatterBoolean,
   isTranslationManagedSource,
   translationTargetsForSource,
   publicationReviewIssue,
@@ -292,11 +318,47 @@ function readCheckedFile(filePath) {
 const problems = [];
 for (const sourcePath of sourcePosts) {
   const raw = readCheckedFile(sourcePath);
-  if (raw === null) continue; // staged delete edge case
-  // Skip source posts that are themselves drafts — not ready to translate.
-  if (frontmatterField(extractFrontmatter(raw), "draft") === "true") continue;
+  const translations = TARGET_LANGS.map((lang) => ({
+    lang,
+    path: translationPathFor(sourcePath, lang),
+  })).map((entry) => ({
+    ...entry,
+    raw: readCheckedFile(entry.path),
+  }));
+  const existingTranslations = translations.filter((entry) => entry.raw !== null);
+
+  // Deleting every version together is intentional. Leaving even a draft
+  // translation behind is not: without its source, sourceHash can never be
+  // validated again and a published translation would remain live indefinitely.
+  if (raw === null) {
+    for (const { lang } of existingTranslations) {
+      problems.push({ sourcePath, lang, reason: "orphaned-translation" });
+    }
+    continue;
+  }
+
   // Translation is opt-in so unrelated authors' existing posts are unaffected.
-  if (!isTranslationManagedSource(raw)) continue;
+  // Once translations exist, removing the source's opt-in metadata must not turn
+  // the guard off while those translations continue to build.
+  if (!isTranslationManagedSource(raw)) {
+    for (const { lang } of existingTranslations) {
+      problems.push({ sourcePath, lang, reason: "unmanaged-source" });
+    }
+    continue;
+  }
+
+  const sourceFrontmatter = extractFrontmatter(raw);
+  // A draft source may have draft translations for work-in-progress previews,
+  // but it cannot anchor translations that production is allowed to publish.
+  if (frontmatterBoolean(sourceFrontmatter, "draft") === true) {
+    for (const { lang, raw: translation } of existingTranslations) {
+      const frontmatter = extractFrontmatter(translation);
+      if (frontmatterBoolean(frontmatter, "draft") !== true) {
+        problems.push({ sourcePath, lang, reason: "source-unpublished" });
+      }
+    }
+    continue;
+  }
 
   const targetSelection = translationTargetsForSource(raw);
   if (targetSelection.issue) {
@@ -309,9 +371,7 @@ for (const sourcePath of sourcePosts) {
   }
 
   const expectedLangs = new Set(targetSelection.langs);
-  for (const lang of TARGET_LANGS) {
-    const tPath = translationPathFor(sourcePath, lang);
-    const translation = readCheckedFile(tPath);
+  for (const { lang, raw: translation } of translations) {
     if (translation === null) {
       if (expectedLangs.has(lang)) {
         problems.push({ sourcePath, lang, reason: "missing" });
@@ -356,6 +416,28 @@ for (const [sourcePath, items] of bySource) {
     .join(", ");
   console.error(`  ${sourcePath}`);
   console.error(`    → ${issues}`);
+  const languagesFor = (reason) =>
+    items.filter((i) => i.reason === reason).map((i) => i.lang);
+
+  const orphaned = languagesFor("orphaned-translation");
+  if (orphaned.length > 0) {
+    console.error(
+      `    Restore the source, or remove its remaining translations: ${orphaned.join(",")}.`
+    );
+  }
+  const unmanaged = languagesFor("unmanaged-source");
+  if (unmanaged.length > 0) {
+    console.error(
+      "    Restore lang: zh-TW and translationKey on the source, " +
+        `or remove its translations: ${unmanaged.join(",")}.`
+    );
+  }
+  const unpublished = languagesFor("source-unpublished");
+  if (unpublished.length > 0) {
+    console.error(
+      `    Set these translations back to draft: true, or publish the source: ${unpublished.join(",")}.`
+    );
+  }
   const undeclared = items.filter((i) => i.reason === "not-declared");
   if (undeclared.length > 0) {
     console.error(
@@ -363,8 +445,14 @@ for (const [sourcePath, items] of bySource) {
         "or remove the corresponding translation file(s)."
     );
   }
+  const nonTranslationReasons = new Set([
+    "not-declared",
+    "orphaned-translation",
+    "unmanaged-source",
+    "source-unpublished",
+  ]);
   const langs = items
-    .filter((i) => i.lang && i.reason !== "not-declared")
+    .filter((i) => i.lang && !nonTranslationReasons.has(i.reason))
     .map((i) => i.lang);
   if (langs.length > 0) {
     console.error(`    Run: /translate-post ${sourcePath} ${langs.join(",")}\n`);
@@ -375,7 +463,7 @@ for (const [sourcePath, items] of bySource) {
 console.error(
   checkAll
     ? "Fix the translations above before this build can be published.\n"
-    : "Translate the posts above (see AGENTS.md), or bypass for a WIP commit with:\n" +
+    : "Fix the translation issues above (see AGENTS.md), or bypass for a WIP commit with:\n" +
         "  SKIP_TRANSLATION_CHECK=1 git commit ...\n" +
         "  git commit --no-verify\n"
 );

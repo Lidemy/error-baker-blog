@@ -19,6 +19,7 @@ const {
   translationPathFor,
   sourcePathForTranslation,
   frontmatterField,
+  frontmatterBoolean,
   isTranslationManagedSource,
   translationTargetsForSource,
   publicationReviewIssue,
@@ -110,6 +111,14 @@ test("frontmatterField parses a quoted or bare value", () => {
   assert.strictEqual(frontmatterField(fm, "missing"), null);
 });
 
+test("frontmatterBoolean matches YAML booleans without coercing quoted strings", () => {
+  assert.strictEqual(frontmatterBoolean("draft: true", "draft"), true);
+  assert.strictEqual(frontmatterBoolean("draft: TRUE # WIP", "draft"), true);
+  assert.strictEqual(frontmatterBoolean("draft: False", "draft"), false);
+  assert.strictEqual(frontmatterBoolean('draft: "true"', "draft"), null);
+  assert.strictEqual(frontmatterBoolean("title: Example", "draft"), null);
+});
+
 test("only zh-TW sources with a translationKey opt into translation checks", () => {
   assert.strictEqual(isTranslationManagedSource(SAMPLE), false);
   assert.strictEqual(
@@ -182,26 +191,39 @@ function write(repo, relativePath, contents) {
   fs.writeFileSync(absolutePath, contents, "utf8");
 }
 
-function sourcePost(title, body = "Source body.\n", targets = TARGET_LANGS) {
+function sourcePost(
+  title,
+  body = "Source body.\n",
+  targets = TARGET_LANGS,
+  draft = false
+) {
   return (
     "---\n" +
     `title: ${title}\n` +
     "lang: zh-TW\n" +
     "translationKey: tester/example\n" +
     `translationTargets: [${targets.join(", ")}]\n` +
+    (draft ? `draft: ${draft === true ? "true" : draft}\n` : "") +
     "---\n\n" +
     body
   );
 }
 
-function translationPost(lang, sourceHash, body = "Translated body.\n") {
+function translationPost(
+  lang,
+  sourceHash,
+  body = "Translated body.\n",
+  draft = true
+) {
   return (
     "---\n" +
     `title: Translation ${lang}\n` +
     `lang: ${lang}\n` +
     "sourceLang: zh-TW\n" +
     "translationKey: tester/example\n" +
-    "draft: true\n" +
+    (draft
+      ? `draft: ${draft === true ? "true" : draft}\n`
+      : "reviewedBy: Translation Reviewer\nreviewedAt: 2026-07-13\n") +
     `sourceHash: ${sourceHash}\n` +
     "---\n\n" +
     body
@@ -286,6 +308,117 @@ test("integration: a staged translation deletion is reported from the index", ()
     assert.strictEqual(result.status, 1);
     assert.match(result.stderr, /ja \(missing\)/);
   });
+});
+
+test("integration: deleting a source while translations remain is rejected", () => {
+  withTranslationRepo(({ repo, sourcePath }) => {
+    git(repo, ["rm", "--quiet", sourcePath]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /en \(orphaned-translation\)/);
+    assert.match(result.stderr, /Restore the source/);
+    assert.doesNotMatch(result.stderr, /Run: \/translate-post/);
+  }, ["en"]);
+});
+
+test("integration: deleting a source and all of its translations together is allowed", () => {
+  withTranslationRepo(({ repo, sourcePath, translations }) => {
+    git(repo, ["rm", "--quiet", sourcePath, ...Object.values(translations)]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 0, result.stderr);
+  });
+});
+
+test("integration: --all catches an orphaned translation in a clean checkout", () => {
+  withTranslationRepo(({ repo, sourcePath }) => {
+    git(repo, ["rm", "--quiet", sourcePath]);
+    git(repo, ["commit", "--quiet", "-m", "delete source only"]);
+
+    const result = runGuard(repo, ["--all"]);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /en \(orphaned-translation\)/);
+  }, ["en"]);
+});
+
+test("integration: removing i18n metadata cannot leave translations unmanaged", () => {
+  withTranslationRepo(({ repo, sourcePath }) => {
+    write(repo, sourcePath, "---\ntitle: Original title\n---\n\nSource body.\n");
+    git(repo, ["add", sourcePath]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /en \(unmanaged-source\)/);
+    assert.match(result.stderr, /Restore lang: zh-TW and translationKey/);
+  }, ["en"]);
+});
+
+test("integration: a draft source may keep draft translations", () => {
+  withTranslationRepo(({ repo, sourcePath }) => {
+    write(repo, sourcePath, sourcePost("Original title", "Source body.\n", ["en"], true));
+    git(repo, ["add", sourcePath]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 0, result.stderr);
+  }, ["en"]);
+});
+
+test("integration: a draft source cannot anchor a published translation", () => {
+  withTranslationRepo(({ repo, sourcePath, sourceHash, translations }) => {
+    write(repo, sourcePath, sourcePost("Original title", "Source body.\n", ["en"], true));
+    write(
+      repo,
+      translations.en,
+      translationPost("en", sourceHash, "Translated body.\n", false)
+    );
+    git(repo, ["add", sourcePath, translations.en]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /en \(source-unpublished\)/);
+    assert.match(result.stderr, /Set these translations back to draft: true/);
+    assert.doesNotMatch(result.stderr, /Run: \/translate-post/);
+  }, ["en"]);
+});
+
+test("integration: YAML boolean variants cannot bypass draft-source isolation", () => {
+  withTranslationRepo(({ repo, sourcePath, sourceHash, translations }) => {
+    write(
+      repo,
+      sourcePath,
+      sourcePost("Original title", "Source body.\n", ["en"], "TRUE # WIP")
+    );
+    write(
+      repo,
+      translations.en,
+      translationPost("en", sourceHash, "Translated body.\n", false)
+    );
+    git(repo, ["add", sourcePath, translations.en]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /en \(source-unpublished\)/);
+  }, ["en"]);
+});
+
+test("integration: YAML boolean variants keep source and translation drafts aligned", () => {
+  withTranslationRepo(({ repo, sourcePath, sourceHash, translations }) => {
+    write(
+      repo,
+      sourcePath,
+      sourcePost("Original title", "Source body.\n", ["en"], "TRUE # WIP")
+    );
+    write(
+      repo,
+      translations.en,
+      translationPost("en", sourceHash, "Translated body.\n", "True # WIP")
+    );
+    git(repo, ["add", sourcePath, translations.en]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 0, result.stderr);
+  }, ["en"]);
 });
 
 test("integration: an explicit target subset does not require other site languages", () => {
