@@ -36,7 +36,13 @@ const { gif2mp4 } = require("./video-gif");
 
 const processImage = async (img, outputPath) => {
   let src = img.getAttribute("src");
-  if (/^(https?\:\/\/|\/\/)/i.test(src)) {
+  if (!src) {
+    throw new Error(`[img-dim] Image in ${outputPath} is missing a src attribute`);
+  }
+  // Only local file URLs can be inspected at build time. In particular, do not
+  // mistake a data URI for a path under `_site/` (which previously caused an
+  // ENAMETOOLONG warning while still allowing the build to pass).
+  if (/^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(src)) {
     return;
   }
   if (/^\.+\//.test(src)) {
@@ -50,10 +56,11 @@ const processImage = async (img, outputPath) => {
   }
   let dimensions;
   try {
-    dimensions = await sizeOf("_site/" + src);
+    dimensions = await sizeOf(localFilePath(src));
   } catch (e) {
-    console.warn(e.message, src);
-    return;
+    throw new Error(
+      `[img-dim] Cannot read local image "${src}" referenced by ${outputPath}: ${e.message}`
+    );
   }
   if (!img.getAttribute("width")) {
     img.setAttribute("width", dimensions.width);
@@ -89,7 +96,7 @@ const processImage = async (img, outputPath) => {
     img.setAttribute(
       "style",
       `background-size:cover;` +
-        `background-image:url("${await blurryPlaceholder(src)}")`
+        `background-image:url("${await blurryPlaceholder(localUrlPath(src))}")`
     );
     const doc = img.ownerDocument;
     const picture = doc.createElement("picture");
@@ -113,6 +120,22 @@ const processImage = async (img, outputPath) => {
     img.setAttribute("src", fallback);
   }
 };
+
+/** Return a URL path without a query string or fragment. */
+function localUrlPath(src) {
+  return src.split(/[?#]/, 1)[0];
+}
+
+/** Map a local URL path to the decoded path written below `_site/`. */
+function localFilePath(src) {
+  let decoded;
+  try {
+    decoded = decodeURIComponent(localUrlPath(src));
+  } catch (e) {
+    throw new Error(`[img-dim] Invalid URL encoding in local image "${src}"`);
+  }
+  return "_site/" + decoded;
+}
 
 async function setSrcset(img, src, format) {
   const setInfo = await srcset(src, format);

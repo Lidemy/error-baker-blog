@@ -39,10 +39,12 @@ const quality = {
   avif: 40,
   default: 60,
 };
+const resizeCache = new Map();
 
 module.exports = async function srcset(filename, format) {
+  const sourceUrl = filename.split(/[?#]/, 1)[0];
   const names = await Promise.all(
-    widths.map((w) => resize(filename, w, format))
+    widths.map((w) => resize(sourceUrl, w, format))
   );
   return {
     srcset: names.map((n, i) => `${n} ${widths[i]}w`).join(", "),
@@ -51,20 +53,39 @@ module.exports = async function srcset(filename, format) {
 };
 
 async function resize(filename, width, format) {
+  const key = `${filename}\0${width}\0${format}`;
+  if (!resizeCache.has(key)) {
+    resizeCache.set(key, resizeOnce(filename, width, format));
+  }
+  return resizeCache.get(key);
+}
+
+async function resizeOnce(filename, width, format) {
   const out = sizedName(filename, width, format);
-  if (await exists("_site" + out)) {
+  const inputPath = filePath(filename);
+  const outputPath = filePath(out);
+  if (await exists(outputPath)) {
     return out;
   }
-  await sharp("_site" + filename)
+  await sharp(inputPath)
     .rotate() // Manifest rotation from metadata
     .resize(width)
     [format]({
       quality: quality[format] || quality.default,
       reductionEffort: 6,
     })
-    .toFile("_site" + out);
+    .toFile(outputPath);
 
   return out;
+}
+
+function filePath(urlPath) {
+  const pathWithoutQuery = urlPath.split(/[?#]/, 1)[0];
+  try {
+    return "_site" + decodeURIComponent(pathWithoutQuery);
+  } catch (e) {
+    throw new Error(`Invalid URL encoding in local image "${urlPath}"`);
+  }
 }
 
 function sizedName(filename, width, format) {

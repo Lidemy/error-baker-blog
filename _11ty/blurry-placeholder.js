@@ -47,6 +47,7 @@ function escaper(match) {
 }
 
 const cache = {};
+const placeholderCache = {};
 
 async function getCachedDataURI(src) {
   if (cache[src]) {
@@ -91,8 +92,21 @@ function getBitmapDimensions_(imgWidth, imgHeight) {
   return { width: Math.round(bitmapWidth), height: Math.round(bitmapHeight) };
 }
 
-module.exports = async function (src) {
-  const filename = "_site/" + src;
+module.exports = function (src) {
+  if (!placeholderCache[src]) {
+    placeholderCache[src] = buildPlaceholder(src);
+  }
+  return placeholderCache[src];
+};
+
+async function buildPlaceholder(src) {
+  let decodedSrc;
+  try {
+    decodedSrc = decodeURIComponent(src.split(/[?#]/, 1)[0]);
+  } catch (e) {
+    throw new Error(`Invalid URL encoding in local image "${src}"`);
+  }
+  const filename = "_site/" + decodedSrc;
   const cachedName = filename + ".blurred";
   if (await exists(cachedName)) {
     return readFile(cachedName, {
@@ -122,8 +136,7 @@ module.exports = async function (src) {
   svg = svg.replace(/> </g, "><");
   svg = svg.replace(ESCAPE_REGEX, escaper);
 
-  console.log(src, "[SUCCESS]");
   const URI = `data:image/svg+xml;charset=utf-8,${svg}`;
   await writeFile(cachedName, URI);
   return URI;
-};
+}
