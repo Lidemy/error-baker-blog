@@ -5,8 +5,10 @@ eleventyNavigation:
   key: Archive
   order: 1
 pagination:
+  # netlify.toml force-redirects /archive/:page to /archive/, so a second
+  # pagination page would be unreachable — size must stay above the post count.
   data: collections.postsZhTW
-  size: 500
+  size: 9999
   alias: posts
   reverse: true
 permalink: /archive/{% if pagination.pageNumber > 0 %}{{ pagination.pageNumber }}/{% endif %}
