@@ -244,7 +244,12 @@ module.exports = function (eleventyConfig) {
       );
     }
   }
-  const IS_DEVELOPMENT = process.argv.some((arg) => /(^|-)serve(?:$|=)/.test(arg));
+  // Single dev-mode signal shared with the permalink/exclusion gate in
+  // eleventyComputed.js — ELEVENTY_ENV wins, argv sniffing is the fallback.
+  // Two independent detectors here previously let
+  // `ELEVENTY_ENV=development eleventy` emit orphan draft pages (permalink
+  // gate said dev, collection gate said production).
+  const IS_DEVELOPMENT = require("./_data/isdevelopment.js")();
   const draftCache = new Map();
 
   const postLang = (item) => (item.data && item.data.lang) || DEFAULT_LANG;
