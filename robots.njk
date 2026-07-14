@@ -3,5 +3,40 @@ layout: false
 permalink: robots.txt
 ---
 User-agent: *
+Allow: /
 
-Sitemap: https://blog.errorbaker.tw/sitemap.xml
+# Generative-engine / AI crawlers are explicitly welcome (GEO).
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+Sitemap: {{ metadata.url }}/sitemap.xml

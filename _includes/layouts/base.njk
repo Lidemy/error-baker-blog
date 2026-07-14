@@ -51,7 +51,7 @@
     {% else %}
       <meta property="og:image" content="{{ metadata.ogimage }}">
     {% endif %}
-    <meta property="og:type" content="article">
+    <meta property="og:type" content="{{ 'article' if templateClass == 'tmpl-post' else 'website' }}">
     <meta property="og:url" content="{{ metadata.url }}{{ canonicalUrl or page.url }}">
     <meta property="og:site_name" content="{{ t.siteName or metadata.title }}">
     <meta property="og:locale" content="{{ t.ogLocale }}">

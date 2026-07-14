@@ -81,8 +81,10 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPlugin(require("./_11ty/summary.js"));
   eleventyConfig.addPlugin(require("./_11ty/link-target.js"));
   eleventyConfig.addPlugin(require("./_11ty/img-dim.js"));
-  eleventyConfig.addPlugin(require("./_11ty/json-ld.js"));
   eleventyConfig.addPlugin(require("./_11ty/optimize-html.js"));
+  // Validate structured data after every HTML-mutating transform so CI checks
+  // the exact minified document that will be deployed.
+  eleventyConfig.addPlugin(require("./_11ty/json-ld.js"));
   // NOTE: disable CSP because we don't need it
   // eleventyConfig.addPlugin(require("./_11ty/apply-csp.js"));
   eleventyConfig.setDataDeepMerge(true);
@@ -350,6 +352,40 @@ module.exports = function (eleventyConfig) {
       inputPath:
         code === DEFAULT_LANG ? "./about/index.md" : "./about-i18n.njk",
     }));
+  });
+
+  // Return only controlled pagination records missing from collections.all.
+  // Never return collections.all itself here: computed draft exclusions are
+  // applied later in Eleventy's lifecycle and must remain handled by Eleventy.
+  eleventyConfig.addFilter("missingSitemapPages", function (
+    pages,
+    ...extraGroups
+  ) {
+    const seen = new Set((pages || []).map((page) => page.url));
+    const missing = [];
+    for (const group of extraGroups) {
+      for (const page of group || []) {
+        if (seen.has(page.url)) continue;
+        missing.push(page);
+        seen.add(page.url);
+      }
+    }
+    return missing;
+  });
+
+  // Keep sitemap input limited to pages that are both visible and intended for
+  // indexing. Draft computed data is applied late in Eleventy 0.12, so mirror
+  // the production gate here instead of relying on collection timing.
+  eleventyConfig.addFilter("indexablePages", function (pages) {
+    return (pages || []).filter((page) => {
+      if (!page || !page.url) return false;
+      const data = page.data || {};
+      if (data.sitemapExclude) return false;
+      if ((data.draft === true || data.draft === "true") && !IS_DEVELOPMENT) {
+        return false;
+      }
+      return true;
+    });
   });
 
   // zh-TW-only posts — the source language listing (homepage, archive, feeds).
