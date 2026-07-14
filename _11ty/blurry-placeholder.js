@@ -27,6 +27,7 @@ const sharp = require("sharp");
 const sizeOf = promisify(require("image-size"));
 const DatauriParser = require("datauri/parser");
 const parser = new DatauriParser();
+const fsSync = require("fs");
 const readFile = promisify(require("fs").readFile);
 const writeFile = promisify(require("fs").writeFile);
 const exists = promisify(require("fs").exists);
@@ -47,6 +48,7 @@ function escaper(match) {
 }
 
 const cache = {};
+const placeholderCache = {};
 
 async function getCachedDataURI(src) {
   if (cache[src]) {
@@ -91,16 +93,33 @@ function getBitmapDimensions_(imgWidth, imgHeight) {
   return { width: Math.round(bitmapWidth), height: Math.round(bitmapHeight) };
 }
 
-module.exports = async function (src) {
-  const filename = "_site/" + src;
+module.exports = function (src) {
+  if (!placeholderCache[src]) {
+    placeholderCache[src] = buildPlaceholder(src);
+  }
+  return placeholderCache[src];
+};
+
+async function buildPlaceholder(src) {
+  let decodedSrc;
+  try {
+    decodedSrc = decodeURIComponent(src.split(/[?#]/, 1)[0]);
+  } catch (e) {
+    throw new Error(`Invalid URL encoding in local image "${src}"`);
+  }
+  const filename = "_site/" + decodedSrc;
   const cachedName = filename + ".blurred";
   if (await exists(cachedName)) {
     return readFile(cachedName, {
       encoding: "utf-8",
     });
   }
+  // Read from the source tree when possible: the `_site/` copy is written by
+  // passthrough copy concurrently with transforms and may be incomplete.
+  const sourceName = "." + (decodedSrc.startsWith("/") ? decodedSrc : "/" + decodedSrc);
+  const inputName = fsSync.existsSync(sourceName) ? sourceName : filename;
   // We wrap the blurred image in a SVG to avoid rasterizing the filter on each layout.
-  const dataURI = await getCachedDataURI(filename);
+  const dataURI = await getCachedDataURI(inputName);
   let svg = `<svg xmlns="http://www.w3.org/2000/svg"
                   xmlns:xlink="http://www.w3.org/1999/xlink"
                   viewBox="0 0 ${dataURI.width} ${dataURI.height}">
@@ -122,8 +141,7 @@ module.exports = async function (src) {
   svg = svg.replace(/> </g, "><");
   svg = svg.replace(ESCAPE_REGEX, escaper);
 
-  console.log(src, "[SUCCESS]");
   const URI = `data:image/svg+xml;charset=utf-8,${svg}`;
   await writeFile(cachedName, URI);
   return URI;
-};
+}
