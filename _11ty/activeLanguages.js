@@ -16,6 +16,7 @@ const fs = require("fs");
 const path = require("path");
 
 const LANGS = require("../_data/langs.json");
+const isDraftFrontmatter = require("./draftFlag");
 const DEFAULT_LANG = LANGS[0];
 
 function walk(directory) {
@@ -45,8 +46,7 @@ module.exports = function activeLanguages(
     if (!langMatch) continue;
     const lang = langMatch[1];
     if (lang === DEFAULT_LANG || !LANGS.includes(lang)) continue;
-    // Match the draft scalar contract used by isDraft in .eleventy.js.
-    const isDraft = /^draft:\s*(?:true|["']true["'])\s*$/m.test(frontmatter[1]);
+    const isDraft = isDraftFrontmatter(frontmatter[1]);
     if (isDraft && !includeDrafts) continue;
     active.add(lang);
   }

@@ -56,6 +56,7 @@ const localImages = require("./third_party/eleventy-plugin-local-images/.elevent
 const CleanCSS = require("clean-css");
 const { buildAuthorStats } = require("./_11ty/authorStats");
 const activeLanguages = require("./_11ty/activeLanguages");
+const isDraftFrontmatter = require("./_11ty/draftFlag");
 const { commentCountsByTitle } = require("./_11ty/discussions");
 const {
   effectivePublishedDate,
@@ -267,9 +268,7 @@ module.exports = function (eleventyConfig) {
     try {
       const raw = fs.readFileSync(inputPath, "utf8");
       const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-      draft = Boolean(
-        match && /^draft:\s*(?:true|["']true["'])\s*$/m.test(match[1])
-      );
+      draft = Boolean(match && isDraftFrontmatter(match[1]));
     } catch (error) {
       throw new Error(`Unable to inspect draft state for ${inputPath}: ${error.message}`);
     }
