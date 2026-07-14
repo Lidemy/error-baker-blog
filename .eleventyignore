@@ -1,10 +1,12 @@
 .DS_Store
+.claude/
 .github/
 .netlify/
 _site/
 node_modules/
 package-lock.json
 README.md
+page-list.njk
 _11ty/
 third_party
 functions
