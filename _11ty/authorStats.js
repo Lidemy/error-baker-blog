@@ -58,17 +58,28 @@ function buildCalendar(dates) {
 /**
  * @param {Array} posts  Eleventy items (already filtered to zh-TW source posts).
  * @param {Object} authors  metadata.json `authors` map (key -> {name, avatarUrl}).
+ * @param {Object|null} commentsByTitle  post title -> reader comment count, from
+ *   utterances (see _11ty/discussions.js). Omit/null when unavailable (offline
+ *   or rate-limited build) — reader stats are then simply not computed.
  * @returns {Array} enriched author records, sorted (count desc, latest desc),
- *                  each with a `rank` (1-based) and `medal` for the top 3.
+ *                  each with a `rank` (1-based) and `medal` for the top 3. When
+ *                  comment data is supplied, records also carry `comments` (sum
+ *                  across the author's posts) and the single author with the
+ *                  most reader comments is flagged `mostDiscussed`.
  */
-function buildAuthorStats(posts, authors) {
-  const acc = {}; // key -> { count, dates[] }
+function buildAuthorStats(posts, authors, commentsByTitle = null) {
+  const hasComments = commentsByTitle && typeof commentsByTitle === "object";
+  const acc = {}; // key -> { count, dates[], comments }
   for (const item of posts) {
     const key = item.data && item.data.author;
     if (!key) continue;
-    const a = (acc[key] = acc[key] || { count: 0, dates: [] });
+    const a = (acc[key] = acc[key] || { count: 0, dates: [], comments: 0 });
     a.count += 1;
     a.dates.push(item.date);
+    if (hasComments) {
+      const title = item.data && item.data.title;
+      a.comments += (title && commentsByTitle[title]) || 0;
+    }
   }
 
   const stats = Object.keys(authors)
@@ -85,6 +96,7 @@ function buildAuthorStats(posts, authors) {
         latestDate: iso(utc(sorted[sorted.length - 1])),
         latestTs: utc(sorted[sorted.length - 1]).toMillis(),
       };
+      if (hasComments) stat.comments = a.comments;
       Object.assign(stat, levelInfo(stat.count));
       stat.calendar = buildCalendar(a.dates);
       return stat;
@@ -100,6 +112,27 @@ function buildAuthorStats(posts, authors) {
     s.medal = medals[s.rank] || "";
     s.pct = max ? Math.round((s.count / max) * 100) : 0;
   });
+
+  // Reader-driven achievement: the author whose posts drew the most reader
+  // comments. Distinct from the post-count ranking, so it rewards resonance,
+  // not volume. Awarded only when there is a positive, unambiguous leader.
+  if (hasComments) {
+    let top = null;
+    let tied = false;
+    for (const s of stats) {
+      if (s.comments <= 0) continue;
+      if (!top || s.comments > top.comments) {
+        top = s;
+        tied = false;
+      } else if (s.comments === top.comments) {
+        tied = true;
+      }
+    }
+    stats.forEach((s) => {
+      s.mostDiscussed = Boolean(top && !tied && s.key === top.key);
+    });
+  }
+
   return stats;
 }
 

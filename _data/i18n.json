@@ -6,6 +6,8 @@
       "contributions": "發文紀錄",
       "less": "少",
       "more": "多",
+      "mostDiscussed": "最多討論",
+      "commentsUnit": "則留言",
       "tier": { "diamond": "鑽石", "gold": "金牌", "silver": "銀牌", "bronze": "銅牌", "iron": "新手" }
     },
     "langName": "繁體中文",
@@ -44,6 +46,8 @@
       "contributions": "Contributions",
       "less": "Less",
       "more": "More",
+      "mostDiscussed": "Most discussed",
+      "commentsUnit": "comments",
       "tier": { "diamond": "Diamond", "gold": "Gold", "silver": "Silver", "bronze": "Bronze", "iron": "Rookie" }
     },
     "langName": "English",
@@ -82,6 +86,8 @@
       "contributions": "投稿記録",
       "less": "少",
       "more": "多",
+      "mostDiscussed": "コメント最多",
+      "commentsUnit": "件のコメント",
       "tier": { "diamond": "ダイヤ", "gold": "ゴールド", "silver": "シルバー", "bronze": "ブロンズ", "iron": "ルーキー" }
     },
     "langName": "日本語",
@@ -120,6 +126,8 @@
       "contributions": "发文记录",
       "less": "少",
       "more": "多",
+      "mostDiscussed": "最多讨论",
+      "commentsUnit": "条评论",
       "tier": { "diamond": "钻石", "gold": "金牌", "silver": "银牌", "bronze": "铜牌", "iron": "新手" }
     },
     "langName": "简体中文",

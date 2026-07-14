@@ -83,6 +83,27 @@
 .gx-cal__legend { display: flex; align-items: center; gap: 3px; margin-top: 0.8rem; font-size: 0.62rem; color: var(--ink-faint); }
 .gx-cal__legend span { margin: 0 0.3rem; }
 
+/* Reader-discussion signals (utterances comment counts). */
+.gx-comments {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.gx-badge {
+  display: inline-block;
+  padding: 0.05em 0.5em;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.gx-badge--discussed {
+  color: #fff;
+  background: var(--accent, #d04444);
+}
+
 @media (prefers-color-scheme: dark) {
   :root { --gx-c0: #2d333b; }
 }

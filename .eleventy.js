@@ -56,6 +56,7 @@ const localImages = require("./third_party/eleventy-plugin-local-images/.elevent
 const CleanCSS = require("clean-css");
 const { buildAuthorStats } = require("./_11ty/authorStats");
 const activeLanguages = require("./_11ty/activeLanguages");
+const { commentCountsByTitle } = require("./_11ty/discussions");
 const {
   effectivePublishedDate,
   effectiveModifiedDate,
@@ -422,12 +423,17 @@ module.exports = function (eleventyConfig) {
   // leaderboard and per-author profile. Each record is enriched by
   // _11ty/authorStats.js with level/tier, achievements and a contribution
   // calendar. Ties on post count are broken by most recent activity (not name).
-  eleventyConfig.addCollection("authorsByPostCount", function (collectionApi) {
+  eleventyConfig.addCollection("authorsByPostCount", async function (
+    collectionApi
+  ) {
     const authors = require("./_data/metadata.json").authors;
     const posts = collectionApi
       .getFilteredByTag("posts")
       .filter((item) => postLang(item) === DEFAULT_LANG);
-    return buildAuthorStats(posts, authors);
+    // Reader comment counts from utterances; null (fetch failed) degrades to a
+    // post-count-only leaderboard without failing the build.
+    const commentsByTitle = await commentCountsByTitle();
+    return buildAuthorStats(posts, authors, commentsByTitle);
   });
 
   // Look up one author's enriched stats record by key (for author pages).
