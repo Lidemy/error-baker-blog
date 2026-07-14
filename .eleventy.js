@@ -55,6 +55,7 @@ const markdownItAnchor = require("markdown-it-anchor");
 const localImages = require("./third_party/eleventy-plugin-local-images/.eleventy.js");
 const CleanCSS = require("clean-css");
 const { buildAuthorStats } = require("./_11ty/authorStats");
+const activeLanguages = require("./_11ty/activeLanguages");
 const {
   effectivePublishedDate,
   effectiveModifiedDate,
@@ -408,16 +409,13 @@ module.exports = function (eleventyConfig) {
   // Activate a localized section only after that language has at least one
   // visible translated post. Draft translations count in local `--serve`
   // previews but never create empty, indexable production home/About/feed URLs.
-  eleventyConfig.addCollection("siteLangsWithPublishedPosts", function (
-    collectionApi
-  ) {
-    const active = new Set([DEFAULT_LANG]);
-    for (const item of collectionApi.getFilteredByTag("posts")) {
-      if (!isVisible(item)) continue;
-      const lang = postLang(item);
-      if (SITE_LANGS.includes(lang)) active.add(lang);
-    }
-    return SITE_LANGS.filter((lang) => active.has(lang));
+  //
+  // Delegates to the same helper as the `activeLangs` global data so the
+  // language switcher/hreflang (which read this collection) and the permalink
+  // gate in _data/eleventyComputed.js (which reads the global) can never
+  // disagree about which locales are live.
+  eleventyConfig.addCollection("siteLangsWithPublishedPosts", function () {
+    return activeLanguages(IS_DEVELOPMENT);
   });
 
   // Authors ranked by number of (zh-TW source) posts — for the /about/

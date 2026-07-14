@@ -133,16 +133,15 @@ describe("production output boundaries", () => {
 
   it("enables localized author shells only for active languages", () => {
     const page = { inputPath: "./author-langs.njk" };
-    const collections = { siteLangsWithPublishedPosts: ["zh-TW", "en"] };
     const base = {
       page,
-      collections,
-      permalink: "/en/posts/tian/",
+      activeLangs: ["zh-TW", "en"],
+      permalink: "/{{ ap.lang }}/posts/{{ ap.author }}/",
     };
 
     assert.equal(
       computedData.permalink({ ...base, ap: { lang: "en", author: "tian" } }),
-      base.permalink
+      "/en/posts/tian/"
     );
     assert.equal(
       computedData.permalink({ ...base, ap: { lang: "ja", author: "tian" } }),
@@ -151,11 +150,48 @@ describe("production output boundaries", () => {
   });
 
   it("enables both localized feed formats only for active languages", () => {
-    const collections = { siteLangsWithPublishedPosts: ["zh-TW", "en"] };
-    for (const inputPath of ["./feed/feed-i18n.njk", "./feed/json-i18n.njk"]) {
-      const base = { page: { inputPath }, collections, permalink: "/en/feed/" };
-      assert.equal(computedData.permalink({ ...base, flang: "en" }), base.permalink);
+    const activeLangs = ["zh-TW", "en"];
+    const cases = [
+      {
+        inputPath: "./feed/feed-i18n.njk",
+        raw: "/{{ flang }}/feed/feed.xml",
+        expected: "/en/feed/feed.xml",
+      },
+      {
+        inputPath: "./feed/json-i18n.njk",
+        raw: "/{{ flang }}/feed/feed.json",
+        expected: "/en/feed/feed.json",
+      },
+    ];
+    for (const { inputPath, raw, expected } of cases) {
+      const base = { page: { inputPath }, activeLangs, permalink: raw };
+      assert.equal(computedData.permalink({ ...base, flang: "en" }), expected);
       assert.equal(computedData.permalink({ ...base, flang: "ja" }), false);
     }
+  });
+
+  // Eleventy 0.12 does not re-render a permalink string returned from
+  // computed data, so active shells must yield concrete URLs — echoing the
+  // raw front-matter template collapses them all onto one empty output path.
+  it("renders concrete permalinks for active localized shells", () => {
+    const activeLangs = ["zh-TW", "en"];
+    assert.equal(
+      computedData.permalink({
+        page: { inputPath: "./home-i18n.njk" },
+        activeLangs,
+        hlang: "en",
+        permalink: "/{{ hlang }}/",
+      }),
+      "/en/"
+    );
+    assert.equal(
+      computedData.permalink({
+        page: { inputPath: "./about-i18n.njk" },
+        activeLangs,
+        alang: "en",
+        permalink: "/{{ alang }}/about/",
+      }),
+      "/en/about/"
+    );
   });
 });
