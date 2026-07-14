@@ -2,7 +2,7 @@
 title: New Architecture of Rreac Native
 date: 2025-01-26
 tags: [Front-end]
-author: Ruofan
+author: ruofan
 layout: layouts/post.njk
 ---
 

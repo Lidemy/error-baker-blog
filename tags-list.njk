@@ -10,6 +10,6 @@ eleventyNavigation:
 {% for tag in collections.tagList %}
   {% set tagUrl %}/tags/{{ tag | slug }}/{% endset %}
   <h2><a href="{{ tagUrl | url }}" class="post-tag">{{ tag }}</a></h2>
-  {% set postslist = collections[tag] %}
+  {% set postslist = collections[tag] | filterByLang('zh-TW') | sortByPublishedDate | reverse %}
   {% include "postslist.njk" %}
 {% endfor %}

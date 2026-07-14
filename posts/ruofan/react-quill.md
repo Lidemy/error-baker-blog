@@ -2,7 +2,7 @@
 title: render quill delta 的方式
 date: 2021-11-07
 tags: [Front-end]
-author: Ruofan
+author: ruofan
 layout: layouts/post.njk
 ---
 

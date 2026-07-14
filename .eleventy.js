@@ -54,6 +54,14 @@ const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
 const localImages = require("./third_party/eleventy-plugin-local-images/.eleventy.js");
 const CleanCSS = require("clean-css");
+const activeLanguages = require("./_11ty/activeLanguages");
+const isDraftFrontmatter = require("./_11ty/draftFlag");
+const {
+  effectivePublishedDate,
+  effectiveModifiedDate,
+  postPublishedDate,
+  sortByPublishedDate,
+} = require("./_11ty/publication-dates");
 const GA_ID = require("./_data/metadata.json").googleAnalyticsId;
 
 module.exports = function (eleventyConfig) {
@@ -150,6 +158,15 @@ module.exports = function (eleventyConfig) {
     return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat("yyyy-LL-dd");
   });
 
+  // Keep Article JSON-LD, listings, and per-language feeds on one explicit date
+  // contract. The first filter argument is `page.date`; version-specific
+  // metadata is optional for source posts and mandatory at the publish gate for
+  // translations.
+  eleventyConfig.addFilter("effectivePublishedDate", effectivePublishedDate);
+  eleventyConfig.addFilter("effectiveModifiedDate", effectiveModifiedDate);
+  eleventyConfig.addFilter("postPublishedDate", postPublishedDate);
+  eleventyConfig.addFilter("sortByPublishedDate", sortByPublishedDate);
+
   eleventyConfig.addFilter("sitemapDateTimeString", (dateObj) => {
     const dt = DateTime.fromJSDate(dateObj, { zone: "utc" });
     if (!dt.isValid) {
@@ -165,6 +182,239 @@ module.exports = function (eleventyConfig) {
     }
 
     return array.slice(0, n);
+  });
+
+  /* ---------------------------------------------------------------------------
+   * i18n / multilingual support
+   *
+   * Posts live as `posts/<author>/<slug>.md` (zh-TW source) with translations
+   * alongside as `posts/<author>/<slug>.<lang>.md`. Each translation declares
+   * `lang` and a shared `translationKey` in its frontmatter. These helpers let
+   * templates (a) keep each language's listings separate and (b) link the
+   * versions of one article together for the language switcher + hreflang.
+   * ------------------------------------------------------------------------- */
+  // Single source of truth for the language list (source language first,
+  // display order). check-translations.js and the tests derive from the same
+  // file, so adding a locale means editing langs.json + i18n.json only.
+  const SITE_LANGS = require("./_data/langs.json");
+  const DEFAULT_LANG = SITE_LANGS[0];
+
+  // A half-added language (declared in langs.json but missing its UI strings)
+  // must fail the build instead of rendering `undefined` into pages.
+  const I18N_STRINGS = require("./_data/i18n.json");
+  const REQUIRED_I18N_KEYS = [
+    "langName",
+    "ogLocale",
+    "siteName",
+    "noTranslation",
+    "intro",
+    "nav_About",
+    "suggestAvailable",
+    "suggestRead",
+    "suggestDismiss",
+  ];
+  if (!Array.isArray(SITE_LANGS) || SITE_LANGS.length === 0) {
+    throw new Error("_data/langs.json must be a non-empty array of language codes");
+  }
+  for (const lang of SITE_LANGS) {
+    const strings = I18N_STRINGS[lang];
+    if (!strings) {
+      throw new Error(
+        `_data/i18n.json has no entry for "${lang}" (declared in _data/langs.json)`
+      );
+    }
+    const missing = REQUIRED_I18N_KEYS.filter((key) => !strings[key]);
+    if (missing.length > 0) {
+      throw new Error(
+        `_data/i18n.json["${lang}"] is missing required keys: ${missing.join(", ")}`
+      );
+    }
+  }
+  // Single dev-mode signal shared with the permalink/exclusion gate in
+  // eleventyComputed.js — ELEVENTY_ENV wins, argv sniffing is the fallback.
+  // Two independent detectors here previously let
+  // `ELEVENTY_ENV=development eleventy` emit orphan draft pages (permalink
+  // gate said dev, collection gate said production).
+  const IS_DEVELOPMENT = require("./_data/isdevelopment.js")();
+  const draftCache = new Map();
+
+  const postLang = (item) => (item.data && item.data.lang) || DEFAULT_LANG;
+  const isDraft = (item) => {
+    if (!item) return false;
+    if (item.data && (item.data.draft === true || item.data.draft === "true")) {
+      return true;
+    }
+
+    // Eleventy 0.12 constructs custom collections before global computed data
+    // has finished. Read the source frontmatter as a deterministic fallback so
+    // drafts can never leak into feeds, hreflang, or sitemap collections.
+    const inputPath = item.inputPath;
+    if (!inputPath || !inputPath.endsWith(".md")) return false;
+    // Cache only for one-shot builds: a --serve rebuild must observe draft
+    // toggles in frontmatter, so dev reads the file every time.
+    if (!IS_DEVELOPMENT && draftCache.has(inputPath)) {
+      return draftCache.get(inputPath);
+    }
+    let draft = false;
+    try {
+      const raw = fs.readFileSync(inputPath, "utf8");
+      const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+      draft = Boolean(match && isDraftFrontmatter(match[1]));
+    } catch (error) {
+      throw new Error(`Unable to inspect draft state for ${inputPath}: ${error.message}`);
+    }
+    if (!IS_DEVELOPMENT) draftCache.set(inputPath, draft);
+    return draft;
+  };
+  const isVisible = (item) => !isDraft(item) || IS_DEVELOPMENT;
+  // Only strip suffixes that are actual site languages, so a legitimately
+  // dotted slug (e.g. `intro.v2.md`) keeps its full key.
+  const LANG_SUFFIX_RE = new RegExp(
+    `posts/(.+?)(?:\\.(?:${SITE_LANGS.join("|")}))?\\.md$`
+  );
+  const postTranslationKey = (item) => {
+    if (item.data && item.data.translationKey) return item.data.translationKey;
+    // Fallback: derive `<author>/<slug>` from the input path, dropping any
+    // `.<lang>` suffix so an original and its translations share one key.
+    const match = item.inputPath.match(LANG_SUFFIX_RE);
+    return match ? match[1] : item.inputPath;
+  };
+
+  // Keep only the posts written in `lang` (defaults to zh-TW). Used by listing
+  // pages and feeds so translations don't leak into the Chinese homepage/RSS.
+  eleventyConfig.addFilter("filterByLang", function (posts, lang) {
+    const target = lang || DEFAULT_LANG;
+    return (posts || []).filter(
+      (item) => isVisible(item) && postLang(item) === target
+    );
+  });
+
+  // Look up the URL of the `lang` version within a translations entry (the
+  // [{lang, url, title}] array). Returns null if that language isn't available.
+  // (A filter, not an in-template loop, because Nunjucks `set` inside a `for`
+  // doesn't escape the loop scope.)
+  eleventyConfig.addFilter("urlForLang", function (translations, lang) {
+    if (!translations) return null;
+    const hit = translations.find((v) => v.lang === lang);
+    return hit ? hit.url : null;
+  });
+
+  // Link an author to their page in the current language when that page was
+  // actually generated. Otherwise fall back to the always-available zh-TW
+  // author page instead of emitting a broken localized URL.
+  eleventyConfig.addFilter("authorUrlForLang", function (authorPages, lang, author) {
+    const target = lang || DEFAULT_LANG;
+    const hasLocalizedPage =
+      target !== DEFAULT_LANG &&
+      (authorPages || []).some(
+        (page) => page.lang === target && page.author === author
+      );
+    return hasLocalizedPage
+      ? `/${target}/posts/${author}/`
+      : `/posts/${author}/`;
+  });
+
+  // Per-language strings for the locale-suggestion banner, embedded as a JSON
+  // data attribute so the client script can render the suggestion in the
+  // reader's own language rather than the current page's.
+  eleventyConfig.addFilter("langSuggestStrings", function (i18nData, langsArr) {
+    const out = {};
+    for (const code of langsArr || []) {
+      const strings = i18nData[code] || {};
+      out[code] = {
+        available: strings.suggestAvailable,
+        read: strings.suggestRead,
+      };
+    }
+    return JSON.stringify(out);
+  });
+
+  // The home pages exist for every language at deterministic URLs
+  // (zh-TW → /, others → /<lang>/). Build their translation set directly rather
+  // than via the `translations` collection — paginated pages aren't reliably
+  // visible to a collection consumed from another paginated template.
+  eleventyConfig.addFilter("homeVersions", function (langsArr) {
+    return (langsArr || []).map((code) => ({
+      lang: code,
+      url: code === DEFAULT_LANG ? "/" : `/${code}/`,
+      inputPath: code === DEFAULT_LANG ? "./index.njk" : "./home-i18n.njk",
+    }));
+  });
+
+  // About pages use the same pagination pattern and therefore need the same
+  // deterministic version set for hreflang and the language switcher.
+  eleventyConfig.addFilter("aboutVersions", function (langsArr) {
+    return (langsArr || []).map((code) => ({
+      lang: code,
+      url: code === DEFAULT_LANG ? "/about/" : `/${code}/about/`,
+      inputPath:
+        code === DEFAULT_LANG ? "./about/index.md" : "./about-i18n.njk",
+    }));
+  });
+
+  // zh-TW-only posts — the source language listing (homepage, archive, feeds).
+  eleventyConfig.addCollection("postsZhTW", function (collectionApi) {
+    return sortByPublishedDate(
+      collectionApi
+        .getFilteredByTag("posts")
+        .filter(
+          (item) => isVisible(item) && postLang(item) === DEFAULT_LANG
+        )
+    );
+  });
+
+  // Activate a localized section only after that language has at least one
+  // visible translated post. Draft translations count in local `--serve`
+  // previews but never create empty, indexable production home/About/feed URLs.
+  //
+  // Delegates to the same helper as the `activeLangs` global data so the
+  // language switcher/hreflang (which read this collection) and the permalink
+  // gate in _data/eleventyComputed.js (which reads the global) can never
+  // disagree about which locales are live.
+  eleventyConfig.addCollection("siteLangsWithPublishedPosts", function () {
+    return activeLanguages(IS_DEVELOPMENT);
+  });
+
+  // (lang, author) pairs that have at least one visible translated post — used
+  // to generate per-language author pages /<lang>/posts/<author>/ (zh-TW author
+  // pages are the manual posts/<author>/index.njk files). Computed data is
+  // applied after custom collections, so mirror the production draft gate here
+  // to avoid treating a non-emitted draft author page as available.
+  eleventyConfig.addCollection("authorLangPages", function (collectionApi) {
+    const seen = {};
+    for (const item of collectionApi.getFilteredByTag("posts")) {
+      if (!isVisible(item)) continue;
+      const lang = postLang(item);
+      if (lang === DEFAULT_LANG) continue;
+      const author = item.data.author;
+      if (!author) continue;
+      seen[lang + "|" + author] = { lang, author };
+    }
+    return Object.values(seen);
+  });
+
+  // Map of translationKey -> [{ lang, url, title }], display-ordered by
+  // SITE_LANGS. Templates read collections.translations[translationKey].
+  // Spans ALL pages that declare a `translationKey` (posts AND the per-language
+  // home pages), so the site-wide switcher links home↔home and article↔article.
+  eleventyConfig.addCollection("translations", function (collectionApi) {
+    const map = {};
+    for (const item of collectionApi.getAll()) {
+      if (!item.data || !item.data.translationKey) continue;
+      if (!isVisible(item)) continue;
+      const key = item.data.translationKey;
+      (map[key] = map[key] || []).push({
+        lang: postLang(item),
+        url: item.url,
+        title: item.data.title,
+      });
+    }
+    for (const key of Object.keys(map)) {
+      map[key].sort(
+        (a, b) => SITE_LANGS.indexOf(a.lang) - SITE_LANGS.indexOf(b.lang)
+      );
+    }
+    return map;
   });
 
   eleventyConfig.addCollection("tagList", require("./_11ty/getTagList"));

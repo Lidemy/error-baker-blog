@@ -2,7 +2,7 @@
 title: 初探 Google extension
 date: 2021-09-09
 tags: [JavaScript, google-extension]
-author: Umer
+author: umer
 layout: layouts/post.njk
 ---
 

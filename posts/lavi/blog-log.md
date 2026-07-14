@@ -2,7 +2,7 @@
 title: 用 11ty 寫部落格的心得
 date: 2021-10-31
 tags: ["Eleventy", "JavaScript"]
-author: Lavi
+author: lavi
 layout: layouts/post.njk
 ---
 

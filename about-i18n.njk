@@ -1,0 +1,16 @@
+---
+# Per-language About pages: /en/about/, /ja/about/, /zh-CN/about/
+# (the zh-TW About is about/index.md). Content comes from _data/i18n.json.
+layout: layouts/about.njk
+pagination:
+  data: collections.siteLangsWithPublishedPosts
+  size: 1
+  alias: alang
+  filter:
+    - zh-TW
+permalink: "/{{ alang }}/about/"
+eleventyComputed:
+  lang: "{{ alang }}"
+  title: "{{ i18n[alang].aboutTitle }}"
+  translationKey: about
+---

@@ -2,7 +2,7 @@
 title: React Ref 的一點研究
 date: 2021-09-27
 tags: [react]
-author: Lavi
+author: lavi
 layout: layouts/post.njk
 ---
 

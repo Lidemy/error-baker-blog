@@ -2,7 +2,7 @@
 title: Scroll-driven Animations
 date: 2023-10-19
 tags: [Front-end]
-author: Ruofan
+author: ruofan
 layout: layouts/post.njk
 ---
 

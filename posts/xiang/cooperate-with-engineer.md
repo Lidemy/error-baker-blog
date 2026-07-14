@@ -2,7 +2,7 @@
 title: 從與工程師共事，到與工程師共識（ㄧ）
 date: 2022-01-09
 tags: [Front-end, back-end, article]
-author: Xiang
+author: xiang
 layout: layouts/post.njk
 image:
 ---
