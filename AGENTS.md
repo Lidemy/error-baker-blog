@@ -1,12 +1,30 @@
 # AGENTS.md — 文章翻譯規範（Translation Guide for Agents）
 
 這份檔案是「把一篇技術文章翻成多國語系」的**唯一真相來源**，供任何 AI 代理
-（Claude Code、Cursor、其他）依循。Claude Code 使用者可用斜線指令
-`/translate-post <檔案> [語系...]` 觸發，其內容就是「請依本檔規範處理」。
+（Claude Code、Codex、Cursor、其他）依循。
 
 > 設計目標：零付費 API、不綁定特定廠商、保留人工審核、SEO 正確。
 > 站台的 i18n（路由、語言切換器、hreflang）已由模板處理，代理**只需產出符合規範的
 > Markdown 檔**即可。
+
+## 觸發方式與輸入驗證
+
+任何代理都能以一句話啟動流程，不需要工具專屬設定：
+
+> 依 AGENTS.md 翻譯 `posts/<author>/<slug>.md` 成 `<lang>[,<lang>...]`
+
+工具捷徑（皆為純別名，規範只在本檔）：
+
+- **Agent Skills 開放標準**（Codex CLI 等）：`.agents/skills/translate-post/`。
+- **Claude Code**：斜線指令 `/translate-post <檔案> [語系,...]`（`.claude/commands/`）。
+
+開始翻譯前，代理必須先驗證輸入，任一項不成立就停止並清楚說明，
+不得猜測路徑、猜測語系或修改任何檔案：
+
+1. 原文必須是存在的繁中檔案 `posts/<author>/<slug>.md`（不是 `.<lang>.md` 譯文）。
+2. 指定的語系必須列於 `_data/langs.json` 的非預設語系；未指定時使用全部
+   預設目標語系。
+3. 不得代使用者移除 `draft`、填寫人工審核欄位、提交或發佈內容。
 
 ---
 

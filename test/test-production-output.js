@@ -75,6 +75,7 @@ describe("production output boundaries", () => {
   it("never publishes internal agent or diagnostic pages", () => {
     assert.equal(fs.existsSync(path.join(SITE_ROOT, "AGENTS", "index.html")), false);
     assert.equal(fs.existsSync(path.join(SITE_ROOT, "page-list", "index.html")), false);
+    assert.equal(fs.existsSync(path.join(SITE_ROOT, ".agents")), false);
     assert.doesNotMatch(sitemap, /\/(?:AGENTS|page-list)\//);
   });
 
