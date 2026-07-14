@@ -19,21 +19,16 @@ templateClass: tmpl-post
 {% set publisherLogoUrl = metadata.publisher.logo | absoluteUrl(metadata.url) %}
 
 {% block extraArticleHeader %}
-   <aside class="w-full">
-      <div class="flex items-center">
-        <img class="avatar" src="{{ postAuthor.avatarUrl }}">
-        <span style="margin-left: 12px;"><a href="/posts/{{ author }}">{{ postAuthor.name }}</a> 於 {{ date | htmlDateString }} 發布</span>
-      </div>
-      <div style="text-align: left;">
-      {% for tag in tags %}
-        {% if tag !== "posts" %}
-          {% set tagUrl %}/tags/{{ tag | slug }}/{% endset %}
-          <a href="{{ tagUrl | url }}" class="post-tag">#{{ tag }}</a>
-        {% endif %}
-        
-      {% endfor %}
-      </div>
-   </aside>
+  <div class="byline">
+    <a class="byline-author" href="{{ authorUrl }}">
+      <img class="avatar" src="{{ postAuthor.avatarUrl }}" alt="" />
+      <span>{{ postAuthor.name }}</span>
+    </a>
+    <time class="byline-date" datetime="{{ versionPublishedDate | htmlDateString }}">{{ t.publishedOn }} {{ versionPublishedDate | htmlDateString }}</time>
+    <span class="byline-tags">
+    {%- for tag in tags %}{% if tag !== "posts" %}{% set tagUrl %}/tags/{{ tag | slug }}/{% endset %}<a href="{{ tagUrl | url }}" class="post-tag">#{{ tag }}</a>{% endif %}{% endfor %}
+    </span>
+  </div>
 {% endblock %}
 
 
@@ -44,17 +39,18 @@ templateClass: tmpl-post
 {{ content | safe }}
 
 <hr>
-<p>
-  <h3>關於作者</h3>
+<section class="author-bio">
+  <h2>{{ t.aboutAuthor }}</h2>
   <div class="flex items-center">
-    <img class="avatar avatar-large" src="{{ postAuthor.avatarUrl }}">
-    <h3 style="margin-left: 12px;"><a href="/posts/{{ author }}">{{ postAuthor.name }}</a></h3>
+    <img class="avatar avatar-large" src="{{ postAuthor.avatarUrl }}" alt="">
+    <h3 style="margin-left: 12px;"><a href="{{ authorUrl }}">{{ postAuthor.name }}</a></h3>
   </div>
-  <p>{{ postAuthor.intro | safe }}</p>
-</p>
+  {% set authorIntro = postAuthor['intro_' + pageLang] or postAuthor.intro %}
+  <div class="author-intro">{{ authorIntro | safe }}</div>
+</section>
 
 <p>
-  <a href="{{ shareUrl | safe }}" on-click="share">分享文章</a>
+  <a href="{{ shareUrl | safe }}" on-click="share">{{ t.shareArticle }}</a>
 </p>
 
 <script
@@ -104,4 +100,13 @@ templateClass: tmpl-post
 }
 </script>
 
+{% endblock %}
+
+{% block aside %}
+  <nav class="toc" id="toc" aria-label="{{ t.toc or '目錄' }}">
+    <details class="toc-details" open>
+      <summary class="toc-title">{{ t.toc or '目錄' }}</summary>
+      <ul class="toc-list"></ul>
+    </details>
+  </nav>
 {% endblock %}

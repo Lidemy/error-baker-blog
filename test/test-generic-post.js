@@ -1,203 +1,149 @@
+"use strict";
+
 const assert = require("assert").strict;
-const expect = require("expect.js");
+const fs = require("fs");
+const path = require("path");
 const { JSDOM } = require("jsdom");
-const readFileSync = require("fs").readFileSync;
-const existsSync = require("fs").existsSync;
 const metadata = require("../_data/metadata.json");
-const GA_ID = require("../_data/googleanalytics.js")();
 
-/**
- * These tests kind of suck and they are kind of useful.
- *
- * They suck, because they need to be changed when the hardcoded post changes.
- * They are useful because I tend to break the things they test all the time.
- */
+const POST_PATH = "/posts/tian/git-flow/";
+const POST_URL = metadata.url + POST_PATH;
+const POST_FILENAME = path.resolve(
+  __dirname,
+  "..",
+  "_site",
+  "posts",
+  "tian",
+  "git-flow",
+  "index.html"
+);
+const IMAGE_POST_FILENAME = path.resolve(
+  __dirname,
+  "..",
+  "_site",
+  "posts",
+  "ruofan",
+  "go-RESTful-api",
+  "index.html"
+);
 
-describe("check build output for a generic post", () => {
-  describe("sample post", () => {
-    const POST_FILENAME = "_site/posts/firstpost/index.html";
-    const URL = metadata.url;
-    const POST_URL = URL + "/posts/firstpost/";
+describe("representative post build output", () => {
+  let doc;
 
-    if (!existsSync(POST_FILENAME)) {
-      it("WARNING skipping tests because POST_FILENAME does not exist", () => {});
+  before(() => {
+    assert.ok(fs.existsSync(POST_FILENAME), `Missing build output: ${POST_FILENAME}`);
+    doc = new JSDOM(fs.readFileSync(POST_FILENAME, "utf8")).window.document;
+  });
+
+  it("has correct title, language, canonical, and social metadata", () => {
+    assert.equal(doc.documentElement.lang, "zh-TW");
+    assert.match(doc.title, /^我所理解的 GitFlow/);
+    assert.equal(doc.querySelector("link[rel='canonical']").href, POST_URL);
+    assert.equal(doc.querySelector("meta[property='og:url']").content, POST_URL);
+    assert.ok(doc.querySelector("meta[name='description']").content.length > 0);
+  });
+
+  it("has inlined CSS and the fingerprinted client bundle", () => {
+    assert.match(doc.querySelector("style").textContent, /header nav/);
+    const bundle = doc.querySelector("script[src^='/js/min.js?hash=']");
+    assert.ok(bundle, "Expected fingerprinted /js/min.js client bundle");
+  });
+
+  it("has an accessible share control and correct publication date", () => {
+    const share = doc.querySelector("share-widget button");
+    assert.ok(share);
+    assert.ok(share.getAttribute("aria-label"));
+    assert.equal(share.getAttribute("href"), POST_URL);
+
+    const published = doc.querySelector("time.byline-date");
+    assert.equal(published.getAttribute("datetime"), "2021-10-28");
+    assert.match(published.textContent, /2021-10-28/);
+  });
+
+  it("emits valid Article JSON-LD for the post", () => {
+    const value = doc.querySelector("script[type='application/ld+json']").textContent;
+    const article = JSON.parse(value);
+    assert.equal(article["@type"], "Article");
+    assert.equal(article.headline, "我所理解的 GitFlow");
+    assert.equal(article.inLanguage, "zh-TW");
+    assert.equal(article.url, POST_URL);
+    assert.equal(article.mainEntityOfPage, POST_URL);
+    assert.equal(article.datePublished, "2021-10-28");
+    assert.equal(article.dateModified, article.datePublished);
+    assert.deepEqual(article.image, [metadata.ogimage]);
+    assert.equal(article.author.name, "Tian");
+    assert.equal(article.author.url, `${metadata.url}/posts/tian/`);
+    assert.equal(article.publisher.name, metadata.publisher.name);
+    assert.equal(article.publisher.url, metadata.url);
+    assert.equal(article.publisher.logo.url, metadata.url + metadata.publisher.logo);
+    assert.equal(article.publisher.logo.width, 512);
+    assert.equal(article.publisher.logo.height, 512);
+    assert.equal(Object.hasOwn(article, "genre"), false);
+  });
+
+  it("uses exactly the declared hero image when a post has one", () => {
+    assert.ok(
+      fs.existsSync(IMAGE_POST_FILENAME),
+      `Missing build output: ${IMAGE_POST_FILENAME}`
+    );
+    const imagePost = new JSDOM(fs.readFileSync(IMAGE_POST_FILENAME, "utf8"))
+      .window.document;
+    const article = JSON.parse(
+      imagePost.querySelector("script[type='application/ld+json']").textContent
+    );
+    assert.deepEqual(article.image, [
+      `${metadata.url}/img/posts/ruofan/go-1.png`,
+    ]);
+  });
+
+  it("adds dimensions and responsive sources to local raster images", () => {
+    assert.ok(
+      fs.existsSync(IMAGE_POST_FILENAME),
+      `Missing build output: ${IMAGE_POST_FILENAME}`
+    );
+    const imageDoc = new JSDOM(
+      fs.readFileSync(IMAGE_POST_FILENAME, "utf8")
+    ).window.document;
+    const image = imageDoc.querySelector("picture img[src^='/img/']:not(.avatar)");
+    assert.ok(image, "Expected at least one optimized local image");
+    assert.match(image.getAttribute("width"), /^\d+$/);
+    assert.match(image.getAttribute("height"), /^\d+$/);
+    assert.equal(image.getAttribute("loading"), "lazy");
+    assert.equal(image.getAttribute("decoding"), "async");
+
+    const sources = [...image.closest("picture").querySelectorAll("source")];
+    assert.ok(sources.some((source) => source.type === "image/webp"));
+    assert.ok(sources.some((source) => source.type === "image/jpeg"));
+  });
+
+  it("advertises published translations and never drafts", () => {
+    // Derive this post's published translation languages from the source of
+    // truth (sibling .<lang>.md frontmatter), so the assertion follows the
+    // actual publication state instead of hardcoding it.
+    const langs = require("../_data/langs.json");
+    const published = langs.slice(1).filter((lang) => {
+      const file = path.resolve(__dirname, "..", `posts/tian/git-flow.${lang}.md`);
+      if (!fs.existsSync(file)) return false;
+      const fm = fs
+        .readFileSync(file, "utf8")
+        .match(/^---\r?\n([\s\S]*?)\r?\n---/);
+      return fm && !/^draft:\s*(?:true|["']true["'])\s*$/m.test(fm[1]);
+    });
+
+    const hreflangs = [
+      ...doc.querySelectorAll("link[rel='alternate'][hreflang]"),
+    ].map((link) => link.getAttribute("hreflang"));
+
+    if (published.length === 0) {
+      assert.equal(hreflangs.length, 0);
+      assert.equal(doc.querySelector("#lang-suggest"), null);
       return;
     }
-
-    let dom;
-    let html;
-    let doc;
-
-    function select(selector, opt_attribute) {
-      const element = doc.querySelector(selector);
-      assert(element, "Expected to find: " + selector);
-      if (opt_attribute) {
-        return element.getAttribute(opt_attribute);
-      }
-      return element.textContent;
-    }
-
-    before(() => {
-      html = readFileSync(POST_FILENAME);
-      dom = new JSDOM(html);
-      doc = dom.window.document;
-    });
-
-    // it("should have metadata", () => {
-    //   assert.equal(select("title"), "This is my first post.");
-    //   expect(select("meta[property='og:image']", "content")).to.match(
-    //     /\/img\/remote\/\w+.jpg/
-    //   );
-    //   assert.equal(select("link[rel='canonical']", "href"), POST_URL);
-    //   assert.equal(
-    //     select("meta[name='description']", "content"),
-    //     "This is a post on My Blog about agile frameworks."
-    //   );
-    // });
-
-    it("should have inlined css", () => {
-      const css = select("style");
-      expect(css).to.match(/header nav/);
-      expect(css).to.not.match(/test-dead-code-elimination-sentinel/);
-    });
-
-    it("should have script elements", () => {
-      const scripts = doc.querySelectorAll("script[src]");
-      let has_ga_id = GA_ID ? 1 : 0;
-      expect(scripts).to.have.length(has_ga_id + 1); // NOTE: update this when adding more <script>
-      expect(scripts[0].getAttribute("src")).to.match(
-        /^\/js\/min\.js\?hash=\w+/
-      );
-    });
-
-    it("should have GA a setup", () => {
-      if (!GA_ID) {
-        return;
-      }
-      const scripts = doc.querySelectorAll("script[src]");
-      expect(scripts[1].getAttribute("src")).to.match(
-        /^\/js\/cached\.js\?hash=\w+/
-      );
-      const noscript = doc.querySelectorAll("noscript");
-      expect(noscript.length).to.be.greaterThan(0);
-      let count = 0;
-      for (let n of noscript) {
-        if (n.textContent.includes("/.netlify/functions/ga")) {
-          count++;
-          expect(n.textContent).to.contain(GA_ID);
-        }
-      }
-      expect(count).to.equal(1);
-    });
-
-    it("should have a good CSP", () => {
-      const csp = select(
-        "meta[http-equiv='Content-Security-Policy']",
-        "content"
-      );
-      expect(csp).to.contain(";object-src 'none';");
-      expect(csp).to.match(/^default-src 'self';/);
-    });
-
-    it("should have accessible buttons", () => {
-      const buttons = doc.querySelectorAll("button");
-      for (let b of buttons) {
-        expect(
-          (b.firstElementChild === null && b.textContent.trim()) ||
-            b.getAttribute("aria-label") != null
-        ).to.be.true;
-      }
-    });
-
-    it("should have a share widget", () => {
-      expect(select("share-widget button", "href")).to.equal(POST_URL);
-    });
-
-    // it("should have a header", () => {
-    //   expect(select("header > h1")).to.equal("This is my first post.");
-    //   expect(select("header aside")).to.match(/\d+ min read./);
-    //   expect(select("header dialog", "id")).to.equal("message");
-    // });
-
-    it("should have a published date", () => {
-      expect(select("article time")).to.equal("01 May 2018");
-      expect(select("article time", "datetime")).to.equal("2018-05-01");
-    });
-
-    it("should link to twitter with noopener", () => {
-      const twitterLinks = Array.from(doc.querySelectorAll("a")).filter((a) =>
-        a.href.startsWith("https://twitter.com")
-      );
-      for (let a of twitterLinks) {
-        expect(a.rel).to.contain("noopener");
-        expect(a.target).to.equal("_blank");
-      }
-    });
-
-    describe("body", () => {
-      it("should have images", () => {
-        const images = Array.from(
-          doc.querySelectorAll("article :not(aside) picture img")
-        );
-        const pictures = Array.from(
-          doc.querySelectorAll("article :not(aside) picture")
-        );
-        const metaImage = select("meta[property='og:image']", "content");
-        expect(images.length).to.greaterThan(0);
-        expect(pictures.length).to.greaterThan(0);
-        const img = images[0];
-        const picture = pictures[0];
-        const sources = Array.from(picture.querySelectorAll("source"));
-        expect(sources).to.have.length(3);
-        expect(img.src).to.match(/^\/img\/remote\/\w+-1920w\.jpg$/);
-        expect(metaImage).to.match(new RegExp(URL));
-        expect(metaImage).to.match(/\/img\/remote\/\w+\.jpg$/);
-        const avif = sources.shift();
-        const webp = sources.shift();
-        const jpg = sources.shift();
-        expect(jpg.srcset).to.match(
-          /\/img\/remote\/\w+-1920w.jpg 1920w, \/img\/remote\/\w+-1280w.jpg 1280w, \/img\/remote\/\w+-640w.jpg 640w, \/img\/remote\/\w+-320w.jpg 320w/
-        );
-        expect(webp.srcset).to.match(
-          /\/img\/remote\/\w+-1920w.webp 1920w, \/img\/remote\/\w+-1280w.webp 1280w, \/img\/remote\/\w+-640w.webp 640w, \/img\/remote\/\w+-320w.webp 320w/
-        );
-        expect(avif.srcset).to.match(
-          /\/img\/remote\/\w+-1920w.avif 1920w, \/img\/remote\/\w+-1280w.avif 1280w, \/img\/remote\/\w+-640w.avif 640w, \/img\/remote\/\w+-320w.avif 320w/
-        );
-        expect(jpg.type).to.equal("image/jpeg");
-        expect(webp.type).to.equal("image/webp");
-        //expect(avif.type).to.equal("image/avif");
-        expect(jpg.sizes).to.equal("(max-width: 608px) 100vw, 608px");
-        expect(webp.sizes).to.equal("(max-width: 608px) 100vw, 608px");
-        expect(img.height).to.match(/^\d+$/);
-        expect(img.width).to.match(/^\d+$/);
-        expect(img.getAttribute("loading")).to.equal("lazy");
-        expect(img.getAttribute("decoding")).to.equal("async");
-        // JSDom fails to parse the style attribute properly
-        expect(img.outerHTML).to.match(/svg/);
-        expect(img.outerHTML).to.match(/filter/);
-      });
-
-      it("should have json-ld", () => {
-        const json = select("script[type='application/ld+json']");
-        const images = Array.from(
-          doc.querySelectorAll("article :not(aside) img")
-        );
-        const obj = JSON.parse(json);
-        expect(obj.url).to.equal(POST_URL);
-        expect(obj.description).to.equal(
-          "Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster..."
-        );
-        expect(obj.image.length).to.be.greaterThan(0);
-        obj.image.forEach((url, index) => {
-          expect(url).to.equal(URL + images[index].src);
-        });
-      });
-
-      it("should have paragraphs", () => {
-        const images = Array.from(doc.querySelectorAll("article > p"));
-        expect(images.length).to.greaterThan(0);
-      });
-    });
+    // Source + each published translation + x-default; nothing else — a draft
+    // or missing language must never leak into the alternates.
+    const allowed = ["zh-TW", "x-default", ...published];
+    assert.equal(hreflangs.length, published.length + 2);
+    allowed.forEach((lang) => assert.ok(hreflangs.includes(lang), `missing hreflang ${lang}`));
+    hreflangs.forEach((lang) => assert.ok(allowed.includes(lang), `unexpected hreflang ${lang}`));
   });
 });

@@ -70,6 +70,21 @@ const purifyCss = async (rawContent, outputPath) => {
       ],*/
       fontFace: true,
       variables: true,
+      // Classes/states toggled by JS (TOC scroll-spy, back-to-top) never appear
+      // in the server-rendered HTML PurgeCSS scans, so keep them explicitly.
+      // NOTE: purgecss@2 only honors `whitelist`/`whitelistPatterns` and
+      // silently ignores v3's `safelist` — don't add one; on a purgecss
+      // upgrade, rename these keys instead.
+      whitelist: [
+        "active",
+        "toc-ready",
+        "toc-h2",
+        "toc-h3",
+      ],
+      // Language-aware typography selectors (`:lang(ja) article` etc.) start
+      // with a functional pseudo-class purgecss@2 can't match against content,
+      // so the whole rule group is dropped without this.
+      whitelistPatterns: [/^:lang/],
     });
 
     const after = csso.minify(purged[0].css).css;
