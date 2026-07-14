@@ -13,3 +13,12 @@
   cache-control: public,max-age=31536000,immutable
 /favicon.svg
   cache-control: public,max-age=3600
+
+/feed/feed.xml
+  Content-Type: application/atom+xml; charset=utf-8
+/:lang/feed/feed.xml
+  Content-Type: application/atom+xml; charset=utf-8
+/feed/feed.json
+  Content-Type: application/feed+json; charset=utf-8
+/:lang/feed/feed.json
+  Content-Type: application/feed+json; charset=utf-8
