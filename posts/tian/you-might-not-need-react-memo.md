@@ -151,9 +151,10 @@ export default PureComponentWithCustomCompareFunction
 
 總得來說，我想要盡量的找到可讀性和效能兼具的模式，並且熟練的運用這些模式
 
-### You might not need `memo` —— 透過組合的方式，將 state 和不想被 re-render 的區塊拆開[5]
+### You might not need `memo` —— 透過組合的方式，將 state 和不想被 re-render 的區塊拆開 [5]
 
 每次 setText 都會讓 `<ExpensiveCalculation />` 重新渲染，為了避免不必要的 re-render，我們可以用一下兩種重組元件的方式來避免。
+
 ```tsx
 const App = () => {
 	const [text, setText] = useState('')
@@ -326,12 +327,14 @@ const App = ({ list }) => {
 
 天下文章一大抄，感謝巨人們的肩膀。
 
-[1] [今晚，我想來點 Web 前端效能優化大補帖！](https://medium.com/starbugs/%E4%BB%8A%E6%99%9A-%E6%88%91%E6%83%B3%E4%BE%86%E9%BB%9E-web-%E5%89%8D%E7%AB%AF%E6%95%88%E8%83%BD%E5%84%AA%E5%8C%96%E5%A4%A7%E8%A3%9C%E5%B8%96-e1a5805c1ca2)
-[2] [React.memo](https://reactjs.org/docs/react-api.html#reactmemo)
-[3] [`shallowEqual.js`](https://github.com/facebook/react/blob/main/packages/shared/shallowEqual.js)
-[4] [When to useMemo and useCallback](https://kentcdodds.com/blog/usememo-and-usecallback)
-[5] [Before You memo()](https://overreacted.io/before-you-memo/)
-[6] [Profiler API](https://reactjs.org/docs/profiler.html#gatsby-focus-wrapper)
-[7] [React.useMemo](https://reactjs.org/docs/hooks-reference.html#usememo)
+### 參考資料
+
+- [1] [今晚，我想來點 Web 前端效能優化大補帖！](https://medium.com/starbugs/%E4%BB%8A%E6%99%9A-%E6%88%91%E6%83%B3%E4%BE%86%E9%BB%9E-web-%E5%89%8D%E7%AB%AF%E6%95%88%E8%83%BD%E5%84%AA%E5%8C%96%E5%A4%A7%E8%A3%9C%E5%B8%96-e1a5805c1ca2)
+- [2] [React.memo](https://reactjs.org/docs/react-api.html#reactmemo)
+- [3] [`shallowEqual.js`](https://github.com/facebook/react/blob/main/packages/shared/shallowEqual.js)
+- [4] [When to useMemo and useCallback](https://kentcdodds.com/blog/usememo-and-usecallback)
+- [5] [Before You memo()](https://overreacted.io/before-you-memo/)
+- [6] [Profiler API](https://reactjs.org/docs/profiler.html#gatsby-focus-wrapper)
+- [7] [React.useMemo](https://reactjs.org/docs/hooks-reference.html#usememo)
 
 你有遇過什麼非使用 memo 不可的情境嗎？歡迎留言與我討論 ～

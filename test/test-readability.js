@@ -14,6 +14,27 @@ const POST_FILENAME = path.resolve(
   "git-flow",
   "index.html"
 );
+const JA_POST_FILENAME = path.resolve(
+  __dirname,
+  "..",
+  "_site",
+  "ja",
+  "posts",
+  "tian",
+  "git-flow",
+  "index.html"
+);
+const EN_POST_FILENAME = path.resolve(
+  __dirname,
+  "..",
+  "_site",
+  "en",
+  "posts",
+  "tian",
+  "git-flow",
+  "index.html"
+);
+
 describe("article readability build output", () => {
   let doc;
   let inlineCss;
@@ -58,5 +79,14 @@ describe("article readability build output", () => {
     // cannot match against page content; a whitelistPatterns entry keeps it.
     assert.match(inlineCss, /:lang\([^)]+\)[^{]*article[^{]*\{[^}]*line-height:1\.85/);
     assert.match(inlineCss, /:lang\(en\)[^{]*article[^{]*\{[^}]*line-height:1\.7/);
+  });
+
+  it("applies the matching document language on translated pages", () => {
+    const ja = new JSDOM(fs.readFileSync(JA_POST_FILENAME, "utf8")).window.document;
+    const en = new JSDOM(fs.readFileSync(EN_POST_FILENAME, "utf8")).window.document;
+    assert.equal(ja.documentElement.lang, "ja");
+    assert.equal(en.documentElement.lang, "en");
+    assert.match(ja.querySelector("style").textContent, /line-height:1\.85/);
+    assert.match(en.querySelector("style").textContent, /line-height:1\.7/);
   });
 });
