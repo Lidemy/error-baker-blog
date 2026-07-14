@@ -81,6 +81,10 @@ const purifyCss = async (rawContent, outputPath) => {
         "toc-h2",
         "toc-h3",
       ],
+      // Language-aware typography selectors (`:lang(ja) article` etc.) start
+      // with a functional pseudo-class purgecss@2 can't match against content,
+      // so the whole rule group is dropped without this.
+      whitelistPatterns: [/^:lang/],
     });
 
     const after = csso.minify(purged[0].css).css;
