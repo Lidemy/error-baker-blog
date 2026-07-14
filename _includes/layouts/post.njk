@@ -83,7 +83,7 @@ templateClass: tmpl-post
   },
   "publisher": {
     "@type": "Organization",
-    "name": {{ metadata.publisher.name | dump | safe }},
+    "name": {{ (t.siteName or metadata.publisher.name) | dump | safe }},
     "url": {{ metadata.url | dump | safe }},
     "logo": {
       "@type": "ImageObject",
@@ -96,7 +96,7 @@ templateClass: tmpl-post
   "mainEntityOfPage": {{ articleUrl | dump | safe }},
   "datePublished": "{{ versionPublishedDate | htmlDateString }}",
   "dateModified": "{{ versionModifiedDate | htmlDateString }}",
-  "description": {{ content | striptags | truncate(140) | dump | safe }}
+  "description": {{ (renderData.description or description or (content | striptags | truncate(140))) | dump | safe }}
 }
 </script>
 
