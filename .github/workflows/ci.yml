@@ -29,3 +29,6 @@ jobs:
         run: npm run build
         env:
           ELEVENTY_ENV: production
+          # discussions.js degrades to no comment stats when the GitHub API
+          # rate-limits; authenticate so leaderboard data stays deterministic.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -102,6 +102,9 @@
     {% if googleanalytics %}
       <script async defer src="{{ "/js/cached.js" | addHash }}"></script>
     {% endif %}
+    {% if templateClass == 'tmpl-about' or (templateClass != 'tmpl-post' and '/posts/' in page.url) %}
+      <link rel="stylesheet" href="{{ '/css/gamification.css' | addHash }}">
+    {% endif %}
     <!-- Notably iOS UAs also contain Mac OS X -->
     <script csp-hash>if (/Mac OS X/.test(navigator.userAgent))document.documentElement.classList.add('apple')
     </script>

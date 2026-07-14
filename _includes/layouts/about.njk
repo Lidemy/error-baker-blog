@@ -4,19 +4,45 @@ templateClass: tmpl-about
 ---
 {% extends "layouts/base.njk" %}
 
-{% set postAuthor = metadata.authors[author] %}
+{% set pageLang = lang or 'zh-TW' %}
+{% set t = i18n[pageLang] or i18n['zh-TW'] %}
 
 {% block article %}
 
-{{ content | safe }}
+<h2>{{ t.aboutOriginHeading }}</h2>
+{{ t.aboutOriginBody | safe }}
 
-{% for key, author in metadata.authors %}
-  <div class="flex items-center">
-    <img class="avatar avatar-large" src="{{ author.avatarUrl }}">
-    <h4 style="margin-left: 12px;"><a href="/posts/{{ key }}">{{ author.name }}</a></h4>
-  </div>
-  
-  <p>{{ author.intro | safe }}</p>
-{% endfor %}
+<h2>{{ t.authorsHeading }}</h2>
+{#- Leaderboard ranked by post count, ties broken by most recent activity
+    (collections.authorsByPostCount, enriched in _11ty/authorStats.js). Author
+    links prefer an available page in pageLang, then fall back to the canonical
+    zh-TW author page. -#}
+{%- set tier = t.gx.tier %}
+<ul class="author-list gx-leaderboard">
+{%- for a in collections.authorsByPostCount %}
+  {%- set author = metadata.authors[a.key] %}
+  {%- set bio = author['intro_' + pageLang] or author.intro %}
+  {%- set authorUrl = collections.authorLangPages | authorUrlForLang(pageLang, a.key) %}
+  <li class="author-row gx-row gx-rank-{{ a.rank }}">
+    <span class="gx-rank" aria-label="{{ t.gx.rank }} {{ a.rank }}">{% if a.medal %}{{ a.medal }}{% else %}{{ a.rank }}{% endif %}</span>
+    <a class="author-row__avatar" href="{{ authorUrl }}">
+      <img class="avatar avatar-large" src="{{ author.avatarUrl }}" alt="" loading="lazy" />
+    </a>
+    <div class="author-row__body">
+      <h3 class="author-row__name">
+        <a href="{{ authorUrl }}">{{ author.name }}</a>
+        <span class="gx-level gx-tier-{{ a.tier }}" title="{{ tier[a.tier] }}">Lv.{{ a.level }}</span>
+        <span class="author-row__count">{{ a.count }} {{ t.postsUnit or '篇' }}</span>
+        {%- if a.comments %}<span class="gx-comments" title="{{ a.comments }} {{ t.gx.commentsUnit }}">💬 {{ a.comments }}</span>{% endif %}
+        {%- if a.mostDiscussed %}<span class="gx-badge gx-badge--discussed">💬 {{ t.gx.mostDiscussed }}</span>{% endif %}
+      </h3>
+      <div class="gx-bar" role="img" aria-label="{{ a.count }} {{ t.postsUnit or '篇' }}">
+        <span class="gx-bar__fill gx-tier-{{ a.tier }}" style="width: {{ a.pct }}%"></span>
+      </div>
+      <p class="author-row__intro">{{ bio | safe }}</p>
+    </div>
+  </li>
+{%- endfor %}
+</ul>
 
 {% endblock %}
