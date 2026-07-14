@@ -6,6 +6,7 @@ const path = require("path");
 const { JSDOM } = require("jsdom");
 
 const PROJECT_ROOT = path.resolve(__dirname, "..");
+const activeLanguages = require("../_11ty/activeLanguages.js");
 
 function inlinedCss(relativeOutputPath) {
   const filename = path.join(PROJECT_ROOT, "_site", relativeOutputPath);
@@ -17,11 +18,17 @@ function inlinedCss(relativeOutputPath) {
 }
 
 describe("purged CSS output", () => {
-  it("drops inactive language UI while keeping the current switcher", () => {
+  it("keeps language UI styles only when other languages are live", () => {
     const css = inlinedCss("index.html");
     assert.doesNotMatch(css, /\.lang-nav/);
     assert.match(css, /\.lang-switch/);
-    assert.doesNotMatch(css, /\.lang-suggest/);
+    // The reading-language banner only renders (and its styles only survive
+    // PurgeCSS) once at least one non-default language has published posts.
+    if (activeLanguages(false).length > 1) {
+      assert.match(css, /\.lang-suggest/);
+    } else {
+      assert.doesNotMatch(css, /\.lang-suggest/);
+    }
   });
 
   it("keeps classes added dynamically by the table-of-contents script", () => {

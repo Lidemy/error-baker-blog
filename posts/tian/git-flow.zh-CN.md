@@ -8,7 +8,10 @@ lang: zh-CN
 sourceLang: zh-TW
 translationKey: tian/git-flow
 permalink: /zh-CN/posts/tian/git-flow/
-draft: true
+draft: false
+reviewedBy: Rhett
+reviewedAt: 2026-07-13
+publishedAt: 2026-07-13
 sourceHash: 9e08e16af3be44a8813fcb624dbe3acaac0aa3ec7075ff69e73286ae61c32d12
 ---
 

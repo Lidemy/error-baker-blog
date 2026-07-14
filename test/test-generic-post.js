@@ -116,8 +116,34 @@ describe("representative post build output", () => {
     assert.ok(sources.some((source) => source.type === "image/jpeg"));
   });
 
-  it("does not advertise draft translations", () => {
-    assert.equal(doc.querySelectorAll("link[rel='alternate'][hreflang]").length, 0);
-    assert.equal(doc.querySelector("#lang-suggest"), null);
+  it("advertises published translations and never drafts", () => {
+    // Derive this post's published translation languages from the source of
+    // truth (sibling .<lang>.md frontmatter), so the assertion follows the
+    // actual publication state instead of hardcoding it.
+    const langs = require("../_data/langs.json");
+    const published = langs.slice(1).filter((lang) => {
+      const file = path.resolve(__dirname, "..", `posts/tian/git-flow.${lang}.md`);
+      if (!fs.existsSync(file)) return false;
+      const fm = fs
+        .readFileSync(file, "utf8")
+        .match(/^---\r?\n([\s\S]*?)\r?\n---/);
+      return fm && !/^draft:\s*(?:true|["']true["'])\s*$/m.test(fm[1]);
+    });
+
+    const hreflangs = [
+      ...doc.querySelectorAll("link[rel='alternate'][hreflang]"),
+    ].map((link) => link.getAttribute("hreflang"));
+
+    if (published.length === 0) {
+      assert.equal(hreflangs.length, 0);
+      assert.equal(doc.querySelector("#lang-suggest"), null);
+      return;
+    }
+    // Source + each published translation + x-default; nothing else — a draft
+    // or missing language must never leak into the alternates.
+    const allowed = ["zh-TW", "x-default", ...published];
+    assert.equal(hreflangs.length, published.length + 2);
+    allowed.forEach((lang) => assert.ok(hreflangs.includes(lang), `missing hreflang ${lang}`));
+    hreflangs.forEach((lang) => assert.ok(allowed.includes(lang), `unexpected hreflang ${lang}`));
   });
 });
