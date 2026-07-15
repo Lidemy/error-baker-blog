@@ -20,6 +20,17 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Apply the colour theme to <html> BEFORE the inlined CSS paints, so
+         navigating between pages never flashes light-then-dark. -->
+    <script csp-hash>
+      (function () {
+        try {
+          var t = localStorage.getItem("theme") ||
+            (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+          if (t === "dark") document.documentElement.classList.add("dark");
+        } catch (e) {}
+      })();
+    </script>
     <meta name="robots" content="index, follow">
     <meta name="google-site-verification" content="zbyBgfDuOtaLUTLY7nVzYLdVhNdDIxUCv2xA0R3J1W8" />
     {% if isdevelopment %}
@@ -96,7 +107,8 @@
     </script>
     <!-- css is inserted by optimize-html custom plugin -->
   </head>
-  <body>
+  <body class="{{ templateClass }}">
+    <a class="skip-link" href="#main">{{ t.skipToContent or '跳到主要內容' }}</a>
     <script>
       // light/dark theme switch
       const bodyEl = document.querySelector("body");
@@ -124,12 +136,13 @@
         }
 
         function setTheme(theme) {
+          const toggleImg = toggleEl.querySelector("img");
           if (theme === DARK) {
             setUtterancesTheme(DARK);
-            toggleEl.src = toggleEl.src.replace(DARK, LIGHT);
+            toggleImg.src = toggleImg.src.replace(DARK, LIGHT);
           } else {
             setUtterancesTheme(LIGHT);
-            toggleEl.src = toggleEl.src.replace(LIGHT, DARK);
+            toggleImg.src = toggleImg.src.replace(LIGHT, DARK);
           }
         }
       });
@@ -137,13 +150,15 @@
     <header>
       <nav>
         <div id="nav">
-          <h1>
+          <p class="site-title">
             <a href="{{ homeUrl | url }}" title="Homepage">{{ t.siteName or metadata.title }}</a>
             <label for="menu__control" class="menu__btn">
               <span>{{ t.menu }}</span>
             </label>
-          </h1>
-          <img id="color-scheme-toggle" src="{{ '/img/dark.svg' | url }}" alt="switch dark mode" />
+          </p>
+          <button id="color-scheme-toggle" type="button" aria-label="{{ t.toggleTheme or 'switch dark mode' }}">
+            <img src="{{ '/img/dark.svg' | url }}" alt="" />
+          </button>
           {#- Read more about `eleventy-navigation` at https://www.11ty.dev/docs/plugins/navigation/ #}
           <input id="menu__control" type="checkbox" />
           <div class="nav__links">
@@ -192,12 +207,13 @@
       {% endif %}
     </header>
 
-    <main>
+    <main id="main">
       <article>
         {% block article %}
           {{ content | safe }}
         {% endblock %}
       </article>
+      {% block aside %}{% endblock %}
     </main>
 
     {#- Locale-suggestion banner: only render when this page has another visible
