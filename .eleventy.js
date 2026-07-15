@@ -56,6 +56,7 @@ const localImages = require("./third_party/eleventy-plugin-local-images/.elevent
 const CleanCSS = require("clean-css");
 const activeLanguages = require("./_11ty/activeLanguages");
 const isDraftFrontmatter = require("./_11ty/draftFlag");
+const { buildAiCrawlRules } = require("./_11ty/aiCrawlPolicy");
 const {
   effectivePublishedDate,
   effectiveModifiedDate,
@@ -386,6 +387,16 @@ module.exports = function (eleventyConfig) {
       }
       return true;
     });
+  });
+
+  // AI-crawler opt-in policy for robots.txt, per author with a per-article
+  // override — see _11ty/aiCrawlPolicy.js for the full contract.
+  eleventyConfig.addCollection("aiCrawlRules", function (collectionApi) {
+    const authors = require("./_data/metadata.json").authors;
+    const posts = collectionApi
+      .getFilteredByTag("posts")
+      .filter((item) => isVisible(item));
+    return buildAiCrawlRules(posts, authors, SITE_LANGS, DEFAULT_LANG);
   });
 
   // zh-TW-only posts — the source language listing (homepage, archive, feeds).
