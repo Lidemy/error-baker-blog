@@ -25,18 +25,29 @@ const sizeOf = promisify(require("image-size"));
 const blurryPlaceholder = require("./blurry-placeholder");
 const srcset = require("./srcset");
 const path = require("path");
+const fs = require("fs");
 const { gif2mp4 } = require("./video-gif");
+const AVATAR_WIDTH = 320;
+const SMALL_AVATAR_WIDTH = 96;
+const AVATAR_CLASSES = ["avatar", "avatar-small", "avatar-large"];
 
 /**
- * Sets `width` and `height` on each image, adds blurry placeholder
- * and generates a srcset if none present.
+ * Sets `width` and `height` on each image and generates responsive sources.
+ * Content images receive a blurry placeholder and the full width set; small
+ * avatars use a compact, fixed-width path to avoid oversized repeated markup.
  * Note, that the static `sizes` string would need to change for a different
  * blog layout.
  */
 
 const processImage = async (img, outputPath) => {
   let src = img.getAttribute("src");
-  if (/^(https?\:\/\/|\/\/)/i.test(src)) {
+  if (!src) {
+    throw new Error(`[img-dim] Image in ${outputPath} is missing a src attribute`);
+  }
+  // Only local file URLs can be inspected at build time. In particular, do not
+  // mistake a data URI for a path under `_site/` (which previously caused an
+  // ENAMETOOLONG warning while still allowing the build to pass).
+  if (/^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(src)) {
     return;
   }
   if (/^\.+\//.test(src)) {
@@ -50,10 +61,11 @@ const processImage = async (img, outputPath) => {
   }
   let dimensions;
   try {
-    dimensions = await sizeOf("_site/" + src);
+    dimensions = await sizeOf(localFilePath(src));
   } catch (e) {
-    console.warn(e.message, src);
-    return;
+    throw new Error(
+      `[img-dim] Cannot read local image "${src}" referenced by ${outputPath}: ${e.message}`
+    );
   }
   if (!img.getAttribute("width")) {
     img.setAttribute("width", dimensions.width);
@@ -84,27 +96,38 @@ const processImage = async (img, outputPath) => {
     return;
   }
   if (img.tagName == "IMG") {
+    const isAvatar = AVATAR_CLASSES.some((className) =>
+      img.classList.contains(className)
+    );
+    const isSmallAvatar = img.classList.contains("avatar-small");
     img.setAttribute("decoding", "async");
     img.setAttribute("loading", "lazy");
-    img.setAttribute(
-      "style",
-      `background-size:cover;` +
-        `background-image:url("${await blurryPlaceholder(src)}")`
-    );
+    if (!isAvatar) {
+      img.setAttribute(
+        "style",
+        `background-size:cover;` +
+          `background-image:url("${await blurryPlaceholder(localUrlPath(src))}")`
+      );
+    }
     const doc = img.ownerDocument;
     const picture = doc.createElement("picture");
-    const avif = doc.createElement("source");
     const webp = doc.createElement("source");
-    const jpeg = doc.createElement("source");
-    // await setSrcset(avif, src, "avif");
-    // avif.setAttribute("type", "image/avif");
-    await setSrcset(webp, src, "webp");
     webp.setAttribute("type", "image/webp");
-    const fallback = await setSrcset(jpeg, src, "jpeg");
-    jpeg.setAttribute("type", "image/jpeg");
-    // picture.appendChild(avif);
+    let fallback;
+    let jpeg;
+    if (isAvatar) {
+      const avatarWidth = isSmallAvatar ? SMALL_AVATAR_WIDTH : AVATAR_WIDTH;
+      const avatarSizes = isSmallAvatar ? "22px" : "64px";
+      await setSrcset(webp, src, "webp", [avatarWidth], avatarSizes);
+      fallback = (await srcset(src, "jpeg", [avatarWidth])).fallback;
+    } else {
+      await setSrcset(webp, src, "webp");
+      jpeg = doc.createElement("source");
+      fallback = await setSrcset(jpeg, src, "jpeg");
+      jpeg.setAttribute("type", "image/jpeg");
+    }
     picture.appendChild(webp);
-    picture.appendChild(jpeg);
+    if (jpeg) picture.appendChild(jpeg);
     img.parentElement.replaceChild(picture, img);
     picture.appendChild(img);
     img.setAttribute("src", fallback);
@@ -114,14 +137,69 @@ const processImage = async (img, outputPath) => {
   }
 };
 
-async function setSrcset(img, src, format) {
-  const setInfo = await srcset(src, format);
+/** Return a URL path without a query string or fragment. */
+function localUrlPath(src) {
+  return src.split(/[?#]/, 1)[0];
+}
+
+/**
+ * Map a local URL path to a readable file. Prefer the source tree: the
+ * `_site/` copy is produced by passthrough copy, which runs concurrently with
+ * HTML transforms, so reading it can hit a half-written file.
+ */
+function localFilePath(src) {
+  let decoded;
+  try {
+    decoded = decodeURIComponent(localUrlPath(src));
+  } catch (e) {
+    throw new Error(`[img-dim] Invalid URL encoding in local image "${src}"`);
+  }
+  const sourcePath = "." + (decoded.startsWith("/") ? decoded : "/" + decoded);
+  if (fs.existsSync(sourcePath)) {
+    assertExactCase(sourcePath, src);
+    return sourcePath;
+  }
+  return "_site/" + decoded;
+}
+
+const dirEntriesCache = new Map();
+
+/**
+ * Fail on filename-case mismatches that a case-insensitive filesystem
+ * (macOS/Windows) would silently tolerate but case-sensitive Linux CI
+ * rejects with ENOENT.
+ */
+function assertExactCase(filePath, src) {
+  let dir = ".";
+  for (const segment of filePath.split("/").filter((s) => s && s !== ".")) {
+    let entries = dirEntriesCache.get(dir);
+    if (!entries) {
+      entries = fs.readdirSync(dir);
+      dirEntriesCache.set(dir, entries);
+    }
+    if (!entries.includes(segment)) {
+      const actual = entries.find(
+        (e) => e.toLowerCase() === segment.toLowerCase()
+      );
+      throw new Error(
+        `[img-dim] Filename case mismatch for local image "${src}": ` +
+          `referenced as "${segment}" but the file on disk is "${actual}". ` +
+          `This passes on case-insensitive filesystems but fails on Linux CI.`
+      );
+    }
+    dir += "/" + segment;
+  }
+}
+
+async function setSrcset(img, src, format, widths, sizes) {
+  const setInfo = await srcset(src, format, widths);
   img.setAttribute("srcset", setInfo.srcset);
   img.setAttribute(
     "sizes",
-    img.getAttribute("align")
-      ? "(max-width: 608px) 50vw, 187px"
-      : "(max-width: 608px) 100vw, 608px"
+    sizes ||
+      (img.getAttribute("align")
+        ? "(max-width: 608px) 50vw, 187px"
+        : "(max-width: 608px) 100vw, 608px")
   );
   return setInfo.fallback;
 }

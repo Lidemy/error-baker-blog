@@ -21,11 +21,7 @@
 
 const minify = require("html-minifier").minify;
 const AmpOptimizer = require("@ampproject/toolbox-optimizer");
-const ampOptimizer = AmpOptimizer.create({
-  blurredPlaceholders: true,
-  imageBasePath: "./_site/",
-  //verbose: true,
-});
+let ampOptimizer;
 const PurgeCSS = require("purgecss").PurgeCSS;
 const csso = require("csso");
 
@@ -105,6 +101,14 @@ const minifyHtml = (rawContent, outputPath) => {
 const optimizeAmp = async (rawContent, outputPath) => {
   let content = rawContent;
   if (outputPath && outputPath.endsWith(".html") && isAmp(content)) {
+    // Creating the optimizer eagerly emits dependency warnings even when this
+    // site has no AMP documents. Load it only for a real AMP output.
+    ampOptimizer =
+      ampOptimizer ||
+      AmpOptimizer.create({
+        blurredPlaceholders: true,
+        imageBasePath: "./_site/",
+      });
     content = await ampOptimizer.transformHtml(content);
   }
   return content;
