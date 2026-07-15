@@ -20,6 +20,10 @@
  */
 
 module.exports = function () {
-  // YOLO.
+  // Explicit env wins: a `_site` built with `eleventy --serve` and deployed
+  // by hand would otherwise leak drafts, since argv sniffing is all we'd have.
+  if (process.env.ELEVENTY_ENV) {
+    return process.env.ELEVENTY_ENV !== "production";
+  }
   return /serve/.test(process.argv.join());
 };
