@@ -63,6 +63,12 @@ const {
   postPublishedDate,
   sortByPublishedDate,
 } = require("./_11ty/publication-dates");
+const {
+  feedPublishedDate,
+  feedModifiedDate,
+  sortFeedPosts,
+  feedUpdatedDate,
+} = require("./_11ty/feed-data");
 const GA_ID = require("./_data/metadata.json").googleAnalyticsId;
 
 module.exports = function (eleventyConfig) {
@@ -169,6 +175,10 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addFilter("effectiveModifiedDate", effectiveModifiedDate);
   eleventyConfig.addFilter("postPublishedDate", postPublishedDate);
   eleventyConfig.addFilter("sortByPublishedDate", sortByPublishedDate);
+  eleventyConfig.addFilter("feedPublishedDate", feedPublishedDate);
+  eleventyConfig.addFilter("feedModifiedDate", feedModifiedDate);
+  eleventyConfig.addFilter("sortFeedPosts", sortFeedPosts);
+  eleventyConfig.addFilter("feedUpdatedDate", feedUpdatedDate);
 
   eleventyConfig.addFilter("sitemapDateTimeString", (dateObj) => {
     const dt = DateTime.fromJSDate(dateObj, { zone: "utc" });

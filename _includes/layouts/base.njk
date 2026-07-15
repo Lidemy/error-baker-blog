@@ -79,7 +79,10 @@
          https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
           -->
     <meta name="referrer" content="always">
-    <link rel="alternate" href="{{ metadata.feed.path | url }}" type="application/atom+xml" title="{{ metadata.title }}">
+    {%- set feedPath = metadata.feed.path if pageLang == 'zh-TW' else '/' + pageLang + metadata.feed.path %}
+    {%- set jsonFeedPath = metadata.jsonfeed.path if pageLang == 'zh-TW' else '/' + pageLang + metadata.jsonfeed.path %}
+    <link rel="alternate" href="{{ feedPath | url }}" type="application/atom+xml" title="{{ t.siteName or metadata.title }} (Atom)">
+    <link rel="alternate" href="{{ jsonFeedPath | url }}" type="application/feed+json" title="{{ t.siteName or metadata.title }} (JSON Feed)">
 
     <link rel="preconnect" href="/" crossorigin>
     <script async defer src="{{ "/js/min.js" | addHash }}"
@@ -212,7 +215,9 @@
 
     <footer>
       <div class="copyright">&copy; 2021&ndash;{{ year }} {{ t.copyright }}</div>
-      <a href="{{ metadata.feed.id + metadata.feed.path | url }}" id="rss"><img  src="/img/rss-feed.svg" alt="rss feed" /></a>
+      {#- Reuse the localized feedPath computed in <head> so the footer icon
+          points at the current language's feed, not always the zh-TW one. #}
+      <a href="{{ feedPath | url }}" id="rss"><img  src="/img/rss-feed.svg" alt="rss feed" /></a>
     </footer>
 
     <!-- Current page: {{ page.url | url }} -->

@@ -7,14 +7,13 @@
   "googleAnalyticsId": "",
   "sendWebVitals": false,
   "feed": {
-    "subtitle": "ErrorBaker 技術共筆部落格",
     "filename": "feed.xml",
     "path": "/feed/feed.xml",
-    "id": "https://blog.errorbaker.tw"
+    "id": "https://blog.errorbaker.tw",
+    "limit": 20
   },
   "jsonfeed": {
-    "path": "/feed/feed.json",
-    "url": "https://blog.errorbaker.tw/feed/feed.json"
+    "path": "/feed/feed.json"
   },
   "author": {
     "name": "ErrorBaker 技術共筆部落格",

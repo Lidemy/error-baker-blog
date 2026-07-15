@@ -1,0 +1,19 @@
+---
+# Per-language JSON Feeds; zh-TW remains at /feed/feed.json.
+pagination:
+  data: collections.siteLangsWithPublishedPosts
+  size: 1
+  alias: flang
+  filter:
+    - zh-TW
+permalink: "/{{ flang }}/feed/feed.json"
+eleventyExcludeFromCollections: true
+---
+{%- set feedPosts = collections.posts | filterByLang(flang) %}
+{%- set feedPosts = feedPosts | sortFeedPosts(metadata.feed.limit) %}
+{%- set feedLang = flang %}
+{%- set feedTitle = i18n[feedLang].siteName %}
+{%- set feedDescription = i18n[feedLang].intro %}
+{%- set feedSelfUrl = ('/' + feedLang + metadata.jsonfeed.path) | url | absoluteUrl(metadata.url) %}
+{%- set feedHomeUrl = ('/' + feedLang + '/') | url | absoluteUrl(metadata.url) %}
+{%- include "feeds/json.njk" %}

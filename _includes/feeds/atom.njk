@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="{{ feedLang | escape }}">
+	<title type="text">{{ feedTitle | escape }}</title>
+	<subtitle type="text">{{ feedDescription | escape }}</subtitle>
+	<link href="{{ feedSelfUrl }}" rel="self" type="application/atom+xml"/>
+	<link href="{{ feedHomeUrl }}" rel="alternate" type="text/html" hreflang="{{ feedLang | escape }}"/>
+	<updated>{{ feedPosts | feedUpdatedDate | dateToRfc3339 }}</updated>
+	<id>{{ feedId }}</id>
+	<author>
+		<name>{{ metadata.publisher.name | escape }}</name>
+		<uri>{{ metadata.url }}</uri>
+	</author>
+	{%- for post in feedPosts %}
+	{% set absolutePostUrl = post.url | url | absoluteUrl(metadata.url) %}
+	{% set postAuthor = metadata.authors[post.data.author] %}
+	{% set postAuthorUrl = collections.authorLangPages | authorUrlForLang(feedLang, post.data.author) | url | absoluteUrl(metadata.url) %}
+	<entry>
+		<title type="text">{{ post.data.title | escape }}</title>
+		<link href="{{ absolutePostUrl }}" rel="alternate" type="text/html"/>
+		<id>{{ absolutePostUrl }}</id>
+		<published>{{ post | feedPublishedDate | dateToRfc3339 }}</published>
+		<updated>{{ post | feedModifiedDate | dateToRfc3339 }}</updated>
+		<author>
+			<name>{{ postAuthor.name | escape }}</name>
+			<uri>{{ postAuthorUrl }}</uri>
+		</author>
+		<content type="html">
+		  {{ post.templateContent | htmlToAbsoluteUrls(absolutePostUrl) }}
+			{% if feedAnalytics and googleanalytics %}
+				{% set titleUrlEncoded = post.data.title | encodeURIComponent %}
+				{% set urlUrlEncoded = post.url | encodeURIComponent %}
+				{{ '<img src="' + metadata.url + '/.netlify/functions/ga?v=1&_v=j83&t=pageview&dr=https%3A%2F%2Frss-feed-reader.com&_s=1&dh=' + metadata.domain + '&dp=' + urlUrlEncoded + '&ul=en-us&de=UTF-8&dt=' + titleUrlEncoded + '&tid=' + googleanalytics + '" width="1" height="1" style="display:none" alt="">' }}
+			{% endif %}
+		</content>
+	</entry>
+	{%- endfor %}
+</feed>

@@ -1,0 +1,21 @@
+---
+# Per-language Atom feeds: /en/feed/feed.xml, /ja/feed/feed.xml, /zh-CN/feed/feed.xml
+# (the zh-TW feed is feed/feed.njk at /feed/feed.xml).
+pagination:
+  data: collections.siteLangsWithPublishedPosts
+  size: 1
+  alias: flang
+  filter:
+    - zh-TW
+permalink: "/{{ flang }}/feed/feed.xml"
+eleventyExcludeFromCollections: true
+---
+{%- set feedPosts = collections.posts | filterByLang(flang) %}
+{%- set feedPosts = feedPosts | sortFeedPosts(metadata.feed.limit) %}
+{%- set feedLang = flang %}
+{%- set feedTitle = i18n[feedLang].siteName %}
+{%- set feedDescription = i18n[feedLang].intro %}
+{%- set feedSelfUrl = ('/' + feedLang + metadata.feed.path) | url | absoluteUrl(metadata.url) %}
+{%- set feedHomeUrl = ('/' + feedLang + '/') | url | absoluteUrl(metadata.url) %}
+{%- set feedId = feedHomeUrl %}
+{%- include "feeds/atom.njk" %}
