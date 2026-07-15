@@ -2506,6 +2506,63 @@ article h3 {
   text-wrap: balance;
 }
 
+/* About page — author list, ranked by post count (avatar · name · count · bio). */
+.author-list {
+  list-style: none;
+  margin: 2.5rem 0 0;
+  padding: 0;
+}
+.author-row {
+  display: flex;
+  gap: 1.2rem;
+  align-items: flex-start;
+  padding: 1.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.author-row:last-child {
+  border-bottom: 0;
+}
+.author-row__avatar .avatar-large {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0;
+  display: block;
+}
+.author-row__body {
+  flex: 1;
+}
+.author-row__name {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  margin: 0 0 0.4rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  border: 0;
+}
+.author-row__name a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.author-row__name a:hover {
+  color: var(--accent);
+}
+.author-row__count {
+  font-family: Consolas, Monaco, "Andale Mono", monospace;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--ink-faint);
+}
+.author-row__intro {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
 /* Home → archive call-to-action (replaces page-by-page pagination). */
 .view-all {
   text-align: center;

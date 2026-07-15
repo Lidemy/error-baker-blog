@@ -54,9 +54,11 @@ const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
 const localImages = require("./third_party/eleventy-plugin-local-images/.eleventy.js");
 const CleanCSS = require("clean-css");
+const { buildAuthorStats } = require("./_11ty/authorStats");
 const activeLanguages = require("./_11ty/activeLanguages");
 const isDraftFrontmatter = require("./_11ty/draftFlag");
 const { buildAiCrawlRules } = require("./_11ty/aiCrawlPolicy");
+const { commentCountsByTitle } = require("./_11ty/discussions");
 const {
   effectivePublishedDate,
   effectiveModifiedDate,
@@ -430,6 +432,28 @@ module.exports = function (eleventyConfig) {
   // disagree about which locales are live.
   eleventyConfig.addCollection("siteLangsWithPublishedPosts", function () {
     return activeLanguages(IS_DEVELOPMENT);
+  });
+
+  // Authors ranked by number of (zh-TW source) posts — for the /about/
+  // leaderboard and per-author profile. Each record is enriched by
+  // _11ty/authorStats.js with level/tier, achievements and a contribution
+  // calendar. Ties on post count are broken by most recent activity (not name).
+  eleventyConfig.addCollection("authorsByPostCount", async function (
+    collectionApi
+  ) {
+    const authors = require("./_data/metadata.json").authors;
+    const posts = collectionApi
+      .getFilteredByTag("posts")
+      .filter((item) => postLang(item) === DEFAULT_LANG);
+    // Reader comment counts from utterances; null (fetch failed) degrades to a
+    // post-count-only leaderboard without failing the build.
+    const commentsByTitle = await commentCountsByTitle();
+    return buildAuthorStats(posts, authors, commentsByTitle);
+  });
+
+  // Look up one author's enriched stats record by key (for author pages).
+  eleventyConfig.addFilter("authorStat", function (stats, key) {
+    return (stats || []).find((s) => s.key === key) || null;
   });
 
   // (lang, author) pairs that have at least one visible translated post — used
