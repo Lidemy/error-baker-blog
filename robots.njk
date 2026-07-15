@@ -3,5 +3,38 @@ layout: false
 permalink: robots.txt
 ---
 User-agent: *
+Allow: /
 
-Sitemap: https://blog.errorbaker.tw/sitemap.xml
+{%- set aiBots = [
+  "GPTBot",
+  "OAI-SearchBot",
+  "ChatGPT-User",
+  "ClaudeBot",
+  "Claude-Web",
+  "PerplexityBot",
+  "Google-Extended",
+  "Applebot-Extended",
+  "CCBot",
+  "Amazonbot",
+  "meta-externalagent"
+] %}
+{%- set rules = collections.aiCrawlRules %}
+{#- Generative-engine / AI crawlers: each author opts in for their own
+    writing via metadata.json (`aiCrawl: true`); an article's own frontmatter
+    can override its author's default either way. Unset = not welcome. #}
+{%- for bot in aiBots %}
+
+User-agent: {{ bot }}
+Allow: /
+{%- for path in rules.disallowPaths %}
+Disallow: {{ path }}
+{%- endfor %}
+{%- for path in rules.disallowOverridePaths %}
+Disallow: {{ path }}
+{%- endfor %}
+{%- for path in rules.allowOverridePaths %}
+Allow: {{ path }}
+{%- endfor %}
+{%- endfor %}
+
+Sitemap: {{ metadata.url }}/sitemap.xml

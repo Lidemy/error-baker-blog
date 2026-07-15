@@ -4,7 +4,6 @@
   "ogimage": "https://blog.errorbaker.tw/img/ogimage.png",
   "domain": "blog.errorbaker.tw",
   "description": "錯誤烘焙師，從錯誤中學習",
-  "genre": "Insert a schema.org genre",
   "googleAnalyticsId": "",
   "sendWebVitals": false,
   "feed": {
@@ -88,7 +87,8 @@
       "intro_en": "A record of my clumsy but endearing moments",
       "intro_ja": "不器用で愛おしい瞬間の記録",
       "intro_zh-CN": "记录那些我笨拙可爱的时刻",
-      "avatarUrl": "/img/authors/tian.jpg"
+      "avatarUrl": "/img/authors/tian.jpg",
+      "aiCrawl": true
     },
     "YongChen": {
       "name": "YongChen",
@@ -97,6 +97,7 @@
     }
   },
   "publisher": {
-    "name": "ErrorBaker 技術共筆部落格"
+    "name": "ErrorBaker 技術共筆部落格",
+    "logo": "/img/favicon/favicon-512x512.png"
   }
 }
