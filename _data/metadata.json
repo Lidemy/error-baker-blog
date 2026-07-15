@@ -37,27 +37,27 @@
       "intro": "著迷於設計工程之間的有趣事情",
       "avatarUrl": "https://avatars.githubusercontent.com/u/10834433?v=4"
     },
-    "Xiang": {
+    "xiang": {
       "name": "Xiang",
       "intro": "作夢也在寫程式",
       "avatarUrl": "/img/authors/xiang.jpg"
     },
-    "Cian": {
+    "cian": {
       "name": "Cian",
       "intro": "遊走在各種覺得有趣的知識之間。",
       "avatarUrl": "https://avatars.githubusercontent.com/u/34278495?v=4"
     },
-    "Umer": {
+    "umer": {
       "name": "Umer",
       "intro": "This is Umer，烏瑪。",
       "avatarUrl": "/img/authors/umer.png"
     },
-    "Ruofan": {
+    "ruofan": {
       "name": "Ruofan",
       "intro": "喜歡有趣的設計",
       "avatarUrl": "/img/authors/ruofan.png"
     },
-    "Lavi": {
+    "lavi": {
       "name": "lavi",
       "intro": "前端學徒。",
       "avatarUrl": "/img/authors/lavi.jpg"
@@ -85,6 +85,9 @@
     "tian": {
       "name": "Tian",
       "intro": "紀錄那些我笨拙可愛的時刻",
+      "intro_en": "A record of my clumsy but endearing moments",
+      "intro_ja": "不器用で愛おしい瞬間の記録",
+      "intro_zh-CN": "记录那些我笨拙可爱的时刻",
       "avatarUrl": "/img/authors/tian.jpg"
     },
     "YongChen": {

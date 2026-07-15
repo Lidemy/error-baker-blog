@@ -2,7 +2,7 @@
 title: Setup your react native project
 date: 2022-08-13
 tags: [Front-end]
-author: Ruofan
+author: ruofan
 layout: layouts/post.njk
 ---
 

@@ -18,7 +18,6 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 const exposed = {};
 if (location.search) {
   var a = document.createElement("a");
@@ -272,3 +271,76 @@ document.body.addEventListener(
   /* capture */ "true"
 );
 
+// ── Locale-suggestion banner ─────────────────────────────────────────────
+// The banner <aside id="lang-suggest"> is server-rendered (hidden) by
+// base.njk. When this page has a translated version that matches the
+// reader's preferred languages better than the current one, reveal it with
+// a link — never auto-redirect (hreflang/SEO stays intact). The available
+// versions are read from the hreflang alternates already in <head>, so this
+// works on any page and never fires where no translation exists.
+(function () {
+  var banner = document.getElementById("lang-suggest");
+  if (!banner || !navigator.languages) return;
+  try {
+    if (localStorage.getItem("langSuggestDismissed")) return;
+  } catch (e) {
+    return;
+  }
+  var strings;
+  try {
+    strings = JSON.parse(banner.getAttribute("data-strings") || "{}");
+  } catch (e) {
+    return;
+  }
+  var alternates = {};
+  [].forEach.call(
+    document.querySelectorAll('link[rel="alternate"][hreflang]'),
+    function (link) {
+      var code = link.getAttribute("hreflang");
+      if (code && code !== "x-default") {
+        alternates[code.toLowerCase()] = {
+          code: code,
+          href: link.getAttribute("href"),
+        };
+      }
+    }
+  );
+  // Map a BCP-47 preference onto the site's language codes. Chinese needs
+  // script awareness: Traditional regions/scripts → zh-TW, Simplified → zh-CN.
+  function candidatesFor(pref) {
+    var p = pref.toLowerCase();
+    if (p === "zh" || p === "zh-tw" || p === "zh-hant" || p === "zh-hk" || p === "zh-mo") {
+      return ["zh-tw"];
+    }
+    if (p === "zh-cn" || p === "zh-hans" || p === "zh-sg" || p === "zh-my") {
+      return ["zh-cn"];
+    }
+    return [p, p.split("-")[0]];
+  }
+  var pageLang = (document.documentElement.lang || "").toLowerCase();
+  var prefs = navigator.languages;
+  var match = null;
+  for (var i = 0; i < prefs.length && !match; i++) {
+    var cands = candidatesFor(prefs[i]);
+    for (var j = 0; j < cands.length && !match; j++) {
+      if (cands[j] === pageLang) return; // current page already fits best
+      if (alternates[cands[j]]) match = alternates[cands[j]];
+    }
+  }
+  if (!match) return;
+  var s = strings[match.code];
+  if (!s || !s.available || !s.read) return;
+  banner.querySelector(".lang-suggest__text").textContent = s.available;
+  var link = banner.querySelector(".lang-suggest__link");
+  link.textContent = s.read;
+  link.href = match.href;
+  link.setAttribute("hreflang", match.code);
+  link.setAttribute("lang", match.code);
+  banner.querySelector(".lang-suggest__dismiss").addEventListener("click", function () {
+    banner.hidden = true;
+    try {
+      localStorage.setItem("langSuggestDismissed", "1");
+    } catch (e) {}
+  });
+  banner.hidden = false;
+})();

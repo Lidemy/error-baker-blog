@@ -2,7 +2,7 @@
 title: 前端開發需了解的 GA 基礎
 date: 2022-11-05
 tags: [Front-end, article]
-author: Xiang
+author: xiang
 layout: layouts/post.njk
 image:
 ---

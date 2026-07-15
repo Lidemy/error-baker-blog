@@ -2,7 +2,7 @@
 title: HSTORE  vs JSONB in PostgreSQL
 date: 2022-06-29
 tags: [back-end]
-author: Ruofan
+author: ruofan
 layout: layouts/post.njk
 image: /img/posts/ruofan/postgres.png
 ---

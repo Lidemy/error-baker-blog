@@ -2,7 +2,7 @@
 title: 使用 Golang 建立一個 gRPC 架構
 date: 2021-08-28
 tags: [back-end, JavaScript, golang]
-author: Cian
+author: cian
 layout: layouts/post.njk
 ---
 

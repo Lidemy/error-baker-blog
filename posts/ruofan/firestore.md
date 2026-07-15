@@ -2,7 +2,7 @@
 title: 儲存資料到 firestore 前，需要注意哪些事？
 date: 2022-04-16
 tags: [back-end]
-author: Ruofan
+author: ruofan
 layout: layouts/post.njk
 ---
 

@@ -1,0 +1,17 @@
+---
+# Per-language author pages: /<lang>/posts/<author>/ listing that author's
+# articles in <lang>. Only generated for (author, lang) pairs that have posts
+# (collections.authorLangPages), so there are no empty pages.
+layout: layouts/home.njk
+pagination:
+  data: collections.authorLangPages
+  size: 1
+  alias: ap
+permalink: "/{{ ap.lang }}/posts/{{ ap.author }}/"
+eleventyComputed:
+  lang: "{{ ap.lang }}"
+  title: "{{ metadata.authors[ap.author].name }}"
+---
+{% set postslist = collections.posts | filterByLang(ap.lang) | sortByPublishedDate %}
+{% set author = ap.author %}
+{% include "author-postslist.njk" %}

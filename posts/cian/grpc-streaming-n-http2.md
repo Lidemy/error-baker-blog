@@ -2,7 +2,7 @@
 title: gRPC 和 HTTP/2 Streaming
 date: 2021-10-03
 tags: [back-end, golang, gRPC, HTTP]
-author: Cian
+author: cian
 layout: layouts/post.njk
 ---
 
