@@ -7,6 +7,7 @@ const { JSDOM } = require("jsdom");
 const { buildAuthorStats } = require("../_11ty/authorStats.js");
 
 const ABOUT_FILENAME = path.resolve(__dirname, "..", "_site", "about", "index.html");
+const EN_ABOUT_FILENAME = path.resolve(__dirname, "..", "_site", "en", "about", "index.html");
 const AUTHOR_FILENAME = path.resolve(__dirname, "..", "_site", "posts", "tian", "index.html");
 const HOME_FILENAME = path.resolve(__dirname, "..", "_site", "index.html");
 const POST_FILENAME = path.resolve(
@@ -145,6 +146,11 @@ describe("gamification build output", () => {
       rows[0].querySelector(".gx-bar__fill").getAttribute("style"),
       /width:\s*100%/
     );
+  });
+
+  it("renders the localized leaderboard on translated about pages", () => {
+    const enAbout = new JSDOM(fs.readFileSync(EN_ABOUT_FILENAME, "utf8")).window.document;
+    assert.ok(enAbout.querySelector("ul.gx-leaderboard li.gx-row"));
   });
 
   it("renders the quarterly contribution calendar on author pages", () => {
