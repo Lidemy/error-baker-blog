@@ -1,10 +1,12 @@
 .DS_Store
+.agents/
 .claude/
 .github/
 .netlify/
 _site/
 node_modules/
 package-lock.json
+AGENTS.md
 README.md
 page-list.njk
 _11ty/

@@ -1,0 +1,687 @@
+#!/usr/bin/env node
+/**
+ * Minimal, dependency-free tests for the translation guard helpers.
+ * Run: npm run test:translations
+ */
+"use strict";
+
+const assert = require("assert");
+const crypto = require("crypto");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+const { execFileSync, spawnSync } = require("child_process");
+const {
+  extractBody,
+  hashBody,
+  hashSource,
+  isTranslationPath,
+  translationPathFor,
+  sourcePathForTranslation,
+  frontmatterField,
+  frontmatterBoolean,
+  isTranslationManagedSource,
+  translationTargetsForSource,
+  publicationReviewIssue,
+  publicationVersionDateIssues,
+  publicationMetadataIssues,
+  sourceHashIssue,
+  TARGET_LANGS,
+} = require("./check-translations.js");
+
+const GUARD_SCRIPT = path.join(__dirname, "check-translations.js");
+
+// Git hook runners (the pre-commit/pre-push packages) export GIT_DIR and
+// GIT_INDEX_FILE to their children. If the integration tests inherit them,
+// every `git add` in the temporary repo silently rewrites the REAL repository's
+// index instead. Strip all GIT_* variables so the temp repos stay hermetic.
+const ISOLATED_ENV = Object.fromEntries(
+  Object.entries(process.env).filter(([key]) => !key.startsWith("GIT_"))
+);
+
+let passed = 0;
+function test(name, fn) {
+  fn();
+  passed++;
+  console.log("  ✓ " + name);
+}
+
+const SAMPLE = "---\ntitle: Hi\nlang: zh-TW\n---\n\nBody line one.\n";
+
+test("extractBody strips the leading frontmatter block", () => {
+  assert.strictEqual(extractBody(SAMPLE), "\nBody line one.\n");
+});
+
+test("extractBody returns input unchanged when there is no frontmatter", () => {
+  assert.strictEqual(extractBody("no frontmatter here"), "no frontmatter here");
+});
+
+test("hashBody is deterministic and hashes the body only", () => {
+  const expected = crypto
+    .createHash("sha256")
+    .update("\nBody line one.\n", "utf8")
+    .digest("hex");
+  assert.strictEqual(hashBody(SAMPLE), expected);
+  assert.strictEqual(hashBody(SAMPLE), hashBody(SAMPLE));
+});
+
+test("hashBody ignores frontmatter changes, reacts to body changes", () => {
+  const otherFm = "---\ntitle: Different\n---\n\nBody line one.\n";
+  assert.strictEqual(hashBody(otherFm), hashBody(SAMPLE)); // same body
+  const otherBody = "---\ntitle: Hi\n---\n\nBody line TWO.\n";
+  assert.notStrictEqual(hashBody(otherBody), hashBody(SAMPLE));
+});
+
+test("hashSource reacts to title and body changes but ignores copied metadata", () => {
+  const sameContent =
+    "---\ntitle: Hi\ndate: 2026-07-12\ntags: [javascript]\n---\n\nBody line one.\n";
+  const changedTitle = "---\ntitle: Hello\n---\n\nBody line one.\n";
+  const changedBody = "---\ntitle: Hi\n---\n\nBody line TWO.\n";
+
+  assert.strictEqual(hashSource(sameContent), hashSource(SAMPLE));
+  assert.notStrictEqual(hashSource(changedTitle), hashSource(SAMPLE));
+  assert.notStrictEqual(hashSource(changedBody), hashSource(SAMPLE));
+  assert.notStrictEqual(hashSource(SAMPLE), hashBody(SAMPLE));
+});
+
+test("isTranslationPath detects .<lang>.md but not source posts", () => {
+  assert.strictEqual(isTranslationPath("posts/tian/git-flow.en.md"), true);
+  assert.strictEqual(isTranslationPath("posts/tian/git-flow.zh-CN.md"), true);
+  assert.strictEqual(isTranslationPath("posts/tian/git-flow.ja.md"), true);
+  assert.strictEqual(isTranslationPath("posts/tian/git-flow.md"), false);
+});
+
+test("translationPathFor builds the sibling translation path", () => {
+  assert.strictEqual(
+    translationPathFor("posts/tian/git-flow.md", "en"),
+    "posts/tian/git-flow.en.md"
+  );
+});
+
+test("sourcePathForTranslation maps a translation back to its source", () => {
+  assert.strictEqual(
+    sourcePathForTranslation("posts/tian/git-flow.zh-CN.md"),
+    "posts/tian/git-flow.md"
+  );
+  assert.strictEqual(sourcePathForTranslation("posts/tian/git-flow.md"), null);
+});
+
+test("frontmatterField parses a quoted or bare value", () => {
+  const fm = 'sourceHash: abc123\nlang: "en"';
+  assert.strictEqual(frontmatterField(fm, "sourceHash"), "abc123");
+  assert.strictEqual(frontmatterField(fm, "lang"), "en");
+  assert.strictEqual(frontmatterField(fm, "missing"), null);
+});
+
+test("frontmatterBoolean matches the site's boolean and quoted draft contract", () => {
+  assert.strictEqual(frontmatterBoolean("draft: true", "draft"), true);
+  assert.strictEqual(frontmatterBoolean("draft: TRUE # WIP", "draft"), true);
+  assert.strictEqual(frontmatterBoolean("draft: False", "draft"), false);
+  assert.strictEqual(frontmatterBoolean('draft: "true" # WIP', "draft"), true);
+  assert.strictEqual(frontmatterBoolean("draft: 'true'", "draft"), true);
+  assert.strictEqual(frontmatterBoolean('draft: "TRUE"', "draft"), null);
+  assert.strictEqual(frontmatterBoolean("title: Example", "draft"), null);
+});
+
+test("only zh-TW sources with a translationKey opt into translation checks", () => {
+  assert.strictEqual(isTranslationManagedSource(SAMPLE), false);
+  assert.strictEqual(
+    isTranslationManagedSource(
+      "---\nlang: zh-TW\ntranslationKey: tian/example\n---\n\nBody\n"
+    ),
+    true
+  );
+  assert.strictEqual(
+    isTranslationManagedSource("---\nlang: en\ntranslationKey: tian/example\n---\n\nBody\n"),
+    false
+  );
+});
+
+test("translationTargets selects a supported subset and defaults legacy sources to all", () => {
+  assert.deepStrictEqual(translationTargetsForSource(SAMPLE), {
+    langs: TARGET_LANGS,
+    issue: null,
+  });
+  assert.deepStrictEqual(
+    translationTargetsForSource(
+      "---\nlang: zh-TW\ntranslationTargets: [ja, en] # requested locales\n---\n\nBody\n"
+    ),
+    { langs: ["en", "ja"], issue: null }
+  );
+});
+
+test("translationTargets rejects malformed, empty, duplicate, or unsupported lists", () => {
+  const source = (value) =>
+    translationTargetsForSource(
+      `---\nlang: zh-TW\ntranslationTargets: ${value}\n---\n\nBody\n`
+    ).issue;
+
+  assert.match(source("en,ja"), /inline YAML list/);
+  assert.match(source("[]"), /at least one/);
+  assert.match(source("[en, en]"), /duplicate/);
+  assert.match(source("[en, fr]"), /unsupported.*fr/);
+});
+
+test("published translations require an auditable human review", () => {
+  assert.strictEqual(publicationReviewIssue("draft: true"), null);
+  assert.strictEqual(publicationReviewIssue("draft: TRUE # WIP"), null);
+  assert.strictEqual(publicationReviewIssue('draft: "true"'), null);
+  assert.strictEqual(publicationReviewIssue("draft: false"), "not-reviewed");
+  assert.strictEqual(
+    publicationReviewIssue("draft: false\nreviewedBy: May\nreviewedAt: 2026-07-11"),
+    null
+  );
+});
+
+test("publication metadata separates original, review, publish, and update dates", () => {
+  const sourceDate = "2021-10-28";
+  assert.deepStrictEqual(
+    publicationMetadataIssues("draft: true\ndate: 2021-10-28", sourceDate),
+    []
+  );
+  assert.deepStrictEqual(
+    publicationMetadataIssues(
+      "draft: false\ndate: 2021-10-28\nreviewedBy: May\nreviewedAt: 2026-07-11",
+      sourceDate
+    ),
+    ["missing-published-at"]
+  );
+  assert.deepStrictEqual(
+    publicationMetadataIssues(
+      "draft: false\ndate: 2021-10-28\nreviewedBy: May\nreviewedAt: 2026-07-11\npublishedAt: 2026-07-13\nupdatedAt: 2026-07-14",
+      sourceDate
+    ),
+    []
+  );
+});
+
+test("publication metadata rejects invalid or contradictory dates", () => {
+  const sourceDate = "2021-10-28";
+  assert.deepStrictEqual(
+    publicationMetadataIssues("draft: true\ndate: 2021-10-29", sourceDate),
+    ["date-mismatch"]
+  );
+  assert.deepStrictEqual(
+    publicationMetadataIssues(
+      "draft: false\ndate: 2021-10-28\nreviewedBy: May\nreviewedAt: 2026-02-30\npublishedAt: 2021/10/28\nupdatedAt: 2026-07-13T10:00:00Z",
+      sourceDate
+    ),
+    ["invalid-published-at", "invalid-updated-at", "invalid-reviewed-at"]
+  );
+  assert.deepStrictEqual(
+    publicationMetadataIssues(
+      "draft: false\ndate: 2021-10-28\nreviewedBy: May\nreviewedAt: 2026-07-11\npublishedAt: 2021-10-27\nupdatedAt: 2021-10-26",
+      sourceDate
+    ),
+    ["published-before-source", "updated-before-published"]
+  );
+});
+
+test("version dates are validated independently of translation review", () => {
+  assert.deepStrictEqual(
+    publicationVersionDateIssues(
+      "publishedAt: 2026-02-30\nupdatedAt: 2026/07/13",
+      "2021-10-28"
+    ),
+    ["invalid-published-at", "invalid-updated-at"]
+  );
+  assert.deepStrictEqual(
+    publicationVersionDateIssues("updatedAt: 2021-10-27", "2021-10-28"),
+    ["updated-before-published"]
+  );
+});
+
+test("sourceHashIssue requires the title-aware source hash", () => {
+  const source =
+    "---\ntitle: Original\nlang: zh-TW\ntranslationKey: tian/example\n---\n\nBody\n";
+
+  assert.strictEqual(sourceHashIssue(hashSource(source), source), null);
+  assert.strictEqual(sourceHashIssue(hashBody(source), source), "stale");
+  assert.strictEqual(sourceHashIssue(null, source), "no-hash");
+});
+
+function git(repo, args) {
+  return execFileSync("git", args, {
+    cwd: repo,
+    env: ISOLATED_ENV,
+    encoding: "utf8",
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+}
+
+function write(repo, relativePath, contents) {
+  const absolutePath = path.join(repo, relativePath);
+  fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
+  fs.writeFileSync(absolutePath, contents, "utf8");
+}
+
+function sourcePost(
+  title,
+  body = "Source body.\n",
+  targets = TARGET_LANGS,
+  draft = false
+) {
+  return (
+    "---\n" +
+    `title: ${title}\n` +
+    "date: 2021-10-28\n" +
+    "lang: zh-TW\n" +
+    "translationKey: tester/example\n" +
+    `translationTargets: [${targets.join(", ")}]\n` +
+    (draft ? `draft: ${draft === true ? "true" : draft}\n` : "") +
+    "---\n\n" +
+    body
+  );
+}
+
+function translationPost(
+  lang,
+  sourceHash,
+  body = "Translated body.\n",
+  draft = true,
+  metadata = {}
+) {
+  return (
+    "---\n" +
+    `title: Translation ${lang}\n` +
+    "date: 2021-10-28\n" +
+    `lang: ${lang}\n` +
+    "sourceLang: zh-TW\n" +
+    "translationKey: tester/example\n" +
+    (draft
+      ? `draft: ${draft === true ? "true" : draft}\n`
+      : `reviewedBy: ${metadata.reviewedBy || "Translation Reviewer"}\n` +
+        `reviewedAt: ${metadata.reviewedAt || "2026-07-13"}\n` +
+        (metadata.publishedAt ? `publishedAt: ${metadata.publishedAt}\n` : "") +
+        (metadata.updatedAt ? `updatedAt: ${metadata.updatedAt}\n` : "")) +
+    `sourceHash: ${sourceHash}\n` +
+    "---\n\n" +
+    body
+  );
+}
+
+function runGuard(repo, args = []) {
+  return spawnSync(process.execPath, [GUARD_SCRIPT, ...args], {
+    cwd: repo,
+    env: ISOLATED_ENV,
+    encoding: "utf8",
+  });
+}
+
+function runHash(repo, sourcePath) {
+  return spawnSync(process.execPath, [GUARD_SCRIPT, "--hash", sourcePath], {
+    cwd: repo,
+    env: ISOLATED_ENV,
+    encoding: "utf8",
+  });
+}
+
+function withTranslationRepo(fn, targetLangs = TARGET_LANGS) {
+  const repo = fs.mkdtempSync(path.join(os.tmpdir(), "translation-guard-"));
+  const sourcePath = "posts/tester/example.md";
+  const initialSource = sourcePost("Original title", "Source body.\n", targetLangs);
+  const sourceHash = hashSource(initialSource);
+  const translations = {};
+
+  try {
+    git(repo, ["init", "--quiet"]);
+    git(repo, ["config", "user.name", "Translation Guard Test"]);
+    git(repo, ["config", "user.email", "translation-guard@example.test"]);
+    write(repo, sourcePath, initialSource);
+    for (const lang of targetLangs) {
+      const translationPath = `posts/tester/example.${lang}.md`;
+      translations[lang] = translationPath;
+      write(repo, translationPath, translationPost(lang, sourceHash));
+    }
+    git(repo, ["add", "."]);
+    git(repo, ["commit", "--quiet", "-m", "initial translations"]);
+
+    fn({ repo, sourcePath, initialSource, sourceHash, translations });
+  } finally {
+    fs.rmSync(repo, { recursive: true, force: true });
+  }
+}
+
+test("integration: a staged title change makes translations stale", () => {
+  withTranslationRepo(({ repo, sourcePath, translations }) => {
+    const retitledSource = sourcePost("Retitled source");
+    write(repo, sourcePath, retitledSource);
+    git(repo, ["add", sourcePath]);
+
+    const stale = runGuard(repo);
+    assert.strictEqual(stale.status, 1);
+    for (const lang of TARGET_LANGS) {
+      assert.match(stale.stderr, new RegExp(`${lang} \\(stale\\)`));
+    }
+
+    const hashResult = runHash(repo, sourcePath);
+    assert.strictEqual(hashResult.status, 0, hashResult.stderr);
+    assert.strictEqual(hashResult.stdout.trim(), hashSource(retitledSource));
+    for (const lang of TARGET_LANGS) {
+      write(repo, translations[lang], translationPost(lang, hashResult.stdout.trim()));
+      git(repo, ["add", translations[lang]]);
+    }
+
+    const repaired = runGuard(repo);
+    assert.strictEqual(repaired.status, 0, repaired.stderr);
+  });
+});
+
+test("integration: a staged translation deletion is reported from the index", () => {
+  withTranslationRepo(({ repo, translations }) => {
+    const deletedContents = fs.readFileSync(path.join(repo, translations.ja), "utf8");
+    git(repo, ["rm", "--quiet", translations.ja]);
+    // Recreate an unstaged working-tree copy. The staged deletion must still win.
+    write(repo, translations.ja, deletedContents);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /ja \(missing\)/);
+  });
+});
+
+test("integration: deleting a source while translations remain is rejected", () => {
+  withTranslationRepo(({ repo, sourcePath }) => {
+    git(repo, ["rm", "--quiet", sourcePath]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /en \(orphaned-translation\)/);
+    assert.match(result.stderr, /Restore the source/);
+    assert.doesNotMatch(result.stderr, /Run: \/translate-post/);
+  }, ["en"]);
+});
+
+test("integration: deleting a source and all of its translations together is allowed", () => {
+  withTranslationRepo(({ repo, sourcePath, translations }) => {
+    git(repo, ["rm", "--quiet", sourcePath, ...Object.values(translations)]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 0, result.stderr);
+  });
+});
+
+test("integration: --all catches an orphaned translation in a clean checkout", () => {
+  withTranslationRepo(({ repo, sourcePath }) => {
+    git(repo, ["rm", "--quiet", sourcePath]);
+    git(repo, ["commit", "--quiet", "-m", "delete source only"]);
+
+    const result = runGuard(repo, ["--all"]);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /en \(orphaned-translation\)/);
+  }, ["en"]);
+});
+
+test("integration: removing i18n metadata cannot leave translations unmanaged", () => {
+  withTranslationRepo(({ repo, sourcePath }) => {
+    write(repo, sourcePath, "---\ntitle: Original title\n---\n\nSource body.\n");
+    git(repo, ["add", sourcePath]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /en \(unmanaged-source\)/);
+    assert.match(result.stderr, /Restore lang: zh-TW and translationKey/);
+  }, ["en"]);
+});
+
+test("integration: a draft source may keep draft translations", () => {
+  withTranslationRepo(({ repo, sourcePath }) => {
+    write(repo, sourcePath, sourcePost("Original title", "Source body.\n", ["en"], true));
+    git(repo, ["add", sourcePath]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 0, result.stderr);
+  }, ["en"]);
+});
+
+test("integration: a draft source cannot anchor a published translation", () => {
+  withTranslationRepo(({ repo, sourcePath, sourceHash, translations }) => {
+    write(repo, sourcePath, sourcePost("Original title", "Source body.\n", ["en"], true));
+    write(
+      repo,
+      translations.en,
+      translationPost("en", sourceHash, "Translated body.\n", false)
+    );
+    git(repo, ["add", sourcePath, translations.en]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /en \(source-unpublished\)/);
+    assert.match(result.stderr, /Set these translations back to draft: true/);
+    assert.doesNotMatch(result.stderr, /Run: \/translate-post/);
+  }, ["en"]);
+});
+
+test("integration: an unreviewed translation requests metadata, not retranslation", () => {
+  withTranslationRepo(({ repo, sourceHash, translations }) => {
+    write(
+      repo,
+      translations.en,
+      translationPost("en", sourceHash, "Translated body.\n", false, {
+        publishedAt: "2026-07-13",
+      }).replace(
+        "reviewedBy: Translation Reviewer\nreviewedAt: 2026-07-13\n",
+        ""
+      )
+    );
+    git(repo, ["add", translations.en]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /en \(not-reviewed\)/);
+    assert.match(result.stderr, /Add reviewedBy and reviewedAt/);
+    assert.doesNotMatch(result.stderr, /Run: \/translate-post/);
+  }, ["en"]);
+});
+
+test("integration: YAML boolean variants cannot bypass draft-source isolation", () => {
+  withTranslationRepo(({ repo, sourcePath, sourceHash, translations }) => {
+    write(
+      repo,
+      sourcePath,
+      sourcePost("Original title", "Source body.\n", ["en"], "TRUE # WIP")
+    );
+    write(
+      repo,
+      translations.en,
+      translationPost("en", sourceHash, "Translated body.\n", false)
+    );
+    git(repo, ["add", sourcePath, translations.en]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /en \(source-unpublished\)/);
+  }, ["en"]);
+});
+
+test("integration: YAML boolean variants keep source and translation drafts aligned", () => {
+  withTranslationRepo(({ repo, sourcePath, sourceHash, translations }) => {
+    write(
+      repo,
+      sourcePath,
+      sourcePost("Original title", "Source body.\n", ["en"], "TRUE # WIP")
+    );
+    write(
+      repo,
+      translations.en,
+      translationPost("en", sourceHash, "Translated body.\n", "True # WIP")
+    );
+    git(repo, ["add", sourcePath, translations.en]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 0, result.stderr);
+  }, ["en"]);
+});
+
+test("integration: quoted draft source cannot anchor a published translation", () => {
+  withTranslationRepo(({ repo, sourcePath, sourceHash, translations }) => {
+    write(
+      repo,
+      sourcePath,
+      sourcePost("Original title", "Source body.\n", ["en"], '"true"')
+    );
+    write(
+      repo,
+      translations.en,
+      translationPost("en", sourceHash, "Translated body.\n", false)
+    );
+    git(repo, ["add", sourcePath, translations.en]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /en \(source-unpublished\)/);
+  }, ["en"]);
+});
+
+test("integration: quoted source and translation drafts remain aligned", () => {
+  withTranslationRepo(({ repo, sourcePath, sourceHash, translations }) => {
+    write(
+      repo,
+      sourcePath,
+      sourcePost("Original title", "Source body.\n", ["en"], '"true"')
+    );
+    write(
+      repo,
+      translations.en,
+      translationPost("en", sourceHash, "Translated body.\n", "'true'")
+    );
+    git(repo, ["add", sourcePath, translations.en]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 0, result.stderr);
+  }, ["en"]);
+});
+
+test("integration: an explicit target subset does not require other site languages", () => {
+  withTranslationRepo(({ repo }) => {
+    const result = runGuard(repo, ["--all"]);
+    assert.strictEqual(result.status, 0, result.stderr);
+  }, ["en", "ja"]);
+});
+
+test("integration: a translation outside the explicit target set is rejected", () => {
+  withTranslationRepo(({ repo, sourceHash }) => {
+    const translationPath = "posts/tester/example.ja.md";
+    write(repo, translationPath, translationPost("ja", sourceHash));
+    git(repo, ["add", translationPath]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /ja \(not-declared\)/);
+    assert.match(result.stderr, /Add ja to translationTargets/);
+  }, ["en"]);
+});
+
+test("integration: removing a target and its translation together is intentional", () => {
+  withTranslationRepo(({ repo, sourcePath, translations }) => {
+    write(repo, sourcePath, sourcePost("Original title", "Source body.\n", ["en", "zh-CN"]));
+    git(repo, ["add", sourcePath]);
+    git(repo, ["rm", "--quiet", translations.ja]);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 0, result.stderr);
+  });
+});
+
+test("integration: source comparisons use staged content, not the working tree", () => {
+  withTranslationRepo(({ repo, sourcePath, initialSource }) => {
+    write(repo, sourcePath, sourcePost("Staged title"));
+    git(repo, ["add", sourcePath]);
+    // Make the working tree look current again without changing the index.
+    write(repo, sourcePath, initialSource);
+
+    const result = runGuard(repo);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /en \(stale\)/);
+  });
+});
+
+test("integration: --all validates the working checkout", () => {
+  withTranslationRepo(({ repo, sourcePath }) => {
+    write(repo, sourcePath, sourcePost("Unstaged title change"));
+
+    const stagedOnly = runGuard(repo);
+    assert.strictEqual(stagedOnly.status, 0, stagedOnly.stderr);
+
+    const fullRepository = runGuard(repo, ["--all"]);
+    assert.strictEqual(fullRepository.status, 1);
+    assert.match(fullRepository.stderr, /en \(stale\)/);
+  });
+});
+
+test("integration: --all rejects an impossible managed source date", () => {
+  withTranslationRepo(({ repo, sourcePath }) => {
+    write(
+      repo,
+      sourcePath,
+      sourcePost("Original title").replace(
+        "date: 2021-10-28",
+        "date: 2022-06-31"
+      )
+    );
+
+    const result = runGuard(repo, ["--all"]);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /invalid-source-date/);
+    assert.doesNotMatch(result.stderr, /Run: \/translate-post/);
+  });
+});
+
+test("integration: --all rejects impossible new dates on a legacy post", () => {
+  withTranslationRepo(({ repo }) => {
+    const legacyPath = "posts/legacy/example.md";
+    write(
+      repo,
+      legacyPath,
+      "---\ntitle: Legacy\ndate: 2021-10-28\npublishedAt: 2026-02-30\n---\n\nBody\n"
+    );
+    git(repo, ["add", legacyPath]);
+
+    const result = runGuard(repo, ["--all"]);
+    assert.strictEqual(result.status, 1);
+    assert.match(result.stderr, /source-invalid-published-at/);
+    assert.match(result.stderr, /publishedAt must be a valid YYYY-MM-DD/);
+    assert.doesNotMatch(result.stderr, /Run: \/translate-post/);
+  });
+});
+
+test("integration: --all requires publishedAt before a translation is public", () => {
+  withTranslationRepo(({ repo, sourceHash, translations }) => {
+    write(
+      repo,
+      translations.en,
+      translationPost("en", sourceHash, "Translated body.\n", false)
+    );
+
+    const missingDate = runGuard(repo, ["--all"]);
+    assert.strictEqual(missingDate.status, 1);
+    assert.match(missingDate.stderr, /en \(missing-published-at\)/);
+    assert.doesNotMatch(missingDate.stderr, /Run: \/translate-post/);
+
+    write(
+      repo,
+      translations.en,
+      translationPost("en", sourceHash, "Translated body.\n", false, {
+        publishedAt: "2026-07-13",
+      })
+    );
+    const valid = runGuard(repo, ["--all"]);
+    assert.strictEqual(valid.status, 0, valid.stderr);
+  });
+});
+
+test("integration: --all catches a missing translation in a clean checkout", () => {
+  withTranslationRepo(({ repo, translations }) => {
+    git(repo, ["rm", "--quiet", translations.ja]);
+    git(repo, ["commit", "--quiet", "-m", "delete Japanese translation"]);
+
+    const stagedOnly = runGuard(repo);
+    assert.strictEqual(stagedOnly.status, 0, stagedOnly.stderr);
+
+    const fullRepository = runGuard(repo, ["--all"]);
+    assert.strictEqual(fullRepository.status, 1);
+    assert.match(fullRepository.stderr, /ja \(missing\)/);
+  });
+});
+
+console.log(`\n${passed} tests passed.`);
