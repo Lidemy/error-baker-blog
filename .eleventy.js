@@ -59,6 +59,7 @@ const activeLanguages = require("./_11ty/activeLanguages");
 const isDraftFrontmatter = require("./_11ty/draftFlag");
 const { buildAiCrawlRules } = require("./_11ty/aiCrawlPolicy");
 const { commentCountsByTitle } = require("./_11ty/discussions");
+const { CSS_FILES } = require("./_11ty/css-bundle");
 const {
   effectivePublishedDate,
   effectiveModifiedDate,
@@ -502,7 +503,9 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addCollection("tagList", require("./_11ty/getTagList"));
 
   eleventyConfig.addPassthroughCopy("img");
-  eleventyConfig.addPassthroughCopy("css");
+  // Component and base CSS are build-only inputs inlined by optimize-html.
+  // Only the conditionally linked gamification stylesheet is public.
+  eleventyConfig.addPassthroughCopy("css/gamification.css");
   // We need to copy cached.js only if GA is used
   eleventyConfig.addPassthroughCopy(GA_ID ? "js" : "js/*[!cached].*");
   eleventyConfig.addPassthroughCopy("fonts");
@@ -510,8 +513,8 @@ module.exports = function (eleventyConfig) {
 
   // We need to rebuild upon JS change to update the CSP.
   eleventyConfig.addWatchTarget("./js/");
-  // We need to rebuild on CSS change to inline it.
-  eleventyConfig.addWatchTarget("./css/");
+  // Explicit files keep Eleventy 0.12 watching nested build-only CSS sources.
+  CSS_FILES.forEach((file) => eleventyConfig.addWatchTarget(`./${file}`));
   // Unfortunately this means .eleventyignore needs to be maintained redundantly.
   // But without this the JS build artefacts doesn't trigger a build.
   eleventyConfig.setUseGitIgnore(false);

@@ -44,7 +44,14 @@ describe("representative post build output", () => {
   });
 
   it("has inlined CSS and the fingerprinted client bundle", () => {
-    assert.match(doc.querySelector("style").textContent, /header nav/);
+    const styles = doc.querySelectorAll("style");
+    assert.equal(styles.length, 1, "Expected one optimized inline stylesheet");
+    assert.match(styles[0].textContent, /header nav/);
+    assert.equal(
+      doc.querySelectorAll("link[rel='stylesheet']").length,
+      0,
+      "Post pages should not request another stylesheet"
+    );
     const bundle = doc.querySelector("script[src^='/js/min.js?hash=']");
     assert.ok(bundle, "Expected fingerprinted /js/min.js client bundle");
   });
