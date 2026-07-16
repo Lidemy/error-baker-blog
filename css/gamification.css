@@ -1,19 +1,20 @@
 /* Author contributions — leaderboard, levels, and contribution calendar.
-   Quantities use the brand "crust scale": dough → deep bake. Empty calendar
-   cells are unbaked dough; the more you write, the darker the crust. */
+   Quantities use the brand "ember scale": dough → oven fire. It lives in the
+   same red-warm hue family as --accent (#b5322e) so quantitative color and
+   brand color read as one system — the more you write, the hotter the bake. */
 :root {
   --gx-cell: 11px;
-  --gx-diamond: #7c4a1e;
-  --gx-gold: #b06a2c;
-  --gx-silver: #d9a441;
-  --gx-bronze: #e6c98f;
-  --gx-iron: #f2e8d5;
-  --gx-ink-on-light: #5c4423;
-  --gx-c0: #f2e8d5;
-  --gx-c1: #e6c98f;
-  --gx-c2: #d9a441;
-  --gx-c3: #b06a2c;
-  --gx-c4: #7c4a1e;
+  --gx-diamond: #93351f;
+  --gx-gold: #bc5b2b;
+  --gx-silver: #d99757;
+  --gx-bronze: #eac7a2;
+  --gx-iron: #f4ece0;
+  --gx-ink-on-light: #5a2c18;
+  --gx-c0: #f4ece0;
+  --gx-c1: #eac7a2;
+  --gx-c2: #d99757;
+  --gx-c3: #bc5b2b;
+  --gx-c4: #93351f;
 }
 
 .gx-row { align-items: center; }
@@ -62,6 +63,9 @@
   max-width: 320px;
 }
 .gx-bar__fill { display: block; height: 100%; border-radius: 999px; }
+/* The fill communicates quantity by width alone; a fixed ember color keeps it
+   visible for low tiers (the pale dough chips would vanish on light paper). */
+.gx-bar .gx-bar__fill { background: var(--gx-c3); }
 
 .gx-profile {
   margin: 0 0 2rem;
@@ -115,12 +119,12 @@
 }
 
 /* Dark mode follows the site's class-based toggle (not the OS preference,
-   which the toggle can override). On dark paper the crust ramp brightens
-   with intensity, mirroring GitHub's dark calendar behaviour. */
+   which the toggle can override). On dark paper the ember ramp brightens
+   with intensity — a glowing oven fire in the dark. */
 body.dark {
-  --gx-c0: #2d2a26;
-  --gx-c1: #4a3a26;
-  --gx-c2: #6e522c;
-  --gx-c3: #9a7231;
-  --gx-c4: #c9963d;
+  --gx-c0: #2e2621;
+  --gx-c1: #5c3423;
+  --gx-c2: #94512a;
+  --gx-c3: #c96f38;
+  --gx-c4: #ee9556;
 }

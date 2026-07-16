@@ -10,7 +10,7 @@
       "commentsUnit": "則留言",
       "tier": {
         "diamond": "烘焙大師",
-        "gold": "主廚",
+        "gold": "大師傅",
         "silver": "麵包師",
         "bronze": "麵團手",
         "iron": "學徒"
@@ -116,7 +116,7 @@
       "commentsUnit": "件のコメント",
       "tier": {
         "diamond": "マイスター",
-        "gold": "シェフ",
+        "gold": "親方",
         "silver": "パン職人",
         "bronze": "生地職人",
         "iron": "見習い"
@@ -169,7 +169,7 @@
       "commentsUnit": "条评论",
       "tier": {
         "diamond": "烘焙大师",
-        "gold": "主厨",
+        "gold": "大师傅",
         "silver": "面包师",
         "bronze": "面团手",
         "iron": "学徒"
