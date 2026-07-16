@@ -80,7 +80,16 @@ Hi，這是 ErrorBaker 技術共筆部落格，由一群希望藉由共筆部落
 
 ### 樣式
 
-css/main.css 所有的樣式都在裡面，有新增的都放在最下面
+樣式來源依功能拆分：
+
+- `css/main.css`：全站共用的基礎、版面與文章樣式
+- `css/components/lang-suggest.css`：語言建議 Banner
+- `css/components/header-nav.css`：頂部導覽列與手機選單
+- `css/gamification.css`：只在作者與排行榜頁面額外載入
+
+`_11ty/css-bundle.js` 會依固定順序串接前三個檔案，再由 PurgeCSS
+移除各頁未使用的規則、壓縮並內嵌成單一 `<style>`。新增元件檔時需同步加入
+該檔案清單；請勿使用瀏覽器端 `@import`，以免增加請求並改變 cascade 順序。
 
 ## 文章規範
 

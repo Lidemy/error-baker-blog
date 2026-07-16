@@ -59,9 +59,10 @@ article * {
 }
 
 /* "Content-visibility: auto" move the images over the other elements
-   Set z-index to keep the nav over the rasterized images */
+   Set z-index to keep the nav (and its mobile panel) over the rasterized
+   images and all in-flow content */
 header nav {
-  z-index: 1;
+  z-index: 50;
 }
 
 /*! purgecss start ignore */
@@ -780,30 +781,6 @@ section {
   margin-right: auto;
   width: 900px;
 }
-#menu-toggle {
-  display: none;
-}
-header label {
-  display: block;
-}
-#menu-toggle:checked ~ a {
-  display: block;
-  padding: 0.75em 0;
-  margin: 0 1.5em;
-  text-align: center;
-  border-bottom: 1px solid #ccc;
-}
-#menu-toggle:checked ~ a:last-of-type {
-  padding-bottom: 0;
-  border: 0;
-}
-#menu-toggle:checked ~ label {
-  border-bottom: 1px solid #aaa;
-  padding-bottom: 0.75em;
-}
-#menu-toggle:not(:checked) ~ a {
-  display: none;
-}
 header {
   padding: 4.5em 1.5em 3em;
   width: 50.5em;
@@ -816,47 +793,6 @@ header {
 }
 header p {
   margin-top: 0;
-}
-header nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  padding: 0.375em 1.5em;
-  background: var(--bg);
-  text-align: right;
-  background: var(--navColor);
-}
-header nav h1 {
-  float: left;
-  font-size: inherit;
-  line-height: inherit;
-  margin: 0;
-  text-align: left;
-}
-header nav a {
-  text-decoration: none;
-  font-family: var(--font-family);
-  color: #fafafa;
-  margin-left: 1.5em;
-  font-size: 0.7rem;
-  transition: 0.3s;
-}
-header nav a:hover {
-  opacity: 0.9;
-}
-header nav a:first-of-type {
-  margin-left: auto;
-}
-header nav a:last-of-type {
-  margin-right: 1.5em;
-}
-header nav label {
-  color: #000;
-  cursor: pointer;
-  margin: 0;
-  font-style: normal;
-  text-align: right;
 }
 main {
   max-width: 70rem;
@@ -1125,115 +1061,10 @@ a {
   font-family: monospace;
 }
 
-/* navbar RWD -------------------- */
-.menu__btn {
-  display: none;
-}
-.menu__btn span {
-  opacity: 0;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  display: block;
-}
-#menu__control {
-  display: none;
-}
-
-@media screen and (max-width: 960px) {
-  #nav .nav__links a {
-    margin-right: 0.5rem;
-    margin-left: 0.5rem;
-  }
-}
-@media screen and (max-width: 840px) {
-  header nav {
-    padding: 0;
-  }
-  #nav {
-    position: relative;
-  }
-  #nav h1 {
-    padding: 0.375rem 1.5rem;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  #nav h1 * {
-    margin: 0;
-  }
-  .menu__btn {
-    display: inline-block;
-    width: 1.5rem;
-    height: 1.5rem;
-    border: 1px solid #191919;
-    border-radius: 0.3rem;
-    position: relative;
-  }
-  .menu__btn::before {
-    content: "";
-    position: absolute;
-    top: 51%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 0.1rem;
-    width: 0.9rem;
-    background-color: #333;
-    border-radius: 0.1rem;
-    box-shadow: 0 0.3rem 0px #333, 0 -0.3rem 0px #333;
-  }
-  .menu__btn:hover {
-    filter: brightness(0.6);
-  }
-  .nav__links {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 0;
-    max-height: 0;
-    overflow: hidden;
-    position: absolute;
-    top: 2.24em;
-    transition: max-height 0.6s ease;
-    margin: 0;
-    padding: 0;
-    z-index: -1;
-    background: rgba(255, 255, 255, 0.9);
-  }
-  .nav__links a {
-    text-align: center;
-    width: 100%;
-    padding: 0.5rem 0;
-    transition: all 0.3s ease-out;
-  }
-  .nav__links a:hover {
-    color: var(--primary);
-    background: rgba(245, 245, 245, 0.9);
-  }
-  #menu__control:checked + .nav__links {
-    height: auto;
-    max-height: 100vh;
-  }
-}
-
 #rss {
   vertical-align: text-top;
 }
 
-#nav {
-  display: flex;
-}
-#color-scheme-toggle {
-  cursor: pointer;
-  vertical-align: text-top;
-  display: inline-block;
-  margin-right: 1em;
-  width: 24px;
-  transform: translateY(2.5px);
-}
 ul#post-list {
   list-style-type: none;
 }
@@ -1614,22 +1445,6 @@ main {
   display: block;
   pointer-events: none;
 }
-/* Mobile nav bar layout for the (renamed) site title — mirrors the old
-   `#nav h1` rules now that the element is a <p class="site-title">. */
-@media screen and (max-width: 840px) {
-  #nav .site-title {
-    padding: 0.375rem 1.5rem;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    float: none;
-  }
-  #nav .site-title * {
-    margin: 0;
-  }
-}
-
 /* ── Post cards: robust clamp + gentle hover ────────────────────────────*/
 .summary {
   display: -webkit-box;
@@ -1781,52 +1596,6 @@ article h2,
 article h3,
 header > h1.w-full {
   font-weight: 700;
-}
-
-/* ── Top nav: "paper" bar with a hairline, accent only on hover ─────────*/
-header nav {
-  background: var(--navColor);
-  border-bottom: 1px solid var(--rule);
-}
-header nav a,
-.site-title a {
-  color: var(--ink);
-  font-size: 0.82rem;
-  letter-spacing: 0.02em;
-}
-header nav a:hover {
-  color: var(--accent);
-  opacity: 1;
-}
-.site-title a {
-  font-size: 1.15rem;
-  font-weight: 700;
-}
-/* Thin reading-progress line along the bottom of the nav (was a full sweep). */
-#reading-progress {
-  top: auto;
-  bottom: 0;
-  height: 3px;
-  background-color: var(--accent);
-}
-/* mobile menu panel + hamburger on paper — MOBILE ONLY (on desktop the
-   nav links are an inline group and must have no background/border). */
-@media (max-width: 840px) {
-  .nav__links {
-    background: var(--paper);
-    border-bottom: 1px solid var(--rule);
-  }
-  .nav__links a:hover {
-    background: var(--rule);
-    color: var(--accent);
-  }
-}
-.menu__btn {
-  border-color: var(--ink-faint);
-}
-.menu__btn::before {
-  background-color: var(--ink);
-  box-shadow: 0 0.3rem 0 var(--ink), 0 -0.3rem 0 var(--ink);
 }
 
 /* ── Page header / masthead ──────────────────────────────────────────────*/
@@ -2271,49 +2040,6 @@ h6:hover > .direct-link {
    home masthead rhythm, modern pagination (design-craft review)
    ════════════════════════════════════════════════════════════════════════ */
 
-/* ── Nav: single clean bar, everything vertically centred ────────────────*/
-header nav {
-  padding: 0.5rem 1.5rem;
-  display: flex;
-  align-items: center;
-  border-bottom: 1px solid var(--rule);
-}
-#nav {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-.site-title {
-  float: none;
-  margin: 0 auto 0 0; /* wordmark left, push the rest right */
-  display: inline-flex;
-  align-items: center;
-}
-.site-title a {
-  line-height: 1.1;
-}
-@media (min-width: 841px) {
-  .nav__links {
-    order: 5;
-    display: flex;
-    align-items: center;
-    gap: 1.4rem;
-  }
-  #color-scheme-toggle {
-    order: 6;
-    margin: 0;
-  }
-  .nav__link {
-    font-size: 0.9rem;
-  }
-}
-/* Reading-progress hairline sits exactly on the nav border (no double line) */
-#reading-progress {
-  height: 2px;
-  bottom: -1px;
-}
-
 /* Theme-toggle icon: the SVGs are white (#fafafa); invert them on the light
    "paper" nav so the icon is visible, keep them white on the dark nav. */
 #color-scheme-toggle {
@@ -2463,21 +2189,6 @@ body.tmpl-home .intro {
 }
 .posts .post--lead .post-title {
   font-size: clamp(1.7rem, 1.25rem + 1.5vw, 2.3rem);
-}
-
-/* Mobile: language menu expands inline inside the collapsed nav menu. */
-@media (max-width: 840px) {
-  .lang-switch {
-    margin-top: 0.4rem;
-  }
-  .lang-switch__menu {
-    position: static;
-    box-shadow: none;
-    border: 0;
-    padding: 0.2rem 0;
-    min-width: 0;
-    text-align: center;
-  }
 }
 
 /* Set the document background per theme so the very first paint after a
@@ -2638,130 +2349,4 @@ body.tmpl-home .intro {
 }
 body.tmpl-home .intro p {
   text-wrap: balance;
-}
-
-/* ── Locale-suggestion banner (revealed by src/main.js) ────────────────── */
-/* A compact editorial callout that reuses the site's paper/ink palette. It
-   stays fixed to the viewport so revealing it causes no layout shift. */
-.lang-suggest {
-  position: fixed;
-  left: 50%;
-  bottom: calc(1rem + env(safe-area-inset-bottom));
-  transform: translateX(-50%);
-  z-index: 100;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0.85rem;
-  box-sizing: border-box;
-  width: min(32rem, calc(100vw - 2rem));
-  padding: 0.8rem 0.8rem 0.8rem 1rem;
-  border: 1px solid var(--rule-strong);
-  border-left: 3px solid var(--accent);
-  border-radius: 7px;
-  background: var(--paper-raised);
-  color: var(--ink);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
-  font-size: 0.9rem;
-  line-height: 1.45;
-}
-.lang-suggest[hidden] {
-  display: none;
-}
-.lang-suggest__icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  fill: none;
-  stroke: var(--accent);
-  stroke-width: 1.6;
-}
-.lang-suggest__content {
-  min-width: 0;
-}
-.lang-suggest__text {
-  display: block;
-  color: var(--ink);
-  font-family: var(--font-serif);
-  font-size: 0.95rem;
-  line-height: 1.4;
-  text-wrap: pretty;
-}
-.lang-suggest__link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3em;
-  margin-top: 0.2rem;
-  color: var(--accent);
-  font-family: var(--font-family);
-  font-size: 0.82rem;
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 0.18em;
-}
-.lang-suggest__link::after {
-  content: "\2192";
-  transition: transform 0.15s ease;
-}
-.lang-suggest__link:hover {
-  color: var(--accent-hover);
-}
-.lang-suggest__link:hover::after {
-  transform: translateX(0.15em);
-}
-.lang-suggest__link:focus-visible,
-.lang-suggest > .lang-suggest__dismiss:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-}
-/* Two classes intentionally outrank the legacy button:not([disabled]) rule,
-   which otherwise paints this control as a large accent submit button. */
-.lang-suggest > .lang-suggest__dismiss {
-  appearance: none;
-  display: inline-grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  min-width: 0;
-  margin: 0;
-  padding: 0;
-  border: 1px solid transparent;
-  border-radius: 3px;
-  background: transparent;
-  cursor: pointer;
-  color: var(--ink-faint);
-  box-shadow: none;
-  line-height: 1;
-}
-.lang-suggest > .lang-suggest__dismiss svg {
-  width: 1rem;
-  height: 1rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-linecap: round;
-  stroke-width: 1.8;
-}
-.lang-suggest > .lang-suggest__dismiss:hover {
-  border-color: var(--rule);
-  background: var(--rule);
-  color: var(--ink);
-}
-body.dark .lang-suggest {
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
-}
-@media (max-width: 480px) {
-  .lang-suggest {
-    right: 0.75rem;
-    bottom: calc(0.75rem + env(safe-area-inset-bottom));
-    left: 0.75rem;
-    width: auto;
-    padding: 0.75rem 0.65rem 0.75rem 0.8rem;
-    transform: none;
-  }
-}
-/* The article share control occupies the lower-right corner between 377px and
-   600px. Lift the notice above it; at 376px the share control is already hidden. */
-@media (min-width: 377px) and (max-width: 660px) {
-  body.tmpl-post .lang-suggest {
-    bottom: calc(5rem + env(safe-area-inset-bottom));
-  }
 }

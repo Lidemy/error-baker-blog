@@ -24,6 +24,17 @@ const AmpOptimizer = require("@ampproject/toolbox-optimizer");
 let ampOptimizer;
 const PurgeCSS = require("purgecss").PurgeCSS;
 const csso = require("csso");
+const { readCssBundle } = require("./css-bundle");
+
+let preparedCss;
+
+function prepareCss() {
+  preparedCss = readCssBundle().replace(
+    /@font-face {/g,
+    "@font-face {font-display:optional;"
+  );
+  return preparedCss;
+}
 
 /**
  * Inlines the CSS.
@@ -41,14 +52,9 @@ const purifyCss = async (rawContent, outputPath) => {
     !isAmp(content) &&
     !/data-style-override/.test(content)
   ) {
-    let before = require("fs").readFileSync("css/main.css", {
-      encoding: "utf-8",
-    });
-
-    before = before.replace(
-      /@font-face {/g,
-      "@font-face {font-display:optional;"
-    );
+    // `beforeBuild` prepares this once per build (including watch rebuilds),
+    // instead of synchronously reading the full stylesheet for every page.
+    const before = preparedCss || prepareCss();
 
     const purged = await new PurgeCSS().purge({
       content: [
@@ -80,6 +86,9 @@ const purifyCss = async (rawContent, outputPath) => {
         "toc-ready",
         "toc-h2",
         "toc-h3",
+        "js", // set on <html> by the head script; gates collapsed mobile nav
+        "nav-open", // toggled on #nav by the hamburger button
+        "dark", // theme class — keep explicitly, not just via script-text extraction
       ],
       // Language-aware typography selectors (`:lang(ja) article` etc.) start
       // with a functional pseudo-class purgecss@2 can't match against content,
@@ -132,6 +141,7 @@ const optimizeAmp = async (rawContent, outputPath) => {
 module.exports = {
   initArguments: {},
   configFunction: async (eleventyConfig, pluginOptions = {}) => {
+    eleventyConfig.on("beforeBuild", prepareCss);
     eleventyConfig.addTransform("purifyCss", purifyCss);
     eleventyConfig.addTransform("minifyHtml", minifyHtml);
     eleventyConfig.addTransform("optimizeAmp", optimizeAmp);

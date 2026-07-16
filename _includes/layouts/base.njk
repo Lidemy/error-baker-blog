@@ -24,6 +24,7 @@
          navigating between pages never flashes light-then-dark. -->
     <script csp-hash>
       (function () {
+        document.documentElement.classList.add("js");
         try {
           var t = localStorage.getItem("theme") ||
             (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
@@ -133,6 +134,7 @@
 
         function handleToggleEvent() {
           const isDark = bodyEl.classList.toggle(DARK);
+          document.documentElement.classList.toggle(DARK, isDark);
           const theme = isDark ? DARK : LIGHT;
           setTheme(theme);
           localStorage.setItem("theme", theme);
@@ -148,23 +150,58 @@
             toggleImg.src = toggleImg.src.replace(LIGHT, DARK);
           }
         }
+
+        // Mobile nav + language menu
+        const nav = document.getElementById("nav");
+        const navToggle = document.getElementById("nav-toggle");
+        const langSwitch = document.querySelector(".lang-switch");
+
+        function closeNav() {
+          nav.classList.remove("nav-open");
+          navToggle.setAttribute("aria-expanded", "false");
+        }
+
+        navToggle.addEventListener("click", () => {
+          const open = nav.classList.toggle("nav-open");
+          navToggle.setAttribute("aria-expanded", open);
+          if (!open && langSwitch) langSwitch.removeAttribute("open");
+        });
+
+        document.addEventListener("click", (e) => {
+          if (langSwitch && langSwitch.open && !langSwitch.contains(e.target)) {
+            langSwitch.removeAttribute("open");
+          }
+          if (nav.classList.contains("nav-open") && !nav.contains(e.target)) {
+            closeNav();
+          }
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key !== "Escape") return;
+          if (langSwitch && langSwitch.open) {
+            langSwitch.removeAttribute("open");
+            langSwitch.querySelector("summary").focus();
+            return;
+          }
+          if (nav.classList.contains("nav-open")) {
+            closeNav();
+            navToggle.focus();
+          }
+        });
       });
     </script>
     <header>
-      <nav>
+      <nav aria-label="{{ t.menu }}">
         <div id="nav">
           <p class="site-title">
             <a href="{{ homeUrl | url }}" title="Homepage">{{ t.siteName or metadata.title }}</a>
-            <label for="menu__control" class="menu__btn">
-              <span>{{ t.menu }}</span>
-            </label>
           </p>
-          <button id="color-scheme-toggle" type="button" aria-label="{{ t.toggleTheme or 'switch dark mode' }}">
-            <img src="{{ '/img/dark.svg' | url }}" alt="" />
+          <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+            <span class="visually-hidden">{{ t.menu }}</span>
+            <span class="nav-toggle__bars" aria-hidden="true"></span>
           </button>
           {#- Read more about `eleventy-navigation` at https://www.11ty.dev/docs/plugins/navigation/ #}
-          <input id="menu__control" type="checkbox" />
-          <div class="nav__links">
+          <div id="site-menu" class="nav__links">
           {#- zh-TW shows the full chrome (Archive/Tags/About). Other languages
               only have a translated About + Home, so Archive/Tags (zh-TW-only
               browse) are hidden and About points at the per-language page. #}
@@ -196,6 +233,9 @@
             </ul>
           </details>
           </div>
+          <button id="color-scheme-toggle" type="button" aria-label="{{ t.toggleTheme or 'switch dark mode' }}">
+            <img src="{{ '/img/dark.svg' | url }}" alt="" />
+          </button>
         </div>
         <div id="reading-progress" aria-hidden="true"></div>
       </nav>
