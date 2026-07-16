@@ -77,12 +77,14 @@ header nav {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
-/* Reading progress: accent hairline riding the bar's bottom edge */
+/* Reading progress: ink hairline riding the bar's bottom edge — same colour
+   as the text so the chrome stays quiet (Rhett's call; flips with the theme
+   via --ink). */
 #reading-progress {
   top: auto;
   bottom: -1px;
   height: 2px;
-  background-color: var(--accent);
+  background-color: var(--ink);
 }
 
 @media (max-width: 840px) {
