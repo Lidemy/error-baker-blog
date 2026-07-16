@@ -1,16 +1,19 @@
-/* Author contributions — leaderboard, levels, and contribution calendar. */
+/* Author contributions — leaderboard, levels, and contribution calendar.
+   Quantities use the brand "crust scale": dough → deep bake. Empty calendar
+   cells are unbaked dough; the more you write, the darker the crust. */
 :root {
   --gx-cell: 11px;
-  --gx-diamond: #38bdf8;
-  --gx-gold: #e0a92a;
-  --gx-silver: #9aa0a6;
-  --gx-bronze: #b5713b;
-  --gx-iron: #8a8f98;
-  --gx-c0: #ebedf0;
-  --gx-c1: #9be9a8;
-  --gx-c2: #40c463;
-  --gx-c3: #30a14e;
-  --gx-c4: #216e39;
+  --gx-diamond: #7c4a1e;
+  --gx-gold: #b06a2c;
+  --gx-silver: #d9a441;
+  --gx-bronze: #e6c98f;
+  --gx-iron: #f2e8d5;
+  --gx-ink-on-light: #5c4423;
+  --gx-c0: #f2e8d5;
+  --gx-c1: #e6c98f;
+  --gx-c2: #d9a441;
+  --gx-c3: #b06a2c;
+  --gx-c4: #7c4a1e;
 }
 
 .gx-row { align-items: center; }
@@ -39,9 +42,16 @@
 }
 .gx-tier-diamond { background: var(--gx-diamond); }
 .gx-tier-gold { background: var(--gx-gold); }
-.gx-tier-silver { background: var(--gx-silver); }
-.gx-tier-bronze { background: var(--gx-bronze); }
-.gx-tier-iron { background: var(--gx-iron); }
+.gx-tier-silver { background: var(--gx-silver); color: var(--gx-ink-on-light); }
+.gx-tier-bronze { background: var(--gx-bronze); color: var(--gx-ink-on-light); }
+.gx-tier-iron { background: var(--gx-iron); color: var(--gx-ink-on-light); }
+.gx-toque {
+  width: 0.95em;
+  height: 0.95em;
+  vertical-align: -0.12em;
+  margin-right: 0.2em;
+  fill: currentColor;
+}
 
 .gx-bar {
   height: 6px;
@@ -101,9 +111,16 @@
 }
 .gx-badge--discussed {
   color: #fff;
-  background: var(--accent, #d04444);
+  background: var(--accent, #b5322e);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root { --gx-c0: #2d333b; }
+/* Dark mode follows the site's class-based toggle (not the OS preference,
+   which the toggle can override). On dark paper the crust ramp brightens
+   with intensity, mirroring GitHub's dark calendar behaviour. */
+body.dark {
+  --gx-c0: #2d2a26;
+  --gx-c1: #4a3a26;
+  --gx-c2: #6e522c;
+  --gx-c3: #9a7231;
+  --gx-c4: #c9963d;
 }

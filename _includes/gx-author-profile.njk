@@ -3,7 +3,11 @@
     collections.authorsByPostCount) and `t` (i18n strings for the page lang). -#}
 <section class="gx-profile">
   <div class="gx-profile__head">
-    <span class="gx-level gx-tier-{{ stat.tier }}">Lv.{{ stat.level }} · {{ t.gx.tier[stat.tier] }}</span>
+    <span class="gx-level gx-tier-{{ stat.tier }}">
+      {%- if stat.tier == 'diamond' -%}
+      <svg class="gx-toque" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="6.5" cy="9" r="4.5"/><circle cx="12" cy="7" r="5.5"/><circle cx="17.5" cy="9" r="4.5"/><rect x="7" y="12" width="10" height="7" rx="1.5"/></svg>
+      {%- endif -%}
+      Lv.{{ stat.level }} · {{ t.gx.tier[stat.tier] }}</span>
     {%- if stat.rank %}<span class="gx-profile__rank">#{{ stat.rank }}</span>{% endif %}
     <span class="gx-profile__count">{{ stat.count }} {{ t.postsUnit or '篇' }}</span>
     {%- if stat.comments %}<span class="gx-comments" title="{{ stat.comments }} {{ t.gx.commentsUnit }}">💬 {{ stat.comments }}</span>{% endif %}

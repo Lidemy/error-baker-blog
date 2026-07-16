@@ -31,7 +31,11 @@ templateClass: tmpl-about
     <div class="author-row__body">
       <h3 class="author-row__name">
         <a href="{{ authorUrl }}">{{ author.name }}</a>
-        <span class="gx-level gx-tier-{{ a.tier }}" title="{{ tier[a.tier] }}">Lv.{{ a.level }}</span>
+        <span class="gx-level gx-tier-{{ a.tier }}" title="{{ tier[a.tier] }}">
+          {%- if a.tier == 'diamond' -%}
+          <svg class="gx-toque" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="6.5" cy="9" r="4.5"/><circle cx="12" cy="7" r="5.5"/><circle cx="17.5" cy="9" r="4.5"/><rect x="7" y="12" width="10" height="7" rx="1.5"/></svg>
+          {%- endif -%}
+          Lv.{{ a.level }}</span>
         <span class="author-row__count">{{ a.count }} {{ t.postsUnit or '篇' }}</span>
         {%- if a.comments %}<span class="gx-comments" title="{{ a.comments }} {{ t.gx.commentsUnit }}">💬 {{ a.comments }}</span>{% endif %}
         {%- if a.mostDiscussed %}<span class="gx-badge gx-badge--discussed">💬 {{ t.gx.mostDiscussed }}</span>{% endif %}
