@@ -224,11 +224,22 @@
         match among the hreflang alternates in <head>. Fixed-position so
         revealing it causes no layout shift. No auto-redirect (SEO-safe). #}
     {%- if langVersions and langVersions.length > 1 %}
-    <aside id="lang-suggest" class="lang-suggest" hidden
+    <aside id="lang-suggest" class="lang-suggest" hidden aria-live="polite"
+      aria-labelledby="lang-suggest-text"
       data-strings="{{ i18n | langSuggestStrings(langs) }}">
-      <span class="lang-suggest__text"></span>
-      <a class="lang-suggest__link" href="#"></a>
-      <button class="lang-suggest__dismiss" type="button" aria-label="{{ t.suggestDismiss }}">&#10005;</button>
+      <svg class="lang-suggest__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M3 12h18M12 3c2.5 2.5 2.5 16 0 18M12 3c-2.5 2.5-2.5 16 0 18"/>
+      </svg>
+      <div class="lang-suggest__content">
+        <span id="lang-suggest-text" class="lang-suggest__text"></span>
+        <a class="lang-suggest__link" href="#"></a>
+      </div>
+      <button class="lang-suggest__dismiss" type="button" aria-label="{{ t.suggestDismiss }}">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M6 6l12 12M18 6L6 18"/>
+        </svg>
+      </button>
     </aside>
     {%- endif %}
 

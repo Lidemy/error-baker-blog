@@ -330,13 +330,16 @@ document.body.addEventListener(
   if (!match) return;
   var s = strings[match.code];
   if (!s || !s.available || !s.read) return;
+  banner.setAttribute("lang", match.code);
   banner.querySelector(".lang-suggest__text").textContent = s.available;
   var link = banner.querySelector(".lang-suggest__link");
   link.textContent = s.read;
   link.href = match.href;
   link.setAttribute("hreflang", match.code);
   link.setAttribute("lang", match.code);
-  banner.querySelector(".lang-suggest__dismiss").addEventListener("click", function () {
+  var dismiss = banner.querySelector(".lang-suggest__dismiss");
+  if (s.dismiss) dismiss.setAttribute("aria-label", s.dismiss);
+  dismiss.addEventListener("click", function () {
     banner.hidden = true;
     try {
       localStorage.setItem("langSuggestDismissed", "1");
@@ -395,4 +398,3 @@ document.body.addEventListener(
     });
   }
 })();
-
