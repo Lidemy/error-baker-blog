@@ -1736,6 +1736,22 @@ body.tmpl-home article {
   margin-right: 0.55rem;
   color: var(--rule-strong);
 }
+/* End-of-post recommendations ("another batch from the oven"). */
+.related-posts ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.related-posts li {
+  margin: 0.8em 0;
+}
+.related-posts .related-meta {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  margin-top: 0.15em;
+}
+
 /* Back-to-top: revealed by src/main.js after ~1.5 screens of scrolling.
    `button.` prefix outranks the global button:not([disabled]) rules. */
 button.back-to-top {
