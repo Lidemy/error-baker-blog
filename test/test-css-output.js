@@ -38,6 +38,17 @@ describe("purged CSS output", () => {
     assert.match(css, /\.toc-list a\.active/);
   });
 
+  it("keeps the banner dismiss control isolated from global button styles", () => {
+    const css = inlinedCss("posts/tian/git-flow/index.html");
+    const dismissRule = css.match(
+      /\.lang-suggest>\.lang-suggest__dismiss\{([^}]*)\}/
+    );
+    assert.ok(dismissRule, "Expected the specific banner dismiss-button reset");
+    assert.match(dismissRule[1], /margin:0/);
+    // clean-css serializes `transparent` shorthand as the equivalent `0 0`.
+    assert.match(dismissRule[1], /background:(?:transparent|0 0)/);
+  });
+
   it("contains no retired language-nav selectors in the source stylesheet", () => {
     const css = fs.readFileSync(path.join(PROJECT_ROOT, "css", "main.css"), "utf8");
     assert.doesNotMatch(css, /\.lang-nav/);
