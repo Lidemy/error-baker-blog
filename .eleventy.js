@@ -339,6 +339,7 @@ module.exports = function (eleventyConfig) {
       out[code] = {
         available: strings.suggestAvailable,
         read: strings.suggestRead,
+        dismiss: strings.suggestDismiss,
       };
     }
     return JSON.stringify(out);

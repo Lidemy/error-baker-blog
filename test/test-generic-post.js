@@ -145,5 +145,19 @@ describe("representative post build output", () => {
     assert.equal(hreflangs.length, published.length + 2);
     allowed.forEach((lang) => assert.ok(hreflangs.includes(lang), `missing hreflang ${lang}`));
     hreflangs.forEach((lang) => assert.ok(allowed.includes(lang), `unexpected hreflang ${lang}`));
+
+    const banner = doc.querySelector("#lang-suggest");
+    assert.ok(banner, "Expected a language suggestion for a translated post");
+    assert.equal(banner.hidden, true, "Client-side language matching reveals the banner");
+    assert.equal(banner.getAttribute("aria-live"), "polite");
+    assert.ok(banner.querySelector(".lang-suggest__icon[aria-hidden='true']"));
+    assert.ok(banner.querySelector(".lang-suggest__content"));
+    assert.ok(banner.querySelector("button.lang-suggest__dismiss[aria-label]"));
+    const bannerStrings = JSON.parse(banner.getAttribute("data-strings"));
+    assert.deepEqual(bannerStrings.en, {
+      available: "This page is available in English",
+      read: "Read in English",
+      dismiss: "Dismiss",
+    });
   });
 });
