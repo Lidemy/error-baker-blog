@@ -8,7 +8,7 @@
       "more": "多",
       "mostDiscussed": "最多討論",
       "commentsUnit": "則留言",
-      "tier": { "diamond": "烘焙大師", "gold": "主廚", "silver": "麵包師", "bronze": "麵團手", "iron": "學徒" }
+      "tier": { "diamond": "烘焙大師", "gold": "大師傅", "silver": "麵包師", "bronze": "麵團手", "iron": "學徒" }
     },
     "freshBadge": "新出爐",
     "js": {
@@ -100,7 +100,7 @@
       "more": "多",
       "mostDiscussed": "コメント最多",
       "commentsUnit": "件のコメント",
-      "tier": { "diamond": "マイスター", "gold": "シェフ", "silver": "パン職人", "bronze": "生地職人", "iron": "見習い" }
+      "tier": { "diamond": "マイスター", "gold": "親方", "silver": "パン職人", "bronze": "生地職人", "iron": "見習い" }
     },
     "freshBadge": "焼きたて",
     "js": {
@@ -146,7 +146,7 @@
       "more": "多",
       "mostDiscussed": "最多讨论",
       "commentsUnit": "条评论",
-      "tier": { "diamond": "烘焙大师", "gold": "主厨", "silver": "面包师", "bronze": "面团手", "iron": "学徒" }
+      "tier": { "diamond": "烘焙大师", "gold": "大师傅", "silver": "面包师", "bronze": "面团手", "iron": "学徒" }
     },
     "freshBadge": "新出炉",
     "js": {
