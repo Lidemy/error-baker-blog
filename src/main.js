@@ -226,23 +226,6 @@ if (window.ResizeObserver && document.querySelector("header nav #nav")) {
   }
   addEventListener("scroll", scroll);
 
-  // The progress bar "bakes": its ember colour deepens with reading progress
-  // (same red-warm family as --accent; values mirror --gx-c2 → --gx-c4).
-  var CRUST_LIGHT = [[217, 151, 87], [147, 53, 31]];
-  var CRUST_DARK = [[148, 81, 42], [238, 149, 86]];
-  function bakeColor(percent) {
-    var ramp = document.body.classList.contains("dark")
-      ? CRUST_DARK
-      : CRUST_LIGHT;
-    var from = ramp[0];
-    var to = ramp[1];
-    var k = percent / 100;
-    var rgb = from.map(function (c, i) {
-      return Math.round(c + (to[i] - c) * k);
-    });
-    return "rgb(" + rgb.join(",") + ")";
-  }
-
   var winHeight = 1000;
   var bottom = 10000;
   function updateProgress() {
@@ -252,7 +235,6 @@ if (window.ResizeObserver && document.querySelector("header nav #nav")) {
       100
     );
     progress.style.transform = `translate(-${100 - percent}vw, 0)`;
-    progress.style.backgroundColor = bakeColor(percent);
     if (backToTopButton) {
       backToTopButton.hidden =
         document.scrollingElement.scrollTop < winHeight * 1.5;
