@@ -1204,6 +1204,9 @@ body {
   /* Serif display family (Latin first, CJK appended below per language). */
   --font-serif: "Iowan Old Style", "Apple Garamond", Georgia, "Source Serif 4",
     "Times New Roman", Times, serif;
+  /* Shared motion tokens for micro-interactions. */
+  --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --dur: 0.25s;
 }
 body.dark {
   --paper: #1a1816;
@@ -1446,6 +1449,10 @@ main {
   width: 24px;
   display: block;
   pointer-events: none;
+  transition: transform var(--dur) var(--ease);
+}
+body.dark #color-scheme-toggle img {
+  transform: rotate(180deg);
 }
 /* ── Post cards: robust clamp + gentle hover ────────────────────────────*/
 .summary {
@@ -1665,6 +1672,10 @@ body.tmpl-home article {
   height: 100%;
   object-fit: cover;
   border-radius: 2px;
+  transition: transform var(--dur) var(--ease);
+}
+.posts .post:hover .post-cover-img {
+  transform: scale(1.04);
 }
 .post-body {
   flex: 1 1 auto;
@@ -1725,6 +1736,30 @@ body.tmpl-home article {
   margin-right: 0.55rem;
   color: var(--rule-strong);
 }
+/* Back-to-top: revealed by src/main.js after ~1.5 screens of scrolling.
+   `button.` prefix outranks the global button:not([disabled]) rules. */
+button.back-to-top {
+  position: fixed;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+  z-index: 10;
+}
+button.back-to-top:hover {
+  background: var(--accent-hover);
+  color: #fff;
+}
+
 /* "Freshly baked" chip on posts younger than 30 days (see isFresh filter). */
 .post-fresh {
   display: inline-block;
