@@ -136,11 +136,22 @@
         toggleEl.addEventListener("click", handleToggleEvent);
 
         function handleToggleEvent() {
-          const isDark = bodyEl.classList.toggle(DARK);
-          document.documentElement.classList.toggle(DARK, isDark);
-          const theme = isDark ? DARK : LIGHT;
-          setTheme(theme);
-          localStorage.setItem("theme", theme);
+          const apply = () => {
+            const isDark = bodyEl.classList.toggle(DARK);
+            document.documentElement.classList.toggle(DARK, isDark);
+            const theme = isDark ? DARK : LIGHT;
+            setTheme(theme);
+            localStorage.setItem("theme", theme);
+          };
+          // Cross-fade the whole page between themes where supported.
+          if (
+            document.startViewTransition &&
+            !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ) {
+            document.startViewTransition(apply);
+          } else {
+            apply();
+          }
         }
 
         function setTheme(theme) {

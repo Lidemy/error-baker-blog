@@ -226,10 +226,10 @@ if (window.ResizeObserver && document.querySelector("header nav #nav")) {
   }
   addEventListener("scroll", scroll);
 
-  // The progress bar "bakes": its crust colour deepens with reading progress
-  // (quantities use the crust scale; both ends stay legible on paper/ink).
-  var CRUST_LIGHT = [[217, 164, 65], [124, 74, 30]];
-  var CRUST_DARK = [[110, 82, 44], [201, 150, 61]];
+  // The progress bar "bakes": its ember colour deepens with reading progress
+  // (same red-warm family as --accent; values mirror --gx-c2 → --gx-c4).
+  var CRUST_LIGHT = [[217, 151, 87], [147, 53, 31]];
+  var CRUST_DARK = [[148, 81, 42], [238, 149, 86]];
   function bakeColor(percent) {
     var ramp = document.body.classList.contains("dark")
       ? CRUST_DARK
