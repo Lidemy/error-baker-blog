@@ -1752,6 +1752,65 @@ body.tmpl-home article {
   margin-top: 0.15em;
 }
 
+/* Toast: glassy pill that slides up from the bottom edge, replacing the old
+   tiny red box. Element+id selector so the per-page PurgeCSS keeps it. */
+dialog#message {
+  position: fixed;
+  left: 50%;
+  right: auto;
+  top: auto;
+  bottom: calc(1.4rem + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0.6rem 1.15rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper-raised) 82%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--ink);
+  font-size: 0.88rem;
+  line-height: 1.4;
+  opacity: 1;
+  white-space: nowrap;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
+  z-index: 1002;
+}
+dialog#message[open] {
+  animation: toast-in 0.35s var(--ease);
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(12px);
+  }
+}
+
+/* Scroll-driven entrance for the home feed (pure CSS, no JS; browsers without
+   animation-timeline simply render the cards statically). */
+@supports (animation-timeline: view()) {
+  .posts .post {
+    animation: card-rise both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 45%;
+  }
+  @keyframes card-rise {
+    from {
+      opacity: 0.15;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .posts .post {
+      animation: none;
+    }
+  }
+}
+
 /* Back-to-top: revealed by src/main.js after ~1.5 screens of scrolling.
    `button.` prefix outranks the global button:not([disabled]) rules. */
 button.back-to-top {
@@ -1774,6 +1833,19 @@ button.back-to-top {
 button.back-to-top:hover {
   background: var(--accent-hover);
   color: #fff;
+  transform: translateY(-2px);
+}
+button.back-to-top {
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease),
+    background 0.15s;
+}
+/* Fade/rise in when the hidden attribute is removed (2024 CSS; browsers
+   without @starting-style just show the button instantly). */
+@starting-style {
+  button.back-to-top {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
 }
 
 /* "Freshly baked" chip on posts younger than 30 days (see isFresh filter). */
