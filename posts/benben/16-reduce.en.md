@@ -9,7 +9,7 @@ sourceLang: zh-TW
 translationKey: benben/16-reduce
 permalink: /en/posts/benben/16-reduce/
 draft: true
-sourceHash: 7788f0dc875f421d0796cc508e16a676932c3196b50b4d8b7ff9e0b2d5e5c700
+sourceHash: 453a27accd175a00da3851983100d4d0e68cc0c2d77f0f05fd66106249f9f091
 ---
 
 <!-- summary -->
@@ -93,7 +93,7 @@ But Xiao Ban had just learned `sum` and was too excited to listen, so off he wen
 
 ## Why is it called reduce?
 
-Da Ban thinks: the "summing" function above is clearly the exact opposite of the English word "reduce."
+Da Ban thinks: the "summing" function above is clearly the complete opposite of the English word "reduce."
 
 I wonder — when you first learned reduce, did you have the same confusion as Da Ban?
 

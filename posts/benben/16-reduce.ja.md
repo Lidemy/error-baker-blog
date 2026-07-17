@@ -9,7 +9,7 @@ sourceLang: zh-TW
 translationKey: benben/16-reduce
 permalink: /ja/posts/benben/16-reduce/
 draft: true
-sourceHash: 7788f0dc875f421d0796cc508e16a676932c3196b50b4d8b7ff9e0b2d5e5c700
+sourceHash: 453a27accd175a00da3851983100d4d0e68cc0c2d77f0f05fd66106249f9f091
 ---
 
 <!-- summary -->
@@ -93,7 +93,7 @@ const sum = arr.reduce((a, b) => a + b)
 
 ## なぜ reduce と呼ぶのか？
 
-ダーバンくんは考えます：上の「合計」機能は、英語の "reduce（減らす）" という言葉とは明らかに正反対の意味だ、と。
+ダーバンくんは考えます：上の「合計」機能は、英語の "reduce（減らす）" という言葉とは明らかに完全に正反対の意味だ、と。
 
 皆さんは reduce を初めて学んだ時、ダーバンくんと同じ疑問を持ったことはないでしょうか？
 
