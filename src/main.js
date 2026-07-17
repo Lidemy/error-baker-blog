@@ -19,6 +19,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 const exposed = {};
+
+// Page-language UI strings, injected by base.njk on <dialog id="message">
+// (same pattern as the lang-suggest banner's data-strings).
+var uiStrings = {};
+try {
+  uiStrings = JSON.parse(
+    document.getElementById("message").getAttribute("data-ui") || "{}"
+  );
+} catch (e) {}
+function ui(key, fallback) {
+  return uiStrings[key] || fallback;
+}
 if (location.search) {
   var a = document.createElement("a");
   a.href = location.href;
@@ -48,7 +60,7 @@ function share(anchor) {
     });
   } else if (navigator.clipboard) {
     navigator.clipboard.writeText(url);
-    message("文章連結已複製");
+    message(ui("linkCopied", "文章連結已複製"));
   } else {
     tweet_(url);
   }
@@ -200,6 +212,8 @@ addEventListener(
 
 if (window.ResizeObserver && document.querySelector("header nav #nav")) {
   var progress = document.getElementById("reading-progress");
+  var backToTopButton = document.getElementById("back-to-top");
+  var readDoneShown = false;
 
   var timeOfLastScroll = 0;
   var requestedAniFrame = false;
@@ -212,6 +226,24 @@ if (window.ResizeObserver && document.querySelector("header nav #nav")) {
   }
   addEventListener("scroll", scroll);
 
+  // The progress bar "bakes" from pale dough to deep ember with reading
+  // progress, like watching a loaf brown in the oven (values mirror
+  // --gx-c1 → --gx-c4; the dark ramp glows brighter instead).
+  var CRUST_LIGHT = [[234, 199, 162], [147, 53, 31]];
+  var CRUST_DARK = [[92, 52, 35], [238, 149, 86]];
+  function bakeColor(percent) {
+    var ramp = document.body.classList.contains("dark")
+      ? CRUST_DARK
+      : CRUST_LIGHT;
+    var from = ramp[0];
+    var to = ramp[1];
+    var k = percent / 100;
+    var rgb = from.map(function (c, i) {
+      return Math.round(c + (to[i] - c) * k);
+    });
+    return "rgb(" + rgb.join(",") + ")";
+  }
+
   var winHeight = 1000;
   var bottom = 10000;
   function updateProgress() {
@@ -221,6 +253,22 @@ if (window.ResizeObserver && document.querySelector("header nav #nav")) {
       100
     );
     progress.style.transform = `translate(-${100 - percent}vw, 0)`;
+    progress.style.backgroundColor = bakeColor(percent);
+    if (backToTopButton) {
+      backToTopButton.hidden =
+        document.scrollingElement.scrollTop < winHeight * 1.5;
+    }
+    if (
+      percent >= 100 &&
+      !readDoneShown &&
+      document.body.classList.contains("tmpl-post")
+    ) {
+      readDoneShown = true;
+      var doneMsg = ui("readDone", "");
+      if (doneMsg) {
+        message(doneMsg);
+      }
+    }
     if (Date.now() - timeOfLastScroll < 3000) {
       requestAnimationFrame(updateProgress);
       requestedAniFrame = true;
@@ -239,6 +287,25 @@ if (window.ResizeObserver && document.querySelector("header nav #nav")) {
 function expose(name, fn) {
   exposed[name] = fn;
 }
+
+expose("backToTop", function () {
+  // css `scroll-behavior: smooth` animates this (and turns it off under
+  // prefers-reduced-motion).
+  window.scrollTo(0, 0);
+});
+
+// Clicking a heading's "#" anchor copies the section link. Default hash
+// navigation still happens, so the URL bar reflects what was copied.
+addEventListener("click", function (e) {
+  var anchor = e.target.closest("a.direct-link");
+  if (!anchor || !navigator.clipboard) {
+    return;
+  }
+  navigator.clipboard.writeText(
+    location.origin + location.pathname + anchor.getAttribute("href")
+  );
+  message(ui("anchorCopied", "段落連結已複製 🔗"));
+});
 
 addEventListener("click", (e) => {
   const handler = e.target.closest("[on-click]");

@@ -135,12 +135,34 @@
         const toggleEl = document.querySelector("#color-scheme-toggle");
         toggleEl.addEventListener("click", handleToggleEvent);
 
+        // The markup ships the light-mode icon; initTheme only sets the class.
+        // Sync the icon (and utterances, when present) with the theme applied
+        // at load, so dark-mode visitors see the sun icon before any click.
+        if (bodyEl.classList.contains(DARK)) {
+          const toggleImg = toggleEl.querySelector("img");
+          toggleImg.src = toggleImg.src.replace(DARK, LIGHT);
+          if (document.querySelector('script[src*="utteranc.es"]')) {
+            setUtterancesTheme(DARK);
+          }
+        }
+
         function handleToggleEvent() {
-          const isDark = bodyEl.classList.toggle(DARK);
-          document.documentElement.classList.toggle(DARK, isDark);
-          const theme = isDark ? DARK : LIGHT;
-          setTheme(theme);
-          localStorage.setItem("theme", theme);
+          const apply = () => {
+            const isDark = bodyEl.classList.toggle(DARK);
+            document.documentElement.classList.toggle(DARK, isDark);
+            const theme = isDark ? DARK : LIGHT;
+            setTheme(theme);
+            localStorage.setItem("theme", theme);
+          };
+          // Cross-fade the whole page between themes where supported.
+          if (
+            document.startViewTransition &&
+            !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ) {
+            document.startViewTransition(apply);
+          } else {
+            apply();
+          }
         }
 
         function setTheme(theme) {
@@ -244,7 +266,9 @@
       </nav>
       <h1 class="w-full">{{ title }}</h1>
       {% block extraArticleHeader %}{% endblock %}
-      <dialog id="message"></dialog>
+      {#- data-ui feeds src/main.js the page-language UI strings (toasts etc.),
+          following the lang-suggest data-strings pattern. #}
+      <dialog id="message" data-ui="{{ t.js | dump }}"></dialog>
       {% if googleanalytics %}
       <noscript>
         <img src="/.netlify/functions/ga?v=1&_v=j83&t=pageview&dr=https%3A%2F%2Fno-script.com&_s=1&dh={{ metadata.domain | encodeURIComponent }}&dp={{ page.url | encodeURIComponent }}&ul=en-us&de=UTF-8&dt={{title|encodeURIComponent}}&tid={{googleanalytics}}" width="1" height="1"
@@ -285,6 +309,11 @@
       </button>
     </aside>
     {%- endif %}
+
+    {#- Revealed by src/main.js after ~1.5 screens of scrolling. Rendered here
+        (hidden) so its styles survive the per-page PurgeCSS pass. #}
+    <button id="back-to-top" class="back-to-top" type="button" hidden
+      aria-label="{{ t.backToTop or '回到頂端' }}" on-click="backToTop">↑</button>
 
     <footer>
       <div class="copyright">&copy; 2021&ndash;{{ year }} {{ t.copyright }}</div>
