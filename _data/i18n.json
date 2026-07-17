@@ -6,7 +6,7 @@
       "contributions": "出爐紀錄",
       "less": "少",
       "more": "多",
-      "mostDiscussed": "最搶手",
+      "mostDiscussed": "最熱銷",
       "commentsUnit": "則留言",
       "tier": {
         "diamond": "烘焙大師",
@@ -20,12 +20,12 @@
     "js": {
       "linkCopied": "文章連結已複製",
       "anchorCopied": "段落連結已複製 🔗",
-      "readDone": "出爐！讀完這一篇了 🍞"
+      "readDone": "出爐！讀完這篇了 🍞"
     },
     "langName": "繁體中文",
     "publishedOn": "出爐於",
     "publishedBy": "作者",
-    "aboutAuthor": "關於這位烘焙師",
+    "aboutAuthor": "關於烘焙師",
     "shareArticle": "分享文章",
     "otherLanguages": "其他語言",
     "readInYourLanguage": "選擇語言",
@@ -36,8 +36,8 @@
     "suggestDismiss": "關閉",
     "siteName": "ErrorBaker 技術共筆部落格",
     "menu": "選單",
-    "intro": "Hi，這裡是 ErrorBaker 技術共筆部落格——一間把錯誤烤成麵包的烘焙坊。我們用共筆互相督促，把踩過的坑、寫壞的 code，烘成一篇篇熱騰騰的文章。",
-    "nav_Archive": "麵包櫃",
+    "intro": "Hi，這裡是 ErrorBaker —— 我們以共筆互相督促，把踩過的坑，烘成熱騰騰的文章。",
+    "nav_Archive": "品項",
     "nav_Tags": "口味",
     "postsUnit": "篇",
     "toc": "目錄",
@@ -45,13 +45,13 @@
     "skipToContent": "跳到主要內容",
     "toggleTheme": "切換深色模式",
     "ogLocale": "zh_TW",
-    "nav_About": "烘焙坊",
-    "aboutTitle": "關於這間烘焙坊",
+    "nav_About": "烘焙師",
+    "aboutTitle": "關於烘焙坊",
     "aboutOriginHeading": "緣起",
     "authorsHeading": "烘焙師名單",
     "aboutOriginBody": "<p>一群因為某些原因聚集在一起的工程師決定合寫一個技術共筆部落格，藉此督促自己做點事，以每人每個月至少一篇的形式發佈文章。</p><p>名字的由來是為了跟 TechBridge 以及 StarBugs 一樣，由兩個單字組成，第二個單字 B 開頭，然後單字要跟程式有關（像是 Tech 與 Bugs），最後就找到了 ErrorBaker，錯誤烘焙師，很適合常常寫出 error 的我們。</p>",
     "backToTop": "回到頂端",
-    "relatedHeading": "這篇烤好了，再來一爐？"
+    "relatedHeading": "再來一爐？"
   },
   "en": {
     "gx": {
@@ -60,7 +60,7 @@
       "contributions": "Bake log",
       "less": "Less",
       "more": "More",
-      "mostDiscussed": "Hot batch",
+      "mostDiscussed": "Best seller",
       "commentsUnit": "comments",
       "tier": {
         "diamond": "Master Baker",
@@ -90,8 +90,8 @@
     "suggestDismiss": "Dismiss",
     "siteName": "ErrorBaker Tech Blog",
     "menu": "Menu",
-    "intro": "Hi, this is ErrorBaker — a bakery where errors get baked into bread. We're a group of engineers who keep each other writing, turning the pitfalls we've hit into warm, fresh-from-the-oven articles.",
-    "nav_Archive": "All Bakes",
+    "intro": "Hi, this is ErrorBaker — we keep each other writing, baking the pitfalls we've hit into warm, fresh articles.",
+    "nav_Archive": "Lineup",
     "nav_Tags": "Flavors",
     "postsUnit": "articles",
     "toc": "Contents",
@@ -99,7 +99,7 @@
     "skipToContent": "Skip to content",
     "toggleTheme": "Toggle dark mode",
     "ogLocale": "en_US",
-    "nav_About": "The Bakery",
+    "nav_About": "Bakers",
     "aboutTitle": "About the Bakery",
     "aboutOriginHeading": "Origin",
     "authorsHeading": "The Bakers",
@@ -114,7 +114,7 @@
       "contributions": "焼き上げ記録",
       "less": "少",
       "more": "多",
-      "mostDiscussed": "一番人気",
+      "mostDiscussed": "ベストセラー",
       "commentsUnit": "件のコメント",
       "tier": {
         "diamond": "マイスター",
@@ -144,8 +144,8 @@
     "suggestDismiss": "閉じる",
     "siteName": "ErrorBaker 技術ブログ",
     "menu": "メニュー",
-    "intro": "ErrorBaker へようこそ——エラーをパンに焼き上げる技術ブログです。エンジニア仲間で執筆を励まし合い、踏んだバグや失敗を、焼きたての記事に仕上げています。",
-    "nav_Archive": "パン棚",
+    "intro": "ErrorBaker へようこそ —— 互いに励まし合い、踏んだ失敗を焼きたての記事に仕上げています。",
+    "nav_Archive": "ラインナップ",
     "nav_Tags": "フレーバー",
     "postsUnit": "記事",
     "toc": "目次",
@@ -153,13 +153,13 @@
     "skipToContent": "本文へスキップ",
     "toggleTheme": "ダークモード切替",
     "ogLocale": "ja_JP",
-    "nav_About": "工房について",
-    "aboutTitle": "この工房について",
+    "nav_About": "職人たち",
+    "aboutTitle": "工房について",
     "aboutOriginHeading": "由来",
     "authorsHeading": "職人一覧",
     "aboutOriginBody": "<p>さまざまな理由で集まったエンジニアたちが、技術共同ブログを書くことにしました。お互いを律するために、一人あたり毎月最低 1 本の記事を公開しています。</p><p>名前は TechBridge や StarBugs と同じく 2 つの単語からなり、2 つ目は B で始まりプログラミングに関係する語（Tech と Bugs のように）。最終的に ErrorBaker（エラーを焼く人）に決めました。しょっちゅう error を生み出す私たちにぴったりです。</p>",
     "backToTop": "トップへ戻る",
-    "relatedHeading": "もう一つ、焼きたてをどうぞ"
+    "relatedHeading": "もう一つどうぞ"
   },
   "zh-CN": {
     "gx": {
@@ -168,7 +168,7 @@
       "contributions": "出炉记录",
       "less": "少",
       "more": "多",
-      "mostDiscussed": "最抢手",
+      "mostDiscussed": "最热销",
       "commentsUnit": "条评论",
       "tier": {
         "diamond": "烘焙大师",
@@ -182,12 +182,12 @@
     "js": {
       "linkCopied": "文章链接已复制",
       "anchorCopied": "段落链接已复制 🔗",
-      "readDone": "出炉！读完这一篇了 🍞"
+      "readDone": "出炉！读完这篇了 🍞"
     },
     "langName": "简体中文",
     "publishedOn": "出炉于",
     "publishedBy": "作者",
-    "aboutAuthor": "关于这位烘焙师",
+    "aboutAuthor": "关于烘焙师",
     "shareArticle": "分享文章",
     "otherLanguages": "其他语言",
     "readInYourLanguage": "选择语言",
@@ -198,8 +198,8 @@
     "suggestDismiss": "关闭",
     "siteName": "ErrorBaker 技术共笔博客",
     "menu": "菜单",
-    "intro": "Hi，这里是 ErrorBaker 技术共笔博客——一间把错误烤成面包的烘焙坊。我们用共笔互相督促，把踩过的坑、写坏的 code，烘成一篇篇热腾腾的文章。",
-    "nav_Archive": "面包柜",
+    "intro": "Hi，这里是 ErrorBaker —— 我们以共笔互相督促，把踩过的坑，烘成热腾腾的文章。",
+    "nav_Archive": "品项",
     "nav_Tags": "口味",
     "postsUnit": "篇",
     "toc": "目录",
@@ -207,12 +207,12 @@
     "skipToContent": "跳到主要内容",
     "toggleTheme": "切换深色模式",
     "ogLocale": "zh_CN",
-    "nav_About": "烘焙坊",
-    "aboutTitle": "关于这间烘焙坊",
+    "nav_About": "烘焙师",
+    "aboutTitle": "关于烘焙坊",
     "aboutOriginHeading": "缘起",
     "authorsHeading": "烘焙师名单",
     "aboutOriginBody": "<p>一群因为某些原因聚集在一起的工程师决定合写一个技术共笔博客，借此督促自己做点事，以每人每个月至少一篇的形式发布文章。</p><p>名字的由来是为了跟 TechBridge 以及 StarBugs 一样，由两个单词组成，第二个单词 B 开头，然后单词要跟程序有关（像是 Tech 与 Bugs），最后就找到了 ErrorBaker，错误烘焙师，很适合常常写出 error 的我们。</p>",
     "backToTop": "回到顶部",
-    "relatedHeading": "这篇烤好了，再来一炉？"
+    "relatedHeading": "再来一炉？"
   }
 }
