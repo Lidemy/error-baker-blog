@@ -2371,22 +2371,34 @@ article h3 {
 header {
   padding-bottom: 1.25em;
 }
-body:not(.tmpl-post) header > h1.w-full::after {
+/* Centered (ceremonial) pages only: in a flush-left setting a short stub
+   reads as a broken underline — left-register pages carry hierarchy with
+   scale and spacing alone, per flush-left typographic tradition. */
+body:not(.tmpl-post):not(.tmpl-home) header > h1.w-full::after {
   content: "";
   display: block;
   width: 2.75rem;
   height: 3px;
   border-radius: 2px;
-  background: var(--accent);
+  /* The tick is "baked" like everything quantitative: dough → ember. */
+  background: linear-gradient(90deg, #eac7a2, #bc5b2b 55%, #93351f);
   margin: 1rem auto 0;
+  /* Bakes out on load; transform-only so layout never shifts (no CLS).
+     The global prefers-reduced-motion rule collapses it to instant. */
+  animation: tick-bake 0.7s var(--ease) 0.15s backwards;
+  transform-origin: center;
+}
+body.dark:not(.tmpl-post):not(.tmpl-home) header > h1.w-full::after {
+  background: linear-gradient(90deg, #5c3423, #c96f38 55%, #ee9556);
+}
+@keyframes tick-bake {
+  from {
+    transform: scaleX(0);
+  }
 }
 /* Site alignment registers: the home family (home/archive/tags/404) is a
    left-set masthead, ceremonial pages (post/about) are centered. The tick
    follows its title's register instead of always centering. */
-body.tmpl-home header > h1.w-full::after {
-  margin-left: 0;
-  margin-right: 0;
-}
 /* Pages without a front-matter title render an empty header h1 — hide it so
    no orphaned tick floats above the content (e.g. 404 before it had a title). */
 header > h1.w-full:empty {
@@ -2528,7 +2540,7 @@ body.tmpl-home main > article {
   padding-top: 0.4rem;
 }
 body.tmpl-home .intro {
-  margin: 0.4rem 0 3.2rem;
+  margin: 0.9rem 0 3.2rem;
   max-width: 44rem;
   text-align: start;
   border-bottom: 0;
