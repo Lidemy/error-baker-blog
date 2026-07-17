@@ -1,10 +1,14 @@
 /**
  * Build-time reader-discussion signals from utterances.
  *
- * utterances stores each post's comment thread as a GitHub issue on this repo,
- * labelled `utterancex`, with the issue title set to the page <title> at the
- * time the first comment was posted (issue-term="title"). A couple of API
- * calls map every thread to its post title and comment count.
+ * utterances stores each post's comment thread as a GitHub issue on this
+ * repo. Threads are keyed by the source post's path (`/posts/<author>/
+ * <slug>/`): legacy threads — created back when the embed used
+ * issue-term="title" — are pinned to their path by _data/commentThreads.json
+ * (see scripts/build-comment-thread-map.js), and threads created since carry
+ * the path as their issue title, because the embed now uses the path as the
+ * issue term. One paginated API sweep maps every thread to its path and
+ * comment count.
  *
  * The fetch is memoized per build process and fails soft: an offline or
  * rate-limited build resolves to null, and the templates simply hide reader
@@ -14,16 +18,27 @@
 "use strict";
 
 const REPO = "Lidemy/error-baker-blog";
-const LABEL = "utterancex";
 const TIMEOUT_MS = 8000;
-const MAX_PAGES = 10; // 1000 discussion threads — far above current volume
+const MAX_PAGES = 10; // 1000 issues — far above current volume
 
-// Issue titles are page <title>s. Post pages append `｜<site name>`, so strip
-// any such suffix to recover the raw post title used as the lookup key.
-const normalizeTitle = (title) => (title || "").split("｜")[0].trim();
+const LEGACY_THREADS = require("../_data/commentThreads.json");
+
+// path -> issue number, inverted to issue number -> path for counting.
+const legacyPathByNumber = Object.create(null);
+for (const [path, number] of Object.entries(LEGACY_THREADS)) {
+  legacyPathByNumber[number] = path;
+}
+
+// The path a thread belongs to, or null for issues that aren't comment
+// threads (engineering issues, PRs are filtered by the caller).
+function threadPath(issue) {
+  if (legacyPathByNumber[issue.number]) return legacyPathByNumber[issue.number];
+  const title = (issue.title || "").trim();
+  return /^\/posts\/.+\/$/.test(title) ? title : null;
+}
 
 async function fetchCommentCounts() {
-  const byTitle = Object.create(null);
+  const byPath = Object.create(null);
   const headers = {
     accept: "application/vnd.github+json",
     "user-agent": "error-baker-blog-build",
@@ -32,7 +47,7 @@ async function fetchCommentCounts() {
     headers.authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
   }
   for (let page = 1; page <= MAX_PAGES; page++) {
-    const url = `https://api.github.com/repos/${REPO}/issues?labels=${LABEL}&state=all&per_page=100&page=${page}`;
+    const url = `https://api.github.com/repos/${REPO}/issues?state=all&per_page=100&page=${page}`;
     const res = await fetch(url, {
       headers,
       signal: AbortSignal.timeout(TIMEOUT_MS),
@@ -41,18 +56,18 @@ async function fetchCommentCounts() {
     const issues = await res.json();
     for (const issue of issues) {
       if (issue.pull_request) continue; // the issues API also returns PRs
-      const key = normalizeTitle(issue.title);
+      const key = threadPath(issue);
       if (!key) continue;
-      byTitle[key] = (byTitle[key] || 0) + issue.comments;
+      byPath[key] = (byPath[key] || 0) + issue.comments;
     }
     if (issues.length < 100) break;
   }
-  return byTitle;
+  return byPath;
 }
 
 let cached; // Promise<Object|null> — memoized so collections can re-run freely
 
-function commentCountsByTitle() {
+function commentCountsByPath() {
   if (!cached) {
     cached = fetchCommentCounts().catch((error) => {
       console.warn(`[discussions] skipping reader stats: ${error.message}`);
@@ -62,4 +77,4 @@ function commentCountsByTitle() {
   return cached;
 }
 
-module.exports = { commentCountsByTitle, normalizeTitle };
+module.exports = { commentCountsByPath, threadPath };

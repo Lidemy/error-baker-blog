@@ -8,14 +8,14 @@ const authors = {
   benben: { name: "Benben", avatarUrl: "/img/benben.png" },
 };
 
-function post(author, title, date) {
-  return { data: { author, title }, date: new Date(date) };
+function post(author, url, date) {
+  return { url, data: { author }, date: new Date(date) };
 }
 
 const posts = [
-  post("tian", "GitFlow as I Understand It", "2021-10-28"),
-  post("tian", "Second Tian Post", "2022-01-10"),
-  post("benben", "Benben on reduce", "2023-05-01"),
+  post("tian", "/posts/tian/git-flow/", "2021-10-28"),
+  post("tian", "/posts/tian/second/", "2022-01-10"),
+  post("benben", "/posts/benben/16-reduce/", "2023-05-01"),
 ];
 
 describe("buildAuthorStats reader-discussion signals", () => {
@@ -29,9 +29,9 @@ describe("buildAuthorStats reader-discussion signals", () => {
 
   it("sums comments per author and flags the single most-discussed", () => {
     const comments = {
-      "GitFlow as I Understand It": 3,
-      "Second Tian Post": 1,
-      "Benben on reduce": 6,
+      "/posts/tian/git-flow/": 3,
+      "/posts/tian/second/": 1,
+      "/posts/benben/16-reduce/": 6,
     };
     const stats = buildAuthorStats(posts, authors, comments);
     const tian = stats.find((s) => s.key === "tian");
@@ -45,7 +45,7 @@ describe("buildAuthorStats reader-discussion signals", () => {
 
   it("does not disturb the post-count ranking", () => {
     // benben has the most comments but tian has more posts → tian still #1.
-    const comments = { "Benben on reduce": 99 };
+    const comments = { "/posts/benben/16-reduce/": 99 };
     const stats = buildAuthorStats(posts, authors, comments);
     assert.strictEqual(stats[0].key, "tian");
     assert.strictEqual(stats[0].rank, 1);
@@ -53,8 +53,8 @@ describe("buildAuthorStats reader-discussion signals", () => {
 
   it("awards no most-discussed badge on a tie", () => {
     const comments = {
-      "GitFlow as I Understand It": 2,
-      "Benben on reduce": 2,
+      "/posts/tian/git-flow/": 2,
+      "/posts/benben/16-reduce/": 2,
     };
     const stats = buildAuthorStats(posts, authors, comments);
     assert.ok(stats.every((s) => s.mostDiscussed === false));

@@ -22,8 +22,8 @@ const POST_FILENAME = path.resolve(
 
 const TIERS = ["iron", "bronze", "silver", "gold", "diamond"];
 
-function post(author, isoDate, title) {
-  return { data: { author, title }, date: new Date(`${isoDate}T00:00:00Z`) };
+function post(author, isoDate, url) {
+  return { url, data: { author }, date: new Date(`${isoDate}T00:00:00Z`) };
 }
 
 function repeat(author, isoDate, count) {
@@ -102,11 +102,11 @@ describe("author gamification stats", () => {
 
   it("sums reader comments per author and flags a single most-discussed leader", () => {
     const posts = [
-      post("a", "2024-01-01", "T1"),
-      post("a", "2024-02-01", "T2"),
-      post("b", "2024-03-01", "T3"),
+      post("a", "2024-01-01", "/posts/a/t1/"),
+      post("a", "2024-02-01", "/posts/a/t2/"),
+      post("b", "2024-03-01", "/posts/b/t3/"),
     ];
-    const stats = buildAuthorStats(posts, authors, { T1: 4, T2: 3, T3: 5 });
+    const stats = buildAuthorStats(posts, authors, { "/posts/a/t1/": 4, "/posts/a/t2/": 3, "/posts/b/t3/": 5 });
     const byKey = Object.fromEntries(stats.map((s) => [s.key, s]));
     assert.equal(byKey.a.comments, 7);
     assert.equal(byKey.b.comments, 5);
@@ -115,8 +115,8 @@ describe("author gamification stats", () => {
   });
 
   it("awards no most-discussed badge on a tie or without comment data", () => {
-    const posts = [post("a", "2024-01-01", "T1"), post("b", "2024-02-01", "T2")];
-    const tied = buildAuthorStats(posts, authors, { T1: 5, T2: 5 });
+    const posts = [post("a", "2024-01-01", "/posts/a/t1/"), post("b", "2024-02-01", "/posts/b/t2/")];
+    const tied = buildAuthorStats(posts, authors, { "/posts/a/t1/": 5, "/posts/b/t2/": 5 });
     assert.ok(tied.every((s) => s.mostDiscussed === false));
     const withoutData = buildAuthorStats(posts, authors);
     assert.ok(withoutData.every((s) => !("comments" in s) && !("mostDiscussed" in s)));
