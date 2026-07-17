@@ -84,10 +84,10 @@ header nav {
   top: auto;
   bottom: -1px;
   height: 2px;
-  background-color: #d99757;
+  background-color: #eac7a2;
 }
 body.dark #reading-progress {
-  background-color: #94512a;
+  background-color: #5c3423;
 }
 
 @media (max-width: 840px) {
