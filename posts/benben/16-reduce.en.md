@@ -1,5 +1,5 @@
 ---
-title: "Reduce | The Complete Handbook"
+title: 'Reduce | The Complete Handbook'
 date: 2026-05-16
 tags: [JavaScript, array]
 author: benben
@@ -8,7 +8,9 @@ lang: en
 sourceLang: zh-TW
 translationKey: benben/16-reduce
 permalink: /en/posts/benben/16-reduce/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 453a27accd175a00da3851983100d4d0e68cc0c2d77f0f05fd66106249f9f091
 ---
 
@@ -20,12 +22,12 @@ sourceHash: 453a27accd175a00da3851983100d4d0e68cc0c2d77f0f05fd66106249f9f091
 
 > By the way, ES6 (2015) is already **10 years old** 👴🏼
 
-I think most people just starting out with JavaScript — besides the common Array methods like `push`, `pop`, `shift`, and `unshift` — are relatively unfamiliar with the rest, and `reduce` is the most unfamiliar of all. Other commonly used ones like `find` and `forEach` are fairly intuitive. Most people figure they'll just look up `reduce` when they need it. But when exactly *do* you need it? They can't even really say.
+I think most people just starting out with JavaScript — besides the common Array methods like `push`, `pop`, `shift`, and `unshift` — are relatively unfamiliar with the rest, and `reduce` is the most unfamiliar of all. Other commonly used ones like `find` and `forEach` are fairly intuitive. Most people figure they'll just look up `reduce` when they need it. But when exactly _do_ you need it? They can't even really say.
 
 Let me throw out a few questions for you to think about first:
 
 1. What is `Array.prototype.reduce()`?
-2. Why is it called *reduce*?
+2. Why is it called _reduce_?
 3. What do the parameters mean?
 4. When should you use it? When should you not?
 
@@ -87,7 +89,7 @@ Got it. No problem doing it this way from now on, right?
 
 Meanwhile Da Ban mutters inwardly: "As if!"
 
-> Note: Da Ban means the senior class of kindergarten, not "Big B___".
+> Note: Da Ban means the senior class of kindergarten, not "Big B\_\_\_".
 
 But Xiao Ban had just learned `sum` and was too excited to listen, so off he went, happily writing code again!
 
