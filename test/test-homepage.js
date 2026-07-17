@@ -1,47 +1,48 @@
-const expect = require("expect.js");
+"use strict";
+
 const assert = require("assert").strict;
+const fs = require("fs");
+const path = require("path");
 const { JSDOM } = require("jsdom");
-const readFileSync = require("fs").readFileSync;
-const existsSync = require("fs").existsSync;
+const metadata = require("../_data/metadata.json");
 
-describe("check build output for homepage", () => {
-  describe("homepage", () => {
-    const FILENAME = "_site/index.html";
+const SITE_ROOT = path.resolve(__dirname, "..", "_site");
+const FILENAME = path.join(SITE_ROOT, "index.html");
 
-    if (!existsSync(FILENAME)) {
-      it("WARNING skipping tests because FILENAME does not exist", () => {});
-      return;
+describe("homepage build output", () => {
+  let doc;
+
+  before(() => {
+    assert.ok(fs.existsSync(FILENAME), `Missing build output: ${FILENAME}`);
+    doc = new JSDOM(fs.readFileSync(FILENAME, "utf8")).window.document;
+  });
+
+  it("has localized document metadata and a self canonical", () => {
+    assert.equal(doc.documentElement.lang, "zh-TW");
+    assert.equal(
+      doc.querySelector("link[rel='canonical']").href,
+      `${metadata.url}/`
+    );
+    assert.ok(doc.querySelector("meta[name='description']").content.length > 0);
+  });
+
+  it("has working primary navigation", () => {
+    const hrefs = [...doc.querySelectorAll("header nav a")].map((link) =>
+      link.getAttribute("href")
+    );
+    assert.ok(hrefs.includes("/archive/"));
+    assert.ok(hrefs.includes("/tags/"));
+    assert.ok(hrefs.includes("/about/"));
+  });
+
+  it("lists real posts whose generated pages exist", () => {
+    const links = [...doc.querySelectorAll(".posts .post-title a")];
+    assert.ok(links.length > 0, "Expected at least one post on the homepage");
+
+    for (const link of links) {
+      const pathname = new URL(link.href, metadata.url).pathname;
+      const output = path.join(SITE_ROOT, pathname, "index.html");
+      assert.ok(fs.existsSync(output), `Homepage links to missing output: ${pathname}`);
     }
-
-    let dom;
-    let html;
-    let doc;
-
-    function select(selector, opt_attribute) {
-      const element = doc.querySelector(selector);
-      assert(element, "Expected to find: " + selector);
-      if (opt_attribute) {
-        return element.getAttribute(opt_attribute);
-      }
-      return element.textContent;
-    }
-
-    before(() => {
-      html = readFileSync("_site/index.html");
-      dom = new JSDOM(html);
-      doc = dom.window.document;
-    });
-
-    it("should have a top navigation", () => {
-      const navs = Array.from(doc.querySelectorAll("header nav a"));
-
-      expect(navs.length).to.be.greaterThan(1);
-    });
-
-    it("should have a list of posts", () => {
-      const posts = Array.from(doc.querySelectorAll("#posts ul li a"));
-
-      expect(posts.length).to.be.greaterThan(0);
-    });
   });
 });

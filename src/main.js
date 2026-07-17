@@ -18,7 +18,6 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 const exposed = {};
 if (location.search) {
   var a = document.createElement("a");
@@ -272,3 +271,130 @@ document.body.addEventListener(
   /* capture */ "true"
 );
 
+// ── Locale-suggestion banner ─────────────────────────────────────────────
+// The banner <aside id="lang-suggest"> is server-rendered (hidden) by
+// base.njk. When this page has a translated version that matches the
+// reader's preferred languages better than the current one, reveal it with
+// a link — never auto-redirect (hreflang/SEO stays intact). The available
+// versions are read from the hreflang alternates already in <head>, so this
+// works on any page and never fires where no translation exists.
+(function () {
+  var banner = document.getElementById("lang-suggest");
+  if (!banner || !navigator.languages) return;
+  try {
+    if (localStorage.getItem("langSuggestDismissed")) return;
+  } catch (e) {
+    return;
+  }
+  var strings;
+  try {
+    strings = JSON.parse(banner.getAttribute("data-strings") || "{}");
+  } catch (e) {
+    return;
+  }
+  var alternates = {};
+  [].forEach.call(
+    document.querySelectorAll('link[rel="alternate"][hreflang]'),
+    function (link) {
+      var code = link.getAttribute("hreflang");
+      if (code && code !== "x-default") {
+        alternates[code.toLowerCase()] = {
+          code: code,
+          href: link.getAttribute("href"),
+        };
+      }
+    }
+  );
+  // Map a BCP-47 preference onto the site's language codes. Chinese needs
+  // script awareness: Traditional regions/scripts → zh-TW, Simplified → zh-CN.
+  function candidatesFor(pref) {
+    var p = pref.toLowerCase();
+    if (p === "zh" || p === "zh-tw" || p === "zh-hant" || p === "zh-hk" || p === "zh-mo") {
+      return ["zh-tw"];
+    }
+    if (p === "zh-cn" || p === "zh-hans" || p === "zh-sg" || p === "zh-my") {
+      return ["zh-cn"];
+    }
+    return [p, p.split("-")[0]];
+  }
+  var pageLang = (document.documentElement.lang || "").toLowerCase();
+  var prefs = navigator.languages;
+  var match = null;
+  for (var i = 0; i < prefs.length && !match; i++) {
+    var cands = candidatesFor(prefs[i]);
+    for (var j = 0; j < cands.length && !match; j++) {
+      if (cands[j] === pageLang) return; // current page already fits best
+      if (alternates[cands[j]]) match = alternates[cands[j]];
+    }
+  }
+  if (!match) return;
+  var s = strings[match.code];
+  if (!s || !s.available || !s.read) return;
+  banner.setAttribute("lang", match.code);
+  banner.querySelector(".lang-suggest__text").textContent = s.available;
+  var link = banner.querySelector(".lang-suggest__link");
+  link.textContent = s.read;
+  link.href = match.href;
+  link.setAttribute("hreflang", match.code);
+  link.setAttribute("lang", match.code);
+  var dismiss = banner.querySelector(".lang-suggest__dismiss");
+  if (s.dismiss) dismiss.setAttribute("aria-label", s.dismiss);
+  dismiss.addEventListener("click", function () {
+    banner.hidden = true;
+    try {
+      localStorage.setItem("langSuggestDismissed", "1");
+    } catch (e) {}
+  });
+  banner.hidden = false;
+})();
+
+// ── Table of contents (post pages) + scroll-spy ─────────────────────────
+// The TOC <nav id="toc"> is rendered (empty) by post.njk so its styles survive
+// PurgeCSS. We populate it from the article's heading anchors (which already
+// have ids from markdown-it-anchor). Manually-authored headings such as the
+// "About the author" section have no id and are intentionally skipped.
+(function () {
+  var toc = document.getElementById("toc");
+  if (!toc) return;
+  var article = document.querySelector("main > article");
+  var list = toc.querySelector(".toc-list");
+  if (!article || !list) return;
+  var headings = [].slice.call(article.querySelectorAll("h2[id], h3[id]"));
+  if (headings.length < 2) {
+    // Nothing worth a TOC. It is display:none, so removing it shifts nothing.
+    toc.parentNode && toc.parentNode.removeChild(toc);
+    return;
+  }
+  var byId = {};
+  headings.forEach(function (h) {
+    var li = document.createElement("li");
+    li.className = h.tagName === "H3" ? "toc-h3" : "toc-h2";
+    var a = document.createElement("a");
+    a.href = "#" + h.id;
+    a.textContent = (h.textContent || "").replace(/^#+\s*/, "").trim();
+    li.appendChild(a);
+    list.appendChild(li);
+    byId[h.id] = a;
+  });
+  // CSS reveals .toc.toc-ready only on >=1024px (desktop sidebar); on smaller
+  // screens it stays hidden, avoiding a bottom-of-page TOC and any layout shift.
+  toc.classList.add("toc-ready");
+
+  if ("IntersectionObserver" in window) {
+    var current = null;
+    var io = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          if (current) current.classList.remove("active");
+          current = byId[e.target.id];
+          if (current) current.classList.add("active");
+        });
+      },
+      { rootMargin: "0px 0px -75% 0px", threshold: 0 }
+    );
+    headings.forEach(function (h) {
+      io.observe(h);
+    });
+  }
+})();

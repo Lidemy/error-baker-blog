@@ -15,14 +15,14 @@
   --fluid-typography-ratio: 0.7;
   --rem: calc(var(--base-font-size) + var(--fluid-typography-ratio) * 1vw);
 
-  --small: 0.5rem;
-  --p: 0.9rem;
-  --h6: 0.9rem;
-  --h5: 0.9rem;
-  --h4: 1rem;
-  --h3: 1.1rem;
-  --h2: 1.2rem;
-  --h1: 1.6rem;
+  --small: 0.7rem;
+  --p: 1rem;
+  --h6: 0.95rem;
+  --h5: 1rem;
+  --h4: 1.15rem;
+  --h3: 1.3rem;
+  --h2: 1.55rem;
+  --h1: 2rem;
 
   --black: 900;
   --bold: 700;
@@ -30,14 +30,12 @@
 
   /* prevent compiler from removing --p */
   font-size: var(--p);
-  font-size: var(--rem);
+  /* Bounded fluid root size: never smaller than 16px (mobile-readable,
+     avoids iOS form zoom), capped at 21px on very wide screens. Replaces the
+     old unbounded calc(12px + 0.7vw) which made text too small on phones and
+     unstable on ultra-wide displays. */
+  font-size: clamp(16px, calc(13px + 0.45vw), 21px);
   font-weight: var(--normal);
-}
-
-@media (min-width: 1168px) {
-  :root {
-    --p: 0.8rem;
-  }
 }
 
 .test-dead-code-elimination-sentinel {
@@ -61,9 +59,10 @@ article * {
 }
 
 /* "Content-visibility: auto" move the images over the other elements
-   Set z-index to keep the nav over the rasterized images */
+   Set z-index to keep the nav (and its mobile panel) over the rasterized
+   images and all in-flow content */
 header nav {
-  z-index: 1;
+  z-index: 50;
 }
 
 /*! purgecss start ignore */
@@ -602,8 +601,6 @@ html {
     "Noto Sans TC", "PingFang TC", "Hiragino Sans GB", "Heiti TC",
     "Microsoft YaHei", "Microsoft Jhenghei", sans-serif;
 }
-@supports (font-variation-settings: normal) {
-}
 form {
   padding: 1.5em 1.5em 0;
   border: 0.2rem solid #202020;
@@ -702,8 +699,8 @@ input[type="submit"] {
 button:not([disabled]):hover,
 button[type="submit"]:hover,
 input[type="submit"]:hover {
-  background: #ba9005;
-  color: #000;
+  background: var(--accent-hover);
+  color: #fff;
 }
 input[type="color"],
 input[type="date"],
@@ -752,7 +749,6 @@ body {
   font-family: var(--font-family);
   background: var(--bg);
   color: var(--fg);
-  transition: all 0.3s;
 }
 body {
   --fg: var(--dark);
@@ -760,7 +756,9 @@ body {
   --navColor: var(--primary);
   --progressColor: var(--dark);
   --codeColor: var(--light);
-  --codeBg: #444444;
+  /* Warm-hued code surfaces so code blocks sit inside the paper/ink palette
+     instead of the old neutral greys. Syntax token colors stay untouched. */
+  --codeBg: #2e2925;
 }
 body.dark {
   --fg: var(--light);
@@ -768,7 +766,7 @@ body.dark {
   --navColor: var(--dark);
   --progressColor: var(--primary);
   --codeColor: #d65c5c;
-  --codeBg: #333;
+  --codeBg: #272220;
 }
 @media (prefers-color-scheme: dark) {
   body.dark {
@@ -777,37 +775,13 @@ body.dark {
     --navColor: var(--dark);
     --progressColor: var(--primary);
     --codeColor: #d65c5c;
-    --codeBg: #333;
+    --codeBg: #272220;
   }
 }
 section {
   margin-left: auto;
   margin-right: auto;
   width: 900px;
-}
-#menu-toggle {
-  display: none;
-}
-header label {
-  display: block;
-}
-#menu-toggle:checked ~ a {
-  display: block;
-  padding: 0.75em 0;
-  margin: 0 1.5em;
-  text-align: center;
-  border-bottom: 1px solid #ccc;
-}
-#menu-toggle:checked ~ a:last-of-type {
-  padding-bottom: 0;
-  border: 0;
-}
-#menu-toggle:checked ~ label {
-  border-bottom: 1px solid #aaa;
-  padding-bottom: 0.75em;
-}
-#menu-toggle:not(:checked) ~ a {
-  display: none;
 }
 header {
   padding: 4.5em 1.5em 3em;
@@ -821,47 +795,6 @@ header {
 }
 header p {
   margin-top: 0;
-}
-header nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  padding: 0.375em 1.5em;
-  background: var(--bg);
-  text-align: right;
-  background: var(--navColor);
-}
-header nav h1 {
-  float: left;
-  font-size: inherit;
-  line-height: inherit;
-  margin: 0;
-  text-align: left;
-}
-header nav a {
-  text-decoration: none;
-  font-family: var(--font-family);
-  color: #fafafa;
-  margin-left: 1.5em;
-  font-size: 0.7rem;
-  transition: 0.3s;
-}
-header nav a:hover {
-  opacity: 0.9;
-}
-header nav a:first-of-type {
-  margin-left: auto;
-}
-header nav a:last-of-type {
-  margin-right: 1.5em;
-}
-header nav label {
-  color: #000;
-  cursor: pointer;
-  margin: 0;
-  font-style: normal;
-  text-align: right;
 }
 main {
   max-width: 70rem;
@@ -1130,115 +1063,10 @@ a {
   font-family: monospace;
 }
 
-/* navbar RWD -------------------- */
-.menu__btn {
-  display: none;
-}
-.menu__btn span {
-  opacity: 0;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  display: block;
-}
-#menu__control {
-  display: none;
-}
-
-@media screen and (max-width: 960px) {
-  #nav .nav__links a {
-    margin-right: 0.5rem;
-    margin-left: 0.5rem;
-  }
-}
-@media screen and (max-width: 840px) {
-  header nav {
-    padding: 0;
-  }
-  #nav {
-    position: relative;
-  }
-  #nav h1 {
-    padding: 0.375rem 1.5rem;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  #nav h1 * {
-    margin: 0;
-  }
-  .menu__btn {
-    display: inline-block;
-    width: 1.5rem;
-    height: 1.5rem;
-    border: 1px solid #191919;
-    border-radius: 0.3rem;
-    position: relative;
-  }
-  .menu__btn::before {
-    content: "";
-    position: absolute;
-    top: 51%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 0.1rem;
-    width: 0.9rem;
-    background-color: #333;
-    border-radius: 0.1rem;
-    box-shadow: 0 0.3rem 0px #333, 0 -0.3rem 0px #333;
-  }
-  .menu__btn:hover {
-    filter: brightness(0.6);
-  }
-  .nav__links {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 0;
-    max-height: 0;
-    overflow: hidden;
-    position: absolute;
-    top: 2.24em;
-    transition: max-height 0.6s ease;
-    margin: 0;
-    padding: 0;
-    z-index: -1;
-    background: rgba(255, 255, 255, 0.9);
-  }
-  .nav__links a {
-    text-align: center;
-    width: 100%;
-    padding: 0.5rem 0;
-    transition: all 0.3s ease-out;
-  }
-  .nav__links a:hover {
-    color: var(--primary);
-    background: rgba(245, 245, 245, 0.9);
-  }
-  #menu__control:checked + .nav__links {
-    height: auto;
-    max-height: 100vh;
-  }
-}
-
 #rss {
   vertical-align: text-top;
 }
 
-#nav {
-  display: flex;
-}
-#color-scheme-toggle {
-  cursor: pointer;
-  vertical-align: text-top;
-  display: inline-block;
-  margin-right: 1em;
-  width: 24px;
-  transform: translateY(2.5px);
-}
 ul#post-list {
   list-style-type: none;
 }
@@ -1336,85 +1164,1202 @@ ul#post-list li {
   }
 }
 
-/* home article end */
-
-.nav-pagination {
-  text-align: center;
-  margin-top: 72px;
-  padding: 0 28px;
-}
-
-.nav-pagination ol {
-  display: inline-flex;
-  flex-direction: row;
-  list-style: none;
-  padding: 0;
-}
-
-.nav-pagination li {
-  width: 32px;
-  height: 32px;
-  border: 1px solid #cccccc;
-  background: #fff;
-  border-radius: 6px;
-}
-
-.nav-pagination li.current {
-  border-color: var(--primary);
-}
-
-.nav-pagination li a,
-.nav-pagination li span {
-  font-size: 14px;
-  color: #000;
-  height: 32px;
-  line-height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.nav-pagination li a:hover {
-  text-decoration: none;
-  color: var(--primary);
-}
-
-.nav-pagination li:not(:first-child) {
-  margin-left: 8px;
-}
-
-.nav-pagination li.nav-pagination__prev,
-.nav-pagination li.nav-pagination__next {
-  background: var(--primary);
-  border-color: var(--primary);
-}
-
-.nav-pagination li.nav-pagination__prev *,
-.nav-pagination li.nav-pagination__next * {
-  color: #fff;
-  margin-top: -1px;
-}
-
-.nav-pagination li.nav-pagination__prev *:hover,
-.nav-pagination li.nav-pagination__next *:hover {
-  color: #fff;
-}
-
-.nav-pagination li.nav-pagination__prev:hover,
-.nav-pagination li.nav-pagination__next:hover {
-  background: var(--primary-light);
-}
-
-.nav-pagination li.nav-pagination__prev--disable,
-.nav-pagination li.nav-pagination__next--disable {
-  background: #ccc;
-  border-color: #ccc;
-  pointer-events: none;
-}
-
 /* Global style */
 .post-image-width {
   width: 800px;
   max-width: 90%;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   READING EXPERIENCE / SEO / A11y ENHANCEMENTS  (layered overrides)
+   Appended so the cascade lets these win over the base Bahunya rules above
+   without destabilising the original stylesheet.
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* ── Design tokens: links, hairlines, inline-code, surfaces ──────────────
+   New vars are referenced below so PurgeCSS (variables:true) keeps them. */
+/* ── Editorial palette: warm "paper" light, warm "ink" dark ─────────────*/
+body {
+  --paper: #fbfaf8;
+  --paper-raised: #ffffff;
+  --ink: #1f1d1b;
+  --ink-soft: #4a4642;
+  --ink-faint: #6b6660;
+  --accent: #b5322e;
+  --accent-hover: #8f2723;
+  --rule: rgba(31, 29, 27, 0.12);
+  --rule-strong: rgba(31, 29, 27, 0.22);
+  /* Map the legacy tokens used across the stylesheet onto the palette. */
+  --bg: var(--paper);
+  --fg: var(--ink);
+  --primary: var(--accent);
+  --linkColor: var(--accent);
+  --navColor: var(--paper);
+  --progressColor: var(--accent);
+  --hairline: var(--rule);
+  --surface: var(--paper-raised);
+  --muted: var(--ink-soft);
+  --inlineCodeBg: rgba(31, 29, 27, 0.05);
+  --inlineCodeColor: var(--accent);
+  /* Serif display family (Latin first, CJK appended below per language). */
+  --font-serif: "Iowan Old Style", "Apple Garamond", Georgia, "Source Serif 4",
+    "Times New Roman", Times, serif;
+}
+body.dark {
+  --paper: #1a1816;
+  --paper-raised: #232020;
+  --ink: #ece7e0;
+  --ink-soft: #b8b2aa;
+  --ink-faint: #8f8980;
+  --accent: #ff7d72;
+  --accent-hover: #ff9a91;
+  --rule: rgba(236, 231, 224, 0.14);
+  --rule-strong: rgba(236, 231, 224, 0.24);
+  --bg: var(--paper);
+  --fg: var(--ink);
+  --primary: var(--accent);
+  --linkColor: var(--accent);
+  --navColor: var(--paper);
+  --progressColor: var(--accent);
+  --hairline: var(--rule);
+  --surface: var(--paper-raised);
+  --muted: var(--ink-soft);
+  --inlineCodeBg: rgba(236, 231, 224, 0.08);
+  --inlineCodeColor: #ffb0a3;
+  --codeColor: #ffb0a3; /* AA-contrast on the dark code surfaces (was #d65c5c, 3.3:1) */
+  color-scheme: dark;
+}
+/* CJK display headings use a Ming/Song serif; Latin serif stays first in the
+   stack so Latin words render in the Latin face and CJK glyphs fall through. */
+body:lang(zh-TW),
+body:lang(zh-Hant) {
+  --font-serif: "Iowan Old Style", Georgia, "Source Serif 4", "Noto Serif TC",
+    "Songti TC", "Source Han Serif TC", serif;
+}
+body:lang(zh-CN),
+body:lang(zh-Hans) {
+  --font-serif: "Iowan Old Style", Georgia, "Source Serif 4", "Noto Serif SC",
+    "Songti SC", "Source Han Serif SC", serif;
+}
+body:lang(ja) {
+  --font-serif: "Iowan Old Style", Georgia, "Source Serif 4", "Noto Serif JP",
+    "YuMincho", "Hiragino Mincho ProN", serif;
+}
+
+/* ── Article measure & comfortable padding ──────────────────────────────
+   Replaces the rigid width:50.5em / padding:1.5em / word-break:break-word. */
+article {
+  width: min(100%, 46rem);
+  padding: clamp(1rem, 4vw, 2rem);
+  word-break: normal;
+  overflow-wrap: break-word;
+  line-height: 1.8;
+}
+
+/* ── Language-aware typography (i18n-ready; lang set on <html>) ──────────
+   CJK wants more leading + a touch of tracking and may break anywhere;
+   Latin keeps default tracking and must not hard-break words. */
+:lang(zh-Hant) article,
+:lang(zh-TW) article,
+:lang(zh-Hans) article,
+:lang(zh-CN) article,
+:lang(ja) article {
+  line-height: 1.85;
+  letter-spacing: 0.02em;
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+:lang(en) article,
+:lang(es) article {
+  line-height: 1.7;
+  letter-spacing: 0;
+  overflow-wrap: break-word;
+}
+
+/* ── Paragraph rhythm & heading hierarchy ───────────────────────────────*/
+article p,
+article ul,
+article ol,
+article pre,
+article blockquote {
+  margin-bottom: 1.4em;
+}
+article h1,
+article h2,
+article h3,
+article h4,
+article h5,
+article h6 {
+  line-height: 1.3;
+  margin-top: 1.8em;
+  margin-bottom: 0.6em;
+  letter-spacing: normal;
+}
+article > :first-child {
+  margin-top: 0;
+}
+/* Section-heading underline applies to ARTICLE BODY headings only — not the
+   home feed's post-title h2 nor the archive. */
+body.tmpl-post article h2 {
+  padding-bottom: 0.25em;
+  border-bottom: 1px solid var(--hairline);
+}
+
+/* Heading anchor "#": hidden until the heading is hovered/focused, so it no
+   longer clutters every title but stays available for sharing. */
+.direct-link {
+  opacity: 0;
+  text-decoration: none;
+  margin-left: 0.35em;
+  font-weight: var(--normal);
+  transition: opacity 0.2s;
+}
+h1:hover .direct-link,
+h2:hover .direct-link,
+h3:hover .direct-link,
+h4:hover .direct-link,
+h5:hover .direct-link,
+h6:hover .direct-link,
+.direct-link:focus {
+  opacity: 0.55;
+}
+
+/* ── Links: underline content links for non-colour-reliant affordance ───*/
+a {
+  color: var(--linkColor);
+}
+article a {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: 1px;
+}
+article a:hover {
+  text-decoration-thickness: 2px;
+}
+/* keep chrome (nav, cards, tags) underline-free */
+header nav a,
+.post a,
+.post-tag,
+footer a {
+  text-decoration: none;
+}
+
+/* ── Code: bigger, theme-aware inline chips; readable blocks ─────────────*/
+code,
+kbd {
+  font-size: 0.9em;
+}
+:not(pre) > code:not([class*="language-"]),
+kbd {
+  background: var(--inlineCodeBg);
+  color: var(--inlineCodeColor);
+  padding: 0.15em 0.4em;
+  border-radius: 0.35em;
+  font-size: 0.875em;
+}
+code[class*="language-"],
+pre[class*="language-"] {
+  line-height: 1.6;
+}
+pre[class*="language-"],
+pre code:not([class]) {
+  border-radius: 8px;
+  padding: 1.25em 1.5em;
+}
+/* code/tables/wide media never break the page on small screens */
+pre,
+table {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* ── Accessibility: skip link, focus ring, reduced motion ───────────────*/
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -3rem;
+  z-index: 1001;
+  padding: 0.5rem 1rem;
+  background: var(--surface);
+  color: var(--linkColor);
+  border-radius: 0.35em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 0.5rem;
+}
+:focus-visible {
+  outline: 2px solid var(--linkColor);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+html {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ── Dark-mode-aware misc surfaces (replace hard-coded greys) ────────────*/
+small,
+figcaption,
+blockquote footer,
+.post-date {
+  color: var(--muted);
+}
+hr,
+main {
+  border-color: var(--hairline);
+}
+.divider,
+.dark .divider {
+  border-top: 1px solid var(--hairline);
+}
+
+/* ── Header / nav: keyboard-operable theme toggle, accessible site title ─*/
+.site-title {
+  float: left;
+  font-size: inherit;
+  line-height: inherit;
+  margin: 0;
+  text-align: left;
+  font-weight: var(--bold);
+}
+#color-scheme-toggle {
+  background: transparent;
+  border: 0;
+  padding: 0.25rem;
+  cursor: pointer;
+  line-height: 0;
+}
+#color-scheme-toggle img {
+  width: 24px;
+  display: block;
+  pointer-events: none;
+}
+/* ── Post cards: robust clamp + gentle hover ────────────────────────────*/
+.summary {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  max-height: none;
+  overflow: hidden;
+}
+.post {
+  border-radius: 10px;
+  padding: 1em;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.post:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+.post-cover,
+.post-cover-img {
+  border-radius: 8px;
+}
+
+/* ── Table of Contents (post sidebar; populated by JS) ───────────────────*/
+.toc {
+  display: none;            /* shown by JS only when >= 2 headings exist */
+}
+.toc-details {
+  border: 1px solid var(--hairline);
+  border-radius: 0.5rem;
+  background: var(--surface);
+  padding: 0.5rem 0.9rem;
+}
+.toc-title {
+  font-weight: var(--bold);
+  cursor: pointer;
+  list-style: none;
+}
+.toc-title::-webkit-details-marker {
+  display: none;
+}
+.toc-title::before {
+  content: "›";
+  display: inline-block;
+  margin-right: 0.4em;
+  transition: transform 0.2s;
+}
+.toc-details[open] .toc-title::before {
+  transform: rotate(90deg);
+}
+.toc-list {
+  list-style: none;
+  margin: 0.6rem 0 0;
+  padding: 0;
+  font-size: 0.92em;
+}
+.toc-list li {
+  margin: 0.15em 0;
+}
+.toc-list .toc-h3 {
+  padding-left: 1em;
+  font-size: 0.95em;
+}
+.toc-list a {
+  color: var(--muted);
+  text-decoration: none;
+  display: block;
+  padding: 0.2em 0;
+  border-left: 2px solid transparent;
+  padding-left: 0.6em;
+}
+.toc-list a:hover {
+  color: var(--linkColor);
+}
+.toc-list a.active {
+  color: var(--linkColor);
+  border-left-color: var(--linkColor);
+  font-weight: var(--bold);
+}
+
+/* ── Back-to-top button (fixed;
+
+/* ════════════════════════════════════════════════════════════════════════
+   RESPONSIVE: phone / tablet / desktop — unified strategy
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* Desktop (>=1024px): article + sticky TOC sidebar. The grid reserves the
+   sidebar column up-front so populating the TOC causes no layout shift. */
+@media (min-width: 1024px) {
+  body.tmpl-post main {
+    display: grid;
+    grid-template-columns: minmax(0, 46rem) 15rem;
+    justify-content: center;
+    align-items: start;
+    gap: clamp(1.5rem, 3vw, 3rem);
+  }
+  body.tmpl-post main > article {
+    width: 100%;
+    margin: 0;
+  }
+  /* Sidebar TOC is desktop-only; .toc-ready is added by JS once populated.
+     On phone/tablet the .toc stays display:none (set above) so no bottom-of-
+     page TOC box appears and there is zero layout shift. */
+  .toc.toc-ready {
+    display: block;
+    align-self: start;
+    position: sticky;
+    top: 4.5rem;
+    max-height: calc(100vh - 6rem);
+    overflow-y: auto;
+  }
+}
+
+/* Tablet (768–1023px): single column, generous side padding, TOC hidden
+   (sidebar would crowd the measure; future: collapsible top card). */
+@media (min-width: 768px) and (max-width: 1023px) {
+  article {
+    width: min(100%, 42rem);
+    padding: clamp(1.25rem, 5vw, 2.5rem);
+  }
+}
+
+/* Touch devices: enlarge tap targets to >= 44px. */
+@media (pointer: coarse) {
+  header nav a,
+  .nav__links a,
+  .toc-list a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  #color-scheme-toggle {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* Never allow horizontal scrolling of the whole page.
+   `clip` (not `hidden`) so we don't create a scroll container that would
+   break the TOC's position:sticky. */
+html,
+body {
+  overflow-x: clip;
+}
+article h1,
+article h2,
+article h3,
+header > h1.w-full {
+  font-weight: 700;
+}
+
+/* ── Page header / masthead ──────────────────────────────────────────────*/
+main {
+  border-top: 0;
+}
+header > h1.w-full {
+  font-size: clamp(2.1rem, 1.5rem + 2vw, 3rem);
+  line-height: 1.18;
+  margin: 0.2em 0 0.3em;
+  color: var(--ink);
+}
+/* Home masthead: site name + tagline, centred, with a strong rule below. */
+body.tmpl-home header {
+  padding-bottom: 1.5em;
+}
+body.tmpl-home .intro {
+  max-width: 40rem;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--rule-strong);
+  padding-bottom: 2rem;
+}
+body.tmpl-home .intro p {
+  margin: 0 0 0.5em;
+}
+
+/* ── Home / list page width ──────────────────────────────────────────────*/
+body.tmpl-home article {
+  width: min(100%, 52rem);
+}
+
+/* ════════ Homepage magazine list ════════ */
+.posts .post {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  margin: 0;
+  padding: 1.8rem 0;
+  border-bottom: 1px solid var(--rule);
+  border-radius: 0;
+  transition: none;
+}
+.posts .post:hover {
+  transform: none;
+  box-shadow: none;
+}
+.posts .post:last-child {
+  border-bottom: 0;
+}
+.post-cover {
+  flex: 0 0 190px;
+  height: 124px;
+  order: 2;
+  margin: 0;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.post-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 2px;
+}
+.post-body {
+  flex: 1 1 auto;
+}
+.post-title {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  margin: 0 0 0.5rem;
+}
+.post-title a {
+  color: var(--ink);
+  text-decoration: none;
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-size: 0 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.25s, color 0.2s;
+}
+.post-title a:hover {
+  color: var(--accent);
+  background-size: 100% 1px;
+}
+.posts .summary {
+  color: var(--ink-soft);
+  font-size: 0.98rem;
+  line-height: 1.65;
+  margin: 0 0 0.2rem;
+}
+.post-info {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0.8rem;
+  font-size: 0.82rem;
+  color: var(--ink-faint);
+}
+.author-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.author-link:hover {
+  color: var(--accent);
+}
+.avatar-small {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+}
+.post-date {
+  font-family: Consolas, Monaco, "Andale Mono", monospace;
+  letter-spacing: 0.02em;
+}
+.post-date::before {
+  content: "·";
+  margin-right: 0.55rem;
+  color: var(--rule-strong);
+}
+/* "Freshly baked" chip on posts younger than 30 days (see isFresh filter). */
+.post-fresh {
+  display: inline-block;
+  padding: 0.05em 0.55em;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: var(--bold);
+  white-space: nowrap;
+}
+
+/* Lead (featured) article: cover on top, oversized serif title.
+   Selector matches `.posts .post` specificity (2 classes) so display:block
+   and the strong rule win over the row layout. */
+.posts .post--lead {
+  display: block;
+  padding: 0 0 2.6rem;
+  margin-bottom: 0.6rem;
+  border-bottom: 1px solid var(--rule-strong);
+}
+.post--lead .post-cover {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  max-height: 360px;
+  margin-bottom: 1.4rem;
+  border-radius: 3px;
+}
+.post--lead .post-title {
+  font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.7rem);
+  line-height: 1.18;
+  margin-bottom: 0.7rem;
+}
+.post--lead .summary {
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+  .posts .post:not(.post--lead) .post-cover {
+    display: none;
+  }
+}
+
+/* ════════ Article: editorial reading ════════ */
+body.tmpl-post article {
+  width: min(100%, 40rem);
+}
+/* Refined byline under the article title (markup from post.njk). */
+.byline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 0.8rem;
+  margin: 0.4rem 0 0.6rem;
+  font-size: 0.88rem;
+  color: var(--ink-faint);
+}
+.byline-author {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-weight: 700;
+}
+.byline-author:hover {
+  color: var(--accent);
+}
+.byline-author .avatar {
+  width: 30px;
+  height: 30px;
+  margin: 0;
+}
+.byline-tags {
+  width: 100%;
+  text-align: center;
+  margin-top: 0.4rem;
+}
+
+/* Drop cap on the first paragraph — an editorial signature. */
+body.tmpl-post article > p:first-of-type::first-letter {
+  float: left;
+  font-family: var(--font-serif);
+  font-size: 3.3em;
+  line-height: 0.78;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0.04em 0.12em 0 0;
+}
+
+/* Pull-quote */
+article blockquote {
+  font-family: var(--font-serif);
+  font-size: 1.25em;
+  font-style: italic;
+  color: var(--ink-soft);
+  border-left: 3px solid var(--accent);
+  padding: 0.1em 0 0.1em 1.2em;
+  margin: 1.8em 0;
+}
+article blockquote footer {
+  font-style: normal;
+  font-family: var(--font-family);
+}
+
+/* Figures & captions */
+article figure {
+  margin: 2em auto;
+  text-align: center;
+}
+article figcaption {
+  font-family: var(--font-serif);
+  font-style: italic;
+  color: var(--ink-faint);
+  text-align: center;
+  font-size: 0.9em;
+  margin-top: 0.6em;
+}
+
+/* Centred ornament instead of a full-width rule */
+article hr {
+  border: 0;
+  text-align: center;
+  margin: 2.6em 0;
+  line-height: 1;
+}
+article hr::before {
+  content: "✳";
+  color: var(--ink-faint);
+  font-size: 1.05em;
+  letter-spacing: 0.5em;
+}
+
+/* Tags */
+.post-tag {
+  display: inline-block;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  border: 1px solid var(--rule-strong);
+  border-radius: 2px;
+  padding: 0.12em 0.55em;
+  margin: 0.15em 0.35em 0.15em 0;
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s;
+}
+.post-tag:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* About-the-author card */
+.author-bio {
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--paper-raised);
+  padding: 1.5rem 1.6rem;
+  margin-top: 2.6rem;
+}
+.author-bio h2 {
+  font-size: 1.2rem;
+  margin: 0 0 0.8rem;
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.author-bio .author-intro {
+  color: var(--ink-soft);
+  margin-top: 0.6rem;
+}
+
+/* ── TOC: editorial styling ──────────────────────────────────────────────*/
+.toc-details {
+  border: 0;
+  border-left: 1px solid var(--rule);
+  border-radius: 0;
+  background: transparent;
+  padding: 0.1rem 0 0.1rem 1rem;
+}
+.toc-title {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.toc-list a {
+  border-left: 2px solid transparent;
+  margin-left: -1rem;
+  padding-left: 0.9rem;
+}
+.toc-list a.active {
+  border-left-color: var(--accent);
+}
+button:not([disabled]),
+button[type="submit"],
+input[type="submit"] {
+  background: var(--accent);
+  color: #fff;
+  border-radius: 2px;
+}
+button:not([disabled]):hover,
+button[type="submit"]:hover,
+input[type="submit"]:hover {
+  background: var(--accent-hover);
+  color: #fff;
+}
+footer {
+  border-top: 1px solid var(--rule);
+  color: var(--ink-faint);
+  margin-top: 4rem;
+  font-size: 0.82rem;
+}
+
+/* Editorial article body link affordance (underline offset a touch more). */
+body.tmpl-post article a {
+  text-underline-offset: 0.18em;
+}
+
+/* Tablet: keep article comfortable, lead cover a bit shorter. */
+@media (min-width: 768px) and (max-width: 1023px) {
+  body.tmpl-post article {
+    width: min(100%, 40rem);
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   REFINEMENTS / FIXES (review round 1)
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* (1) CRITICAL: legacy Bahunya `section { width:900px }` forced .intro and
+   .author-bio to 900px, overflowing small screens (clipped by overflow-x).
+   Neutralise it so sections fit their container. */
+section {
+  width: auto;
+  max-width: 100%;
+}
+
+/* (9) Underlined content links belong to article BODY only — not the home
+   feed or the archive list (which manage their own link styling). */
+body:not(.tmpl-post) article a {
+  text-decoration: none;
+}
+
+/* (1b) Home intro: left-aligned readable lead, not centred long paragraphs. */
+body.tmpl-home .intro {
+  text-align: start;
+  max-width: 38rem;
+  font-size: 1.08rem;
+}
+
+/* (5) Heading "#" permalink: hang it in the gutter so it never indents the
+   heading text, and only reveal it on hover. Keeps every heading flush-left
+   with the body text. */
+article h1,
+article h2,
+article h3,
+article h4,
+article h5,
+article h6 {
+  position: relative;
+}
+.direct-link {
+  position: absolute;
+  left: -0.85em;
+  top: 0;
+  margin: 0;
+  opacity: 0;
+  color: var(--accent);
+  text-decoration: none;
+}
+h1:hover > .direct-link,
+h2:hover > .direct-link,
+h3:hover > .direct-link,
+h4:hover > .direct-link,
+h5:hover > .direct-link,
+h6:hover > .direct-link {
+  opacity: 0.5;
+}
+
+/* (4) Tags: subtle text links ("#JavaScript"), not boxy outlined pills. */
+.post-tag {
+  display: inline-block;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  margin: 0 0.85rem 0.2rem 0;
+  font-size: 0.86rem;
+  color: var(--ink-faint);
+  text-decoration: none;
+}
+.post-tag:hover {
+  color: var(--accent);
+  border-color: transparent;
+}
+
+/* (7) Pagination: wrap instead of overflowing on phones;
+
+/* (6) Archive list: clean three-part rows (date · serif title · by author),
+   not a wall of red underlined links. */
+#post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.archive-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.3rem 0.9rem;
+  padding: 0.85rem 0;
+  margin: 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 1rem;
+}
+.archive-date {
+  flex: 0 0 7em;
+  color: var(--ink-faint);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   REFINEMENTS round 2 — nav, language dropdown, back-to-top, author card,
+   home masthead rhythm, modern pagination (design-craft review)
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* Theme-toggle icon: the SVGs are white (#fafafa); invert them on the light
+   "paper" nav so the icon is visible, keep them white on the dark nav. */
+#color-scheme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+#color-scheme-toggle img {
+  filter: invert(1) brightness(0.2);
+}
+body.dark #color-scheme-toggle img {
+  filter: none;
+}
+
+/* ── Language switcher: compact globe dropdown (native <details>) ─────────*/
+.lang-switch {
+  position: relative;
+}
+.lang-switch__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.32rem 0.6rem;
+  border: 1px solid var(--rule);
+  border-radius: 7px;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  white-space: nowrap;
+}
+.lang-switch__btn::-webkit-details-marker,
+.lang-switch__btn::marker {
+  display: none;
+}
+.lang-switch__btn:hover {
+  border-color: var(--rule-strong);
+  color: var(--ink);
+}
+.lang-switch__globe {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+}
+.lang-switch__chev {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  transition: transform 0.2s;
+}
+.lang-switch[open] .lang-switch__chev {
+  transform: rotate(180deg);
+}
+.lang-switch[open] .lang-switch__btn {
+  border-color: var(--accent);
+  color: var(--ink);
+}
+.lang-switch__menu {
+  position: absolute;
+  top: calc(100% + 7px);
+  right: 0;
+  z-index: 1001;
+  min-width: 9.5rem;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  text-align: left;
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-radius: 9px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+}
+.lang-switch__menu li {
+  margin: 0;
+}
+.lang-switch__item {
+  display: block;
+  padding: 0.45rem 0.7rem;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.lang-switch__item:hover {
+  background: var(--rule);
+  color: var(--ink);
+}
+.lang-switch__item.is-current {
+  color: var(--accent);
+  font-weight: 700;
+}
+.lang-switch__item.is-disabled {
+  color: var(--ink-faint);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* (7) About-the-author card: aligned avatar + serif name (no raw red link),
+   tighter rhythm. */
+.author-bio {
+  padding: 1.6rem 1.8rem;
+}
+.author-bio h2 {
+  font-size: 1.15rem;
+  margin: 0 0 1rem;
+  color: var(--ink);
+}
+.author-bio .flex.items-center {
+  gap: 0;
+}
+.author-bio .avatar-large {
+  width: 54px;
+  height: 54px;
+}
+.author-bio h3 {
+  margin: 0 0 0 0.9rem;
+  font-size: 1.15rem;
+}
+.author-bio h3 a {
+  font-family: var(--font-serif);
+  color: var(--ink);
+  text-decoration: none;
+}
+.author-bio h3 a:hover {
+  color: var(--accent);
+}
+.author-bio .author-intro {
+  color: var(--ink-soft);
+  margin-top: 1rem;
+}
+
+/* (10) Home masthead → feed rhythm: distinguish the masthead from the lead
+   article (no hairline crammed between two big serif titles). */
+body.tmpl-home header > h1.w-full {
+  font-size: clamp(1.9rem, 1.4rem + 1.7vw, 2.5rem);
+}
+body.tmpl-home .intro {
+  border-bottom: 0;
+  padding-bottom: 0;
+  margin-bottom: 3.2rem;
+}
+.posts .post--lead .post-title {
+  font-size: clamp(1.7rem, 1.25rem + 1.5vw, 2.3rem);
+}
+
+/* Set the document background per theme so the very first paint after a
+   navigation is already the right colour (the <head> script adds html.dark).
+   Hard-coded to match --paper / dark --paper because <html> has no tokens. */
+html {
+  background: #fbfaf8;
+}
+html.dark {
+  background: #1a1816;
+}
+
+/* ── round 3: line-breaking & "view all" link ───────────────────────────*/
+/* Avoid lonely orphan characters on the last line (esp. CJK). */
+article p,
+body.tmpl-home .intro p,
+.summary {
+  text-wrap: pretty;
+}
+header > h1.w-full,
+.post-title,
+.archive-title,
+article h1,
+article h2,
+article h3 {
+  text-wrap: balance;
+}
+
+/* About page — author list, ranked by post count (avatar · name · count · bio). */
+.author-list {
+  list-style: none;
+  margin: 2.5rem 0 0;
+  padding: 0;
+}
+.author-row {
+  display: flex;
+  gap: 1.2rem;
+  align-items: flex-start;
+  padding: 1.6rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+.author-row:last-child {
+  border-bottom: 0;
+}
+.author-row__avatar .avatar-large {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0;
+  display: block;
+}
+.author-row__body {
+  flex: 1;
+}
+.author-row__name {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  margin: 0 0 0.4rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+  border: 0;
+}
+.author-row__name a {
+  color: var(--ink);
+  text-decoration: none;
+}
+.author-row__name a:hover {
+  color: var(--accent);
+}
+.author-row__count {
+  font-family: Consolas, Monaco, "Andale Mono", monospace;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--ink-faint);
+}
+.author-row__intro {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+/* Home → archive call-to-action (replaces page-by-page pagination). */
+.view-all {
+  text-align: center;
+  margin: 2.6rem 0 1rem;
+}
+.view-all a {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  color: var(--ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--rule-strong);
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.view-all a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.archive-title {
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+.archive-title:hover {
+  color: var(--accent);
+}
+.archive-by {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-faint);
+  font-size: 0.85rem;
+}
+.archive-by a {
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.archive-by a:hover {
+  color: var(--accent);
+}
+.archive-by .avatar-small {
+  width: 20px;
+  height: 20px;
+}
+@media (max-width: 480px) {
+  .archive-date {
+    flex-basis: 100%;
+  }
+}
+
+/* ── round 4: cohesive LEFT-aligned home masthead ───────────────────────
+   The title and the intro now share ONE left edge (aligned with the article),
+   instead of a centred title floating over a centred-but-left-text intro.
+   `balance` evens out the two-line intro so no lone CJK character is orphaned. */
+body.tmpl-home header {
+  align-items: stretch; /* full-width children so the title wraps, not shrink-wraps */
+  text-align: left;
+  width: min(100%, 52rem);
+  max-width: 100%;
+  padding: 4.5em clamp(1rem, 4vw, 2rem) 0;
+}
+body.tmpl-home header > h1.w-full {
+  text-align: left;
+  margin: 0.2em 0 0.4em;
+}
+body.tmpl-home .intro {
+  margin: 1.4rem 0 3.2rem;
+  max-width: 44rem;
+  text-align: start;
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+body.tmpl-home .intro p {
+  text-wrap: balance;
 }

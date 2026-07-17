@@ -4,18 +4,16 @@
   "ogimage": "https://blog.errorbaker.tw/img/ogimage.png",
   "domain": "blog.errorbaker.tw",
   "description": "錯誤烘焙師，從錯誤中學習",
-  "genre": "Insert a schema.org genre",
   "googleAnalyticsId": "",
   "sendWebVitals": false,
   "feed": {
-    "subtitle": "ErrorBaker 技術共筆部落格",
     "filename": "feed.xml",
     "path": "/feed/feed.xml",
-    "id": "https://blog.errorbaker.tw"
+    "id": "https://blog.errorbaker.tw",
+    "limit": 20
   },
   "jsonfeed": {
-    "path": "/feed/feed.json",
-    "url": "https://blog.errorbaker.tw/feed/feed.json"
+    "path": "/feed/feed.json"
   },
   "author": {
     "name": "ErrorBaker 技術共筆部落格",
@@ -37,27 +35,27 @@
       "intro": "著迷於設計工程之間的有趣事情",
       "avatarUrl": "https://avatars.githubusercontent.com/u/10834433?v=4"
     },
-    "Xiang": {
+    "xiang": {
       "name": "Xiang",
       "intro": "作夢也在寫程式",
       "avatarUrl": "/img/authors/xiang.jpg"
     },
-    "Cian": {
+    "cian": {
       "name": "Cian",
       "intro": "遊走在各種覺得有趣的知識之間。",
       "avatarUrl": "https://avatars.githubusercontent.com/u/34278495?v=4"
     },
-    "Umer": {
+    "umer": {
       "name": "Umer",
       "intro": "This is Umer，烏瑪。",
       "avatarUrl": "/img/authors/umer.png"
     },
-    "Ruofan": {
+    "ruofan": {
       "name": "Ruofan",
       "intro": "喜歡有趣的設計",
       "avatarUrl": "/img/authors/ruofan.png"
     },
-    "Lavi": {
+    "lavi": {
       "name": "lavi",
       "intro": "前端學徒。",
       "avatarUrl": "/img/authors/lavi.jpg"
@@ -85,7 +83,11 @@
     "tian": {
       "name": "Tian",
       "intro": "紀錄那些我笨拙可愛的時刻",
-      "avatarUrl": "/img/authors/tian.jpg"
+      "intro_en": "A record of my clumsy but endearing moments",
+      "intro_ja": "不器用で愛おしい瞬間の記録",
+      "intro_zh-CN": "记录那些我笨拙可爱的时刻",
+      "avatarUrl": "/img/authors/tian.jpg",
+      "aiCrawl": true
     },
     "YongChen": {
       "name": "YongChen",
@@ -94,6 +96,7 @@
     }
   },
   "publisher": {
-    "name": "ErrorBaker 技術共筆部落格"
+    "name": "ErrorBaker 技術共筆部落格",
+    "logo": "/img/favicon/favicon-512x512.png"
   }
 }

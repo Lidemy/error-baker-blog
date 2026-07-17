@@ -1,0 +1,130 @@
+/* Author contributions — leaderboard, levels, and contribution calendar.
+   Quantities use the brand "ember scale": dough → oven fire. It lives in the
+   same red-warm hue family as --accent (#b5322e) so quantitative color and
+   brand color read as one system — the more you write, the hotter the bake. */
+:root {
+  --gx-cell: 11px;
+  --gx-diamond: #93351f;
+  --gx-gold: #bc5b2b;
+  --gx-silver: #d99757;
+  --gx-bronze: #eac7a2;
+  --gx-iron: #f4ece0;
+  --gx-ink-on-light: #5a2c18;
+  --gx-c0: #f4ece0;
+  --gx-c1: #eac7a2;
+  --gx-c2: #d99757;
+  --gx-c3: #bc5b2b;
+  --gx-c4: #93351f;
+}
+
+.gx-row { align-items: center; }
+.gx-rank {
+  flex: 0 0 1.8em;
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+.gx-rank-1 .gx-rank, .gx-rank-2 .gx-rank, .gx-rank-3 .gx-rank { font-size: 1.6rem; }
+
+.gx-level {
+  display: inline-block;
+  padding: 0.05em 0.5em;
+  border-radius: 999px;
+  font-family: Consolas, Monaco, "Andale Mono", monospace;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #fff;
+  background: var(--gx-iron);
+  white-space: nowrap;
+}
+.gx-tier-diamond { background: var(--gx-diamond); }
+.gx-tier-gold { background: var(--gx-gold); }
+.gx-tier-silver { background: var(--gx-silver); color: var(--gx-ink-on-light); }
+.gx-tier-bronze { background: var(--gx-bronze); color: var(--gx-ink-on-light); }
+.gx-tier-iron { background: var(--gx-iron); color: var(--gx-ink-on-light); }
+.gx-toque {
+  width: 0.95em;
+  height: 0.95em;
+  vertical-align: -0.12em;
+  margin-right: 0.2em;
+  fill: currentColor;
+}
+
+.gx-bar {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--rule, #e5e5e5);
+  overflow: hidden;
+  margin: 0 0 0.6rem;
+  max-width: 320px;
+}
+.gx-bar__fill { display: block; height: 100%; border-radius: 999px; }
+/* The fill communicates quantity by width alone; a fixed ember color keeps it
+   visible for low tiers (the pale dough chips would vanish on light paper). */
+.gx-bar .gx-bar__fill { background: var(--gx-c3); }
+
+.gx-profile {
+  margin: 0 0 2rem;
+  padding: 1.2rem 1.3rem;
+  border: 1px solid var(--rule, #e5e5e5);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
+}
+.gx-profile__head { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; }
+.gx-profile__rank { font-weight: 700; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+.gx-profile__count { color: var(--ink-soft); font-size: 0.85rem; }
+.gx-profile__medal { font-size: 1.3rem; }
+.gx-profile__h { font-size: 0.95rem; margin: 1.1rem 0 0.6rem; color: var(--ink-soft); border: 0; }
+
+.gx-cal { overflow-x: auto; padding-bottom: 0.3rem; }
+.gx-cell {
+  width: var(--gx-cell); height: var(--gx-cell);
+  border-radius: 2px; background: var(--gx-c0); display: block;
+}
+.gx-cell[data-level="1"] { background: var(--gx-c1); }
+.gx-cell[data-level="2"] { background: var(--gx-c2); }
+.gx-cell[data-level="3"] { background: var(--gx-c3); }
+.gx-cell[data-level="4"] { background: var(--gx-c4); }
+.gx-periods { display: flex; gap: 6px; }
+.gx-period { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 0 0 auto; }
+.gx-period .gx-cell { width: 26px; height: 26px; border-radius: 5px; }
+.gx-period__lbl { font-size: 0.6rem; line-height: 1.25; text-align: center; color: var(--ink-faint); white-space: nowrap; }
+.gx-period__lbl b { display: block; min-height: 1.2em; color: var(--ink-soft); }
+.gx-cal__legend { display: flex; align-items: center; gap: 3px; margin-top: 0.8rem; font-size: 0.62rem; color: var(--ink-faint); }
+.gx-cal__legend span { margin: 0 0.3rem; }
+
+/* Reader-discussion signals (utterances comment counts). */
+.gx-comments {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.gx-badge {
+  display: inline-block;
+  padding: 0.05em 0.5em;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.gx-badge--discussed {
+  color: #fff;
+  background: var(--accent, #b5322e);
+}
+
+/* Dark mode follows the site's class-based toggle (not the OS preference,
+   which the toggle can override). On dark paper the ember ramp brightens
+   with intensity — a glowing oven fire in the dark. */
+body.dark {
+  --gx-c0: #2e2621;
+  --gx-c1: #5c3423;
+  --gx-c2: #94512a;
+  --gx-c3: #c96f38;
+  --gx-c4: #ee9556;
+}

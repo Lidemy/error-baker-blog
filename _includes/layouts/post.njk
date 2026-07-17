@@ -5,23 +5,30 @@ templateClass: tmpl-post
 {% extends "layouts/base.njk" %}
 
 {% set postAuthor = metadata.authors[author] %}
+{% set pageLang = lang or 'zh-TW' %}
+{% set t = i18n[pageLang] or i18n['zh-TW'] %}
+{# Author page in the article's language (the per-language page exists because
+   this article is in that language). #}
+{% set authorUrl = ('/posts/' + author + '/') if pageLang == 'zh-TW' else ('/' + pageLang + '/posts/' + author + '/') %}
+{% set versionPublishedDate = page.date | effectivePublishedDate(publishedAt) %}
+{% set versionModifiedDate = page.date | effectiveModifiedDate(publishedAt, updatedAt) %}
+{% set articleImagePath = image or metadata.ogimage %}
+{% set articleImageUrl = articleImagePath | absoluteUrl(metadata.url) %}
+{% set articleUrl = (canonicalUrl or page.url) | absoluteUrl(metadata.url) %}
+{% set articleAuthorUrl = authorUrl | absoluteUrl(metadata.url) %}
+{% set publisherLogoUrl = metadata.publisher.logo | absoluteUrl(metadata.url) %}
 
 {% block extraArticleHeader %}
-   <aside class="w-full">
-      <div class="flex items-center">
-        <img class="avatar" src="{{ postAuthor.avatarUrl }}">
-        <span style="margin-left: 12px;"><a href="/posts/{{ author }}">{{ postAuthor.name }}</a> 於 {{ date | htmlDateString }} 發布</span>
-      </div>
-      <div style="text-align: left;">
-      {% for tag in tags %}
-        {% if tag !== "posts" %}
-          {% set tagUrl %}/tags/{{ tag | slug }}/{% endset %}
-          <a href="{{ tagUrl | url }}" class="post-tag">#{{ tag }}</a>
-        {% endif %}
-        
-      {% endfor %}
-      </div>
-   </aside>
+  <div class="byline">
+    <a class="byline-author" href="{{ authorUrl }}">
+      <img class="avatar" src="{{ postAuthor.avatarUrl }}" alt="" />
+      <span>{{ postAuthor.name }}</span>
+    </a>
+    <time class="byline-date" datetime="{{ versionPublishedDate | htmlDateString }}">{{ t.publishedOn }} {{ versionPublishedDate | htmlDateString }}</time>
+    <span class="byline-tags">
+    {%- for tag in tags %}{% if tag !== "posts" %}{% set tagUrl %}/tags/{{ tag | slug }}/{% endset %}<a href="{{ tagUrl | url }}" class="post-tag">#{{ tag }}</a>{% endif %}{% endfor %}
+    </span>
+  </div>
 {% endblock %}
 
 
@@ -32,28 +39,48 @@ templateClass: tmpl-post
 {{ content | safe }}
 
 <hr>
-<p>
-  <h3>關於作者</h3>
+<section class="author-bio">
+  <h2>{{ t.aboutAuthor }}</h2>
   <div class="flex items-center">
-    <img class="avatar avatar-large" src="{{ postAuthor.avatarUrl }}">
-    <h3 style="margin-left: 12px;"><a href="/posts/{{ author }}">{{ postAuthor.name }}</a></h3>
+    <img class="avatar avatar-large" src="{{ postAuthor.avatarUrl }}" alt="">
+    <h3 style="margin-left: 12px;"><a href="{{ authorUrl }}">{{ postAuthor.name }}</a></h3>
   </div>
-  <p>{{ postAuthor.intro | safe }}</p>
-</p>
+  {% set authorIntro = postAuthor['intro_' + pageLang] or postAuthor.intro %}
+  <div class="author-intro">{{ authorIntro | safe }}</div>
+</section>
 
 <p>
-  <a href="{{ shareUrl | safe }}" on-click="share">分享文章</a>
+  <a href="{{ shareUrl | safe }}" on-click="share">{{ t.shareArticle }}</a>
 </p>
 
+{#- Comment threads are keyed by the source post's path, so every language
+    version shares one thread and retitling a post (or the site) can't orphan
+    it. Threads that predate this scheme are pinned by issue number in
+    _data/commentThreads.json (see scripts/build-comment-thread-map.js). #}
+{%- set commentVersions = collections.translations[translationKey] if translationKey else none %}
+{%- set commentKey = (commentVersions | urlForLang(langs[0])) or page.url %}
+{%- set commentIssue = commentThreads[commentKey] %}
+{% if commentIssue %}
 <script
   src="https://utteranc.es/client.js"
   repo="Lidemy/error-baker-blog"
-  issue-term="title"
+  issue-number="{{ commentIssue }}"
   label="utterancex"
   theme="github-light"
   crossorigin="anonymous"
   async>
 </script>
+{% else %}
+<script
+  src="https://utteranc.es/client.js"
+  repo="Lidemy/error-baker-blog"
+  issue-term="{{ commentKey }}"
+  label="utterancex"
+  theme="github-light"
+  crossorigin="anonymous"
+  async>
+</script>
+{% endif %}
 
 <share-widget>
   <button on-click="share" aria-label="Share" href="{{ shareUrl | safe }}">
@@ -65,24 +92,40 @@ templateClass: tmpl-post
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "{{ title }}",
-  "image": [],
-  "author": "{{ postAuthor.name }}", 
-  "genre": "{{ metadata.genre }}", 
+  "headline": {{ title | dump | safe }},
+  "inLanguage": {{ pageLang | dump | safe }},
+  "image": [{{ articleImageUrl | dump | safe }}],
+  "author": {
+    "@type": "Person",
+    "name": {{ postAuthor.name | dump | safe }},
+    "url": {{ articleAuthorUrl | dump | safe }}
+  },
   "publisher": {
     "@type": "Organization",
-    "name": "{{ metadata.publisher.name }}",
+    "name": {{ (t.siteName or metadata.publisher.name) | dump | safe }},
+    "url": {{ metadata.url | dump | safe }},
     "logo": {
       "@type": "ImageObject",
-      "url": "{{ '/img/favicon/favicon-192x192.png' | addHash }}"
+      "url": {{ publisherLogoUrl | dump | safe }},
+      "width": 512,
+      "height": 512
     }
   },
-  "url": "{{ metadata.url }}{{ canonicalUrl or page.url }}",
-  "mainEntityOfPage": "{{ metadata.url }}{{ canonicalUrl or page.url }}",
-  "datePublished": "{{ page.date | htmlDateString }}",
-  "dateModified": "{{ page.inputPath | lastModifiedDate  | htmlDateString }}",
-  "description": "{{ content | striptags | truncate(140) }}"
+  "url": {{ articleUrl | dump | safe }},
+  "mainEntityOfPage": {{ articleUrl | dump | safe }},
+  "datePublished": "{{ versionPublishedDate | htmlDateString }}",
+  "dateModified": "{{ versionModifiedDate | htmlDateString }}",
+  "description": {{ (renderData.description or description or (content | striptags | truncate(140))) | dump | safe }}
 }
 </script>
 
+{% endblock %}
+
+{% block aside %}
+  <nav class="toc" id="toc" aria-label="{{ t.toc or '目錄' }}">
+    <details class="toc-details" open>
+      <summary class="toc-title">{{ t.toc or '目錄' }}</summary>
+      <ul class="toc-list"></ul>
+    </details>
+  </nav>
 {% endblock %}

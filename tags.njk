@@ -8,6 +8,12 @@ pagination:
     - nav
     - post
     - posts
+    - postsZhTW
+    - siteLangsWithPublishedPosts
+    - translations
+    - authorsByPostCount
+    - authorLangPages
+    - aiCrawlRules
     - tagList
   addAllPagesToCollections: true
 layout: layouts/home.njk
@@ -16,7 +22,7 @@ eleventyComputed:
 permalink: /tags/{{ tag | slug }}/
 ---
 
-{% set postslist = collections[ tag ] %}
+{% set postslist = collections[ tag ] | filterByLang('zh-TW') | sortByPublishedDate | reverse %}
 {% include "postslist.njk" %}
 
 <p>See <a href="{{ '/tags/' | url }}">all tags</a>.</p>

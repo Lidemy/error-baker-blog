@@ -80,7 +80,16 @@ Hi，這是 ErrorBaker 技術共筆部落格，由一群希望藉由共筆部落
 
 ### 樣式
 
-css/main.css 所有的樣式都在裡面，有新增的都放在最下面
+樣式來源依功能拆分：
+
+- `css/main.css`：全站共用的基礎、版面與文章樣式
+- `css/components/lang-suggest.css`：語言建議 Banner
+- `css/components/header-nav.css`：頂部導覽列與手機選單
+- `css/gamification.css`：只在作者與排行榜頁面額外載入
+
+`_11ty/css-bundle.js` 會依固定順序串接前三個檔案，再由 PurgeCSS
+移除各頁未使用的規則、壓縮並內嵌成單一 `<style>`。新增元件檔時需同步加入
+該檔案清單；請勿使用瀏覽器端 `@import`，以免增加請求並改變 cascade 順序。
 
 ## 文章規範
 
@@ -88,6 +97,83 @@ css/main.css 所有的樣式都在裡面，有新增的都放在最下面
 
 - tags 採用 kabab case 來命名 e.g. back-end
 - 若遇到有連詞或分詞疑問，依循前者來決定 e.g. backend vs back-end，如果已經有人使用 backend 則使用 backend。
+
+## 多國語系翻譯
+
+文章可以翻成多國語系（預設 `en` / `ja` / `zh-CN`）。翻譯由 AI 代理執行，**不需付費 API**，
+規範集中在根目錄的 [`AGENTS.md`](./AGENTS.md)。
+
+### 怎麼翻一篇文章
+
+1. 用 Claude Code 跑斜線指令（假設原文是 `posts/peter/foo.md`）：
+
+   ```
+   /translate-post posts/peter/foo.md          # 翻成預設的 en, ja, zh-CN
+   /translate-post posts/peter/foo.md en,ja    # 只翻指定語系
+   ```
+
+   （非 Claude Code 的代理：直接請它「依 AGENTS.md 翻譯 posts/peter/foo.md」即可。）
+
+2. 代理會在原文的 `translationTargets` 記錄預期語系，產出
+   `posts/peter/foo.en.md` 等檔並標為 `draft: true`，再回報「回譯校驗」讓你用中文
+   檢查語意。指定 `en,ja` 時，守門只要求這兩個譯文。
+3. 本機預覽 `npm run serve`（草稿在 dev 模式可見），確認沒問題後才可移除譯文的
+   `draft: true`，並填入 `reviewedBy`、`reviewedAt` 與 `publishedAt`；欄位缺少或日期
+   不是有效的 `YYYY-MM-DD` 時，pre-commit 會拒絕發佈。
+
+### 其他作者如何加入多語系
+
+翻譯是**逐篇 opt-in**，未加入的文章完全不受影響。想讓自己的文章有譯文時：
+
+1. 跑 `/translate-post posts/<author>/<slug>.md`；代理會在原文 frontmatter 補
+   `lang: zh-TW`、`translationKey` 與 `translationTargets`，並產出指定語系的草稿譯文。
+2. 人工審核譯文後移除 `draft: true`，填入 `reviewedBy`、`reviewedAt` 與
+   `publishedAt`。
+3. （建議）在 `_data/metadata.json` 自己的作者條目加上 `intro_en`、`intro_ja`、
+   `intro_zh-CN`；譯文頁的作者簡介才會跟著在地化（缺少時顯示中文 `intro`）。
+
+### 譯文不會混進中文首頁或訂閱 Feed
+
+譯文有獨立路由（`/en/posts/...`）與語言切換器、`hreflang`；中文首頁、標籤頁與繁中
+Feed 只會列繁中文章。每個已有公開譯文的語系會同時提供 Atom 與 JSON Feed：
+
+- 繁中：`/feed/feed.xml`、`/feed/feed.json`（保留既有訂閱 URL）。
+- 其他語系：`/<lang>/feed/feed.xml`、`/<lang>/feed/feed.json`。
+
+頁面會透過 `<link rel="alternate">` 自動宣告當前語系的兩種 Feed；尚無公開譯文的語系
+不會產生空 Feed。兩種格式都依各語言版本的 `publishedAt`／`updatedAt` 顯示最近活動，
+並輸出 `_data/metadata.json` 中 `feed.limit` 指定的最新篇數。
+
+### 過期守門（pre-commit）
+
+提交時會自動檢查：被改動的原文或譯文若**缺少 `translationTargets` 指定的譯文**、
+**存在未列入清單的譯文**、**譯文已過期**（原文標題或內文變了）、譯文 `date` 與原文
+不同，或已發佈譯文缺少有效的 `publishedAt`／人工審核紀錄，就會擋下提交並提示你修正。
+`updatedAt` 若存在也必須有效且不早於 `publishedAt`。檢查一律讀取 Git 暫存區，不會被
+working tree 的未暫存內容影響。
+
+譯文不能脫離繁中原文獨立存在：刪除文章時要在同一個 commit 刪除所有語系；原文若是
+草稿，譯文也必須是草稿。這能避免無法再以 `sourceHash` 稽核、卻仍留在 production 的譯文。
+
+WIP 想先略過檢查：
+
+```bash
+SKIP_TRANSLATION_CHECK=1 git commit ...
+# 或
+git commit --no-verify
+```
+
+> 機制說明：守門腳本是 `scripts/check-translations.js`，透過專案既有的 `pre-commit`
+> 套件掛在 git hook（不需額外裝 Husky）。語系清單以 `_data/langs.json` 為唯一來源
+> （第一個元素是預設語系，其餘為翻譯目標；順序即切換器顯示順序），`.eleventy.js`、
+> 守門腳本與測試都由它推導。新增語系只需兩步：在 `_data/langs.json` 加語系代碼、
+> 在 `_data/i18n.json` 補該語系完整字串區塊（缺必要欄位時 build 會直接失敗提示）。
+
+### 導覽列語言切換器
+
+每頁導覽列都有全站語言切換器。**目前頁面有該語言版本**→ 可點連結；**沒有**→ 顯示為灰色
+停用並提示「此頁面尚無此語言版本」（不會產生壞連結）。等之後做了各語系首頁/列表頁
+（第二階段），這些停用項目會自動變成可點。
 
 ## 參考資源
 

@@ -1,21 +1,23 @@
+{% set tt = i18n[lang or 'zh-TW'] or i18n['zh-TW'] %}
 {% for post in postslist %}
   {% set author = metadata.authors[post.data.author] %}
-<article class="post">
+<article class="post{% if loop.first %} post--lead{% endif %}">
+  {% if post.data.image %}
+  <a class="post-cover" href="{{ post.url | url }}" tabindex="-1" aria-hidden="true">
+    <img src="{{ post.data.image }}" class="post-cover-img" alt="" loading="lazy" />
+  </a>
+  {% endif %}
   <div class="post-body">
-    <a href="{{ post.url | url }}"><h3 class="post-title">{{ post.data.title | safe }}</h3></a>
+    <h2 class="post-title"><a href="{{ post.url | url }}">{{ post.data.title | safe }}</a></h2>
     {% summary post=post.templateContent %}
     <div class="post-info">
-        <a href="/posts/{{ author.name }}" class="author-link">
-          <img src="{{ author.avatarUrl}}" class="avatar-small" />
-          <span class="post-author">{{ author.name }}</span>
-        </a>on<time class="f-monospace post-date" datetime="{{ post.date | htmlDateString }}">{{ post.date | htmlDateString }}</time>
+      <a href="{{ collections.authorLangPages | authorUrlForLang(lang, post.data.author) | url }}" class="author-link">
+        <img src="{{ author.avatarUrl }}" class="avatar-small" alt="" />
+        <span class="post-author">{{ author.name }}</span>
+      </a>
+      <time class="post-date" datetime="{{ post | postPublishedDate | htmlDateString }}">{{ post | postPublishedDate | htmlDateString }}</time>
+      {%- if post | postPublishedDate | isFresh %}<span class="post-fresh">🥐 {{ tt.freshBadge }}</span>{% endif %}
     </div>
   </div>
-  {% if post.data.image %}
-  <div class="post-cover">
-    <a href="{{ post.url | url }}"><img src="{{ post.data.image }}" class="post-cover-img" /></a>
-  </div>
-  {% endif %}
 </article>
-<hr class="divider">
 {% endfor %}

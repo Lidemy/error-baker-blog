@@ -2,7 +2,7 @@
 title: a simple RESTful api with Go
 date: 2022-01-01
 tags: [back-end]
-author: Ruofan
+author: ruofan
 layout: layouts/post.njk
 image: /img/posts/ruofan/go-1.png
 ---

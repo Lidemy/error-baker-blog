@@ -1,5 +1,17 @@
+{%- set pageLang = lang or 'zh-TW' %}
+{%- set t = i18n[pageLang] or i18n['zh-TW'] %}
+{%- if translationKey == 'home' %}
+  {%- set langVersions = collections.siteLangsWithPublishedPosts | homeVersions %}
+{%- elif translationKey == 'about' %}
+  {%- set langVersions = collections.siteLangsWithPublishedPosts | aboutVersions %}
+{%- elif translationKey %}
+  {%- set langVersions = collections.translations[translationKey] %}
+{%- else %}
+  {%- set langVersions = none %}
+{%- endif %}
+{%- set homeUrl = '/' if pageLang == 'zh-TW' else '/' + pageLang + '/' %}
 <!doctype html>
-<html lang="zh-TW"
+<html lang="{{ pageLang }}"
     domain="{{ metadata.domain }}"
     {% if googleanalytics %}
     ga-id="{{ googleanalytics }}"
@@ -8,6 +20,18 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Apply the colour theme to <html> BEFORE the inlined CSS paints, so
+         navigating between pages never flashes light-then-dark. -->
+    <script csp-hash>
+      (function () {
+        document.documentElement.classList.add("js");
+        try {
+          var t = localStorage.getItem("theme") ||
+            (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+          if (t === "dark") document.documentElement.classList.add("dark");
+        } catch (e) {}
+      })();
+    </script>
     <meta name="robots" content="index, follow">
     <meta name="google-site-verification" content="zbyBgfDuOtaLUTLY7nVzYLdVhNdDIxUCv2xA0R3J1W8" />
     {% if isdevelopment %}
@@ -15,10 +39,14 @@
     {% else %}
     <link rel="icon" href="{{ '/img/favicon/favicon-192x192.png' | addHash }}" type="image/png">
     {% endif %}
-    <meta name="theme-color" content="#d04444">
-    <title>{{ renderData.title or title or metadata.title | escape }}</title>
-    <meta property="og:title" content="{{ renderData.title or title or metadata.title | escape  }}">
-    <meta name="twitter:title" content="{{ renderData.title or title or metadata.title | escape  }}">
+    {#- Browser chrome matches the editorial paper header in both themes. #}
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbfaf8">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1816">
+    <meta name="theme-color" content="#fbfaf8">
+    {%- set pageTitle = renderData.title or title or metadata.title %}
+    <title>{% if templateClass == 'tmpl-post' and (renderData.title or title) %}{{ pageTitle | escape }}｜{{ t.siteName or metadata.title }}{% else %}{{ pageTitle | escape }}{% endif %}</title>
+    <meta property="og:title" content="{{ pageTitle | escape }}">
+    <meta name="twitter:title" content="{{ pageTitle | escape }}">
     {% set desc = renderData.description or description %}
     {% if not desc %}
       {% set desc = content | striptags | truncate(140) %}
@@ -38,11 +66,27 @@
     {% else %}
       <meta property="og:image" content="{{ metadata.ogimage }}">
     {% endif %}
-    <meta property="og:type" content="article">
+    <meta property="og:type" content="{{ 'article' if templateClass == 'tmpl-post' else 'website' }}">
     <meta property="og:url" content="{{ metadata.url }}{{ canonicalUrl or page.url }}">
-    <meta property="og:site_name" content="{{ metadata.title }}">
+    <meta property="og:site_name" content="{{ t.siteName or metadata.title }}">
+    <meta property="og:locale" content="{{ t.ogLocale }}">
+    {%- if langVersions and langVersions.length > 1 %}
+      {%- for v in langVersions %}{% if v.lang != pageLang %}
+    <meta property="og:locale:alternate" content="{{ i18n[v.lang].ogLocale }}">
+      {%- endif %}{% endfor %}
+    {%- endif %}
 
     <link rel="canonical" href="{{ metadata.url }}{{ canonicalUrl or page.url }}">
+    {#- hreflang alternates: link every translated version of this article, plus
+        x-default pointing at the zh-TW source. #}
+    {%- if langVersions and langVersions.length > 1 %}
+      {%- for v in langVersions %}
+    <link rel="alternate" hreflang="{{ v.lang }}" href="{{ metadata.url }}{{ v.url }}">
+        {%- if v.lang == 'zh-TW' %}
+    <link rel="alternate" hreflang="x-default" href="{{ metadata.url }}{{ v.url }}">
+        {%- endif %}
+      {%- endfor %}
+    {%- endif %}
     <!-- This is a blog and so it SHOULD be safe and it is nice for the web
          to send referrers cross-origin.
          However, if you use sensitive data in URLs, consider changing this to
@@ -50,7 +94,10 @@
          https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
           -->
     <meta name="referrer" content="always">
-    <link rel="alternate" href="{{ metadata.feed.path | url }}" type="application/atom+xml" title="{{ metadata.title }}">
+    {%- set feedPath = metadata.feed.path if pageLang == 'zh-TW' else '/' + pageLang + metadata.feed.path %}
+    {%- set jsonFeedPath = metadata.jsonfeed.path if pageLang == 'zh-TW' else '/' + pageLang + metadata.jsonfeed.path %}
+    <link rel="alternate" href="{{ feedPath | url }}" type="application/atom+xml" title="{{ t.siteName or metadata.title }} (Atom)">
+    <link rel="alternate" href="{{ jsonFeedPath | url }}" type="application/feed+json" title="{{ t.siteName or metadata.title }} (JSON Feed)">
 
     <link rel="preconnect" href="/" crossorigin>
     <script async defer src="{{ "/js/min.js" | addHash }}"
@@ -59,12 +106,16 @@
     {% if googleanalytics %}
       <script async defer src="{{ "/js/cached.js" | addHash }}"></script>
     {% endif %}
+    {% if templateClass == 'tmpl-about' or (templateClass != 'tmpl-post' and '/posts/' in page.url) %}
+      <link rel="stylesheet" href="{{ '/css/gamification.css' | addHash }}">
+    {% endif %}
     <!-- Notably iOS UAs also contain Mac OS X -->
     <script csp-hash>if (/Mac OS X/.test(navigator.userAgent))document.documentElement.classList.add('apple')
     </script>
     <!-- css is inserted by optimize-html custom plugin -->
   </head>
-  <body>
+  <body class="{{ templateClass }}">
+    <a class="skip-link" href="#main">{{ t.skipToContent or '跳到主要內容' }}</a>
     <script>
       // light/dark theme switch
       const bodyEl = document.querySelector("body");
@@ -86,39 +137,108 @@
 
         function handleToggleEvent() {
           const isDark = bodyEl.classList.toggle(DARK);
+          document.documentElement.classList.toggle(DARK, isDark);
           const theme = isDark ? DARK : LIGHT;
           setTheme(theme);
           localStorage.setItem("theme", theme);
         }
 
         function setTheme(theme) {
+          const toggleImg = toggleEl.querySelector("img");
           if (theme === DARK) {
             setUtterancesTheme(DARK);
-            toggleEl.src = toggleEl.src.replace(DARK, LIGHT);
+            toggleImg.src = toggleImg.src.replace(DARK, LIGHT);
           } else {
             setUtterancesTheme(LIGHT);
-            toggleEl.src = toggleEl.src.replace(LIGHT, DARK);
+            toggleImg.src = toggleImg.src.replace(LIGHT, DARK);
           }
         }
+
+        // Mobile nav + language menu
+        const nav = document.getElementById("nav");
+        const navToggle = document.getElementById("nav-toggle");
+        const langSwitch = document.querySelector(".lang-switch");
+
+        function closeNav() {
+          nav.classList.remove("nav-open");
+          navToggle.setAttribute("aria-expanded", "false");
+        }
+
+        navToggle.addEventListener("click", () => {
+          const open = nav.classList.toggle("nav-open");
+          navToggle.setAttribute("aria-expanded", open);
+          if (!open && langSwitch) langSwitch.removeAttribute("open");
+        });
+
+        document.addEventListener("click", (e) => {
+          if (langSwitch && langSwitch.open && !langSwitch.contains(e.target)) {
+            langSwitch.removeAttribute("open");
+          }
+          if (nav.classList.contains("nav-open") && !nav.contains(e.target)) {
+            closeNav();
+          }
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key !== "Escape") return;
+          if (langSwitch && langSwitch.open) {
+            langSwitch.removeAttribute("open");
+            langSwitch.querySelector("summary").focus();
+            return;
+          }
+          if (nav.classList.contains("nav-open")) {
+            closeNav();
+            navToggle.focus();
+          }
+        });
       });
     </script>
     <header>
-      <nav>
+      <nav aria-label="{{ t.menu }}">
         <div id="nav">
-          <h1>
-            <a href="{{ '/' | url }}" title="Homepage">{{ metadata.title }}</a>
-            <label for="menu__control" class="menu__btn">
-              <span>選單</span>
-            </label>
-          </h1>
-          <img id="color-scheme-toggle" src="{{ '/img/dark.svg' | url }}" alt="switch dark mode" />
+          <p class="site-title">
+            <a href="{{ homeUrl | url }}" title="Homepage">{{ t.siteName or metadata.title }}</a>
+          </p>
+          <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
+            <span class="visually-hidden">{{ t.menu }}</span>
+            <span class="nav-toggle__bars" aria-hidden="true"></span>
+          </button>
           {#- Read more about `eleventy-navigation` at https://www.11ty.dev/docs/plugins/navigation/ #}
-          <input id="menu__control" type="checkbox" />
-          <div class ="nav__links">
+          <div id="site-menu" class="nav__links">
+          {#- zh-TW shows the full chrome (Archive/Tags/About). Other languages
+              only have a translated About + Home, so Archive/Tags (zh-TW-only
+              browse) are hidden and About points at the per-language page. #}
           {%- for entry in collections.all | eleventyNavigation %}
-            <a href="{{ entry.url | url }}">{{ entry.title }}</a>
+            {%- if pageLang == 'zh-TW' or entry.key == 'About' %}
+            {%- set navHref = ('/' + pageLang + '/about/') if (pageLang != 'zh-TW' and entry.key == 'About') else entry.url %}
+            <a class="nav__link" href="{{ navHref | url }}">{{ i18n[pageLang]['nav_' + entry.key] or entry.title }}</a>
+            {%- endif %}
           {%- endfor %}
+          {#- Language switcher as a compact dropdown (native <details>, no JS).
+              Available languages link; missing ones are shown disabled. #}
+          <details class="lang-switch">
+            <summary class="lang-switch__btn" aria-label="{{ t.readInYourLanguage }}">
+              <svg class="lang-switch__globe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 2.5 16 0 18M12 3c-2.5 2.5-2.5 16 0 18"/></svg>
+              <span>{{ i18n[pageLang].langName }}</span>
+              <svg class="lang-switch__chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </summary>
+            <ul class="lang-switch__menu">
+            {%- for code in langs %}
+              {%- set target = langVersions | urlForLang(code) %}
+              {%- if code == pageLang %}
+              <li><span class="lang-switch__item is-current" aria-current="true">{{ i18n[code].langName }}</span></li>
+              {%- elif target %}
+              <li><a class="lang-switch__item" href="{{ target | url }}" hreflang="{{ code }}" lang="{{ code }}">{{ i18n[code].langName }}</a></li>
+              {%- else %}
+              <li><span class="lang-switch__item is-disabled" aria-disabled="true" title="{{ t.noTranslation }}">{{ i18n[code].langName }}</span></li>
+              {%- endif %}
+            {%- endfor %}
+            </ul>
+          </details>
           </div>
+          <button id="color-scheme-toggle" type="button" aria-label="{{ t.toggleTheme or 'switch dark mode' }}">
+            <img src="{{ '/img/dark.svg' | url }}" alt="" />
+          </button>
         </div>
         <div id="reading-progress" aria-hidden="true"></div>
       </nav>
@@ -133,17 +253,44 @@
       {% endif %}
     </header>
 
-    <main>
+    <main id="main">
       <article>
         {% block article %}
           {{ content | safe }}
         {% endblock %}
       </article>
+      {% block aside %}{% endblock %}
     </main>
 
+    {#- Locale-suggestion banner: only render when this page has another visible
+        language version, then stay hidden unless src/main.js finds a better
+        match among the hreflang alternates in <head>. Fixed-position so
+        revealing it causes no layout shift. No auto-redirect (SEO-safe). #}
+    {%- if langVersions and langVersions.length > 1 %}
+    <aside id="lang-suggest" class="lang-suggest" hidden aria-live="polite"
+      aria-labelledby="lang-suggest-text"
+      data-strings="{{ i18n | langSuggestStrings(langs) }}">
+      <svg class="lang-suggest__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="12" cy="12" r="9"/>
+        <path d="M3 12h18M12 3c2.5 2.5 2.5 16 0 18M12 3c-2.5 2.5-2.5 16 0 18"/>
+      </svg>
+      <div class="lang-suggest__content">
+        <span id="lang-suggest-text" class="lang-suggest__text"></span>
+        <a class="lang-suggest__link" href="#"></a>
+      </div>
+      <button class="lang-suggest__dismiss" type="button" aria-label="{{ t.suggestDismiss }}">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M6 6l12 12M18 6L6 18"/>
+        </svg>
+      </button>
+    </aside>
+    {%- endif %}
+
     <footer>
-      <div class="copyright">&copy 2021 ErrorBaker 技術共筆部落格 </div>
-      <a href="{{ metadata.feed.id + metadata.feed.path | url }}" id="rss"><img  src="/img/rss-feed.svg" alt="rss feed" /></a>
+      <div class="copyright">&copy; 2021&ndash;{{ year }} {{ t.copyright }}</div>
+      {#- Reuse the localized feedPath computed in <head> so the footer icon
+          points at the current language's feed, not always the zh-TW one. #}
+      <a href="{{ feedPath | url }}" id="rss"><img  src="/img/rss-feed.svg" alt="rss feed" /></a>
     </footer>
 
     <!-- Current page: {{ page.url | url }} -->

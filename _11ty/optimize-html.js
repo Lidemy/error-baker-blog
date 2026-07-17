@@ -21,13 +21,20 @@
 
 const minify = require("html-minifier").minify;
 const AmpOptimizer = require("@ampproject/toolbox-optimizer");
-const ampOptimizer = AmpOptimizer.create({
-  blurredPlaceholders: true,
-  imageBasePath: "./_site/",
-  //verbose: true,
-});
+let ampOptimizer;
 const PurgeCSS = require("purgecss").PurgeCSS;
 const csso = require("csso");
+const { readCssBundle } = require("./css-bundle");
+
+let preparedCss;
+
+function prepareCss() {
+  preparedCss = readCssBundle().replace(
+    /@font-face {/g,
+    "@font-face {font-display:optional;"
+  );
+  return preparedCss;
+}
 
 /**
  * Inlines the CSS.
@@ -45,14 +52,9 @@ const purifyCss = async (rawContent, outputPath) => {
     !isAmp(content) &&
     !/data-style-override/.test(content)
   ) {
-    let before = require("fs").readFileSync("css/main.css", {
-      encoding: "utf-8",
-    });
-
-    before = before.replace(
-      /@font-face {/g,
-      "@font-face {font-display:optional;"
-    );
+    // `beforeBuild` prepares this once per build (including watch rebuilds),
+    // instead of synchronously reading the full stylesheet for every page.
+    const before = preparedCss || prepareCss();
 
     const purged = await new PurgeCSS().purge({
       content: [
@@ -74,6 +76,24 @@ const purifyCss = async (rawContent, outputPath) => {
       ],*/
       fontFace: true,
       variables: true,
+      // Classes/states toggled by JS (TOC scroll-spy, back-to-top) never appear
+      // in the server-rendered HTML PurgeCSS scans, so keep them explicitly.
+      // NOTE: purgecss@2 only honors `whitelist`/`whitelistPatterns` and
+      // silently ignores v3's `safelist` — don't add one; on a purgecss
+      // upgrade, rename these keys instead.
+      whitelist: [
+        "active",
+        "toc-ready",
+        "toc-h2",
+        "toc-h3",
+        "js", // set on <html> by the head script; gates collapsed mobile nav
+        "nav-open", // toggled on #nav by the hamburger button
+        "dark", // theme class — keep explicitly, not just via script-text extraction
+      ],
+      // Language-aware typography selectors (`:lang(ja) article` etc.) start
+      // with a functional pseudo-class purgecss@2 can't match against content,
+      // so the whole rule group is dropped without this.
+      whitelistPatterns: [/^:lang/],
     });
 
     const after = csso.minify(purged[0].css).css;
@@ -105,6 +125,14 @@ const minifyHtml = (rawContent, outputPath) => {
 const optimizeAmp = async (rawContent, outputPath) => {
   let content = rawContent;
   if (outputPath && outputPath.endsWith(".html") && isAmp(content)) {
+    // Creating the optimizer eagerly emits dependency warnings even when this
+    // site has no AMP documents. Load it only for a real AMP output.
+    ampOptimizer =
+      ampOptimizer ||
+      AmpOptimizer.create({
+        blurredPlaceholders: true,
+        imageBasePath: "./_site/",
+      });
     content = await ampOptimizer.transformHtml(content);
   }
   return content;
@@ -113,6 +141,7 @@ const optimizeAmp = async (rawContent, outputPath) => {
 module.exports = {
   initArguments: {},
   configFunction: async (eleventyConfig, pluginOptions = {}) => {
+    eleventyConfig.on("beforeBuild", prepareCss);
     eleventyConfig.addTransform("purifyCss", purifyCss);
     eleventyConfig.addTransform("minifyHtml", minifyHtml);
     eleventyConfig.addTransform("optimizeAmp", optimizeAmp);

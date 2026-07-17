@@ -2,7 +2,7 @@
 title: 好玩 && 好用的 console log 技巧
 date: 2021-12-12
 tags: [Front-end, JavaScript]
-author: Xiang
+author: xiang
 layout: layouts/post.njk
 image:
 ---

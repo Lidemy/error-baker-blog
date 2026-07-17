@@ -2,7 +2,7 @@
 title: web Push Notifications
 date: 2022-03-13
 tags: [Front-end]
-author: Ruofan
+author: ruofan
 layout: layouts/post.njk
 ---
 <!-- summary -->

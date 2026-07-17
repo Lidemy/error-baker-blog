@@ -6,7 +6,7 @@ author: tian
 layout: layouts/post.njk
 ---
 
-### 誰可能適合閱讀這篇文章？
+## 誰可能適合閱讀這篇文章？
 
 - 有使用 React 實作多國語系的需求
 - 想瞭解 Babel 除了將 ES6+ 轉成 ES5 還能幫助我們做些什麼？
@@ -14,11 +14,12 @@ layout: layouts/post.njk
 
 如果你沒有上述需求，你可以考慮去閱讀其他夥伴們的 [優秀作品](https://blog.errorbaker.tw/)
 
-### react-intl 簡介
+## react-intl 簡介
 
 從[官方文件](https://formatjs.io/)可以得知， react-intl 是一套可以協助我們做多國語系的 Library
 
-### react-intl 基本操作
+## react-intl 基本操作
+
 在 React 專案中執行指令 `yarn react-intl` or `npm install react-intl` 可以按照下面的程式碼做最基本的配置
 
 1. 在元件的最外層包一個 react-intl 內建的 Context：IntlProvider，這樣被包裹的元件才能透過 useIntl 這個 custom hook 取得 formatMessage
@@ -180,13 +181,13 @@ function TranslationBlock() {
 }
 ```
 
-### Babel 簡介
+## Babel 簡介
 
 Babel 是一個 JavaScript 的轉譯器，通常拿來將瀏覽器的尚未支援的 ES6+ 語法轉成 ES5，這樣就可以讓開發者用最新的語法來寫 Code。
 
 Babel 背後的原理是抽象語法樹 Abstract Syntax Tree，簡稱 AST，對 AST 有興趣的話，推薦看[這篇](https://chihyang41.github.io/2021/06/28/AST-and-ESLint-Introduction-part-1/)
 
-### Babel 設置
+## Babel 設置
 
 可以參考[官方文件](https://babeljs.io/setup#installation)安裝，還需要加上 Plugin [babel-plugin-react-intl](https://github.com/formatjs/babel-plugin-react-intl)
 
@@ -248,7 +249,8 @@ manageTranslations({
 })
 ```
 
-在所有的設置都安排好之後我們要做的事就是
+在所有的設置都安排好之後我們要做的事就是：
+
 1. 利用 react-intl 的 defineMessage 將需要 extract 的字詞定義好
 2. 使用 babel-plugin-react-intl 將 id 和 defaultMessage extract 出來
 3. 使用 react-intl-translations-manager 將 extract 出來的翻譯轉換成語系檔
@@ -272,11 +274,11 @@ manageTranslations({
 可參考 [repo](https://github.com/futianshen/react-js-intl) 
 
 
-### 參考資料
+## 參考資料
 
-[Internationalization & Localization Using React-Intl & TypeScript](https://medium.com/@yehiasaleh/internationalization-localization-using-react-intl-typescript-1e7cfccd34d7)
-[formatjs](https://formatjs.io/docs/getting-started/installation/)
-[babel](https://babeljs.io/setup)
-[babel-plugin-react-intl](https://github.com/formatjs/babel-plugin-react-intl)
-[react-intl-translation-manager](https://github.com/GertjanReynaert/react-intl-translations-manager)
-[前端癢癢 der - 淺談 AST 及 ESlint Rule：AST 是殺毀？（上）](https://chihyang41.github.io/2021/06/28/AST-and-ESLint-Introduction-part-1/)
+- [Internationalization & Localization Using React-Intl & TypeScript](https://medium.com/@yehiasaleh/internationalization-localization-using-react-intl-typescript-1e7cfccd34d7)
+- [formatjs](https://formatjs.io/docs/getting-started/installation/)
+- [babel](https://babeljs.io/setup)
+- [babel-plugin-react-intl](https://github.com/formatjs/babel-plugin-react-intl)
+- [react-intl-translation-manager](https://github.com/GertjanReynaert/react-intl-translations-manager)
+- [前端癢癢 der - 淺談 AST 及 ESlint Rule：AST 是殺毀？（上）](https://chihyang41.github.io/2021/06/28/AST-and-ESLint-Introduction-part-1/)
