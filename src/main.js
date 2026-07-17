@@ -226,11 +226,11 @@ if (window.ResizeObserver && document.querySelector("header nav #nav")) {
   }
   addEventListener("scroll", scroll);
 
-  // The progress bar "bakes": its ember colour deepens with reading progress,
-  // like watching a loaf brown in the oven (values mirror --gx-c2 → --gx-c4;
-  // the dark ramp glows brighter instead).
-  var CRUST_LIGHT = [[217, 151, 87], [147, 53, 31]];
-  var CRUST_DARK = [[148, 81, 42], [238, 149, 86]];
+  // The progress bar "bakes" from pale dough to deep ember with reading
+  // progress, like watching a loaf brown in the oven (values mirror
+  // --gx-c1 → --gx-c4; the dark ramp glows brighter instead).
+  var CRUST_LIGHT = [[234, 199, 162], [147, 53, 31]];
+  var CRUST_DARK = [[92, 52, 35], [238, 149, 86]];
   function bakeColor(percent) {
     var ramp = document.body.classList.contains("dark")
       ? CRUST_DARK
