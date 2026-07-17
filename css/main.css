@@ -1449,10 +1449,6 @@ main {
   width: 24px;
   display: block;
   pointer-events: none;
-  transition: transform var(--dur) var(--ease);
-}
-body.dark #color-scheme-toggle img {
-  transform: rotate(180deg);
 }
 /* ── Post cards: robust clamp + gentle hover ────────────────────────────*/
 .summary {
