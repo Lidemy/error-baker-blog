@@ -5,6 +5,9 @@ tags: [CSS, unoCSS]
 author: benben
 layout: layouts/post.njk
 image: https://i.imgur.com/XRsgu8H.png
+lang: zh-TW
+translationKey: benben/06-uno-css
+translationTargets: [en, ja, zh-CN]
 ---
 
 <!-- summary -->
