@@ -52,7 +52,7 @@
     "aboutOriginBody": "<p>一群因為某些原因聚集在一起的工程師決定合寫一個技術共筆部落格，藉此督促自己做點事，以每人每個月至少一篇的形式發佈文章。</p><p>名字的由來是為了跟 TechBridge 以及 StarBugs 一樣，由兩個單字組成，第二個單字 B 開頭，然後單字要跟程式有關（像是 Tech 與 Bugs），最後就找到了 ErrorBaker，錯誤烘焙師，很適合常常寫出 error 的我們。</p>",
     "backToTop": "回到頂端",
     "relatedHeading": "再來一爐？",
-    "intro2": "主題以 Web 前後端居多，只要跟技術有關，都可能在這裡出爐。"
+    "intro2": "口味以 Web 前後端居多，只要跟技術有關，都可能在這裡出爐。"
   },
   "en": {
     "gx": {
@@ -107,7 +107,7 @@
     "aboutOriginBody": "<p>A group of engineers who came together for various reasons decided to write a shared technical blog — a way to keep each other accountable, publishing at least one article per person every month.</p><p>The name follows the same pattern as TechBridge and StarBugs: two words, the second starting with “B” and related to programming (like Tech &amp; Bugs). We landed on ErrorBaker — fitting for people who bake up errors as often as we do.</p>",
     "backToTop": "Back to top",
     "relatedHeading": "One more from the oven?",
-    "intro2": "Topics lean toward front-end and back-end web development, but anything technical can come out of this oven."
+    "intro2": "Flavors lean toward front-end and back-end web development, but anything technical can come out of this oven."
   },
   "ja": {
     "gx": {
@@ -162,7 +162,7 @@
     "aboutOriginBody": "<p>さまざまな理由で集まったエンジニアたちが、技術共同ブログを書くことにしました。お互いを律するために、一人あたり毎月最低 1 本の記事を公開しています。</p><p>名前は TechBridge や StarBugs と同じく 2 つの単語からなり、2 つ目は B で始まりプログラミングに関係する語（Tech と Bugs のように）。最終的に ErrorBaker（エラーを焼く人）に決めました。しょっちゅう error を生み出す私たちにぴったりです。</p>",
     "backToTop": "トップへ戻る",
     "relatedHeading": "もう一つどうぞ",
-    "intro2": "テーマは Web のフロントエンド・バックエンドが中心ですが、技術に関わるものなら何でもここで焼き上がります。"
+    "intro2": "フレーバーは Web のフロントエンド・バックエンドが中心ですが、技術に関わるものなら何でもここで焼き上がります。"
   },
   "zh-CN": {
     "gx": {
@@ -217,6 +217,6 @@
     "aboutOriginBody": "<p>一群因为某些原因聚集在一起的工程师决定合写一个技术共笔博客，借此督促自己做点事，以每人每个月至少一篇的形式发布文章。</p><p>名字的由来是为了跟 TechBridge 以及 StarBugs 一样，由两个单词组成，第二个单词 B 开头，然后单词要跟程序有关（像是 Tech 与 Bugs），最后就找到了 ErrorBaker，错误烘焙师，很适合常常写出 error 的我们。</p>",
     "backToTop": "回到顶部",
     "relatedHeading": "再来一炉？",
-    "intro2": "主题以 Web 前后端居多，只要跟技术有关，都可能在这里出炉。"
+    "intro2": "口味以 Web 前后端居多，只要跟技术有关，都可能在这里出炉。"
   }
 }
