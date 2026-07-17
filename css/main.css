@@ -1927,6 +1927,19 @@ body.tmpl-post article {
 }
 
 /* Drop cap on the first paragraph — an editorial signature. */
+/* Drop caps are a Latin-print flourish that breaks on English contractions
+   ("It's" → "I t's") and has no tradition in Japanese — keep the signature
+   on Chinese pages only, where a single enlarged hanzi reads cleanly. */
+body.tmpl-post:lang(en) article > p:first-of-type::first-letter,
+body.tmpl-post:lang(ja) article > p:first-of-type::first-letter {
+  float: none;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+}
 body.tmpl-post article > p:first-of-type::first-letter {
   float: left;
   font-family: var(--font-serif);

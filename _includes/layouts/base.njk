@@ -135,6 +135,17 @@
         const toggleEl = document.querySelector("#color-scheme-toggle");
         toggleEl.addEventListener("click", handleToggleEvent);
 
+        // The markup ships the light-mode icon; initTheme only sets the class.
+        // Sync the icon (and utterances, when present) with the theme applied
+        // at load, so dark-mode visitors see the sun icon before any click.
+        if (bodyEl.classList.contains(DARK)) {
+          const toggleImg = toggleEl.querySelector("img");
+          toggleImg.src = toggleImg.src.replace(DARK, LIGHT);
+          if (document.querySelector('script[src*="utteranc.es"]')) {
+            setUtterancesTheme(DARK);
+          }
+        }
+
         function handleToggleEvent() {
           const apply = () => {
             const isDark = bodyEl.classList.toggle(DARK);
