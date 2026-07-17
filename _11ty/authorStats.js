@@ -58,7 +58,7 @@ function buildCalendar(dates) {
 /**
  * @param {Array} posts  Eleventy items (already filtered to zh-TW source posts).
  * @param {Object} authors  metadata.json `authors` map (key -> {name, avatarUrl}).
- * @param {Object|null} commentsByTitle  post title -> reader comment count, from
+ * @param {Object|null} commentsByPath  post path -> reader comment count, from
  *   utterances (see _11ty/discussions.js). Omit/null when unavailable (offline
  *   or rate-limited build) — reader stats are then simply not computed.
  * @returns {Array} enriched author records, sorted (count desc, latest desc),
@@ -67,8 +67,8 @@ function buildCalendar(dates) {
  *                  across the author's posts) and the single author with the
  *                  most reader comments is flagged `mostDiscussed`.
  */
-function buildAuthorStats(posts, authors, commentsByTitle = null) {
-  const hasComments = commentsByTitle && typeof commentsByTitle === "object";
+function buildAuthorStats(posts, authors, commentsByPath = null) {
+  const hasComments = commentsByPath && typeof commentsByPath === "object";
   const acc = {}; // key -> { count, dates[], comments }
   for (const item of posts) {
     const key = item.data && item.data.author;
@@ -77,8 +77,7 @@ function buildAuthorStats(posts, authors, commentsByTitle = null) {
     a.count += 1;
     a.dates.push(item.date);
     if (hasComments) {
-      const title = item.data && item.data.title;
-      a.comments += (title && commentsByTitle[title]) || 0;
+      a.comments += (item.url && commentsByPath[item.url]) || 0;
     }
   }
 

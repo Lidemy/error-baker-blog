@@ -58,7 +58,7 @@ const { buildAuthorStats } = require("./_11ty/authorStats");
 const activeLanguages = require("./_11ty/activeLanguages");
 const isDraftFrontmatter = require("./_11ty/draftFlag");
 const { buildAiCrawlRules } = require("./_11ty/aiCrawlPolicy");
-const { commentCountsByTitle } = require("./_11ty/discussions");
+const { commentCountsByPath } = require("./_11ty/discussions");
 const { CSS_FILES } = require("./_11ty/css-bundle");
 const {
   effectivePublishedDate,
@@ -449,8 +449,8 @@ module.exports = function (eleventyConfig) {
       .filter((item) => postLang(item) === DEFAULT_LANG);
     // Reader comment counts from utterances; null (fetch failed) degrades to a
     // post-count-only leaderboard without failing the build.
-    const commentsByTitle = await commentCountsByTitle();
-    return buildAuthorStats(posts, authors, commentsByTitle);
+    const commentsByPath = await commentCountsByPath();
+    return buildAuthorStats(posts, authors, commentsByPath);
   });
 
   // Look up one author's enriched stats record by key (for author pages).
