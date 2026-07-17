@@ -1790,13 +1790,14 @@ dialog#message[open] {
     animation-timeline: view();
     animation-range: entry 0% entry 45%;
   }
+  /* Transform-only: fading text below the fold fails WCAG contrast while
+     mid-animation (Lighthouse flags the blended color), so the cards rise
+     without changing opacity. */
   @keyframes card-rise {
     from {
-      opacity: 0.15;
       transform: translateY(16px);
     }
     to {
-      opacity: 1;
       transform: none;
     }
   }
