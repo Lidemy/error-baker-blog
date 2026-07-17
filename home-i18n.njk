@@ -17,9 +17,6 @@ eleventyComputed:
 {% set ht = i18n[hlang] %}
 <section class="intro">
 <p>{{ ht.intro }}</p>
-{%- if ht.intro2 %}
-<p>{{ ht.intro2 }}</p>
-{%- endif %}
 </section>
 <section class="posts">
   {% set postslist = collections.posts | filterByLang(hlang) | sortByPublishedDate | reverse | head(8) %}

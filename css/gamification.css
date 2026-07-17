@@ -63,10 +63,9 @@
   max-width: 320px;
 }
 .gx-bar__fill { display: block; height: 100%; border-radius: 999px; }
-/* The fill reads as a loaf browning left-to-right (dough → caramel) — the
-   site-wide "progressively baked" treatment for quantities. A fixed ramp for
-   every tier also keeps low-tier bars visible on light paper. */
-.gx-bar .gx-bar__fill { background: linear-gradient(90deg, var(--gx-c1), var(--gx-c3)); }
+/* The fill communicates quantity by width alone; a fixed ember color keeps it
+   visible for low tiers (the pale dough chips would vanish on light paper). */
+.gx-bar .gx-bar__fill { background: var(--gx-c3); }
 
 .gx-profile {
   margin: 0 0 2rem;

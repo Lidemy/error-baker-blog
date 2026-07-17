@@ -11,7 +11,7 @@
     {%- if stat.rank %}<span class="gx-profile__rank">#{{ stat.rank }}</span>{% endif %}
     <span class="gx-profile__count">{{ stat.count }} {{ t.postsUnit or '篇' }}</span>
     {%- if stat.comments %}<span class="gx-comments" title="{{ stat.comments }} {{ t.gx.commentsUnit }}">💬 {{ stat.comments }}</span>{% endif %}
-    {%- if stat.mostDiscussed %}<span class="gx-badge gx-badge--discussed">{{ t.gx.mostDiscussed }}</span>{% endif %}
+    {%- if stat.mostDiscussed %}<span class="gx-badge gx-badge--discussed">💬 {{ t.gx.mostDiscussed }}</span>{% endif %}
     {%- if stat.medal %}<span class="gx-profile__medal">{{ stat.medal }}</span>{% endif %}
   </div>
 
