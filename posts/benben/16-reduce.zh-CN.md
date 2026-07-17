@@ -1,5 +1,5 @@
 ---
-title: "Reduce | 完全手册"
+title: 'Reduce | 完全手册'
 date: 2026-05-16
 tags: [JavaScript, array]
 author: benben
@@ -8,7 +8,9 @@ lang: zh-CN
 sourceLang: zh-TW
 translationKey: benben/16-reduce
 permalink: /zh-CN/posts/benben/16-reduce/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 453a27accd175a00da3851983100d4d0e68cc0c2d77f0f05fd66106249f9f091
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: "Reduce | 完全マニュアル"
+title: 'Reduce | 完全マニュアル'
 date: 2026-05-16
 tags: [JavaScript, array]
 author: benben
@@ -8,7 +8,9 @@ lang: ja
 sourceLang: zh-TW
 translationKey: benben/16-reduce
 permalink: /ja/posts/benben/16-reduce/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 453a27accd175a00da3851983100d4d0e68cc0c2d77f0f05fd66106249f9f091
 ---
 
@@ -87,7 +89,7 @@ const sum = arr.reduce((a, b) => a + b)
 
 その一方、ダーバン（大班）くんは心の中でつぶやきます：「なわけないだろ！」
 
-> 補足：ダーバンくんは幼稚園の年長組のことです。「Big B___」ではありません。
+> 補足：ダーバンくんは幼稚園の年長組のことです。「Big B\_\_\_」ではありません。
 
 でもシャオバンくんは合計を覚えたばかりで興奮していて耳に入らず、また嬉々としてコードを書きに戻っていきました！
 
