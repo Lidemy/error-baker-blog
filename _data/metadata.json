@@ -22,7 +22,10 @@
   "authors": {
     "benben": {
       "name": "Benben",
-      "intro": "我是 Benben，喜歡理性的冷知識、感性的人事物。會想要寫這個部落格是因為，我認為能夠持續的自我成長是一個很重要的能力，其實跟是不是工程師的關係不大，只是剛好他們更需要這個能力。",
+      "intro": "我是 Benben，主要是前端工程師。沉迷於理性的冷知識，也著迷於感性的人事物。寫程式 / 寫文字，是為了不讓自己停止成長。",
+      "intro_en": "I'm Benben, primarily a frontend engineer. I'm hooked on cold, rational facts and equally captivated by the emotional side of people and things. I write code and I write words, so I never stop growing.",
+      "intro_ja": "Benben です。主にフロントエンドエンジニアをしています。理性的な雑学に夢中になり、心を動かす人や物事にも魅了されます。コードを書くことも文章を書くことも、自分が成長を止めないためです。",
+      "intro_zh-CN": "我是 Benben，主要是前端工程师。沉迷于理性的冷知识，也着迷于感性的人事物。写程序 / 写文字，是为了不让自己停止成长。",
       "avatarUrl": "/img/authors/benben.jpg"
     },
     "clay": {
