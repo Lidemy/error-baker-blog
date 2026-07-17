@@ -1,6 +1,6 @@
 ---
 layout: layouts/about.njk
-title: 關於烘焙坊
+title: 烘焙師們
 lang: zh-TW
 translationKey: about
 permalink: /about/
