@@ -2386,6 +2386,11 @@ body.tmpl-home header > h1.w-full::after {
   margin-left: 0;
   margin-right: 0;
 }
+/* Pages without a front-matter title render an empty header h1 — hide it so
+   no orphaned tick floats above the content (e.g. 404 before it had a title). */
+header > h1.w-full:empty {
+  display: none;
+}
 
 /* About page — author list, ranked by post count (avatar · name · count · bio). */
 .author-list {
@@ -2502,7 +2507,9 @@ body.tmpl-home header > h1.w-full::after {
 body.tmpl-home header {
   align-items: stretch; /* full-width children so the title wraps, not shrink-wraps */
   text-align: left;
-  width: min(100%, 52rem);
+  /* Same column as the article (46rem + identical side padding) so the
+     masthead, tick, and intro share one left edge at every viewport width. */
+  width: min(100%, 46rem);
   max-width: 100%;
   padding: 4.5em clamp(1rem, 4vw, 2rem) 0;
 }
@@ -2510,8 +2517,12 @@ body.tmpl-home header > h1.w-full {
   text-align: left;
   margin: 0.2em 0 0.4em;
 }
+/* Tighten masthead → intro: the tick already provides the pause. */
+body.tmpl-home main > article {
+  padding-top: 0.4rem;
+}
 body.tmpl-home .intro {
-  margin: 1.4rem 0 3.2rem;
+  margin: 0.4rem 0 3.2rem;
   max-width: 44rem;
   text-align: start;
   border-bottom: 0;
