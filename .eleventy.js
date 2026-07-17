@@ -183,6 +183,27 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addFilter("sortFeedPosts", sortFeedPosts);
   eleventyConfig.addFilter("feedUpdatedDate", feedUpdatedDate);
 
+  // End-of-post "another batch from the oven" recommendations: shared tags
+  // weigh double, same author breaks ties, then recency. The caller filters
+  // the pool by language first (filterByLang), so this only ranks.
+  eleventyConfig.addFilter("relatedPosts", function (posts, page, tags, author, count) {
+    const n = count || 3;
+    const currentTags = new Set((tags || []).filter((t) => t !== "posts"));
+    return (posts || [])
+      .filter((p) => p.url && p.url !== page.url)
+      .map((p) => {
+        const shared = (p.data.tags || []).filter((t) =>
+          currentTags.has(t)
+        ).length;
+        const sameAuthor = p.data.author === author ? 1 : 0;
+        return { p, score: shared * 2 + sameAuthor };
+      })
+      .filter((s) => s.score > 0)
+      .sort((a, b) => b.score - a.score || b.p.date - a.p.date)
+      .slice(0, n)
+      .map((s) => s.p);
+  });
+
   // "Freshly baked" badge: true while a post is younger than 30 days at build
   // time. Static builds go stale, so Netlify's periodic deploys keep it honest.
   eleventyConfig.addFilter("isFresh", (dateObj) => {

@@ -1732,6 +1732,22 @@ body.tmpl-home article {
   margin-right: 0.55rem;
   color: var(--rule-strong);
 }
+/* End-of-post recommendations ("another batch from the oven"). */
+.related-posts ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.related-posts li {
+  margin: 0.8em 0;
+}
+.related-posts .related-meta {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  margin-top: 0.15em;
+}
+
 /* Toast: glassy pill that slides up from the bottom edge, replacing the old
    tiny red box. Element+id selector so the per-page PurgeCSS keeps it. */
 dialog#message {
@@ -1774,13 +1790,14 @@ dialog#message[open] {
     animation-timeline: view();
     animation-range: entry 0% entry 45%;
   }
+  /* Transform-only: fading text below the fold fails WCAG contrast while
+     mid-animation (Lighthouse flags the blended color), so the cards rise
+     without changing opacity. */
   @keyframes card-rise {
     from {
-      opacity: 0.15;
       transform: translateY(16px);
     }
     to {
-      opacity: 1;
       transform: none;
     }
   }
@@ -2354,26 +2371,43 @@ article h3 {
 header {
   padding-bottom: 1.25em;
 }
-body:not(.tmpl-post) header > h1.w-full::after {
+/* Centered (ceremonial) pages only: in a flush-left setting a short stub
+   reads as a broken underline — left-register pages carry hierarchy with
+   scale and spacing alone, per flush-left typographic tradition. */
+body:not(.tmpl-post):not(.tmpl-home) header > h1.w-full::after {
   content: "";
   display: block;
   width: 2.75rem;
   height: 3px;
   border-radius: 2px;
-  background: var(--accent);
+  /* The tick is "baked" like everything quantitative: dough → ember. */
+  background: linear-gradient(90deg, #eac7a2, #bc5b2b 55%, #93351f);
   margin: 1rem auto 0;
+  /* Bakes out on load; transform-only so layout never shifts (no CLS).
+     The global prefers-reduced-motion rule collapses it to instant. */
+  animation: tick-bake 0.7s var(--ease) 0.15s backwards;
+  transform-origin: center;
+}
+body.dark:not(.tmpl-post):not(.tmpl-home) header > h1.w-full::after {
+  background: linear-gradient(90deg, #5c3423, #c96f38 55%, #ee9556);
+}
+@keyframes tick-bake {
+  from {
+    transform: scaleX(0);
+  }
 }
 /* Site alignment registers: the home family (home/archive/tags/404) is a
    left-set masthead, ceremonial pages (post/about) are centered. The tick
    follows its title's register instead of always centering. */
-body.tmpl-home header > h1.w-full::after {
-  margin-left: 0;
-  margin-right: 0;
-}
 /* Pages without a front-matter title render an empty header h1 — hide it so
    no orphaned tick floats above the content (e.g. 404 before it had a title). */
 header > h1.w-full:empty {
   display: none;
+}
+/* Ceremonial pages (about): pull the first heading up toward the title —
+   the tick provides the pause, not empty space. */
+body.tmpl-about main > article {
+  padding-top: 0.5rem;
 }
 
 /* About page — author list, ranked by post count (avatar · name · count · bio). */
@@ -2491,9 +2525,9 @@ header > h1.w-full:empty {
 body.tmpl-home header {
   align-items: stretch; /* full-width children so the title wraps, not shrink-wraps */
   text-align: left;
-  /* Same column as the article (46rem + identical side padding) so the
+  /* Same column as the home article (52rem + identical side padding) so the
      masthead, tick, and intro share one left edge at every viewport width. */
-  width: min(100%, 46rem);
+  width: min(100%, 52rem);
   max-width: 100%;
   padding: 4.5em clamp(1rem, 4vw, 2rem) 0;
 }
@@ -2506,11 +2540,20 @@ body.tmpl-home main > article {
   padding-top: 0.4rem;
 }
 body.tmpl-home .intro {
-  margin: 0.4rem 0 3.2rem;
+  margin: 0.9rem 0 3.2rem;
   max-width: 44rem;
   text-align: start;
   border-bottom: 0;
   padding-bottom: 0;
+}
+/* Tablet: articles switch to 42rem/5vw padding — mirror it on the home
+   masthead so the shared left edge holds at every width. (Placed after the
+   base home-header rule: same specificity, source order decides.) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  body.tmpl-home header {
+    padding-left: clamp(1.25rem, 5vw, 2.5rem);
+    padding-right: clamp(1.25rem, 5vw, 2.5rem);
+  }
 }
 /* The intro is prose, not a headline: `balance` halves short paragraphs at
    commas ("lyrics look", worst in en/ja). `pretty` (set in the shared rule)
