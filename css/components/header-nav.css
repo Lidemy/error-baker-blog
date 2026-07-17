@@ -77,12 +77,17 @@ header nav {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
-/* Reading progress: accent hairline riding the bar's bottom edge */
+/* Reading progress: a hairline that "bakes" — src/main.js deepens its colour
+   with scroll along the ember scale, like watching a loaf brown. The static
+   colours here are the ramp's starting values (pre-JS fallback). */
 #reading-progress {
   top: auto;
   bottom: -1px;
   height: 2px;
-  background-color: var(--accent);
+  background-color: #eac7a2;
+}
+body.dark #reading-progress {
+  background-color: #5c3423;
 }
 
 @media (max-width: 840px) {

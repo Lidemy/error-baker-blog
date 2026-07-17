@@ -8,7 +8,13 @@
       "more": "多",
       "mostDiscussed": "最多討論",
       "commentsUnit": "則留言",
-      "tier": { "diamond": "烘焙大師", "gold": "大師傅", "silver": "麵包師", "bronze": "麵團手", "iron": "學徒" }
+      "tier": {
+        "diamond": "烘焙大師",
+        "gold": "大師傅",
+        "silver": "麵包師",
+        "bronze": "麵團手",
+        "iron": "學徒"
+      }
     },
     "freshBadge": "新出爐",
     "js": {
@@ -43,7 +49,8 @@
     "aboutTitle": "關於我們",
     "aboutOriginHeading": "緣起",
     "authorsHeading": "作者列表",
-    "aboutOriginBody": "<p>一群因為某些原因聚集在一起的工程師（或準工程師）決定合寫一個技術共筆部落格，藉此督促自己做點事，以每人每個月至少一篇的形式發佈文章。</p><p>名字的由來是為了跟 TechBridge 以及 StarBugs 一樣，由兩個單字組成，第二個單字 B 開頭，然後單字要跟程式有關（像是 Tech 與 Bugs），最後就找到了 ErrorBaker，錯誤烘焙師，很適合常常寫出 error 的我們。</p>"
+    "aboutOriginBody": "<p>一群因為某些原因聚集在一起的工程師（或準工程師）決定合寫一個技術共筆部落格，藉此督促自己做點事，以每人每個月至少一篇的形式發佈文章。</p><p>名字的由來是為了跟 TechBridge 以及 StarBugs 一樣，由兩個單字組成，第二個單字 B 開頭，然後單字要跟程式有關（像是 Tech 與 Bugs），最後就找到了 ErrorBaker，錯誤烘焙師，很適合常常寫出 error 的我們。</p>",
+    "backToTop": "回到頂端"
   },
   "en": {
     "gx": {
@@ -54,7 +61,13 @@
       "more": "More",
       "mostDiscussed": "Most discussed",
       "commentsUnit": "comments",
-      "tier": { "diamond": "Master Baker", "gold": "Head Baker", "silver": "Baker", "bronze": "Dough Hand", "iron": "Apprentice" }
+      "tier": {
+        "diamond": "Master Baker",
+        "gold": "Head Baker",
+        "silver": "Baker",
+        "bronze": "Dough Hand",
+        "iron": "Apprentice"
+      }
     },
     "freshBadge": "Freshly baked",
     "js": {
@@ -89,7 +102,8 @@
     "aboutTitle": "About us",
     "aboutOriginHeading": "Origin",
     "authorsHeading": "Authors",
-    "aboutOriginBody": "<p>A group of engineers (and engineers-in-training) who came together for various reasons decided to write a shared technical blog — a way to keep each other accountable, publishing at least one article per person every month.</p><p>The name follows the same pattern as TechBridge and StarBugs: two words, the second starting with “B” and related to programming (like Tech &amp; Bugs). We landed on ErrorBaker — fitting for people who bake up errors as often as we do.</p>"
+    "aboutOriginBody": "<p>A group of engineers (and engineers-in-training) who came together for various reasons decided to write a shared technical blog — a way to keep each other accountable, publishing at least one article per person every month.</p><p>The name follows the same pattern as TechBridge and StarBugs: two words, the second starting with “B” and related to programming (like Tech &amp; Bugs). We landed on ErrorBaker — fitting for people who bake up errors as often as we do.</p>",
+    "backToTop": "Back to top"
   },
   "ja": {
     "gx": {
@@ -100,7 +114,13 @@
       "more": "多",
       "mostDiscussed": "コメント最多",
       "commentsUnit": "件のコメント",
-      "tier": { "diamond": "マイスター", "gold": "親方", "silver": "パン職人", "bronze": "生地職人", "iron": "見習い" }
+      "tier": {
+        "diamond": "マイスター",
+        "gold": "親方",
+        "silver": "パン職人",
+        "bronze": "生地職人",
+        "iron": "見習い"
+      }
     },
     "freshBadge": "焼きたて",
     "js": {
@@ -135,7 +155,8 @@
     "aboutTitle": "私たちについて",
     "aboutOriginHeading": "由来",
     "authorsHeading": "著者一覧",
-    "aboutOriginBody": "<p>さまざまな理由で集まったエンジニア（およびエンジニアの卵）たちが、技術共同ブログを書くことにしました。お互いを律するために、一人あたり毎月最低 1 本の記事を公開しています。</p><p>名前は TechBridge や StarBugs と同じく 2 つの単語からなり、2 つ目は B で始まりプログラミングに関係する語（Tech と Bugs のように）。最終的に ErrorBaker（エラーを焼く人）に決めました。しょっちゅう error を生み出す私たちにぴったりです。</p>"
+    "aboutOriginBody": "<p>さまざまな理由で集まったエンジニア（およびエンジニアの卵）たちが、技術共同ブログを書くことにしました。お互いを律するために、一人あたり毎月最低 1 本の記事を公開しています。</p><p>名前は TechBridge や StarBugs と同じく 2 つの単語からなり、2 つ目は B で始まりプログラミングに関係する語（Tech と Bugs のように）。最終的に ErrorBaker（エラーを焼く人）に決めました。しょっちゅう error を生み出す私たちにぴったりです。</p>",
+    "backToTop": "トップへ戻る"
   },
   "zh-CN": {
     "gx": {
@@ -146,7 +167,13 @@
       "more": "多",
       "mostDiscussed": "最多讨论",
       "commentsUnit": "条评论",
-      "tier": { "diamond": "烘焙大师", "gold": "大师傅", "silver": "面包师", "bronze": "面团手", "iron": "学徒" }
+      "tier": {
+        "diamond": "烘焙大师",
+        "gold": "大师傅",
+        "silver": "面包师",
+        "bronze": "面团手",
+        "iron": "学徒"
+      }
     },
     "freshBadge": "新出炉",
     "js": {
@@ -181,6 +208,7 @@
     "aboutTitle": "关于我们",
     "aboutOriginHeading": "缘起",
     "authorsHeading": "作者列表",
-    "aboutOriginBody": "<p>一群因为某些原因聚集在一起的工程师（或准工程师）决定合写一个技术共笔博客，借此督促自己做点事，以每人每个月至少一篇的形式发布文章。</p><p>名字的由来是为了跟 TechBridge 以及 StarBugs 一样，由两个单词组成，第二个单词 B 开头，然后单词要跟程序有关（像是 Tech 与 Bugs），最后就找到了 ErrorBaker，错误烘焙师，很适合常常写出 error 的我们。</p>"
+    "aboutOriginBody": "<p>一群因为某些原因聚集在一起的工程师（或准工程师）决定合写一个技术共笔博客，借此督促自己做点事，以每人每个月至少一篇的形式发布文章。</p><p>名字的由来是为了跟 TechBridge 以及 StarBugs 一样，由两个单词组成，第二个单词 B 开头，然后单词要跟程序有关（像是 Tech 与 Bugs），最后就找到了 ErrorBaker，错误烘焙师，很适合常常写出 error 的我们。</p>",
+    "backToTop": "回到顶部"
   }
 }
