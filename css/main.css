@@ -2391,6 +2391,11 @@ body.tmpl-home header > h1.w-full::after {
 header > h1.w-full:empty {
   display: none;
 }
+/* Ceremonial pages (about): pull the first heading up toward the title —
+   the tick provides the pause, not empty space. */
+body.tmpl-about main > article {
+  padding-top: 0.5rem;
+}
 
 /* About page — author list, ranked by post count (avatar · name · count · bio). */
 .author-list {
@@ -2507,9 +2512,9 @@ header > h1.w-full:empty {
 body.tmpl-home header {
   align-items: stretch; /* full-width children so the title wraps, not shrink-wraps */
   text-align: left;
-  /* Same column as the article (46rem + identical side padding) so the
+  /* Same column as the home article (52rem + identical side padding) so the
      masthead, tick, and intro share one left edge at every viewport width. */
-  width: min(100%, 46rem);
+  width: min(100%, 52rem);
   max-width: 100%;
   padding: 4.5em clamp(1rem, 4vw, 2rem) 0;
 }
@@ -2527,6 +2532,15 @@ body.tmpl-home .intro {
   text-align: start;
   border-bottom: 0;
   padding-bottom: 0;
+}
+/* Tablet: articles switch to 42rem/5vw padding — mirror it on the home
+   masthead so the shared left edge holds at every width. (Placed after the
+   base home-header rule: same specificity, source order decides.) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  body.tmpl-home header {
+    padding-left: clamp(1.25rem, 5vw, 2.5rem);
+    padding-right: clamp(1.25rem, 5vw, 2.5rem);
+  }
 }
 /* The intro is prose, not a headline: `balance` halves short paragraphs at
    commas ("lyrics look", worst in en/ja). `pretty` (set in the shared rule)
