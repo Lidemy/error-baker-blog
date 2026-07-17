@@ -4,6 +4,9 @@ date: 2026-05-16
 tags: [JavaScript, array]
 author: benben
 layout: layouts/post.njk
+lang: zh-TW
+translationKey: benben/16-reduce
+translationTargets: [en, ja, zh-CN]
 ---
 
 <!-- summary -->
@@ -87,7 +90,7 @@ const sum = arr.reduce((a, b) => a + b)
 
 ## 為什麼叫 reduce ？
 
-大班認為：上面的「加總」功能，顯然跟英文「reduce (減少)」完反是相反的意思。
+大班認為：上面的「加總」功能，顯然跟英文「reduce (減少)」完全是相反的意思。
 
 不確定讀者初學習 reduce 時，有沒有跟大班一樣的疑惑？
 
