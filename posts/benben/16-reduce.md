@@ -4,6 +4,9 @@ date: 2026-05-16
 tags: [JavaScript, array]
 author: benben
 layout: layouts/post.njk
+lang: zh-TW
+translationKey: benben/16-reduce
+translationTargets: [en, ja, zh-CN]
 ---
 
 <!-- summary -->
