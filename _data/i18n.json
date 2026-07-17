@@ -6,7 +6,7 @@
       "contributions": "出爐紀錄",
       "less": "少",
       "more": "多",
-      "mostDiscussed": "最熱銷",
+      "mostDiscussed": "讀者最愛",
       "commentsUnit": "則留言",
       "tier": {
         "diamond": "烘焙大師",
@@ -61,7 +61,7 @@
       "contributions": "Bake log",
       "less": "Less",
       "more": "More",
-      "mostDiscussed": "Best seller",
+      "mostDiscussed": "Readers' favorite",
       "commentsUnit": "comments",
       "tier": {
         "diamond": "Master Baker",
@@ -116,7 +116,7 @@
       "contributions": "焼き上げ記録",
       "less": "少",
       "more": "多",
-      "mostDiscussed": "ベストセラー",
+      "mostDiscussed": "読者のお気に入り",
       "commentsUnit": "件のコメント",
       "tier": {
         "diamond": "マイスター",
@@ -171,7 +171,7 @@
       "contributions": "出炉记录",
       "less": "少",
       "more": "多",
-      "mostDiscussed": "最热销",
+      "mostDiscussed": "读者最爱",
       "commentsUnit": "条评论",
       "tier": {
         "diamond": "烘焙大师",

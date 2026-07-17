@@ -38,7 +38,7 @@ templateClass: tmpl-about
           Lv.{{ a.level }}</span>
         <span class="author-row__count">{{ a.count }} {{ t.postsUnit or '篇' }}</span>
         {%- if a.comments %}<span class="gx-comments" title="{{ a.comments }} {{ t.gx.commentsUnit }}">💬 {{ a.comments }}</span>{% endif %}
-        {%- if a.mostDiscussed %}<span class="gx-badge gx-badge--discussed">💬 {{ t.gx.mostDiscussed }}</span>{% endif %}
+        {%- if a.mostDiscussed %}<span class="gx-badge gx-badge--discussed">{{ t.gx.mostDiscussed }}</span>{% endif %}
       </h3>
       <div class="gx-bar" role="img" aria-label="{{ a.count }} {{ t.postsUnit or '篇' }}">
         <span class="gx-bar__fill gx-tier-{{ a.tier }}" style="width: {{ a.pct }}%"></span>
