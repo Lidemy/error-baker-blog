@@ -5,6 +5,9 @@ tags: [JavaScript, CLI]
 author: benben
 layout: layouts/post.njk
 image: https://i.imgur.com/PfIQ0Lq.png
+lang: zh-TW
+translationKey: benben/04-cli
+translationTargets: [en, ja, zh-CN]
 ---
 
 <!-- summary -->
