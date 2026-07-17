@@ -1,7 +1,14 @@
 const tag = "<!-- summary -->"
 const hasSummary = content => content.split(tag).length === 3;
 const excerpt = (content) => content.split(tag)[1];
-const delHtmlTag = str => str.replace(/<[^>]+>/g,"");
+const delHtmlTag = str => {
+  let previous;
+  do {
+    previous = str;
+    str = str.replace(/<[^>]+>/g, "");
+  } while (str !== previous);
+  return str;
+};
 const contentInfo = content => {
     const htmlPart = excerpt(content.post)
     const startIndex = htmlPart.indexOf('<!--')
