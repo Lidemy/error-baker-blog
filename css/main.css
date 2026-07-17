@@ -2363,6 +2363,13 @@ body:not(.tmpl-post) header > h1.w-full::after {
   background: var(--accent);
   margin: 1rem auto 0;
 }
+/* Site alignment registers: the home family (home/archive/tags/404) is a
+   left-set masthead, ceremonial pages (post/about) are centered. The tick
+   follows its title's register instead of always centering. */
+body.tmpl-home header > h1.w-full::after {
+  margin-left: 0;
+  margin-right: 0;
+}
 
 /* About page — author list, ranked by post count (avatar · name · count · bio). */
 .author-list {
