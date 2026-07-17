@@ -2346,6 +2346,24 @@ article h3 {
   text-wrap: balance;
 }
 
+/* ── Title → content rhythm ─────────────────────────────────────────────
+   The display title used to float ~110px above the first line of content,
+   reading as two unrelated blocks. Tighten the header's bottom padding and
+   bridge the centered title to the left-set body with a short accent rule
+   (printer's tick) on non-post pages (posts already have the byline). */
+header {
+  padding-bottom: 1.25em;
+}
+body:not(.tmpl-post) header > h1.w-full::after {
+  content: "";
+  display: block;
+  width: 2.75rem;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+  margin: 1rem auto 0;
+}
+
 /* About page — author list, ranked by post count (avatar · name · count · bio). */
 .author-list {
   list-style: none;
@@ -2476,6 +2494,6 @@ body.tmpl-home .intro {
   border-bottom: 0;
   padding-bottom: 0;
 }
-body.tmpl-home .intro p {
-  text-wrap: balance;
-}
+/* The intro is prose, not a headline: `balance` halves short paragraphs at
+   commas ("lyrics look", worst in en/ja). `pretty` (set in the shared rule)
+   keeps natural fills while still avoiding orphans. */
