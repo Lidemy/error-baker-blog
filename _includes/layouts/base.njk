@@ -39,7 +39,10 @@
     {% else %}
     <link rel="icon" href="{{ '/img/favicon/favicon-192x192.png' | addHash }}" type="image/png">
     {% endif %}
-    <meta name="theme-color" content="#d04444">
+    {#- Browser chrome matches the editorial paper header in both themes. #}
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbfaf8">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1a1816">
+    <meta name="theme-color" content="#fbfaf8">
     {%- set pageTitle = renderData.title or title or metadata.title %}
     <title>{% if templateClass == 'tmpl-post' and (renderData.title or title) %}{{ pageTitle | escape }}｜{{ t.siteName or metadata.title }}{% else %}{{ pageTitle | escape }}{% endif %}</title>
     <meta property="og:title" content="{{ pageTitle | escape }}">

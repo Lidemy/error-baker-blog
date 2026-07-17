@@ -1,16 +1,20 @@
-/* Author contributions — leaderboard, levels, and contribution calendar. */
+/* Author contributions — leaderboard, levels, and contribution calendar.
+   Quantities use the brand "ember scale": dough → oven fire. It lives in the
+   same red-warm hue family as --accent (#b5322e) so quantitative color and
+   brand color read as one system — the more you write, the hotter the bake. */
 :root {
   --gx-cell: 11px;
-  --gx-diamond: #38bdf8;
-  --gx-gold: #e0a92a;
-  --gx-silver: #9aa0a6;
-  --gx-bronze: #b5713b;
-  --gx-iron: #8a8f98;
-  --gx-c0: #ebedf0;
-  --gx-c1: #9be9a8;
-  --gx-c2: #40c463;
-  --gx-c3: #30a14e;
-  --gx-c4: #216e39;
+  --gx-diamond: #93351f;
+  --gx-gold: #bc5b2b;
+  --gx-silver: #d99757;
+  --gx-bronze: #eac7a2;
+  --gx-iron: #f4ece0;
+  --gx-ink-on-light: #5a2c18;
+  --gx-c0: #f4ece0;
+  --gx-c1: #eac7a2;
+  --gx-c2: #d99757;
+  --gx-c3: #bc5b2b;
+  --gx-c4: #93351f;
 }
 
 .gx-row { align-items: center; }
@@ -39,9 +43,16 @@
 }
 .gx-tier-diamond { background: var(--gx-diamond); }
 .gx-tier-gold { background: var(--gx-gold); }
-.gx-tier-silver { background: var(--gx-silver); }
-.gx-tier-bronze { background: var(--gx-bronze); }
-.gx-tier-iron { background: var(--gx-iron); }
+.gx-tier-silver { background: var(--gx-silver); color: var(--gx-ink-on-light); }
+.gx-tier-bronze { background: var(--gx-bronze); color: var(--gx-ink-on-light); }
+.gx-tier-iron { background: var(--gx-iron); color: var(--gx-ink-on-light); }
+.gx-toque {
+  width: 0.95em;
+  height: 0.95em;
+  vertical-align: -0.12em;
+  margin-right: 0.2em;
+  fill: currentColor;
+}
 
 .gx-bar {
   height: 6px;
@@ -52,6 +63,9 @@
   max-width: 320px;
 }
 .gx-bar__fill { display: block; height: 100%; border-radius: 999px; }
+/* The fill communicates quantity by width alone; a fixed ember color keeps it
+   visible for low tiers (the pale dough chips would vanish on light paper). */
+.gx-bar .gx-bar__fill { background: var(--gx-c3); }
 
 .gx-profile {
   margin: 0 0 2rem;
@@ -101,9 +115,16 @@
 }
 .gx-badge--discussed {
   color: #fff;
-  background: var(--accent, #d04444);
+  background: var(--accent, #b5322e);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root { --gx-c0: #2d333b; }
+/* Dark mode follows the site's class-based toggle (not the OS preference,
+   which the toggle can override). On dark paper the ember ramp brightens
+   with intensity — a glowing oven fire in the dark. */
+body.dark {
+  --gx-c0: #2e2621;
+  --gx-c1: #5c3423;
+  --gx-c2: #94512a;
+  --gx-c3: #c96f38;
+  --gx-c4: #ee9556;
 }

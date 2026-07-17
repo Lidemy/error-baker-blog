@@ -699,8 +699,8 @@ input[type="submit"] {
 button:not([disabled]):hover,
 button[type="submit"]:hover,
 input[type="submit"]:hover {
-  background: #ba9005;
-  color: #000;
+  background: var(--accent-hover);
+  color: #fff;
 }
 input[type="color"],
 input[type="date"],
@@ -756,7 +756,9 @@ body {
   --navColor: var(--primary);
   --progressColor: var(--dark);
   --codeColor: var(--light);
-  --codeBg: #444444;
+  /* Warm-hued code surfaces so code blocks sit inside the paper/ink palette
+     instead of the old neutral greys. Syntax token colors stay untouched. */
+  --codeBg: #2e2925;
 }
 body.dark {
   --fg: var(--light);
@@ -764,7 +766,7 @@ body.dark {
   --navColor: var(--dark);
   --progressColor: var(--primary);
   --codeColor: #d65c5c;
-  --codeBg: #333;
+  --codeBg: #272220;
 }
 @media (prefers-color-scheme: dark) {
   body.dark {
@@ -773,7 +775,7 @@ body.dark {
     --navColor: var(--dark);
     --progressColor: var(--primary);
     --codeColor: #d65c5c;
-    --codeBg: #333;
+    --codeBg: #272220;
   }
 }
 section {
@@ -1722,6 +1724,17 @@ body.tmpl-home article {
   content: "·";
   margin-right: 0.55rem;
   color: var(--rule-strong);
+}
+/* "Freshly baked" chip on posts younger than 30 days (see isFresh filter). */
+.post-fresh {
+  display: inline-block;
+  padding: 0.05em 0.55em;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: var(--bold);
+  white-space: nowrap;
 }
 
 /* Lead (featured) article: cover on top, oversized serif title.

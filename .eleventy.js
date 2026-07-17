@@ -183,6 +183,16 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addFilter("sortFeedPosts", sortFeedPosts);
   eleventyConfig.addFilter("feedUpdatedDate", feedUpdatedDate);
 
+  // "Freshly baked" badge: true while a post is younger than 30 days at build
+  // time. Static builds go stale, so Netlify's periodic deploys keep it honest.
+  eleventyConfig.addFilter("isFresh", (dateObj) => {
+    if (!dateObj) {
+      return false;
+    }
+    const ageMs = Date.now() - new Date(dateObj).getTime();
+    return ageMs >= 0 && ageMs < 30 * 24 * 60 * 60 * 1000;
+  });
+
   eleventyConfig.addFilter("sitemapDateTimeString", (dateObj) => {
     const dt = DateTime.fromJSDate(dateObj, { zone: "utc" });
     if (!dt.isValid) {
