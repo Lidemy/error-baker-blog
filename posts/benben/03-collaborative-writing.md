@@ -5,6 +5,9 @@ tags: [JavaScript, collaborative]
 author: benben
 layout: layouts/post.njk
 image: https://i.imgur.com/ZmEEvep.png
+lang: zh-TW
+translationKey: benben/03-collaborative-writing
+translationTargets: [en, ja, zh-CN]
 ---
 
 <!-- summary -->
