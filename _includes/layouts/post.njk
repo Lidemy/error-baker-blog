@@ -24,7 +24,7 @@ templateClass: tmpl-post
       <img class="avatar" src="{{ postAuthor.avatarUrl }}" alt="" />
       <span>{{ postAuthor.name }}</span>
     </a>
-    <time class="byline-date" datetime="{{ versionPublishedDate | htmlDateString }}">{{ t.publishedOn }} {{ versionPublishedDate | htmlDateString }}</time>
+    <time class="byline-date" datetime="{{ page.date | htmlDateString }}">{{ t.publishedOn }} {{ page.date | htmlDateString }}</time>
     <span class="byline-tags">
     {%- for tag in tags %}{% if tag !== "posts" %}{% set tagUrl %}/tags/{{ tag | slug }}/{% endset %}<a href="{{ tagUrl | url }}" class="post-tag">#{{ tag }}</a>{% endif %}{% endfor %}
     </span>
@@ -61,7 +61,7 @@ templateClass: tmpl-post
   {%- for rp in related %}
     <li>
       <a href="{{ rp.url | url }}">{{ rp.data.title | safe }}</a>
-      <span class="related-meta">{{ metadata.authors[rp.data.author].name }} · {{ rp | postPublishedDate | htmlDateString }}</span>
+      <span class="related-meta">{{ metadata.authors[rp.data.author].name }} · {{ rp.date | htmlDateString }}</span>
     </li>
   {%- endfor %}
   </ul>

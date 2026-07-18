@@ -22,7 +22,7 @@ eleventyComputed:
 permalink: /tags/{{ tag | slug }}/
 ---
 
-{% set postslist = collections[ tag ] | filterByLang('zh-TW') | sortByPublishedDate | reverse %}
+{% set postslist = collections[ tag ] | filterByLang('zh-TW') | reverse %}
 {% include "postslist.njk" %}
 
 <p>See <a href="{{ '/tags/' | url }}">all tags</a>.</p>

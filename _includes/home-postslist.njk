@@ -15,8 +15,8 @@
         <img src="{{ author.avatarUrl }}" class="avatar-small" alt="" />
         <span class="post-author">{{ author.name }}</span>
       </a>
-      <time class="post-date" datetime="{{ post | postPublishedDate | htmlDateString }}">{{ post | postPublishedDate | htmlDateString }}</time>
-      {%- if post | postPublishedDate | isFresh %}<span class="post-fresh">🥐 {{ tt.freshBadge }}</span>{% endif %}
+      <time class="post-date" datetime="{{ post.date | htmlDateString }}">{{ post.date | htmlDateString }}</time>
+      {%- if post.date | isFresh %}<span class="post-fresh">🥐 {{ tt.freshBadge }}</span>{% endif %}
     </div>
   </div>
 </article>

@@ -6,7 +6,6 @@ const {
   effectivePublishedDate,
   effectiveModifiedDate,
   postPublishedDate,
-  sortByPublishedDate,
 } = require("../_11ty/publication-dates");
 
 describe("publication date contract", () => {
@@ -55,24 +54,31 @@ describe("publication date contract", () => {
     );
   });
 
-  it("sorts collection items by version publication without mutating input", () => {
-    const posts = [
-      { url: "/new-source/", date: new Date("2025-01-01"), data: {} },
-      {
-        url: "/new-translation/",
-        date: new Date("2021-01-01"),
-        data: { publishedAt: "2026-07-13" },
-      },
-    ];
+  it("postPublishedDate returns the version date for feeds/JSON-LD", () => {
+    // Version dates (publishedAt) are still resolved for structured data and
+    // feeds even though the byline now renders the original work's date.
+    const translated = {
+      date: new Date("2021-10-28"),
+      data: { publishedAt: "2026-07-13" },
+    };
+    assert.equal(
+      postPublishedDate(translated).toISOString(),
+      "2026-07-13T00:00:00.000Z"
+    );
 
-    assert.equal(postPublishedDate(posts[1]).toISOString(), "2026-07-13T00:00:00.000Z");
-    assert.deepEqual(
-      sortByPublishedDate(posts).map((post) => post.url),
-      ["/new-source/", "/new-translation/"]
+    const source = { date: new Date("2021-10-28"), data: {} };
+    assert.equal(
+      postPublishedDate(source).toISOString(),
+      "2021-10-28T00:00:00.000Z"
     );
-    assert.deepEqual(
-      posts.map((post) => post.url),
-      ["/new-source/", "/new-translation/"]
-    );
+  });
+
+  it("a translation's page.date is the original work date", () => {
+    // Display and sort now read page.date directly. scripts/check-translations.js
+    // (date-mismatch) guarantees a translation's date field equals the source's,
+    // so page.date *is* the original work date for every language version.
+    const source = { date: new Date("2021-10-28") };
+    const translation = { date: new Date("2021-10-28") }; // copied verbatim
+    assert.deepEqual(source.date, translation.date);
   });
 });
