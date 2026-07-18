@@ -81,7 +81,7 @@ sourceHash: 8688517cb7c82fe85e207b19cfebc3adc7babf4235b6d85326e3f5c9ec1ac704
 整体来说，我觉得官网的练习小网站还不错，慢慢地一个一个从好记的字根开始，再到需要一些联想力的字根。我差不多每天上个 10～30 分钟，差不多一个月后，可以打 50% 的字了。心态上不要觉得它很难，把它当作游戏。今天学了「A 技能」，一天一天学到了「Z 技能」，等到都学完了，就可以来个组合技降龙十八掌了（误）。
 
 <center>
-  <img src="https://hackmd.io/_uploads/BkAOrVA62.png" class="post-image-width" alt="輕鬆學會嘸蝦米" />
+  <img src="https://hackmd.io/_uploads/BkAOrVA62.png" class="post-image-width" alt="轻松学会嘸蝦米" />
 </center>
 
 > 官网的「轻松学会嘸蝦米」
@@ -95,7 +95,7 @@ sourceHash: 8688517cb7c82fe85e207b19cfebc3adc7babf4235b6d85326e3f5c9ec1ac704
 嘸蝦米官网也很贴心地准备了试用版。不过它的试用版呢～很佛心，**是可以一直免费用的**，只是每三个月要重新安装一次。笔者一开始直上也是先用试用版的，大概用了一年才换付费版的（这边也可以先不买，文章最后会再提到免费的替代方案，但笔者还是有支持正版的）。
 
 <center>
-  <img src="https://hackmd.io/_uploads/rkyML4C6n.png" class="post-image-width" alt="輕鬆學會嘸蝦米" />
+  <img src="https://hackmd.io/_uploads/rkyML4C6n.png" class="post-image-width" alt="轻松学会嘸蝦米" />
 </center>
 
 > 试用版下载：<https://boshiamy.com/download_trial.php>

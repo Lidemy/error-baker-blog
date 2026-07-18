@@ -84,7 +84,7 @@ CodePen 使用起来像这样：
 
 ![CodePen usage](https://i.imgur.com/D7lmpRR.png)
 
-简单说分为 3 个部分：HTML、CSS、JavaScript。右边可以即时显示出当前的樣子，有什么新的想法也可以试试看、玩玩看，当作一个 PlayGround 的概念，也可以分享给别人。
+简单说分为 3 个部分：HTML、CSS、JavaScript。右边可以即时显示出当前的样子，有什么新的想法也可以试试看、玩玩看，当作一个 PlayGround 的概念，也可以分享给别人。
 
 这个共笔读书会的建制就差不多到这边。之后就是最难的一部分：「持续下去」。
 

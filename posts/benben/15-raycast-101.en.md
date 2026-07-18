@@ -10,7 +10,7 @@ sourceLang: zh-TW
 translationKey: benben/15-raycast-101
 permalink: /en/posts/benben/15-raycast-101/
 draft: true
-sourceHash: b09f6c855c013e5e85858a7f7c33bfed477dd5acc5e6a9d634b61dae852b445e
+sourceHash: cfcaead7ff5ab31c75aaee34d0e0ad1596c54ea0bd4742d52c9c674aa5758feb
 ---
 
 <!-- summary -->
@@ -275,7 +275,5 @@ The above is all based on my own experience, so some subjective opinions are ine
 If you spot any errors, please point them out — I'll fix them right away. Thanks again, everyone!
 
 [![Creative Commons License](https://i.creativecommons.org/l/by/4.0/88x31.png)](https://creativecommons.org/licenses/by/4.0/)
-
-This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). You can find me at [benben.me](https://benben.me).
 
 This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). You can find me at [benben.me](https://benben.me)

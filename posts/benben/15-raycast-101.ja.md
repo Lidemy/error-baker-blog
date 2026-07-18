@@ -10,7 +10,7 @@ sourceLang: zh-TW
 translationKey: benben/15-raycast-101
 permalink: /ja/posts/benben/15-raycast-101/
 draft: true
-sourceHash: b09f6c855c013e5e85858a7f7c33bfed477dd5acc5e6a9d634b61dae852b445e
+sourceHash: cfcaead7ff5ab31c75aaee34d0e0ad1596c54ea0bd4742d52c9c674aa5758feb
 ---
 
 <!-- summary -->
@@ -72,7 +72,7 @@ Raycast は主に MacOS 向けです。現在 Window 版は Beta 中〜。
 
 筆者はかなり Emoji をよく使う人です。多少伝わってるでしょうか 😂
 
-> Tips: Mac 標準には Emoji ピッカーを開くショートカットがあります：`⌘` + `Ctrl` + `Spance`。
+> Tips: Mac 標準には Emoji ピッカーを開くショートカットがあります：`⌘` + `Ctrl` + `Space`。
 
 でも標準機能はかなりシンプルです（えっ、2025 年だよ X）。
 
@@ -92,7 +92,7 @@ Raycast の `Search Emoji & Symbol` が使えます。Raycast の右下にはた
 
 例えば、お気に入りの Emoji をピン留めできます。
 
-> Pro Tips: `⌘` + `Ctrl` + `Spance` を Raycast の `Search Emoji & Symbol` のショートカットに設定する。
+> Pro Tips: `⌘` + `Ctrl` + `Space` を Raycast の `Search Emoji & Symbol` のショートカットに設定する。
 
 ### 2. クリップボード履歴
 

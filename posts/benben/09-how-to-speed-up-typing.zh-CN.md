@@ -45,7 +45,7 @@ sourceHash: 93bf6bc560a8c69282c6039d9f736fb18bbee52e136e4678657638a20bf88a81
 
 > Why Microsoft Word is the best IDE for programming | Joma Tech
 
-来试试看最棒的 IDE Microsoft Word 吧！等等！我依在 VS Code 中的习惯打个 `! + tab`、`.wrapper > .item * 3`（emment 語法）然后马上按 `Tab`，怎么没东西！应该会直接产生一个 html 的 template 的啊。窝不会写扣了。
+来试试看最棒的 IDE Microsoft Word 吧！等等！我依在 VS Code 中的习惯打个 `! + tab`、`.wrapper > .item * 3`（emment 语法）然后马上按 `Tab`，怎么没东西！应该会直接产生一个 html 的 template 的啊。窝不会写扣了。
 
 虽然表面上很好笑，但细思极恐。没错，我们都被现在的 IDE 宠坏了。
 
