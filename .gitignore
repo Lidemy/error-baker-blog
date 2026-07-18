@@ -15,6 +15,25 @@ export
 .vscode/
 .idea/
 
-# Local AI tooling
+# Local AI tooling (caches / sessions / history)
+# NOTE: .agents/ stays tracked (project-shared skills/commands)
+# Shared rules files also stay tracked: .cursorrules, .windsurfrules, CLAUDE.md, AGENTS.md, .github/copilot-instructions.md
 .claude/
 .zcode/
+.opencode/
+.cursor/
+.windsurf/
+.codeium/
+.continue/
+.cody/
+.supermaven/
+.tabnine/
+.copilot/
+.gemini/
+.kiro/
+.qwen/
+.roo/
+.cline/
+.zed/
+.idx/
+.aider*
