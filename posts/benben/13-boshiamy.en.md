@@ -81,7 +81,7 @@ Although we say "memorize radicals," Boshiamy's radicals all have a basis. So **
 Overall, I think the official practice site is pretty good — slowly going one by one from easy-to-remember radicals to those needing some imagination. I spent about 10–30 minutes a day, and after about a month, I could type 50% of characters. Mentally, don't think of it as hard — treat it like a game: today you learned "skill A," day by day you learn up to "skill Z," and once you've learned them all, you can unleash the combo "Eighteen Subduing Dragon Palms" (kidding).
 
 <center>
-  <img src="https://hackmd.io/_uploads/BkAOrVA62.png" class="post-image-width" alt="輕鬆學會嘸蝦米" />
+  <img src="https://hackmd.io/_uploads/BkAOrVA62.png" class="post-image-width" alt="Learn Boshiamy the Easy Way" />
 </center>
 
 > The official "Learn Boshiamy the Easy Way" page
@@ -95,7 +95,7 @@ When you can type about 90% of characters and your speed is around 40, it's time
 The Boshiamy official site also thoughtfully provides a trial version. And the trial is very generous — **you can use it for free indefinitely**, just reinstall it every three months. When I first dove in, I started with the trial too. I used it for about a year before switching to the paid version (you can also hold off on buying — the article's end mentions free alternatives. But I do support the legit version).
 
 <center>
-  <img src="https://hackmd.io/_uploads/rkyML4C6n.png" class="post-image-width" alt="輕鬆學會嘸蝦米" />
+  <img src="https://hackmd.io/_uploads/rkyML4C6n.png" class="post-image-width" alt="Learn Boshiamy the Easy Way" />
 </center>
 
 > Trial download: <https://boshiamy.com/download_trial.php>

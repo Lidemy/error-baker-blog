@@ -45,11 +45,11 @@ Then **turn off the built-in Spotlight**, so Raycast won't clash with Spotlight 
 How to turn it off ~?
 
 <center>
-  <img src="/img/posts/benben/15-raycast-101/15-1.png" class="post-image-width" style="width: 480px" alt="圖 1" />
+  <img src="/img/posts/benben/15-raycast-101/15-1.png" class="post-image-width" style="width: 480px" alt="Image 1" />
 </center>
 
 <center>
-  <img src="/img/posts/benben/15-raycast-101/15-2.png" class="post-image-width" style="width: 480px" alt="圖 2" />
+  <img src="/img/posts/benben/15-raycast-101/15-2.png" class="post-image-width" style="width: 480px" alt="Image 2" />
 </center>
 
 > Please refer to this step-by-step tutorial.
@@ -61,7 +61,7 @@ You can start with "launching applications" — exploring the rest later is tota
 Whenever you have a chance, hit `⌘` + `space`, then search for the app you want to open!
 
 <center>
-  <img src="/img/posts/benben/15-raycast-101/15-3.png" class="post-image-width" style="width: 480px" alt="圖 3" />
+  <img src="/img/posts/benben/15-raycast-101/15-3.png" class="post-image-width" style="width: 480px" alt="Image 3" />
 </center>
 
 ## Basics
@@ -77,7 +77,7 @@ Since I'm a heavy Emoji user, you can probably tell 😂
 But the built-in feature is very basic (come on, it's 2025 X).
 
 <center>
-  <img src="/img/posts/benben/15-raycast-101/15-4.png" class="post-image-width" style="width: 480px" alt="圖 4" />
+  <img src="/img/posts/benben/15-raycast-101/15-4.png" class="post-image-width" style="width: 480px" alt="Image 4" />
 </center>
 
 > The built-in Emoji picker interface.
@@ -85,7 +85,7 @@ But the built-in feature is very basic (come on, it's 2025 X).
 We can use Raycast's `Search Emoji & Symbol`. Usually the bottom-right of Raycast shows what "Actions" are available.
 
 <center>
-  <img src="/img/posts/benben/15-raycast-101/15-5.png" class="post-image-width" style="width: 480px" alt="圖 5" />
+  <img src="/img/posts/benben/15-raycast-101/15-5.png" class="post-image-width" style="width: 480px" alt="Image 5" />
 </center>
 
 > Raycast Emoji picker interface.
@@ -101,7 +101,7 @@ Sometimes at work you often need to Copy/Paste various things. Suddenly you need
 That's where our good friend Raycast can help!
 
 <center>
-  <img src="/img/posts/benben/15-raycast-101/15-6.png" class="post-image-width" style="width: 480px" alt="圖 6" />
+  <img src="/img/posts/benben/15-raycast-101/15-6.png" class="post-image-width" style="width: 480px" alt="Image 6" />
 </center>
 
 ### 3. Change Case
@@ -113,7 +113,7 @@ We can use Raycast's `Change Case`.
 For example: select `UserMessageId`, then use the `Change Case` feature.
 
 <center>
-  <img src="/img/posts/benben/15-raycast-101/15-7.png" class="post-image-width" style="width: 480px" alt="圖 7" />
+  <img src="/img/posts/benben/15-raycast-101/15-7.png" class="post-image-width" style="width: 480px" alt="Image 7" />
 </center>
 
 > Change Case feature
@@ -136,7 +136,7 @@ Error Baker 有限公司
 - Set a Keyword as the trigger
 
 <center>
-  <img src="/img/posts/benben/15-raycast-101/15-8.png" class="post-image-width" style="width: 480px" alt="圖 8" />
+  <img src="/img/posts/benben/15-raycast-101/15-8.png" class="post-image-width" style="width: 480px" alt="Image 8" />
 </center>
 
 After setting it, next time you type "@error-baker;", it'll output the text above 🧙
@@ -148,7 +148,7 @@ After setting it, next time you type "@error-baker;", it'll output the text abov
 Raycast can also be used to close apps, including background ones. It's pretty handy for killing hung apps. Open Raycast's `Kill Process` feature to see current processes, sortable by "CPU" or "RAM" usage.
 
 <center>
-  <img src="/img/posts/benben/15-raycast-101/15-kill-process.png" class="post-image-width" style="width: 480px" alt="圖 kill process" />
+  <img src="/img/posts/benben/15-raycast-101/15-kill-process.png" class="post-image-width" style="width: 480px" alt="Image kill process" />
 </center>
 
 ## Store
@@ -196,7 +196,7 @@ For example, to do all the following at once:
 Then save this Layout. If you want, you can set it to open even more apps at once.
 
 <center>
-  <img src="/img/posts/benben/15-raycast-101/15-layout.png" class="post-image-width" style="width: 480px" alt="圖 layout" />
+  <img src="/img/posts/benben/15-raycast-101/15-layout.png" class="post-image-width" style="width: 480px" alt="Image layout" />
 </center>
 
 Next time you can open it with "one command" — even faster into wage-drone mode. Isn't that great?
@@ -218,7 +218,7 @@ Since my English isn't great, I often need translation — for docs, emails, com
 Again, take a look at the handy Actions. I often use swap (`⌘` + `S`), switch language (`⌘` + `P`), etc.
 
 <center>
-  <img src="/img/posts/benben/15-raycast-101/15-translate.png" class="post-image-width" style="width: 480px" alt="圖 layout" />
+  <img src="/img/posts/benben/15-raycast-101/15-translate.png" class="post-image-width" style="width: 480px" alt="Image layout" />
 </center>
 
 > Translate feature
@@ -234,7 +234,7 @@ Sometimes you need to write some English — emails, READMEs, communication with
 > Others can be found in the AI section of settings.
 
 <center>
-  <img src="/img/posts/benben/15-raycast-101/15-ai.png" class="post-image-width" style="width: 480px" alt="圖 layout" />
+  <img src="/img/posts/benben/15-raycast-101/15-ai.png" class="post-image-width" style="width: 480px" alt="Image layout" />
 </center>
 
 ## Conclusion
@@ -250,7 +250,7 @@ Thanks to everyone who read this far — give yourself a round of applause 👏�
 Oh! Raycast also has a Confetti feature 🎊
 
 <center>
-  <img src="/img/posts/benben/15-raycast-101/15-wrapped.gif" class="post-image-width" style="width: 720px" alt="圖 15-wrapped" />
+  <img src="/img/posts/benben/15-raycast-101/15-wrapped.gif" class="post-image-width" style="width: 720px" alt="Image 15-wrapped" />
 </center>
 
 > Confetti feature — requires downloading a Raycast extension first.

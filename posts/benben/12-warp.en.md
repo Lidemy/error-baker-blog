@@ -227,9 +227,9 @@ Happy Coding ~
 
 - [Warp](https://warp.dev)
 - [Warp official demo](https://www.youtube.com/watch?v=XWQY8LgkiXM)
-- [Warp 支援的指令](https://docs.warp.dev/features/completions)
+- [Warp supported commands](https://docs.warp.dev/features/completions)
 - [Window Terminal](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701)
-- [筆者的推薦連結 🥹](https://app.warp.dev/referral/VLL959)
+- [My referral link 🥹](https://app.warp.dev/referral/VLL959)
 
 > Disclaimer
 
