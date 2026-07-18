@@ -262,7 +262,7 @@ $ .
   - [免费 | Homerow](https://github.com/dexterleng/homerow)
   - [付费 | Xnapper](https://xnapper.com/)
   - [付费 | DevUtils](https://devutils.com/)
-- [Huli - 金融保险公司 OneDegree 工作半年心得 | Medium](https://hulitw.medium.com/working-at-onedegree-378a0401130e)
+- [Huli - 金融保险科技公司 OneDegree 工作半年心得 | Medium](https://hulitw.medium.com/working-at-onedegree-378a0401130e)
 - [Benben - 嘸蝦米输入法](https://blog.errorbaker.tw/posts/benben/12-warp/)
 - [VScode 插件 - Bongo cat](https://marketplace.visualstudio.com/items?itemName=JohnHarrison.bongocat-buddy)
 
