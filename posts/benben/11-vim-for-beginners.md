@@ -5,13 +5,16 @@ tags: [vim]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/BkbJbumEh.gif
+lang: zh-TW
+translationKey: benben/11-vim-for-beginners
+translationTargets: [en, ja, zh-CN]
 ---
 
 <!-- summary -->
-<!-- Some people don't want to learn vim. Some people want to learn vim, but ... -->
+<!-- 有些人不想學 Vim；有些人想學 Vim，但是 ... -->
 <!-- summary -->
 
-**！ This is an article about Vim for beginners. If you're a Pro with vim already, you are good to go now** :)
+**！這是一篇寫給初學者的 Vim 文章。如果你已經是 Vim Pro，那就可以跳過這篇了** :)
 
 <center>
 <img src="https://hackmd.io/_uploads/BkbJbumEh.gif" alt="vim-demo" class="post-image-width" />
@@ -19,83 +22,83 @@ image: https://hackmd.io/_uploads/BkbJbumEh.gif
 
 > Vim demo by myself
 
-You can see the screen magically moving and my mouse don't move any millimeter. That's Vim's power.
+你可以看到畫面神奇地移動，而我的滑鼠一毫米都沒有動。這就是 Vim 的威力。
 
-## 0 Preface
+## 0 前言
 
-Hi, nice to see you guys again!
+嗨，很高興再次見到大家！
 
-This time, I want to talk about **Vim**. I will introduce Vim, but it does not include boring Vim history.
+這次我想聊聊 **Vim**。我會介紹 Vim，但不會講那些無聊的 Vim 歷史。
 
-You don't need a mouse if you use Vim like Pro.
+如果你像 Pro 一樣使用 Vim，你不需要滑鼠。
 
-You might wonder if that is true. I would say it makes sense.
+你可能會懷疑這是不是真的。我會說，這還算合理。
 
-Let's dive in!
+讓我們開始吧！
 
-## 1 Sprit
+## 1 精神
 
-First thing first, what is Vim? Vim is an editor, no doubt. But it is not just an editor; it is **almost everywhere**. As a developer, you likely use "Git" to control source code or some remote machine whose editor is Vim by default.
+首先，Vim 是什麼？Vim 是一個編輯器，這無庸置疑。但它不只是個編輯器——它 **幾乎無所不在**。身為一個開發者，你可能會用 Git 來控制原始碼，或是登入某台遠端機器，而它的預設編輯器就是 Vim。
 
-Most people aren't aware of Vim's power; that is a pity. That is the same as me before, so don't worry about it. I was first aware of Vim's influence in some Tech YouTube. The first time I saw it, I was stung by Vim's power.
+多數人沒有意識到 Vim 的強大，這很可惜。這跟以前的我一樣，所以不用擔心。我最早是在某個科技 YouTube 頻道上注意到 Vim 的影響力。第一次看到時，我就被 Vim 的威力所震撼。
 
-Also, Vim's spirit is in a lot of tools and plugins. For example, I wrote this article using the Vim plugin in VScode. I also use Vim's Chrome plugin(Vimium) to browse the web. Vim is everywhere.
+此外，Vim 的精神也存在於許多工具和插件中。例如，我寫這篇文章時用的是 VScode 裡的 Vim 插件。我也用 Vim 的 Chrome 插件（Vimium）來瀏覽網頁。Vim 無所不在。
 
-## 2 keys to escape from Vim
+## 2 離開 Vim 的按鍵
 
-If you know how to escape from Vim, it's just `:q` and then `Enter`. You are good to go now. This command `:q` is most famous in Vim. There are a lot of memes about these two keys.
+如果你知道怎麼離開 Vim，就是 `:q` 然後 `Enter`，這樣就搞定了。這個 `:q` 指令在 Vim 裡最有名了。這兩個鍵有很多迷因。
 
-Additionally, if you want to quit with save, you can input `:qw` and then `Enter.` Alternately, you can input `:x` then `Enter` or press `ZZ` for quit, `ZQ` for save, and quit. Cool, now you can use these methods as you want. Vim is very fun.
+另外，如果你想儲存後離開，可以輸入 `:qw` 然後 `Enter`。或者，你可以輸入 `:x` 然後 `Enter`，或是按 `ZZ` 離開、`ZQ` 儲存並離開。酷吧，現在你可以隨心所欲地使用這些方法。Vim 非常有趣。
 
-The minimum knowledge of Vim are:
+Vim 的最基本知識是：
 
-1. How to input text
-2. How to save text
+1. 如何輸入文字
+2. 如何儲存文字
 
-These two key points are the first things of **any editor**. Let us recall how we got started to edit text files. I suppose most of us probably use the built-in text editor to edit `.txt` file for the first time.
+這兩個關鍵是 **任何編輯器** 的第一課。讓我們回想一下當初是怎麼開始編輯文字檔的。我猜我們大多數人第一次都是用內建的文字編輯器編輯 `.txt` 檔。
 
-- How to input text in a built-in editor?
+- 內建編輯器怎麼輸入文字？
 
-> It is like just inputting any text you want.
+> 就是直接輸入你想要的任何文字。
 
-- How to save text in a built-in editor?
+- 內建編輯器怎麼儲存文字？
 
-> Use `Ctrl/Cmd + S`, then close `X` button with your mouse—no big deal.
+> 用 `Ctrl/Cmd + S`，然後用滑鼠點關閉 `X` 按鈕，沒什麼大不了。
 
-There you are, the same two key points! But in Vim, it is just a little different. Believe it or not, Vim provides **richer and more fun** features than a regular built-in editor.
+你看，就是同樣的兩個關鍵！只是在 Vim 裡有一點點不一樣。信不信由你，Vim 提供了比一般內建編輯器 **更豐富、更有趣** 的功能。
 
-## 3 Modes of Vim
+## 3 Vim 的模式
 
-1. Normal mode
-2. Input mode
-3. Select mode
+1. Normal mode（普通模式）
+2. Input mode（輸入模式）
+3. Select mode（選取模式）
 
-I suggest beginners know about **normal mode** and **input mode** at first, and it's enough.
+我建議初學者一開始先認識 **normal mode** 和 **input mode**，這樣就夠了。
 
-When we first enter Vim world, it is always at **normal mode** by default (if you don't set your `.vimrc` file or stuff). In this mode, we can NOT input text **except** we push some specific keys. It is essential, you should know. In the past, I learned about this from the Internet as well. But I realized: "You can not type anything, " meaning you might push some specific keys intentionally. So, I just randomly pushed my keyboard. You guess what? Yeah, I changed some of my configured files, which I worked on.
+我們第一次進入 Vim 世界時，預設都是在 **normal mode**（如果你沒有設定 `.vimrc` 檔之類的話）。在這個模式下，我們 **無法** 輸入文字，**除非** 按下某些特定按鍵。這點很重要，你應該要知道。過去我也是從網路上學到這點的。但我意識到：「你什麼都打不出來」的意思是，你可能是有意按下某些特定按鍵。於是我就亂按一通。你猜怎麼著？嗯，我修改了一些我正在處理的設定檔。
 
-I prefer to regard normal mode as "navigate mode" because you can look around in the file or document with some specific keys. Meanwhile, some keys can switch to other modes with different features as well.
+我比較傾向把 normal mode 當作「navigate mode（導覽模式）」，因為你可以用一些特定按鍵在檔案或文件中瀏覽。同時，也有些按鍵可以切換到其他具有不同功能的模式。
 
-> Fun fact: There is also an "easy mode" in Vim. Open a file with a command like this: `vim -y file.md`, then you will open a file with easy mode, which is like Nano editor. That means if you want to use a simple editor like Nano editor, you don't even install Nano! Just use Vim easy mode. I don't encourage using this mode because it can not show Vim's power.
+> 小知識：Vim 也有「easy mode（簡易模式）」。用這樣的指令開啟檔案：`vim -y file.md`，然後你就會以簡易模式開啟檔案，類似 Nano 編輯器。也就是說，如果你想用像 Nano 一樣簡單的編輯器，根本不用安裝 Nano！用 Vim 的簡易模式就好。但我不鼓勵使用這個模式，因為它無法展現 Vim 的威力。
 
-## 4 direction
+## 4 方向
 
-There are four directions in Vim world:
+Vim 世界有四個方向：
 
 1. h (**←**)
 2. j (**↓**)
 3. k (**↑**)
 4. l (**→**)
 
-Yes, that is a little weird! I known! But if you look at your keyboard, you will find these four keys just under your right figure one by one. It's no coincidence, and reducing the chance of using a mouse makes more sense.
+對，這有點奇怪！我知道！但如果你看一下你的鍵盤，你會發現這四個鍵剛好在你右手手指下方一個接著一個。這不是巧合，而且減少使用滑鼠的機會也更有道理。
 
-Instead of using traditional direction four arrow keys, Vim uses **h, j, k, and l**. In this way, you can keep your figures in the center above the keyboard. You might wonder if it is a big deal. Yes, I had this thought before. But now, I will say **Yes, it is important** and I use 60% keyboard as well. Those do make me more focused on my work.
+不同於傳統的方向四個箭頭鍵，Vim 使用 **h、j、k、l**。這樣一來，你可以把手指保持在鍵盤中央上方。你可能會想這有什麼大不了的。對，我以前也這樣想過。但現在，我會說 **是的，這很重要**，而且我也用 60% 鍵盤。這些確實讓我更專注於工作。
 
-They're more efficient ways to navigate in Vim, such as `H`, `L`, `M`, `ctrl + d`, and `ctrl + r`. But if you are not familiar with h, j, k, l, **focus on these four keys is good enough, and they can do every navigation** you want in Vim. This is true, but the difference is how long the time taken.
+在 Vim 裡還有更有效率的導覽方式，例如 `H`、`L`、`M`、`ctrl + d`、`ctrl + r`。但如果你對 h、j、k、l 還不熟悉，**專注在這四個鍵就夠好了，而且它們能做到 Vim 裡所有你想要的導覽**。這是真的，差別只在於花了多少時間。
 
-## 5 ways to input
+## 5 輸入方式
 
-There are five ways to input:
+有五種輸入方式：
 
 1. a、A
 2. i、I
@@ -103,35 +106,35 @@ There are five ways to input:
 4. c、C
 5. r、R
 
-But those five keys' uppercase and lowercase are a little different. That means there are 10+ ways to input text in Vim.
+但這五個鍵的大寫和小寫有點不一樣。也就是說，Vim 裡有 10+ 種輸入文字的方式。
 
-That may be a little overwhelming, I know. Again, just know `i` is enough. You might think, why so many ways to input text? Taking `i`, and `a` for example, they are very similar, but one is **insert(i)** at the blank spot, and the other is **append(a)** at the blank spot.
+這可能有點 overwhelming，我知道。再一次，只要知道 `i` 就夠了。你可能會想，為什麼有這麼多輸入文字的方式？以 `i` 和 `a` 為例，它們非常相似，但一個是在空白處 **insert（i）**，另一個是在空白處 **append（a）**。
 
-Actually, I bet you may remember `i` and `a` to input some text in Vim. Not really? Repeat after me: `i, insert`, `a, append`. The truth is don't memorize these commands, but say it out.
+其實我敢打賭你可能會記得用 `i` 和 `a` 在 Vim 裡輸入文字。不會嗎？跟著我念：`i, insert`、`a, append`。重點是不要死記這些指令，而是把它念出來。
 
-## Recap
+## 回顧
 
-For some readers already familiar with Vim, this article may be very easy. But Vim is easy, like 1, 2, 3, 4 and 5. Not at all; I'm just kidding.
+對某些已經熟悉 Vim 的讀者來說，這篇文章可能非常簡單。但 Vim 就是簡單，像 1、2、3、4、5 一樣。才怪，我開玩笑的。
 
-Vim is hard to learn. But once you learn it and master it, Vim will become your best investment in your skill, which not only in coding but also in document editing (literally any document).
+Vim 很難學。但一旦你學會並精通它，Vim 就會成為你技能中最好的投資，不只限於寫程式，連文件編輯（真的是任何文件）都適用。
 
-- First, learn the minimum knowledge of Vim.
+- 第一，學習 Vim 的最基本知識。
 
-They are `h`, `j`, `k`, `l`, `i`, `:q!`, `:wq`, and just believe they're enough to do everything in Vim.
+它們是 `h`、`j`、`k`、`l`、`i`、`:q!`、`:wq`，只要相信它們就足以在 Vim 裡完成一切。
 
-- Second, learn Vim key by key.
+- 第二，逐鍵學習 Vim。
 
-When you are familiar with the minimum knowledge, you can move on to the following key and check their function key by key. Recommend you pick up `w`, `e`, `b`, `zz`, `ctrl + d`, `ctrl + u`, `%`.
+當你熟悉了最基本的知識，你就可以進到下一個鍵，一個一個鍵檢查它們的功能。建議你接著學 `w`、`e`、`b`、`zz`、`ctrl + d`、`ctrl + u`、`%`。
 
-- Third, don't try to memorize any hotkey.
+- 第三，不要試圖死記任何快捷鍵。
 
-Instead of memorizing them, you should use them as much as you can until one day you don't need to check the document of Vim or Google it. It is like you are learning your first hotkeys, `ctrl + c` and `ctrl + v`, but there are much more hotkeys(they are cool and magical) in the world of Vim. And these skills will grow with you. I really love the feeling it is like you are playing an RPG game in which you started with a not-really good(maybe suck) weapon. But in the end, it became a legendary weapon, and it matched their master.
+與其死記，你應該盡可能多地使用它們，直到有一天你不需要再查 Vim 的文件或 Google。這就像你在學你的第一組快捷鍵 `ctrl + c` 和 `ctrl + v` 一樣，只是 Vim 的世界裡有更多快捷鍵（它們很酷、很神奇）。而這些技能會跟著你一起成長。我真的很喜歡這種感覺，就像你在玩一個 RPG 遊戲，一開始拿著一把不怎麼樣（也許很爛）的武器。但最後，它變成了傳奇武器，並找到了它的主人。
 
-## Bonus: Vim tutor just in your hand
+## 番外篇：你手邊就有的 Vim tutor
 
-So you are excited and want to learn more about Vim.
+所以你很興奮，想多學一點 Vim。
 
-But when you saw the cheat sheet of Vim like this:
+但當你看到這樣的 Vim cheat sheet：
 
 <center>
 <img src="https://helloacm.com/wp-content/uploads/2015/09/vi-vim-cheat-sheet.jpg" alt="vim-cheat-sheet" class="post-image-width" />
@@ -139,29 +142,29 @@ But when you saw the cheat sheet of Vim like this:
 
 > [Vim cheat sheet](https://helloacm.com/vi-vim-cheat-sheet-jpg/)
 
-And you decide to quit. Cool, you want to quit? And what key you need to key in?
+於是你決定放棄。酷，你想放棄？那你要按下什麼鍵？
 
-Yeah, it is `:q!`. You know it.
+對，就是 `:q!`。你知道的。
 
-But wait, if I told you there is a **free Vim tutor** for you, would you consider sticking for a while?
+但等等，如果我告訴你有一個 **免費的 Vim tutor** 給你，你願意再堅持一下嗎？
 
-Let's meet him.
+讓我們來見見他。
 
-If you use OS based on Linux (you can use `Git bash terminal`, which is cross-platform).
+如果你用的是 Linux 作業系統（你可以用跨平台的 `Git bash terminal`）。
 
-Open your terminal and input `vimtutor` then `Enter`. You will see him show up in your terminal.
+打開你的終端機，輸入 `vimtutor` 然後 `Enter`。你就會看到他出現在你的終端機裡。
 
-How to close Vim Tutor? You asked. But you know it already.
+怎麼關掉 Vim Tutor？你問。但你已經知道了。
 
 > `:q`
 
-In case you don't like him, there are some useful links:
+如果你不喜歡他，這裡有些有用的連結：
 
 - [VIM Adventures](https://vim-adventures.com/)
 - [Interactive Vim tutorial](https://www.openvim.com/)
-- [vimcolorschemes](https://vimcolorschemes.com/) (Vim is old school? Check out how many fashion themes Vim has)
+- [vimcolorschemes](https://vimcolorschemes.com/)（Vim 很老派？看看 Vim 有多少時尚主題）
 
-That's pretty much it. Ciao ~
+差不多就是這樣。Ciao ~
 
 ## Ref
 
@@ -171,11 +174,13 @@ That's pretty much it. Ciao ~
 - [Interactive Vim tutorial](https://www.openvim.com/)
 - [vimcolorschemes](https://vimcolorschemes.com/)
 
-> Disclaimer
+> 免責聲名
 
-The above content is based on author's own experience, and it is inevitable that there are some subjective opinions. This is for readers' reference, and sharing experiences with me is also welcome.
-If there are any mistakes, please correct me. I will modify it immediately; thank you again!
+以上均為筆者自身經驗，難免小有主觀意見，供讀者們參考，也歡迎分享經驗交流。
+如果有錯誤的地方還請大大們指正，筆者會立刻修改，再次感謝大家！
 
 [![Creative Commons License](https://i.creativecommons.org/l/by/4.0/88x31.png)](https://creativecommons.org/licenses/by/4.0/)
+
+本著作係採用 [創用 CC 姓名標示 4.0 國際授權條款](https://creativecommons.org/licenses/by/4.0/) 授權。您可以在 [benben.me](https://benben.me) 找到我。
 
 This work is licensed under a [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/). You can find me at [benben.me](https://benben.me)
