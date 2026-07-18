@@ -5,6 +5,9 @@ tags: [boshiamy]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/B1HXrmRTn.gif
+lang: zh-TW
+translationKey: benben/13-boshiamy
+translationTargets: [en, ja, zh-CN]
 ---
 
 <!-- summary -->
