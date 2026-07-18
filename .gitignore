@@ -1,10 +1,20 @@
-_site/
+# Dependencies
 node_modules/
-.DS_Store
+
+# Build output
+_site/
 js/min.js
 js/min.js.map
+export
+
+# Deploy
+.netlify/
+
+# OS / editor
+.DS_Store
 .vscode/
 .idea/
-.netlify/
-export
+
+# Local AI tooling
 .claude/
+.zcode/
