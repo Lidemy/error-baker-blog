@@ -71,7 +71,12 @@ describe("commentThreads.json (legacy thread map)", () => {
   });
 });
 
-describe("utterances embed binding", () => {
+describe("utterances embed binding", function () {
+  // These scans build a JSDOM for every emitted page that embeds utterances,
+  // so they scale with the number of posts. The 2s mocha default is too tight
+  // under CI load and flakes intermittently (e.g. same commit passing on push
+  // but timing out on pull_request) — give the suite real headroom.
+  this.timeout(15000);
   it("pins every legacy-mapped post to its issue number", () => {
     for (const [key, number] of Object.entries(THREADS)) {
       const embed = embedFor(key);
