@@ -53,6 +53,21 @@ templateClass: tmpl-post
   <a href="{{ shareUrl | safe }}" on-click="share">{{ t.shareArticle }}</a>
 </p>
 
+{%- set related = collections.posts | filterByLang(pageLang) | relatedPosts(page, tags, author, 3) %}
+{%- if related.length %}
+<section class="related-posts">
+  <h2>🍞 {{ t.relatedHeading }}</h2>
+  <ul>
+  {%- for rp in related %}
+    <li>
+      <a href="{{ rp.url | url }}">{{ rp.data.title | safe }}</a>
+      <span class="related-meta">{{ metadata.authors[rp.data.author].name }} · {{ rp | postPublishedDate | htmlDateString }}</span>
+    </li>
+  {%- endfor %}
+  </ul>
+</section>
+{%- endif %}
+
 {#- Comment threads are keyed by the source post's path, so every language
     version shares one thread and retitling a post (or the site) can't orphan
     it. Threads that predate this scheme are pinned by issue number in

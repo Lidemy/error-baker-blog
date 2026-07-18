@@ -1,10 +1,39 @@
-_site/
+# Dependencies
 node_modules/
-.DS_Store
+
+# Build output
+_site/
 js/min.js
 js/min.js.map
+export
+
+# Deploy
+.netlify/
+
+# OS / editor
+.DS_Store
 .vscode/
 .idea/
-.netlify/
-export
+
+# Local AI tooling (caches / sessions / history)
+# NOTE: .agents/ stays tracked (project-shared skills/commands)
+# Shared rules files also stay tracked: .cursorrules, .windsurfrules, CLAUDE.md, AGENTS.md, .github/copilot-instructions.md
 .claude/
+.zcode/
+.opencode/
+.cursor/
+.windsurf/
+.codeium/
+.continue/
+.cody/
+.supermaven/
+.tabnine/
+.copilot/
+.gemini/
+.kiro/
+.qwen/
+.roo/
+.cline/
+.zed/
+.idx/
+.aider*

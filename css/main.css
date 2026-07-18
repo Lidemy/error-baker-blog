@@ -1204,6 +1204,9 @@ body {
   /* Serif display family (Latin first, CJK appended below per language). */
   --font-serif: "Iowan Old Style", "Apple Garamond", Georgia, "Source Serif 4",
     "Times New Roman", Times, serif;
+  /* Shared motion tokens for micro-interactions. */
+  --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
+  --dur: 0.25s;
 }
 body.dark {
   --paper: #1a1816;
@@ -1665,6 +1668,10 @@ body.tmpl-home article {
   height: 100%;
   object-fit: cover;
   border-radius: 2px;
+  transition: transform var(--dur) var(--ease);
+}
+.posts .post:hover .post-cover-img {
+  transform: scale(1.04);
 }
 .post-body {
   flex: 1 1 auto;
@@ -1725,6 +1732,119 @@ body.tmpl-home article {
   margin-right: 0.55rem;
   color: var(--rule-strong);
 }
+/* End-of-post recommendations ("another batch from the oven"). */
+.related-posts ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.related-posts li {
+  margin: 0.8em 0;
+}
+.related-posts .related-meta {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--ink-faint);
+  margin-top: 0.15em;
+}
+
+/* Toast: glassy pill that slides up from the bottom edge, replacing the old
+   tiny red box. Element+id selector so the per-page PurgeCSS keeps it. */
+dialog#message {
+  position: fixed;
+  left: 50%;
+  right: auto;
+  top: auto;
+  bottom: calc(1.4rem + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0.6rem 1.15rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--paper-raised) 82%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--ink);
+  font-size: 0.88rem;
+  line-height: 1.4;
+  opacity: 1;
+  white-space: nowrap;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.15);
+  z-index: 1002;
+}
+dialog#message[open] {
+  animation: toast-in 0.35s var(--ease);
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(12px);
+  }
+}
+
+/* Scroll-driven entrance for the home feed (pure CSS, no JS; browsers without
+   animation-timeline simply render the cards statically). */
+@supports (animation-timeline: view()) {
+  .posts .post {
+    animation: card-rise both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 45%;
+  }
+  /* Transform-only: fading text below the fold fails WCAG contrast while
+     mid-animation (Lighthouse flags the blended color), so the cards rise
+     without changing opacity. */
+  @keyframes card-rise {
+    from {
+      transform: translateY(16px);
+    }
+    to {
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .posts .post {
+      animation: none;
+    }
+  }
+}
+
+/* Back-to-top: revealed by src/main.js after ~1.5 screens of scrolling.
+   `button.` prefix outranks the global button:not([disabled]) rules. */
+button.back-to-top {
+  position: fixed;
+  right: clamp(1rem, 3vw, 2rem);
+  bottom: clamp(1rem, 3vw, 2rem);
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+  z-index: 10;
+}
+button.back-to-top:hover {
+  background: var(--accent-hover);
+  color: #fff;
+  transform: translateY(-2px);
+}
+button.back-to-top {
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease),
+    background 0.15s;
+}
+/* Fade/rise in when the hidden attribute is removed (2024 CSS; browsers
+   without @starting-style just show the button instantly). */
+@starting-style {
+  button.back-to-top {
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+  }
+}
+
 /* "Freshly baked" chip on posts younger than 30 days (see isFresh filter). */
 .post-fresh {
   display: inline-block;
@@ -1808,6 +1928,19 @@ body.tmpl-post article {
 }
 
 /* Drop cap on the first paragraph — an editorial signature. */
+/* Drop caps are a Latin-print flourish that breaks on English contractions
+   ("It's" → "I t's") and has no tradition in Japanese — keep the signature
+   on Chinese pages only, where a single enlarged hanzi reads cleanly. */
+body.tmpl-post:lang(en) article > p:first-of-type::first-letter,
+body.tmpl-post:lang(ja) article > p:first-of-type::first-letter {
+  float: none;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+}
 body.tmpl-post article > p:first-of-type::first-letter {
   float: left;
   font-family: var(--font-serif);
@@ -2230,6 +2363,53 @@ article h3 {
   text-wrap: balance;
 }
 
+/* ── Title → content rhythm ─────────────────────────────────────────────
+   The display title used to float ~110px above the first line of content,
+   reading as two unrelated blocks. Tighten the header's bottom padding and
+   bridge the centered title to the left-set body with a short accent rule
+   (printer's tick) on non-post pages (posts already have the byline). */
+header {
+  padding-bottom: 1.25em;
+}
+/* Centered (ceremonial) pages only: in a flush-left setting a short stub
+   reads as a broken underline — left-register pages carry hierarchy with
+   scale and spacing alone, per flush-left typographic tradition. */
+body:not(.tmpl-post):not(.tmpl-home) header > h1.w-full::after {
+  content: "";
+  display: block;
+  width: 2.75rem;
+  height: 3px;
+  border-radius: 2px;
+  /* The tick is "baked" like everything quantitative: dough → ember. */
+  background: linear-gradient(90deg, #eac7a2, #bc5b2b 55%, #93351f);
+  margin: 1rem auto 0;
+  /* Bakes out on load; transform-only so layout never shifts (no CLS).
+     The global prefers-reduced-motion rule collapses it to instant. */
+  animation: tick-bake 0.7s var(--ease) 0.15s backwards;
+  transform-origin: center;
+}
+body.dark:not(.tmpl-post):not(.tmpl-home) header > h1.w-full::after {
+  background: linear-gradient(90deg, #5c3423, #c96f38 55%, #ee9556);
+}
+@keyframes tick-bake {
+  from {
+    transform: scaleX(0);
+  }
+}
+/* Site alignment registers: the home family (home/archive/tags/404) is a
+   left-set masthead, ceremonial pages (post/about) are centered. The tick
+   follows its title's register instead of always centering. */
+/* Pages without a front-matter title render an empty header h1 — hide it so
+   no orphaned tick floats above the content (e.g. 404 before it had a title). */
+header > h1.w-full:empty {
+  display: none;
+}
+/* Ceremonial pages (about): pull the first heading up toward the title —
+   the tick provides the pause, not empty space. */
+body.tmpl-about main > article {
+  padding-top: 0.5rem;
+}
+
 /* About page — author list, ranked by post count (avatar · name · count · bio). */
 .author-list {
   list-style: none;
@@ -2345,6 +2525,8 @@ article h3 {
 body.tmpl-home header {
   align-items: stretch; /* full-width children so the title wraps, not shrink-wraps */
   text-align: left;
+  /* Same column as the home article (52rem + identical side padding) so the
+     masthead, tick, and intro share one left edge at every viewport width. */
   width: min(100%, 52rem);
   max-width: 100%;
   padding: 4.5em clamp(1rem, 4vw, 2rem) 0;
@@ -2353,13 +2535,26 @@ body.tmpl-home header > h1.w-full {
   text-align: left;
   margin: 0.2em 0 0.4em;
 }
+/* Tighten masthead → intro: the tick already provides the pause. */
+body.tmpl-home main > article {
+  padding-top: 0.4rem;
+}
 body.tmpl-home .intro {
-  margin: 1.4rem 0 3.2rem;
+  margin: 0.9rem 0 3.2rem;
   max-width: 44rem;
   text-align: start;
   border-bottom: 0;
   padding-bottom: 0;
 }
-body.tmpl-home .intro p {
-  text-wrap: balance;
+/* Tablet: articles switch to 42rem/5vw padding — mirror it on the home
+   masthead so the shared left edge holds at every width. (Placed after the
+   base home-header rule: same specificity, source order decides.) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  body.tmpl-home header {
+    padding-left: clamp(1.25rem, 5vw, 2.5rem);
+    padding-right: clamp(1.25rem, 5vw, 2.5rem);
+  }
 }
+/* The intro is prose, not a headline: `balance` halves short paragraphs at
+   commas ("lyrics look", worst in en/ja). `pretty` (set in the shared rule)
+   keeps natural fills while still avoiding orphans. */
