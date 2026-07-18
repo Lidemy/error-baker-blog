@@ -6,6 +6,13 @@ on:
 
 jobs:
   review:
+    # Skip when the commit was pushed by the opencode bot itself.
+    # The bot has no write permission in this repo, so the permission assertion
+    # inside the opencode action fails (exit 1). The bot auto-commits dirty
+    # working-tree changes (anomalyco/opencode#21636), which re-triggers this
+    # workflow — without this guard every bot commit causes a failing run.
+    # Human-pushed commits still get reviewed.
+    if: github.actor != 'opencode-agent[bot]'
     runs-on: ubuntu-latest
     permissions:
       id-token: write
