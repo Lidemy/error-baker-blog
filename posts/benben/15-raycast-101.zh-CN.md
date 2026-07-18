@@ -9,7 +9,9 @@ lang: zh-CN
 sourceLang: zh-TW
 translationKey: benben/15-raycast-101
 permalink: /zh-CN/posts/benben/15-raycast-101/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: cfcaead7ff5ab31c75aaee34d0e0ad1596c54ea0bd4742d52c9c674aa5758feb
 ---
 

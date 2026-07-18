@@ -9,7 +9,9 @@ lang: en
 sourceLang: zh-TW
 translationKey: benben/10-one-year-and-two-month-experience
 permalink: /en/posts/benben/10-one-year-and-two-month-experience/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 5e58ef75b5398b1614a2f0bdb64b7ccdd43ffb1400983e5cc14908c7a1bf3b03
 ---
 
@@ -197,7 +199,7 @@ Luckily I'd read a bit of [鳥哥的 Linux 私房菜](https://linux.vbird.org/).
 
 The full-stack guy replied coolly: "Not bad. Let's develop like this then."
 
-And then, eating hotpot and singing songs (a reference to the movie *Let the Bullets Fly*), he directly assigned tasks and we started work. From December (2022/12) all the way through Chinese New Year (2023/02), I was working overtime — coding 12+ hours a day (full-time + part-time combined).
+And then, eating hotpot and singing songs (a reference to the movie _Let the Bullets Fly_), he directly assigned tasks and we started work. From December (2022/12) all the way through Chinese New Year (2023/02), I was working overtime — coding 12+ hours a day (full-time + part-time combined).
 
 A quick timeline:
 

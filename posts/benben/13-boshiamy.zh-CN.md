@@ -9,7 +9,9 @@ lang: zh-CN
 sourceLang: zh-TW
 translationKey: benben/13-boshiamy
 permalink: /zh-CN/posts/benben/13-boshiamy/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 8688517cb7c82fe85e207b19cfebc3adc7babf4235b6d85326e3f5c9ec1ac704
 ---
 
@@ -117,16 +119,16 @@ sourceHash: 8688517cb7c82fe85e207b19cfebc3adc7babf4235b6d85326e3f5c9ec1ac704
 这些通常都是精挑细选的常用字或是不好打的常用字。当中还有一个特别的「中文数字」，在嘸蝦米的设计上，也通通都是一字搞定。因此很推荐给常常需要打中文字数字的读者，如：公文、笔录等等。**中文数字在注音很多字都是撞同音**，几乎 ~~一定~~ 要选字。
 
 ```javascript
-E => 一
-R => 二
-S => 三
-F => 四
-W => 五
-L => 六
-C => 七
-B => 八
-K => 九
-J => 十
+;(E) => 一
+;(R) => 二
+;(S) => 三
+;(F) => 四
+;(W) => 五
+;(L) => 六
+;(C) => 七
+;(B) => 八
+;(K) => 九
+;(J) => 十
 ```
 
 > 简单念念看看再对照英文，你又会发现新大陆了！

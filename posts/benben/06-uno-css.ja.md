@@ -9,7 +9,9 @@ lang: ja
 sourceLang: zh-TW
 translationKey: benben/06-uno-css
 permalink: /ja/posts/benben/06-uno-css/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: b5ee1c9e34372faa2e9cf2d9e614e8e4fa83178ca4eef4b4f6b18d5208d4530c
 ---
 
@@ -116,10 +118,10 @@ Uno CSS を使えば、上記の問題が全部解決します：数字の問題
 3/26/2022, 11:41:26 PM
 1656 utilities | x50 runs (min build time)
 
-none                             12.42 ms / delta.      0.00 ms
-unocss       v0.30.6             20.98 ms / delta.      8.57 ms (x1.00)
-tailwindcss  v3.0.23           1621.38 ms / delta.   1608.96 ms (x187.79)
-windicss     v3.5.1            1855.86 ms / delta.   1843.45 ms (x215.16)
+none 12.42 ms / delta. 0.00 ms
+unocss v0.30.6 20.98 ms / delta. 8.57 ms (x1.00)
+tailwindcss v3.0.23 1621.38 ms / delta. 1608.96 ms (x187.79)
+windicss v3.5.1 1855.86 ms / delta. 1843.45 ms (x215.16)
 ```
 
 > 出典：[uno css github](https://github.com/unocss/unocss)

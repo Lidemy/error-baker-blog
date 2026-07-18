@@ -9,7 +9,9 @@ lang: zh-CN
 sourceLang: zh-TW
 translationKey: benben/10-one-year-and-two-month-experience
 permalink: /zh-CN/posts/benben/10-one-year-and-two-month-experience/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 5e58ef75b5398b1614a2f0bdb64b7ccdd43ffb1400983e5cc14908c7a1bf3b03
 ---
 

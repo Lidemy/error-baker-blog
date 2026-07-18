@@ -9,7 +9,9 @@ lang: zh-CN
 sourceLang: zh-TW
 translationKey: benben/02-framework
 permalink: /zh-CN/posts/benben/02-framework/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 84fa49b4397c0aca6b674b44ec27b0a2267d8d2ce97c03ee938351cf3fc96a31
 ---
 
@@ -59,7 +61,7 @@ JavaScript 发明完后，网景的市占率也顺势起飞，还曾经一度独
 
 ```javascript
 // jQuery
-$("#hello")
+$('#hello')
 
 // 原生 JavaScript
 document.getElementById(hello)

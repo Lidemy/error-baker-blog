@@ -9,7 +9,9 @@ lang: en
 sourceLang: zh-TW
 translationKey: benben/11-vim-for-beginners
 permalink: /en/posts/benben/11-vim-for-beginners/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 04197b423d87d2255c648a23d309a76dc9153a2f53bdea02d2890309a92b432a
 ---
 

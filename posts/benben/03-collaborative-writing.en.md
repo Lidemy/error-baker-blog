@@ -9,7 +9,9 @@ lang: en
 sourceLang: zh-TW
 translationKey: benben/03-collaborative-writing
 permalink: /en/posts/benben/03-collaborative-writing/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 20e73037b71eb4857b22ba258533ef1d6bff41df6908e23607d7a9a47016fc2f
 ---
 
@@ -63,7 +65,6 @@ Since I started it, I prepared a simple template for everyone:
 ## JavaScript
 
 // 其他補充 ...
-
 ```
 
 It looks something like that. Since it's all vanilla HTML, CSS, and JavaScript, covering it from those three angles can't go wrong. Even though JavaScript is the main focus, you can also look at how the HTML is laid out, and sometimes CSS has its own little tricks. Anything you learned, you can share.

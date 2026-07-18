@@ -9,7 +9,9 @@ lang: en
 sourceLang: zh-TW
 translationKey: benben/14-2023-wrapped
 permalink: /en/posts/benben/14-2023-wrapped/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 81501e6564741ca6c82e35186a1ad8964225633bc565e69ab22210117ccf8955
 ---
 
@@ -97,7 +99,7 @@ Then the teacher continued: "If you know, or if you find out later, please come 
 
 "In this life, no stranger will support you unconditionally — except your parents. And parents, frankly, are just strangers with a blood tie."
 
-Overall, that teacher influenced me a lot, in many ways — reading, for instance. He'd often share books with us. He'd often mention *Don't Eat the Marshmallow... Yet!*, which influenced me a lot, and *The Secret*, which I only read after hearing him introduce it.
+Overall, that teacher influenced me a lot, in many ways — reading, for instance. He'd often share books with us. He'd often mention _Don't Eat the Marshmallow... Yet!_, which influenced me a lot, and _The Secret_, which I only read after hearing him introduce it.
 
 - Looking back, did I hit my goal this year?
 

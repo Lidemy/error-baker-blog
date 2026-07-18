@@ -9,7 +9,9 @@ lang: zh-CN
 sourceLang: zh-TW
 translationKey: benben/14-2023-wrapped
 permalink: /zh-CN/posts/benben/14-2023-wrapped/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 81501e6564741ca6c82e35186a1ad8964225633bc565e69ab22210117ccf8955
 ---
 

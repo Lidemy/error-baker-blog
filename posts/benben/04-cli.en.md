@@ -9,7 +9,9 @@ lang: en
 sourceLang: zh-TW
 translationKey: benben/04-cli
 permalink: /en/posts/benben/04-cli/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: b56102c166141b5484a4d0780a468a74309771fa2f62459248023883d12a145b
 ---
 

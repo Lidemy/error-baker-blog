@@ -9,7 +9,9 @@ lang: en
 sourceLang: zh-TW
 translationKey: benben/13-boshiamy
 permalink: /en/posts/benben/13-boshiamy/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 8688517cb7c82fe85e207b19cfebc3adc7babf4235b6d85326e3f5c9ec1ac704
 ---
 
@@ -117,16 +119,16 @@ For example: `A => 對`, `D => 的`, etc. Characters like these can be typed lig
 These are usually carefully picked common characters or common characters that are otherwise hard to type. Among them there's also a special "Chinese numerals" set — by Boshiamy's design, all done with one stroke. So it's highly recommended for readers who often need to type Chinese numbers, like in official documents, transcripts, etc. **Chinese numerals in Zhuyin have lots of homophones** and almost always ~~definitely~~ require picking characters.
 
 ```javascript
-E => 一
-R => 二
-S => 三
-F => 四
-W => 五
-L => 六
-C => 七
-B => 八
-K => 九
-J => 十
+;(E) => 一
+;(R) => 二
+;(S) => 三
+;(F) => 四
+;(W) => 五
+;(L) => 六
+;(C) => 七
+;(B) => 八
+;(K) => 九
+;(J) => 十
 ```
 
 > Try reading them out and matching to the English — you'll discover a new world!

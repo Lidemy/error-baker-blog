@@ -9,7 +9,9 @@ lang: en
 sourceLang: zh-TW
 translationKey: benben/09-how-to-speed-up-typing
 permalink: /en/posts/benben/09-how-to-speed-up-typing/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 93bf6bc560a8c69282c6039d9f736fb18bbee52e136e4678657638a20bf88a81
 ---
 
@@ -31,7 +33,7 @@ Hey everyone, I'm finally back! I was a bit busy lately. This time I want to sha
 
 "Fast typing" is absolutely a skill worth investing in — especially for people who type on a keyboard for long stretches, like developers, writers, and even **stenographers**. If your typing speed is really fast, don't be a ~~liver-busting~~ engineer — go be a stenographer (interested readers can go look up stenographer salaries)! During my learning journey I've watched a lot of online courses and livestreams, and I noticed that many top experts and masters type incredibly fast. As someone with short fingers, I envied them every time I saw it — if only my typing could be that fast! And then I'd start fantasizing about fast coding — 3000 words omitted ...
 
-First, a clarification: I'm talking about **efficiency**, not just speed — and efficiency is a subjective feeling. So besides introducing some good typing-practice sites to boost speed, I'll also cover other ways to **amplify the *feeling* of typing fast**. If you're interested, read on!
+First, a clarification: I'm talking about **efficiency**, not just speed — and efficiency is a subjective feeling. So besides introducing some good typing-practice sites to boost speed, I'll also cover other ways to **amplify the _feeling_ of typing fast**. If you're interested, read on!
 
 ## Beginner Chapter
 

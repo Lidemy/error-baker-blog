@@ -9,7 +9,9 @@ lang: en
 sourceLang: zh-TW
 translationKey: benben/08-vue-composition-api-and-react-hook
 permalink: /en/posts/benben/08-vue-composition-api-and-react-hook/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 1247b7500dea748147b2f8145eea3f7e91de09f0037b894694eced47dbb319fc
 ---
 
@@ -68,14 +70,14 @@ Here are simple examples.
 > in react
 
 ```jsx
-import { useState } from 'react'
+import {useState} from 'react'
 
 const Counter = () => {
   const [count, setCount] = useSate(0)
   return (
     <div>
       <h1>Counter:</h1>
-      <button onClick={() => setCount(count + 1)}>you click: { count } times!</button>
+      <button onClick={() => setCount(count + 1)}>you click: {count} times!</button>
     </div>
   )
 }
@@ -87,9 +89,9 @@ export default Counter
 
 ```html
 <script setup>
-import { ref } from 'vue'
-const count = ref(0)
-const addCount = () => ref.value++
+  import {ref} from 'vue'
+  const count = ref(0)
+  const addCount = () => ref.value++
 </script>
 
 <template>
@@ -102,7 +104,7 @@ Both of them are not very different, right?
 
 But still there are in different spirit.
 
-I'm not talking about `MVC`, `MVVM` model or something like that.  This topic really make many people confused, I guess. Take `MVC` for instance, what is `M`? what is `V`? what is `C`? And how do you implement them? There's no standard answer.
+I'm not talking about `MVC`, `MVVM` model or something like that. This topic really make many people confused, I guess. Take `MVC` for instance, what is `M`? what is `V`? what is `C`? And how do you implement them? There's no standard answer.
 
 > Read more: [What is the difference between MVC and MVVM? - Stack Overflow](https://stackoverflow.com/questions/667781/what-is-the-difference-between-mvc-and-mvvm)
 
@@ -115,11 +117,7 @@ In React, you build a component more like writing everything in JavaScript(CSS a
 ```jsx
 const Component = () => {
   // JS/TS here! like logic, hooks etc.
-  return (
-    <div>
-      {/* Template here! */}
-    </div>
-  )
+  return <div>{/* Template here! */}</div>
 }
 
 export default Component
@@ -170,7 +168,7 @@ in **Vue3 Composition API**
 > useCounter.js
 
 ```javascript
-import { ref } from 'vue'
+import {ref} from 'vue'
 
 // global
 const globalCount = ref(0)
@@ -222,10 +220,10 @@ const {
 
 ```html
 <script setup>
-import Counter from './components/Counter.vue'
-import { useCounter } from './composition/useCounter'
+  import Counter from './components/Counter.vue'
+  import {useCounter} from './composition/useCounter'
 
-const { globalCount } = useCounter()
+  const {globalCount} = useCounter()
 </script>
 
 <template>
@@ -243,27 +241,25 @@ const { globalCount } = useCounter()
 
 </center>
 
-> Check out [full source code]( https://github.com/benben6515/counters/tree/main/vue-counter)
+> Check out [full source code](https://github.com/benben6515/counters/tree/main/vue-counter)
 
 in **React hook**
 
 > Counter.jsx
 
 ```jsx
-import { useState, useContext } from 'react'
-import { GlobalCounterContext } from './contexts'
+import {useState, useContext} from 'react'
+import {GlobalCounterContext} from './contexts'
 
-const Counter = ({ id }) => {
+const Counter = ({id}) => {
   const [count, setCount] = useState(0)
-  const { globalCount, setGlobalCount } = useContext(GlobalCounterContext)
+  const {globalCount, setGlobalCount} = useContext(GlobalCounterContext)
   return (
     <div>
       <button onClick={() => setCount((count) => count + 1)}>
         {id} count is: {count}
       </button>
-      <button onClick={() => setGlobalCount((count) => count + 1)}>
-        global count is {globalCount}
-      </button>
+      <button onClick={() => setGlobalCount((count) => count + 1)}>global count is {globalCount}</button>
     </div>
   )
 }
@@ -274,15 +270,15 @@ export default Counter
 > App.jsx
 
 ```jsx
-import { useState } from 'react'
+import {useState} from 'react'
 import Counter from './Counter'
-import { GlobalCounterContext } from './contexts'
+import {GlobalCounterContext} from './contexts'
 
 function App() {
   const [globalCount, setGlobalCount] = useState(0)
 
   return (
-    <GlobalCounterContext.Provider value={{ globalCount, setGlobalCount }}>
+    <GlobalCounterContext.Provider value={{globalCount, setGlobalCount}}>
       <div className="App">
         <h1>Vite + React</h1>
         <p>global count: {globalCount}</p>
@@ -304,7 +300,7 @@ export default App
 
 </center>
 
-> Check out [full source code]( https://github.com/benben6515/counters/tree/main/vue-counter)
+> Check out [full source code](https://github.com/benben6515/counters/tree/main/vue-counter)
 
 At this example, the most different between React and Vue is that the **React's hook can `NOT` to write in the top level** while **Vue3's Composition API can do this!**
 
@@ -326,7 +322,7 @@ In my opinion, that is a healthy competition rather than "Involution".
 
 Image the scenario which if only remain just React or just Vue in the world.
 
-Maybe just React or Vue would not so powerful, but because there are both of them so people can discuss for them, argue for them, love  them.
+Maybe just React or Vue would not so powerful, but because there are both of them so people can discuss for them, argue for them, love them.
 
 Thank React and Vue, they do make front-end development easier. Even ordinary me can build some simple web app.
 

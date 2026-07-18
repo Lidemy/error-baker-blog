@@ -8,7 +8,9 @@ lang: zh-CN
 sourceLang: zh-TW
 translationKey: benben/01-article
 permalink: /zh-CN/posts/benben/01-article/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 1984b924566a0ca82e4f4c3cfe134643678f4489dda38775648a5df3f4c522ea
 ---
 
@@ -71,7 +73,7 @@ sourceHash: 1984b924566a0ca82e4f4c3cfe134643678f4489dda38775648a5df3f4c522ea
 |          | 官方文档 | 技术文章 | 农场文章 | 笔记 | 废文 |
 | -------- | -------- | -------- | -------- | ---- | ---- |
 | 知识含量 | 5        | 4        | 2        | 3    | 1    |
-| 用词深浅 | 5        | 4        | 2        | 3    |1    |
+| 用词深浅 | 5        | 4        | 2        | 3    | 1    |
 | 有趣程度 | 1        | 2        | 4        | 3    | 5    |
 | 文字多寡 | 5        | 4        | 3        | 2    | ?    |
 | 文章结构 | 2        | 5        | 4        | 3    | 1    |
@@ -116,6 +118,7 @@ sourceHash: 1984b924566a0ca82e4f4c3cfe134643678f4489dda38775648a5df3f4c522ea
 
 ```markdown
 ### My frontend skills
+
 - HTML
 - CSS
 - JavaScript
@@ -165,7 +168,6 @@ sourceHash: 1984b924566a0ca82e4f4c3cfe134643678f4489dda38775648a5df3f4c522ea
 遇见你的那天，是七月闷热的天气，如今又到七月。
 今天也好热喔，不确定是不是新高溫，但是今天 (2021/07/13) 台湾的用电来到了新高
 可以参考 : https://money.udn.com/money/story/5648/5598949
-
 ```
 
 这样看起来是不是有点样子了？只是内容还有点废 XD

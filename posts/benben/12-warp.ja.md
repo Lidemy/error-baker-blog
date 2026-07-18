@@ -9,7 +9,9 @@ lang: ja
 sourceLang: zh-TW
 translationKey: benben/12-warp
 permalink: /ja/posts/benben/12-warp/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: dc6efe8097e148c5a389f5c80b1e859ba58b04ec0ae64cac12d66141d22cf35a
 ---
 
@@ -41,16 +43,16 @@ sourceHash: dc6efe8097e148c5a389f5c80b1e859ba58b04ec0ae64cac12d66141d22cf35a
 
 もちろん違います！そうでなければ筆者はこの記事を書いていませんよね？まずは簡単な比較表から：
 
-| 機能                   | Warp            | Window Terminal | iTerm2       |
-| ---------------------- | --------------- | --------------- | ------------ |
-| パーソナライズ         | ⭐️⭐️⭐️             | ⭐⭐              | ⭐            |
-| 入出力の簡単コピー     | ⭐⭐⭐             | ⭐               | ⭐            |
+| 機能                   | Warp            | Window Terminal    | iTerm2             |
+| ---------------------- | --------------- | ------------------ | ------------------ |
+| パーソナライズ         | ⭐️⭐️⭐️          | ⭐⭐               | ⭐                 |
+| 入出力の簡単コピー     | ⭐⭐⭐          | ⭐                 | ⭐                 |
 | Auto Completion        | 開封即利用      | インストール＋設定 | インストール＋設定 |
-| ショートカットチート   | 内蔵（cmd + /） | 別途探す        | 別途探す     |
-| タブ、ペイン分割       | O               | O               | O            |
-| AI                     | O               | X               | X            |
-| マウス使用可           | O               | X               | X            |
-| cmd + a/z/x/c/v 使用可 | O               | X               | X            |
+| ショートカットチート   | 内蔵（cmd + /） | 別途探す           | 別途探す           |
+| タブ、ペイン分割       | O               | O                  | O                  |
+| AI                     | O               | X                  | X                  |
+| マウス使用可           | O               | X                  | X                  |
+| cmd + a/z/x/c/v 使用可 | O               | X                  | X                  |
 
 本記事では Warp の紹介といくつかの感想をお話しします。おおまかな構成：
 

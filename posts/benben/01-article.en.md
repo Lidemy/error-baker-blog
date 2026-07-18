@@ -8,7 +8,9 @@ lang: en
 sourceLang: zh-TW
 translationKey: benben/01-article
 permalink: /en/posts/benben/01-article/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 1984b924566a0ca82e4f4c3cfe134643678f4489dda38775648a5df3f4c522ea
 ---
 
@@ -68,13 +70,13 @@ Broadly speaking, I'd say official docs, technical articles, clickbait farm arti
 
 So what is it? Honestly, I don't know — it really varies from person to person. Knowledge density, depth of vocabulary, article structure — all differ, and everyone feels differently about them. To give you a clearer picture, I've very subjectively put together a table for reference:
 
-|          | Official docs | Technical articles | Clickbait farm | Notes | Shitposts |
-| -------- | -------- | -------- | -------- | ---- | ---- |
-| Knowledge density | 5        | 4        | 2        | 3    | 1    |
-| Vocabulary depth | 5        | 4        | 2        | 3    |1    |
-| Fun factor | 1        | 2        | 4        | 3    | 5    |
-| Amount of text | 5        | 4        | 3        | 2    | ?    |
-| Article structure | 2        | 5        | 4        | 3    | 1    |
+|                   | Official docs | Technical articles | Clickbait farm | Notes | Shitposts |
+| ----------------- | ------------- | ------------------ | -------------- | ----- | --------- |
+| Knowledge density | 5             | 4                  | 2              | 3     | 1         |
+| Vocabulary depth  | 5             | 4                  | 2              | 3     | 1         |
+| Fun factor        | 1             | 2                  | 4              | 3     | 5         |
+| Amount of text    | 5             | 4                  | 3              | 2     | ?         |
+| Article structure | 2             | 5                  | 4              | 3     | 1         |
 
 Right, articles can be really complex — structure, content, word choice, audience, and so on. Naturally, there are tons of writing tutorials online and plenty of articles on the benefits of writing, so I won't dwell on those. Maybe you've thought about writing or starting a blog, and you've even read lots of tutorials by the masters. You get the principles — but... you just can't seem to produce anything! Yeah, that's how a lot of people feel. Including me, of course.
 
@@ -108,7 +110,7 @@ Unless you're some kind of genius with a photographic memory, in which case feel
 
 If you don't yet have a writing habit, the best way in is notes. You can jot down simple things, and it helps your memory — a true win-win.
 
-But what if I'm not great at note-taking either? Don't worry. Try first introducing the idea of structure into your notes. A simple list (or calling it a `li element` might be clearer) is already very useful. You can check out the book *Bullet Journal*, or if you're familiar with HTML, you can apply the DOM model's structure to your notes. It's really nothing fancy — everyone gets it — but the reality is: "a lot of people's notes are still a chaotic mess." Maybe try adding some "structure" and see — it might improve things a lot.
+But what if I'm not great at note-taking either? Don't worry. Try first introducing the idea of structure into your notes. A simple list (or calling it a `li element` might be clearer) is already very useful. You can check out the book _Bullet Journal_, or if you're familiar with HTML, you can apply the DOM model's structure to your notes. It's really nothing fancy — everyone gets it — but the reality is: "a lot of people's notes are still a chaotic mess." Maybe try adding some "structure" and see — it might improve things a lot.
 
 > Recommended book: [The Bullet Journal Method](https://www.books.com.tw/products/0010803003)
 
@@ -116,6 +118,7 @@ The most basic note structure looks like this:
 
 ```markdown
 ### My frontend skills
+
 - HTML
 - CSS
 - JavaScript
@@ -165,7 +168,6 @@ Let's try turning it into a short piece. How would we do that?
 The day I met you was a muggy July day, and now July has come around again.
 It's hot today too — not sure if it's a record high, but today (2021/07/13) Taiwan's electricity usage hit a new high.
 See: https://money.udn.com/money/story/5648/5598949
-
 ```
 
 Doesn't that look like something now? The content's still a bit thin, though XD

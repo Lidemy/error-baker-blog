@@ -9,7 +9,9 @@ lang: zh-CN
 sourceLang: zh-TW
 translationKey: benben/12-warp
 permalink: /zh-CN/posts/benben/12-warp/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: dc6efe8097e148c5a389f5c80b1e859ba58b04ec0ae64cac12d66141d22cf35a
 ---
 
@@ -43,8 +45,8 @@ sourceHash: dc6efe8097e148c5a389f5c80b1e859ba58b04ec0ae64cac12d66141d22cf35a
 
 | 功能                   | Warp            | Window Terminal | iTerm2       |
 | ---------------------- | --------------- | --------------- | ------------ |
-| 个性化                 | ⭐️⭐️⭐️             | ⭐⭐              | ⭐            |
-| 轻松复制 input/output  | ⭐⭐⭐             | ⭐               | ⭐            |
+| 个性化                 | ⭐️⭐️⭐️          | ⭐⭐            | ⭐           |
+| 轻松复制 input/output  | ⭐⭐⭐          | ⭐              | ⭐           |
 | Auto Completion        | 开箱即用        | 需安装、设定    | 需安装、设定 |
 | 快捷键手册             | 内键（cmd + /） | 需另外找        | 需另外找     |
 | 分页、分割视窗         | O               | O               | O            |

@@ -9,7 +9,9 @@ lang: zh-CN
 sourceLang: zh-TW
 translationKey: benben/08-vue-composition-api-and-react-hook
 permalink: /zh-CN/posts/benben/08-vue-composition-api-and-react-hook/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 1247b7500dea748147b2f8145eea3f7e91de09f0037b894694eced47dbb319fc
 ---
 
@@ -68,14 +70,14 @@ sourceHash: 1247b7500dea748147b2f8145eea3f7e91de09f0037b894694eced47dbb319fc
 > in react
 
 ```jsx
-import { useState } from 'react'
+import {useState} from 'react'
 
 const Counter = () => {
   const [count, setCount] = useSate(0)
   return (
     <div>
       <h1>Counter:</h1>
-      <button onClick={() => setCount(count + 1)}>you click: { count } times!</button>
+      <button onClick={() => setCount(count + 1)}>you click: {count} times!</button>
     </div>
   )
 }
@@ -87,9 +89,9 @@ export default Counter
 
 ```html
 <script setup>
-import { ref } from 'vue'
-const count = ref(0)
-const addCount = () => ref.value++
+  import {ref} from 'vue'
+  const count = ref(0)
+  const addCount = () => ref.value++
 </script>
 
 <template>
@@ -115,11 +117,7 @@ const addCount = () => ref.value++
 ```jsx
 const Component = () => {
   // JS/TS here! like logic, hooks etc.
-  return (
-    <div>
-      {/* Template here! */}
-    </div>
-  )
+  return <div>{/* Template here! */}</div>
 }
 
 export default Component
@@ -170,7 +168,7 @@ in **Vue3 Composition API**
 > useCounter.js
 
 ```javascript
-import { ref } from 'vue'
+import {ref} from 'vue'
 
 // global
 const globalCount = ref(0)
@@ -222,10 +220,10 @@ const {
 
 ```html
 <script setup>
-import Counter from './components/Counter.vue'
-import { useCounter } from './composition/useCounter'
+  import Counter from './components/Counter.vue'
+  import {useCounter} from './composition/useCounter'
 
-const { globalCount } = useCounter()
+  const {globalCount} = useCounter()
 </script>
 
 <template>
@@ -243,27 +241,25 @@ const { globalCount } = useCounter()
 
 </center>
 
-> 完整原始码请见 [full source code]( https://github.com/benben6515/counters/tree/main/vue-counter)
+> 完整原始码请见 [full source code](https://github.com/benben6515/counters/tree/main/vue-counter)
 
 in **React hook**
 
 > Counter.jsx
 
 ```jsx
-import { useState, useContext } from 'react'
-import { GlobalCounterContext } from './contexts'
+import {useState, useContext} from 'react'
+import {GlobalCounterContext} from './contexts'
 
-const Counter = ({ id }) => {
+const Counter = ({id}) => {
   const [count, setCount] = useState(0)
-  const { globalCount, setGlobalCount } = useContext(GlobalCounterContext)
+  const {globalCount, setGlobalCount} = useContext(GlobalCounterContext)
   return (
     <div>
       <button onClick={() => setCount((count) => count + 1)}>
         {id} count is: {count}
       </button>
-      <button onClick={() => setGlobalCount((count) => count + 1)}>
-        global count is {globalCount}
-      </button>
+      <button onClick={() => setGlobalCount((count) => count + 1)}>global count is {globalCount}</button>
     </div>
   )
 }
@@ -274,15 +270,15 @@ export default Counter
 > App.jsx
 
 ```jsx
-import { useState } from 'react'
+import {useState} from 'react'
 import Counter from './Counter'
-import { GlobalCounterContext } from './contexts'
+import {GlobalCounterContext} from './contexts'
 
 function App() {
   const [globalCount, setGlobalCount] = useState(0)
 
   return (
-    <GlobalCounterContext.Provider value={{ globalCount, setGlobalCount }}>
+    <GlobalCounterContext.Provider value={{globalCount, setGlobalCount}}>
       <div className="App">
         <h1>Vite + React</h1>
         <p>global count: {globalCount}</p>
@@ -304,7 +300,7 @@ export default App
 
 </center>
 
-> 完整原始码请见 [full source code]( https://github.com/benben6515/counters/tree/main/vue-counter)
+> 完整原始码请见 [full source code](https://github.com/benben6515/counters/tree/main/vue-counter)
 
 在这个范例中，React 与 Vue 最大的差别在于：**React 的 hook `不能` 写在最顶层以外的地方**，而 **Vue3 的 Composition API 可以！**
 

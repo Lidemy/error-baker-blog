@@ -9,7 +9,9 @@ lang: ja
 sourceLang: zh-TW
 translationKey: benben/13-boshiamy
 permalink: /ja/posts/benben/13-boshiamy/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 8688517cb7c82fe85e207b19cfebc3adc7babf4235b6d85326e3f5c9ec1ac704
 ---
 
@@ -117,16 +119,16 @@ sourceHash: 8688517cb7c82fe85e207b19cfebc3adc7babf4235b6d85326e3f5c9ec1ac704
 これらはたいてい厳選された常用字や、打ちにくい常用字です。その中に特別な「中文数字」もあります。嘸蝦米のデザイン上、これらもすべて 1 ストロークで処理できます。そのため、公文や筆錄など、中文数字をよく打つ読者におすすめです。**中文数字は注音では同音字が多く**、ほぼ ~~必ず~~ 文字選択が必要です。
 
 ```javascript
-E => 一
-R => 二
-S => 三
-F => 四
-W => 五
-L => 六
-C => 七
-B => 八
-K => 九
-J => 十
+;(E) => 一
+;(R) => 二
+;(S) => 三
+;(F) => 四
+;(W) => 五
+;(L) => 六
+;(C) => 七
+;(B) => 八
+;(K) => 九
+;(J) => 十
 ```
 
 > 簡単に声に出して読み、英文と対照すると、新大陸を発見します！

@@ -9,7 +9,9 @@ lang: en
 sourceLang: zh-TW
 translationKey: benben/12-warp
 permalink: /en/posts/benben/12-warp/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: dc6efe8097e148c5a389f5c80b1e859ba58b04ec0ae64cac12d66141d22cf35a
 ---
 
@@ -41,16 +43,16 @@ Given that, is the `Warp` terminal really just a terminal with an AI wrapper? Le
 
 Obviously not! Otherwise I wouldn't be writing this post, right? Let's start with a simple comparison table:
 
-| Feature                | Warp            | Window Terminal | iTerm2       |
-| ---------------------- | --------------- | --------------- | ------------ |
-| Personalization        | ⭐️⭐️⭐️             | ⭐⭐              | ⭐            |
-| Easy copy input/output | ⭐⭐⭐             | ⭐               | ⭐            |
-| Auto Completion        | Out of the box  | Install + setup | Install + setup |
-| Shortcut cheat sheet   | Built-in (cmd + /) | Find elsewhere | Find elsewhere |
-| Tabs, split panes      | O               | O               | O            |
-| AI                     | O               | X               | X            |
-| Mouse usable           | O               | X               | X            |
-| cmd + a/z/x/c/v usable | O               | X               | X            |
+| Feature                | Warp               | Window Terminal | iTerm2          |
+| ---------------------- | ------------------ | --------------- | --------------- |
+| Personalization        | ⭐️⭐️⭐️             | ⭐⭐            | ⭐              |
+| Easy copy input/output | ⭐⭐⭐             | ⭐              | ⭐              |
+| Auto Completion        | Out of the box     | Install + setup | Install + setup |
+| Shortcut cheat sheet   | Built-in (cmd + /) | Find elsewhere  | Find elsewhere  |
+| Tabs, split panes      | O                  | O               | O               |
+| AI                     | O                  | X               | X               |
+| Mouse usable           | O                  | X               | X               |
+| cmd + a/z/x/c/v usable | O                  | X               | X               |
 
 In this post I'll introduce Warp and share some thoughts. The rough outline:
 

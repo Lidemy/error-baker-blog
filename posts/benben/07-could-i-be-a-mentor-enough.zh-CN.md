@@ -9,7 +9,9 @@ lang: zh-CN
 sourceLang: zh-TW
 translationKey: benben/07-could-i-be-a-mentor-enough
 permalink: /zh-CN/posts/benben/07-could-i-be-a-mentor-enough/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 7a5bac12d121b526c4114a889c88a88d91cecf4d2d6b13457d17a5d9304c65d5
 ---
 

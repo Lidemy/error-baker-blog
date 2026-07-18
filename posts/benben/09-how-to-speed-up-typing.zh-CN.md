@@ -9,7 +9,9 @@ lang: zh-CN
 sourceLang: zh-TW
 translationKey: benben/09-how-to-speed-up-typing
 permalink: /zh-CN/posts/benben/09-how-to-speed-up-typing/
-draft: true
+reviewedBy: benben
+reviewedAt: 2026-07-18
+publishedAt: 2026-07-18
 sourceHash: 93bf6bc560a8c69282c6039d9f736fb18bbee52e136e4678657638a20bf88a81
 ---
 
