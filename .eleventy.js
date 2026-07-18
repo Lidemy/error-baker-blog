@@ -64,7 +64,6 @@ const {
   effectivePublishedDate,
   effectiveModifiedDate,
   postPublishedDate,
-  sortByPublishedDate,
 } = require("./_11ty/publication-dates");
 const {
   feedPublishedDate,
@@ -177,7 +176,6 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addFilter("effectivePublishedDate", effectivePublishedDate);
   eleventyConfig.addFilter("effectiveModifiedDate", effectiveModifiedDate);
   eleventyConfig.addFilter("postPublishedDate", postPublishedDate);
-  eleventyConfig.addFilter("sortByPublishedDate", sortByPublishedDate);
   eleventyConfig.addFilter("feedPublishedDate", feedPublishedDate);
   eleventyConfig.addFilter("feedModifiedDate", feedModifiedDate);
   eleventyConfig.addFilter("sortFeedPosts", sortFeedPosts);
@@ -445,14 +443,12 @@ module.exports = function (eleventyConfig) {
   });
 
   // zh-TW-only posts — the source language listing (homepage, archive, feeds).
+  // Eleventy's default collection order is page.date ascending, which for
+  // source posts is the original work date — matching the unified date display.
   eleventyConfig.addCollection("postsZhTW", function (collectionApi) {
-    return sortByPublishedDate(
-      collectionApi
-        .getFilteredByTag("posts")
-        .filter(
-          (item) => isVisible(item) && postLang(item) === DEFAULT_LANG
-        )
-    );
+    return collectionApi
+      .getFilteredByTag("posts")
+      .filter((item) => isVisible(item) && postLang(item) === DEFAULT_LANG);
   });
 
   // Activate a localized section only after that language has at least one

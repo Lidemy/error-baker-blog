@@ -12,6 +12,6 @@ eleventyComputed:
   lang: "{{ ap.lang }}"
   title: "{{ metadata.authors[ap.author].name }}"
 ---
-{% set postslist = collections.posts | filterByLang(ap.lang) | sortByPublishedDate %}
+{% set postslist = collections.posts | filterByLang(ap.lang) %}
 {% set author = ap.author %}
 {% include "author-postslist.njk" %}
