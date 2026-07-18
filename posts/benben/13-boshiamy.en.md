@@ -22,7 +22,7 @@ sourceHash: 8688517cb7c82fe85e207b19cfebc3adc7babf4235b6d85326e3f5c9ec1ac704
 ## Foreword
 
 <center>
-  <img src="https://hackmd.io/_uploads/B1HXrmRTn.gif" class="post-image-width" alt="嘸蝦米 demo" />
+  <img src="https://hackmd.io/_uploads/B1HXrmRTn.gif" class="post-image-width" alt="Boshiamy demo" />
 </center>
 
 > 嘸蝦米 demo, by @Benben
@@ -61,7 +61,7 @@ What attracted me to Boshiamy, besides its biggest advantage of not needing to p
 > Try typing: 「1 生、 2 人、 3 餐、 4 季」
 
 <center>
-  <img src="https://hackmd.io/_uploads/B1HXrmRTn.gif" class="post-image-width" alt="嘸蝦米 demo" />
+  <img src="https://hackmd.io/_uploads/B1HXrmRTn.gif" class="post-image-width" alt="Boshiamy demo" />
 </center>
 
 > Yep, that's the cover image (the GIF is at original speed, not sped up).

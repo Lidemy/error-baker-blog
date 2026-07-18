@@ -31,7 +31,7 @@ sourceHash: b5ee1c9e34372faa2e9cf2d9e614e8e4fa83178ca4eef4b4f6b18d5208d4530c
 
 > 画像出典：[Uno CSS Github](https://github.com/unocss/unocss)
 
-简単に言うと、**Tailwind** の代替となる CSS ソリューションで、面倒な設定は一切なし（~~別に Tailwind の設定が面倒だとは言ってないですよ~~）。すぐに使い始められます。「Tailwind のパクリじゃん」と言えるかもしれませんが、もっと強力な機能、例えば `正規表現` による設定などもあります（ここはひとまず置いておきます）。この記事を読めば、少し見方が変わるかもしれません！
+簡単に言うと、**Tailwind** の代替となる CSS ソリューションで、面倒な設定は一切なし（~~別に Tailwind の設定が面倒だとは言ってないですよ~~）。すぐに使い始められます。「Tailwind のパクリじゃん」と言えるかもしれませんが、もっと強力な機能、例えば `正規表現` による設定などもあります（ここはひとまず置いておきます）。この記事を読めば、少し見方が変わるかもしれません！
 
 現在のフロントエンドの三大フレームワークに比べると、CSS の書き方は百種類以上あります（SASS/SCSS、Bootstrap、Tailwind、WindyCSS、CSS in JS シリーズなど）。じゃあ Uno CSS を学ぶべきかどうか？それは人それぞれだと思います！でも、もしあなたが既に Bootstrap や Tailwind を知っているなら、Uno CSS の学習はとても **直感的** です。なぜなら Uno CSS はこれらの慣用的な書き方を統合しているからです！
 
@@ -104,7 +104,7 @@ Uno CSS を使えば、上記の問題が全部解決します：数字の問題
 
 実はこれ、別に魔法ではありません。聡明な読者の皆さんはもうお気付きでしょう。「**正規表現**」です！正規表現を足したのです。
 
-> 関連読書：[简易 Regular Expression 入門指南 - Huli（中国語）](https://blog.huli.tw/2020/05/16/introduction-to-regular-expression/)
+> 関連読書：[簡易 Regular Expression 入門指南 - Huli（中国語）](https://blog.huli.tw/2020/05/16/introduction-to-regular-expression/)
 
 ## Efficacy
 
@@ -205,7 +205,7 @@ React の公式サイト — [React](https://reactjs.org/) は現在 React `18.1
 - [Windi CSS](https://windicss.org/)
 - [Bootstrap](https://getbootstrap.com/)
 - [Sass](https://sass-lang.com/)
-- [简易 Regular Expression 入門指南 - Huli](https://blog.huli.tw/2020/05/16/introduction-to-regular-expression/)
+- [簡易 Regular Expression 入門指南 - Huli](https://blog.huli.tw/2020/05/16/introduction-to-regular-expression/)
 - [Vite](https://vitejs.dev/)
 - [重新构想原子化 CSS](https://antfu.me/posts/reimagine-atomic-css-zh)
 
