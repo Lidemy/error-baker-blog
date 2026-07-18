@@ -5,6 +5,9 @@ tags: [raycast, ai]
 author: benben
 layout: layouts/post.njk
 image: https://img.youtube.com/vi/NuIpZoQwuVY/0.jpg
+lang: zh-TW
+translationKey: benben/15-raycast-101
+translationTargets: [en, ja, zh-CN]
 ---
 
 <!-- summary -->
