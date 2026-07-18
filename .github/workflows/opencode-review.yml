@@ -17,6 +17,58 @@ jobs:
         uses: actions/checkout@v6
         with:
           persist-credentials: false
+          fetch-depth: 0
+
+      - name: Detect changed paths
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            posts:
+              - 'posts/**'
+
+      - name: Build review prompt
+        id: prompt
+        run: |
+          if [ "${{ steps.changes.outputs.posts }}" = "true" ]; then
+            {
+              echo 'value<<PROMPT_END'
+              echo 'Review this pull request. The diff touches posts/, so this is a translation/content PR — follow the TRANSLATION prompt below.'
+              echo ''
+              echo '## Translation/content PR checklist (posts/)'
+              echo ''
+              echo 'Authoritative references in the repo — read these first:'
+              echo '- AGENTS.md — the only source of truth for the translation contract (frontmatter, file layout, sourceHash, date fields).'
+              echo '- REVIEW-PITFALLS.md — recurring bugs from past reviews. Read it before flagging or approving ja/zh-CN character issues; do NOT flag things that file explicitly lists as "preserve" (proper nouns, code-block contents, etc.).'
+              echo ''
+              echo 'Verify concretely:'
+              echo '1. Frontmatter: each translation has lang, sourceLang, translationKey, permalink (trailing /), draft: true, sourceHash. Source posts have lang: zh-TW, translationKey, translationTargets. Dates are valid YYYY-MM-DD.'
+              echo '2. sourceHash matches `node scripts/check-translations.js --hash <source>`.'
+              echo '3. Code blocks and inline code are verbatim from the source (AGENTS.md rule 2) — including code-block comments in zh-TW.'
+              echo '4. ja translations: no Simplified-Chinese-only characters where Japanese uses a different form. Cross-check against REVIEW-PITFALLS.md §1 (the official shinjitai table link is there). Common false conversions to catch: 質→质, 兩→两, 簡→简 (all wrong in JP).'
+              echo '5. zh-CN translations: no residual Traditional characters in prose (but keep book titles / Huli article titles / 嘸蝦米 proper nouns verbatim per REVIEW-PITFALLS.md §3.2).'
+              echo '6. Untranslated prose: markdown link text [text](url) and <img alt="..."> should be translated — except external article titles (preserve verbatim).'
+              echo '7. Chinese idioms / slang literally carried into Japanese (e.g. 香る for "很香", 麗麗 for "煩瑣") — flag for re-translation.'
+              echo ''
+              echo 'Keep the review concrete and concise. Output a markdown summary with sections: Frontmatter & AGENTS.md Compliance, Issues Found (by severity), Not defects (verified correct).'
+              echo 'PROMPT_END'
+            } >> "$GITHUB_OUTPUT"
+          else
+            {
+              echo 'value<<PROMPT_END'
+              echo 'Review this pull request as a normal code review. This PR does not touch posts/, so the translation-specific rules in AGENTS.md and REVIEW-PITFALLS.md do not apply.'
+              echo ''
+              echo 'Focus on:'
+              echo '- Correctness of the change vs. its described intent'
+              echo '- Tests (if applicable): are they added/updated and do they pass?'
+              echo '- Build/lint: does `npm run build` and the existing test suite still pass?'
+              echo '- Security, typos, dead code, obvious regressions'
+              echo '- Consistency with surrounding code style'
+              echo ''
+              echo 'Keep the review concrete and concise. Skip the translation/AGENTS.md checks entirely.'
+              echo 'PROMPT_END'
+            } >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Run opencode
         uses: anomalyco/opencode/github@latest
@@ -24,8 +76,4 @@ jobs:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
           model: opencode-go/qwen3.7-plus
-          prompt: |
-            Review this pull request.
-            - If it touches posts/, verify frontmatter and translation fields comply with AGENTS.md.
-            - Check markdown structure, internal links, and image paths.
-            - Flag concrete issues; keep the review concise.
+          prompt: ${{ steps.prompt.outputs.value }}
