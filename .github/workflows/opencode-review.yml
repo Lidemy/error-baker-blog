@@ -1,0 +1,31 @@
+name: opencode-review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: read
+      issues: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Run opencode
+        uses: anomalyco/opencode/github@latest
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+        with:
+          model: opencode-go/qwen3.7-plus
+          prompt: |
+            Review this pull request.
+            - If it touches posts/, verify frontmatter and translation fields comply with AGENTS.md.
+            - Check markdown structure, internal links, and image paths.
+            - Flag concrete issues; keep the review concise.
