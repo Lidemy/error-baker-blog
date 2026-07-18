@@ -4,6 +4,9 @@ date: 2021-08-22
 tags: [article]
 author: benben
 layout: layouts/post.njk
+lang: zh-TW
+translationKey: benben/01-article
+translationTargets: [en, ja, zh-CN]
 ---
 
 <!-- summary -->

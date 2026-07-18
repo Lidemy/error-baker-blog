@@ -5,6 +5,9 @@ tags: [framework]
 author: benben
 layout: layouts/post.njk
 image: https://www.saaspegasus.com/static/images/web/modern-javascript/2008-vs-2021.png
+lang: zh-TW
+translationKey: benben/02-framework
+translationTargets: [en, ja, zh-CN]
 ---
 
 <!-- summary -->

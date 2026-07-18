@@ -5,13 +5,16 @@ tags: [Front-end, react, vue]
 author: benben
 layout: layouts/post.njk
 image: https://dev-to-uploads.s3.amazonaws.com/i/296z018ivuyy4p3954at.png
+lang: zh-TW
+translationKey: benben/08-vue-composition-api-and-react-hook
+translationTargets: [en, ja, zh-CN]
 ---
 
 <!-- summary -->
-<!-- One side can't reach this altitude without another side. -->
+<!-- 單憑其中一方，是無法達到這個高度的。 -->
 <!-- summary -->
 
-**! this is a article about usage of Vue Composition API and React hooks. And assumes that you have knew some basic about one of them.**
+**！本篇文章會介紹 Vue Composition API 與 React hooks 的用法，並假設你已經對兩者其中之一有基本認識。**
 
 <center>
 
@@ -19,45 +22,45 @@ image: https://dev-to-uploads.s3.amazonaws.com/i/296z018ivuyy4p3954at.png
 
 </center>
 
-> [image resource](https://dev.to/vuesomedev/write-vue-like-you-write-react-23p9)
+> [圖片來源](https://dev.to/vuesomedev/write-vue-like-you-write-react-23p9)
 
-## Preface
+## 前言
 
-Hi, there!
+嗨！
 
-I'm Benben and this is my first time trying to write article with full English(Maybe the last time XD).
+我是 Benben，這是我第一次嘗試用全英文寫文章（也可能是最後一次 XD）。
 
-Why I wrote this article?
+為什麼我會寫這篇文章？
 
-: I am still learning React and Vue, and very love both of them!
+：我還在學 React 和 Vue，而且兩個都非常喜歡！
 
-Why I wrote this article in English?
+那為什麼要用英文寫？
 
-: Also I'm still learning English. Actually, My mother tongue is Mandarin(Tradition Chinese Specifically). But in real world, English is the most used language for software developer. There are so many many documents wrote in English or English only.
+：因為我也還在學英文。其實我的母語是國語（準確說是繁體中文）。但在現實世界裡，英文是軟體開發者最常使用的語言，有非常非常多的文件是用英文寫的，甚至只有英文版。
 
-I'm not show off I'm good at English or something. In fact, I only got 550 points TOEIC (full score is 990), sounded incredible? But don't be, maybe this article just like a shit for someone. I have no argue with that. But you know what? Maybe 1 ~ 3 years later, this shit article could make me successful in my field, who knows?
+我不是在炫耀自己英文有多好。事實上，我的多益（TOEIC）只考了 550 分（滿分 990），聽起來很扯吧？但其實也沒什麼好意外的，對某些人來說，這篇文章可能就是一坨屎，這點我不反對。但你知道嗎？也許 1～3 年後，這坨屎文章會讓我在這個領域成功也說不定，誰知道呢？
 
-Alright, bullshit enough. Let's do some coding.
+好啦，廢話夠了。來寫點 code 吧。
 
-## Before start
+## 開始之前
 
-So, when you joined the fight between Vue and React framework. You chose one side which is probably your favorite one. For most people, maybe that framework is the one and only they have learned.
+所以，當你加入了 Vue 與 React 框架的戰爭，你會選一邊站——通常是比較偏愛的那一邊。對大多數人來說，那個框架可能就是他們唯一學過的。
 
-But some developers will try to understand each other (Angular: I'm not made of plastic.). That is a good but rare situation. Most people like religious war and fight for their personal religion.
+但有些開發者會試著去理解另一方（Angular：我不是塑膠做的）。這是個美好但罕見的情境。大多數人喜歡打宗教戰，為自己的信仰而戰。
 
-It's hard to acknowledge these fighting is not very helpful for anyone. Because in software field, there is **no silver bullet**. That say there is no the best tool can be used in any scenario.
+很難讓人承認這些爭論對任何人其實都沒什麼幫助。因為在軟體領域，**沒有銀彈**。也就是說，沒有任何一個工具可以在所有情境下都是最好的。
 
-You must take a long views. Not because old things change rapidly or because new things are hard to learn, but because **everything fails all the time**.
+你必須把眼光放長遠。不是因為舊東西變化很快，也不是因為新東西很難學，而是因為 **everything fails all the time（所有東西隨時都在故障）**。
 
-> everything fails all the time - Werner Vogels (Amazon vice president and CTO)
+> everything fails all the time - Werner Vogels（Amazon 副總裁暨技術長）
 
-## Basic Usage
+## 基本用法
 
-Let's see a basic usage - `Counter`!
+來看看基本用法——`Counter`（計數器）！
 
-A simple counter is always the best example to learn new Front-End framework. It show us how to definite reactive data and how reactive data drives the view layer.
+一個簡單的計數器，永遠是學習新前端框架最好的範例。它讓我們看到如何定義響應式資料，以及響應式資料如何驅動視圖層。
 
-Here are simple examples.
+以下是簡單的範例。
 
 > in react
 
@@ -92,17 +95,17 @@ const addCount = () => ref.value++
 </template>
 ```
 
-Both of them are not very different, right?
+兩者其實差別不大，對吧？
 
-But still there are in different spirit.
+但兩者背後的精神還是不一樣。
 
-I'm not talking about `MVC`, `MVVM` model or something like that.  This topic really make many people confused, I guess. Take `MVC` for instance, what is `M`? what is `V`? what is `C`? And how do you implement them? There's no standard answer.
+我不是要談 `MVC`、`MVVM` 模型之類的東西。我想這個話題讓很多人感到困惑。以 `MVC` 來說，`M` 是什麼？`V` 是什麼？`C` 是什麼？又要如何實作它們？沒有標準答案。
 
-> Read more: [What is the difference between MVC and MVVM? - Stack Overflow](https://stackoverflow.com/questions/667781/what-is-the-difference-between-mvc-and-mvvm)
+> 延伸閱讀：[What is the difference between MVC and MVVM? - Stack Overflow](https://stackoverflow.com/questions/667781/what-is-the-difference-between-mvc-and-mvvm)
 
-Let's keep simple and see what we got.
+讓我們保持簡單，看看我們得到了什麼。
 
-In React, you build a component more like writing everything in JavaScript(CSS also can be in JavaScript, like CSS-in-JS).
+在 React 中，你寫一個 component 比較像把所有東西都寫在 JavaScript 裡（CSS 也可以放進 JavaScript，例如 CSS-in-JS）。
 
 > react
 
@@ -119,7 +122,7 @@ const Component = () => {
 export default Component
 ```
 
-In Vue, you build a component more like a mini HTML/JS/CSS instance.
+在 Vue 中，你寫一個 component 比較像是一個小型的 HTML/JS/CSS 實例。
 
 > vue
 
@@ -133,31 +136,31 @@ In Vue, you build a component more like a mini HTML/JS/CSS instance.
 </template>
 ```
 
-In the another hand, CSS is the different story. There are a lot of solutions, you can choose what you need or just follow your religion, but that's kind of out of this topic.
+另一方面，CSS 又是另一回事了。有非常多的解決方案，你可以選自己需要的，或者跟著自己的信仰走，但這就有點離題了。
 
-In my opinion, I think Vue has a very open mindset about other competitor.
+在我看來，我覺得 Vue 對其他競爭者抱持著非常開放的心態。
 
-> Read more: <https://vuejs.org/guide/extras/composition-api-faq.html#comparison-with-react-hooks>
+> 延伸閱讀：<https://vuejs.org/guide/extras/composition-api-faq.html#comparison-with-react-hooks>
 
-Moreover, I think React's document is some kind of out-dated. I sure that there are lots of people when they try to learn React (particular after 16.8) first time with a question: "Should learn Class component or Hooks first?"
+除此之外，我認為 React 的文件有點過時了。我相信很多人第一次嘗試學 React（特別是 16.8 之後）時，都會有一個疑問：「應該先學 Class component，還是先學 Hooks？」
 
-In 2022, I would say learn Hooks first, but keep learning some Class component which you maybe need to maintain some legacy code written in it. In addition, class component contains a lot of good programming concepts like `classes`, `inherit`, `this` ...etc.
+在 2022 年，我會說先學 Hooks，但還是要學一些 Class component，因為你可能需要維護用 Class component 寫的舊程式碼。此外，class component 也包含了許多好的程式設計概念，像是 `classes`、`inherit`、`this` 等等。
 
-Recently React also renovate their document (2022.06). That is a good news for everyone.
+最近 React 也翻新了他們的文件（2022.06）。這對所有人來說都是好消息。
 
-> Read more: <https://beta.reactjs.org/learn>
+> 延伸閱讀：<https://beta.reactjs.org/learn>
 
-As we can see, React Hooks feature released early than Vue Composition API. But the new document of Vue Composition API very early release than React's new document.
+如我們所見，React Hooks 功能比 Vue Composition API 早推出。但 Vue Composition API 的新文件卻比 React 的新文件早很多推出。
 
-I bet this renovation been inspired by Vue. Vue3's new document released in 2022.02(about Chinese New Year) and it is very amazing. Both of two new document have dark mode, more newbie friendly, and more code example ...etc. I think it is a healthy competition and we developers take advantage of it. One side can't reach this altitude without another side.
+我敢打賭這次翻新是受到 Vue 的啟發。Vue3 的新文件在 2022.02（大約農曆新年時候）推出，非常令人驚豔。兩份新文件都有暗色模式，對新手更友善，也有更多程式碼範例等等。我覺得這是一種良性競爭，而我們開發者從中受惠。單憑其中一方，是無法達到這個高度的。
 
-## Composition API and Hooks
+## Composition API 與 Hooks
 
-Let's explore more in Composition API and React Hooks.
+讓我們更深入探討 Composition API 與 React Hooks。
 
-Here is an example like Counter but we add a `global` counter feature in it.
+這裡有一個類似 Counter 的範例，但我們在裡面加上了一個 `global` counter 功能。
 
-We will just use in **plain React's or Vue's API**, instead of using State management library like Redux/Zustand or Vuex/Pinia or something like that.
+我們只用 **React 或 Vue 原生的 API**，而不使用 Redux/Zustand 或 Vuex/Pinia 之類的狀態管理 library。
 
 in **Vue3 Composition API**
 
@@ -237,7 +240,7 @@ const { globalCount } = useCounter()
 
 </center>
 
-> Check out [full source code]( https://github.com/benben6515/counters/tree/main/vue-counter)
+> 完整原始碼請見 [full source code]( https://github.com/benben6515/counters/tree/main/vue-counter)
 
 in **React hook**
 
@@ -298,35 +301,35 @@ export default App
 
 </center>
 
-> Check out [full source code]( https://github.com/benben6515/counters/tree/main/vue-counter)
+> 完整原始碼請見 [full source code]( https://github.com/benben6515/counters/tree/main/vue-counter)
 
-At this example, the most different between React and Vue is that the **React's hook can `NOT` to write in the top level** while **Vue3's Composition API can do this!**
+在這個範例中，React 與 Vue 最大的差別在於：**React 的 hook `不能` 寫在最頂層以外的地方**，而 **Vue3 的 Composition API 可以！**
 
-That why some people say composition API could replace Vuex(Pinia). And the `useContext` play a same role in React.
+這就是為什麼有人說 Composition API 可以取代 Vuex（Pinia）。而 React 中的 `useContext` 扮演著同樣的角色。
 
-In fact, you can use them in a small project and that's no problem. But when you build a bigger project considering to use Redux/Vuex(Pinia) which are more reasonable option.
+事實上，在小專案中使用它們完全沒問題。但當你要打造更大的專案時，可以考慮使用 Redux / Vuex（Pinia），它們是更合理的選擇。
 
-React's hook is very creative.
+React 的 hook 非常有創意。
 
-But in some cases like this example, Vue's Composition API is more flexible and intuitive.
+但在像這個範例的一些情境中，Vue 的 Composition API 更靈活、更直覺。
 
-> if you want see more about React and Vue: [I created the exact same app in React and Vue. Here are the differences. | by Sunil Sandhu](https://javascript.plainenglish.io/i-created-the-exact-same-app-in-react-and-vue-here-are-the-differences-e9a1ae8077fd)
+> 如果想看更多 React 與 Vue 的比較：[I created the exact same app in React and Vue. Here are the differences. | by Sunil Sandhu](https://javascript.plainenglish.io/i-created-the-exact-same-app-in-react-and-vue-here-are-the-differences-e9a1ae8077fd)
 
-## React and Vue
+## React 與 Vue
 
-I think React and Vue are like friend and enemy, the **React hooks do inspired Vue's Composition API** which mention it in Vue's document and admitted it.
+我認為 React 與 Vue 亦敵亦友，**React hooks 確實啟發了 Vue 的 Composition API**——這點在 Vue 的文件中有提到，Vue 也承認了。
 
-In my opinion, that is a healthy competition rather than "Involution".
+在我看來，這是良性競爭，而不是「內卷」。
 
-Image the scenario which if only remain just React or just Vue in the world.
+想像一下這個情境：如果世界上只剩下 React，或只剩下 Vue。
 
-Maybe just React or Vue would not so powerful, but because there are both of them so people can discuss for them, argue for them, love  them.
+也許光只有 React 或 Vue，它們不會這麼強大。但正因為兩者並存，人們才能討論它們、為它們爭辯、喜愛它們。
 
-Thank React and Vue, they do make front-end development easier. Even ordinary me can build some simple web app.
+感謝 React 與 Vue，它們確實讓前端開發變得更簡單。即使是平凡如我，也能打造一些簡單的 web app。
 
-I'm gratified that we are living in a best era.
+我很慶幸我們活在一個最好的時代。
 
-Cheer and be happy codding.
+乾杯，祝 coding 愉快。
 
 ## Ref
 

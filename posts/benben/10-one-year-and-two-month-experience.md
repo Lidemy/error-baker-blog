@@ -5,6 +5,9 @@ tags: [Front-end, salary]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/SJOHgbO3j.jpg
+lang: zh-TW
+translationKey: benben/10-one-year-and-two-month-experience
+translationTargets: [en, ja, zh-CN]
 ---
 
 <!-- summary -->

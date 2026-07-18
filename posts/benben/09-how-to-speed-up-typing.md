@@ -5,6 +5,9 @@ tags: [typing, vs-code-plugin]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/rJWJgRQ1i.gif
+lang: zh-TW
+translationKey: benben/09-how-to-speed-up-typing
+translationTargets: [en, ja, zh-CN]
 ---
 
 <!-- summary -->

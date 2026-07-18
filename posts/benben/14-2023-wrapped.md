@@ -5,6 +5,9 @@ tags: [Front-end]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/rydsCO3Da.png
+lang: zh-TW
+translationKey: benben/14-2023-wrapped
+translationTargets: [en, ja, zh-CN]
 ---
 
 <!-- summary -->

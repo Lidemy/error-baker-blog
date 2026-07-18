@@ -5,6 +5,9 @@ tags: [warp, terminal, ai]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/HJsA77LE3.gif
+lang: zh-TW
+translationKey: benben/12-warp
+translationTargets: [en, ja, zh-CN]
 ---
 
 <!-- summary -->
