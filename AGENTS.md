@@ -1,3 +1,11 @@
+# Repository layout（工作目錄注意事項）
+
+- 本 repo 的根目錄可能是 **bare repo**：磁碟上根目錄看得到的檔案為過期快照，
+  **不要直接讀取或編輯**。
+- 實際工作一律在 `.claude/worktrees/` 底下的 worktree 進行。
+- 建立 worktree 時一律從 `origin/main` 切出（先 `git fetch origin main`），
+  避免基於過期分支開工。
+
 # AGENTS.md — 文章翻譯規範（Translation Guide for Agents）
 
 這份檔案是「把一篇技術文章翻成多國語系」的**唯一真相來源**，供任何 AI 代理
