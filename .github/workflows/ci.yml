@@ -32,3 +32,70 @@ jobs:
           # discussions.js degrades to no comment stats when the GitHub API
           # rate-limits; authenticate so leaderboard data stays deterministic.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  seo-diff:
+    name: SEO golden-output diff
+    # 黃金輸出比對：建置 PR head 與 merge-base 兩份 _site，
+    # 比對 SEO 敏感輸出（title/meta/canonical/hreflang/og/twitter/
+    # robots/JSON-LD/sitemap/feed），把差異寫進 job summary。
+    # 僅供 review 參考，不阻擋合併（continue-on-error）。
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    steps:
+      - name: Checkout repository (full history for merge-base)
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build PR head
+        run: |
+          npm run clean
+          npm run js-build
+          npx eleventy
+          cp -R _site /tmp/site-head
+          # diff-site 腳本只存在於 head，先存起來供 base 比對用
+          cp scripts/diff-site.js /tmp/diff-site.js
+        env:
+          ELEVENTY_ENV: production
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build merge-base
+        run: |
+          BASE_SHA="$(git merge-base "origin/${{ github.base_ref }}" HEAD)"
+          echo "merge-base: $BASE_SHA"
+          git checkout --force "$BASE_SHA"
+          npm ci
+          npm run clean
+          npm run js-build
+          npx eleventy
+          cp -R _site /tmp/site-base
+        env:
+          ELEVENTY_ENV: production
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Diff SEO output into job summary
+        run: |
+          set +e
+          node /tmp/diff-site.js /tmp/site-base /tmp/site-head > /tmp/seo-diff.md
+          status=$?
+          set -e
+          {
+            echo "## SEO 黃金輸出比對（merge-base → PR head）"
+            echo ""
+            cat /tmp/seo-diff.md
+          } >> "$GITHUB_STEP_SUMMARY"
+          # 離開碼 1 = 有差異、2 = 腳本執行錯誤。讓非零碼傳出去，
+          # step 會標記為失敗以吸引 review 目光，但 job 設了
+          # continue-on-error，不會擋 PR。
+          exit "$status"
