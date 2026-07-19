@@ -547,15 +547,30 @@ dt {
     display: table-cell;
   }
 }
+/* Display serif webfont: Fraunces variable (wght 400–700), latin subset only,
+   self-hosted (/fonts/* is immutable-cached). unicode-range keeps CJK pages
+   from downloading it when no Latin display glyph is on screen. */
+@font-face {
+  font-family: "Fraunces";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/fraunces-latin-var.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Body sans: system stacks only — CJK webfonts cost 100KB+ per page and are
+   deliberately excluded (perf budget). zh-TW is the default; ja and zh-CN get
+   their own stacks below so kana/simplified glyphs use native platform faces
+   instead of falling into a TC font. Every stack ends on web-safe anchors. */
 html {
-  font-family: "Open Sans", -apple-system, system-ui, BlinkMacSystemFont,
+  font-family: -apple-system, system-ui, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Helvetica, Arial,
-    "Noto Sans TC", "PingFang TC", "Hiragino Sans GB", "Heiti TC",
-    "Microsoft YaHei", "Microsoft Jhenghei", sans-serif;
-  --font-family: "Open Sans", -apple-system, system-ui, BlinkMacSystemFont,
+    "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  --font-family: -apple-system, system-ui, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Helvetica, Arial,
-    "Noto Sans TC", "PingFang TC", "Hiragino Sans GB", "Heiti TC",
-    "Microsoft YaHei", "Microsoft Jhenghei", sans-serif;
+    "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
 }
 form {
   padding: 1.5em 1.5em 0;
@@ -1158,9 +1173,12 @@ body {
   --inlineCodeBg: rgba(31, 29, 27, 0.05);
   --inlineCodeColor: var(--accent);
   /* Serif display family (Latin first, CJK appended below per language). */
-  /* Web-safe anchored: Iowan is a macOS nicety; Georgia and Times guarantee a
-     deliberate serif on every platform (no dead entries, no luck-based fonts). */
-  --font-serif: "Iowan Old Style", Georgia, "Times New Roman", Times, serif;
+  /* Display serif: Fraunces (self-hosted latin-only WOFF2, ~36KB) carries the
+     bakery editorial voice for Latin glyphs; CJK falls through to the
+     language-specific Ming/Song stacks below. Web-safe anchored: Georgia and
+     Times guarantee a deliberate serif on every platform. */
+  --font-serif: "Fraunces", "Iowan Old Style", Georgia,
+    "Times New Roman", Times, serif;
   /* Shared motion tokens for micro-interactions. */
   --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
   --dur: 0.25s;
@@ -1199,17 +1217,23 @@ body.dark {
    stack so Latin words render in the Latin face and CJK glyphs fall through. */
 body:lang(zh-TW),
 body:lang(zh-Hant) {
-  --font-serif: "Iowan Old Style", Georgia, "Noto Serif TC", "Songti TC",
-    "PMingLiU", serif;
+  --font-serif: "Fraunces", "Iowan Old Style", Georgia, "Noto Serif TC",
+    "Songti TC", "PMingLiU", serif;
 }
 body:lang(zh-CN),
 body:lang(zh-Hans) {
-  --font-serif: "Iowan Old Style", Georgia, "Noto Serif SC", "Songti SC",
-    "SimSun", serif;
+  --font-serif: "Fraunces", "Iowan Old Style", Georgia, "Noto Serif SC",
+    "Songti SC", "SimSun", serif;
+  --font-family: -apple-system, system-ui, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Helvetica, Arial,
+    "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
 }
 body:lang(ja) {
-  --font-serif: "Iowan Old Style", Georgia, "Noto Serif JP",
+  --font-serif: "Fraunces", "Iowan Old Style", Georgia, "Noto Serif JP",
     "Hiragino Mincho ProN", "YuMincho", "Yu Mincho", "MS PMincho", serif;
+  --font-family: -apple-system, system-ui, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Noto Sans", "Helvetica Neue", Helvetica, Arial,
+    "Hiragino Sans", "Yu Gothic", "Noto Sans JP", "Meiryo", sans-serif;
 }
 
 /* ── Article measure & comfortable padding ──────────────────────────────
@@ -2750,6 +2774,12 @@ body.dark .topic-map {
   color: var(--ink-faint);
   font-size: 0.82em;
   font-weight: 400;
+}
+/* 手機版 chips 只留口味名：份數屬次級資訊，窄幅下省去避免換行擁擠。 */
+@media (max-width: 660px) {
+  .signature-flavors__count {
+    display: none;
+  }
 }
 .topic-card__stats,
 .topic-card__authors {

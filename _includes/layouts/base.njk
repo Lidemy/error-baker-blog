@@ -110,6 +110,9 @@
     <link rel="alternate" href="{{ jsonFeedPath | url }}" type="application/feed+json" title="{{ t.siteName or metadata.title }} (JSON Feed)">
 
     <link rel="preconnect" href="/" crossorigin>
+    {#- Display serif（Fraunces latin subset, ~36KB, immutable-cached）。
+        preload 消除首屏字體交換；CJK 內文不使用 webfont（效能預算）。 #}
+    <link rel="preload" href="/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
     <script defer src="{{ "/js/min.js" | addHash }}"
       {% if webvitals %}data-cwv-src="{{ "/js/web-vitals.js" | addHash }}"{% endif %}>
     </script>

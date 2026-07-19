@@ -45,6 +45,24 @@ describe("performance budgets", () => {
     }
   });
 
+  it("keeps the display webfont on a latin-subset budget with no third parties", () => {
+    const font = path.join(SITE_ROOT, "fonts", "fraunces-latin-var.woff2");
+    assert.ok(fs.existsSync(font), "missing self-hosted Fraunces woff2");
+    const size = fs.statSync(font).size;
+    assert.ok(size <= 51_200, `webfont ${size} > 51200 — latin subset only`);
+    for (const page of ["index.html", "posts/tian/git-flow/index.html"]) {
+      const html = fs.readFileSync(path.join(SITE_ROOT, page), "utf8");
+      assert.ok(
+        !/fonts\.(googleapis|gstatic)\.com/.test(html),
+        `${page}: fonts must be self-hosted, never third-party`
+      );
+      assert.ok(
+        html.includes("@font-face") && html.includes("fraunces-latin-var.woff2"),
+        `${page}: @font-face must survive PurgeCSS into the inlined CSS`
+      );
+    }
+  });
+
   it("never preloads the search index with the page", () => {
     for (const page of [
       "index.html",

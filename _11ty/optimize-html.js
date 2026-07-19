@@ -74,7 +74,10 @@ const purifyCss = async (rawContent, outputPath) => {
           extensions: ["html"],
         },
       ],*/
-      fontFace: true,
+      // Keep @font-face: Fraunces is referenced via the --font-serif custom
+      // property, which purgecss@2's fontFace pruning cannot see — it would
+      // strip the site's only (deliberate) font-face rule.
+      fontFace: false,
       variables: true,
       // Classes/states toggled by JS (TOC scroll-spy, back-to-top) never appear
       // in the server-rendered HTML PurgeCSS scans, so keep them explicitly.

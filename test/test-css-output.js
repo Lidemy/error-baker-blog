@@ -102,7 +102,11 @@ describe("purged CSS output", () => {
     const css = readCssBundle();
     // Serif stacks must end on guaranteed platform fonts, not luck-based ones.
     assert.doesNotMatch(css, /Apple Garamond|Source Serif 4/);
-    assert.match(css, /"Iowan Old Style", Georgia/);
+    assert.match(css, /"Fraunces", "Iowan Old Style", Georgia/);
+    // The display webfont must survive PurgeCSS into built pages (checked
+    // below on the bundle; fontFace pruning is the failure mode to catch).
+    assert.match(css, /@font-face/);
+    assert.match(css, /fraunces-latin-var\.woff2/);
     assert.match(css, /"PMingLiU"/);
     assert.match(css, /"SimSun"/);
     assert.match(css, /"MS PMincho"/);
