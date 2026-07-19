@@ -71,6 +71,10 @@ jobs:
       - name: Build merge-base
         run: |
           BASE_SHA="$(git merge-base "origin/${{ github.base_ref }}" HEAD)"
+          if [ -z "$BASE_SHA" ]; then
+            echo "無法取得 merge-base，中止比對" >&2
+            exit 2
+          fi
           echo "merge-base: $BASE_SHA"
           git checkout --force "$BASE_SHA"
           npm ci

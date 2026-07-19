@@ -440,7 +440,7 @@ function main(argv) {
   if (asJson) {
     process.stdout.write(JSON.stringify({ ...report, hasDifferences: differ }, null, 2) + "\n");
   } else {
-    process.stdout.write(renderReport(report) + "\n");
+    process.stdout.write(renderReport(report));
   }
 
   return differ ? 1 : 0;
