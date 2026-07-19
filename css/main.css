@@ -2527,7 +2527,9 @@ body.dark .topic-map {
   stroke-linecap: round;
   pointer-events: none;
 }
-.flavor-filter__input {
+/* Two classes intentionally outrank the legacy `input[type=search]` rule
+   (border + padding), same trick as the lang-suggest dismiss button. */
+.flavor-filter > .flavor-filter__input {
   width: 100%;
   margin: 0;
   padding: 0.5rem 0.75rem 0.5rem 2.1rem;
@@ -2537,7 +2539,7 @@ body.dark .topic-map {
   color: var(--ink);
   font-size: 0.9rem;
 }
-.flavor-filter__input:focus-visible {
+.flavor-filter > .flavor-filter__input:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
