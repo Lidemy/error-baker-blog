@@ -2582,6 +2582,65 @@ body.dark .topic-map {
   height: 0.95em;
   fill: currentColor;
 }
+/* Enthroned categories: taxonomy `category: true` (a human editorial
+   decision). They wear the toque beside the title; the accent frame stays.
+   Pending candidates keep the badge instead — red = editorial signal. */
+.topic-card--category {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--rule));
+}
+.topic-card--category .topic-card__heading .topic-card__toque {
+  fill: var(--accent);
+  margin-right: 0.3rem;
+}
+.topic-map__section-heading {
+  margin: 1.8rem 0 0.9rem;
+  color: var(--ink-faint);
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+/* ── Signature flavors: data-driven strip under the hand-written intro ── */
+.signature-flavors {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1.1rem 0 0;
+  font-size: 0.85rem;
+}
+.signature-flavors__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  color: var(--ink-faint);
+  letter-spacing: 0.04em;
+}
+.signature-flavors__toque {
+  width: 1em;
+  height: 1em;
+  fill: var(--accent);
+}
+.signature-flavors__chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  padding: 0.26rem 0.7rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: none;
+  transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.signature-flavors__chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.signature-flavors__count {
+  color: var(--ink-faint);
+  font-size: 0.82em;
+  font-weight: 400;
+}
 .topic-card__stats,
 .topic-card__authors {
   color: var(--ink-faint);

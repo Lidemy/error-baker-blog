@@ -84,6 +84,26 @@ describe("language switcher markup", () => {
   });
 });
 
+describe("signature flavors strip", () => {
+  it("lists enthroned categories as chips, localized to published topics", () => {
+    for (const lang of activeLanguages(false)) {
+      const home = lang === languages[0] ? "index.html" : `${lang}/index.html`;
+      const doc = documentFor(home);
+      const chips = doc.querySelectorAll(".signature-flavors__chip");
+      if (lang === languages[0]) {
+        assert.equal(chips.length, 3, "zh-TW: expected all 3 category chips");
+      } else {
+        // A localized chip only renders when that language has at least one
+        // published post in the category — otherwise it would 404.
+        assert.ok(chips.length >= 1 && chips.length <= 3, `${lang}: ${chips.length}`);
+      }
+      for (const chip of chips) {
+        assert.match(chip.getAttribute("href"), /\/tags\//);
+      }
+    }
+  });
+});
+
 describe("footer feed link", () => {
   it("points at the current language's feed on every home page", () => {
     for (const lang of activeLanguages(false)) {

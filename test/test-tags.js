@@ -153,7 +153,11 @@ describe("built topic pages", () => {
   it("renders the source topic map without expanding article lists", () => {
     const document = documentFor("_site/tags/index.html");
     assert.equal(document.querySelectorAll(".topic-card").length, 92);
-    assert.equal(document.querySelectorAll(".topic-card--candidate").length, 3);
+    // Enthroned categories (taxonomy `category: true`) lead in their own
+    // group; with all current candidates enthroned no candidate badge remains.
+    assert.equal(document.querySelectorAll(".topic-card--category").length, 3);
+    assert.equal(document.querySelectorAll(".topic-card--candidate").length, 0);
+    assert.equal(document.querySelectorAll(".topic-map__section-heading").length, 2);
     // Every card carries an ember bake stage; the busiest topics reach 4.
     assert.equal(document.querySelectorAll("[class*='topic-card--bake-']").length, 92);
     assert.ok(document.querySelectorAll(".topic-card--bake-4").length >= 3);

@@ -1,0 +1,14 @@
+{#- 招牌口味：冊封分類（taxonomy category: true）的資料驅動列。
+    品牌哲學句維持手寫；即時事實由這一列表達，資料變了句子不用改。
+    需要呼叫端先設好 sfTopics（該語系的 topicMap）與 sfTags（i18n[lang].tags）。 #}
+{%- if sfTopics and sfTopics[0] and sfTopics[0].isCategory %}
+<p class="signature-flavors">
+  <span class="signature-flavors__label">
+    <svg class="signature-flavors__toque" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="6.5" cy="9" r="4.5"/><circle cx="12" cy="7" r="5.5"/><circle cx="17.5" cy="9" r="4.5"/><rect x="7" y="12" width="10" height="7" rx="1.5"/></svg>
+    {{- sfTags.categoriesHeading }}</span>
+  {%- for topic in sfTopics %}{% if topic.isCategory %}
+  <a class="signature-flavors__chip" href="{{ topic.url | url }}">{{ topic.canonical }}
+    <span class="signature-flavors__count">{{ topic.postCount }} {{ sfTags.postOne if topic.postCount == 1 else sfTags.postMany }}</span></a>
+  {%- endif %}{% endfor %}
+</p>
+{%- endif %}

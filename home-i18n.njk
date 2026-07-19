@@ -20,6 +20,9 @@ eleventyComputed:
 {%- if ht.intro2 %}
 <p>{{ ht.intro2 }}</p>
 {%- endif %}
+{%- set sfTopics = collections.localizedTopicMaps | localizedTopicsFor(hlang) %}
+{%- set sfTags = ht.tags %}
+{% include "signature-flavors.njk" %}
 </section>
 <section class="posts">
   {% set postslist = collections.posts | filterByLang(hlang) | reverse | head(8) %}

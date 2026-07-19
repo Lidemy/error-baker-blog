@@ -1,15 +1,4 @@
-<section class="topic-map" aria-labelledby="topic-map-heading">
-  <div class="topic-map__intro">
-    <h2 id="topic-map-heading">{{ tt.allTopics }}</h2>
-    <p>{{ tt.intro }}</p>
-    <p class="topic-map__candidate-note">
-      <span class="topic-map__candidate-dot" aria-hidden="true"></span>
-      {{ tt.candidateHint }}
-    </p>
-  </div>
-
-  <ul class="topic-map__grid">
-  {%- for topic in topicMap %}
+{%- macro topicCard(topic, tt) %}
     {#- 越烤越深：文章數映射到餘燼色階（同貢獻日曆的分級邏輯），
         口味越熱門、左側的烘焙度縱條烤得越深。 #}
     {%- set bake = 1 %}
@@ -17,11 +6,15 @@
     {%- elif topic.postCount >= 6 %}{% set bake = 3 %}
     {%- elif topic.postCount >= 3 %}{% set bake = 2 %}
     {%- endif %}
-    <li class="topic-card topic-card--bake-{{ bake }}{% if topic.isCategoryCandidate %} topic-card--candidate{% endif %}">
+    <li class="topic-card topic-card--bake-{{ bake }}{% if topic.isCategory %} topic-card--category{% elif topic.isCategoryCandidate %} topic-card--candidate{% endif %}">
       <a class="topic-card__link" href="{{ topic.url | url }}">
         <span class="topic-card__heading">
-          <strong>{{ topic.canonical }}</strong>
-          {%- if topic.isCategoryCandidate %}
+          <strong>
+            {%- if topic.isCategory %}
+            <svg class="topic-card__toque" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="6.5" cy="9" r="4.5"/><circle cx="12" cy="7" r="5.5"/><circle cx="17.5" cy="9" r="4.5"/><rect x="7" y="12" width="10" height="7" rx="1.5"/></svg>
+            {%- endif %}
+            {{- topic.canonical }}</strong>
+          {%- if not topic.isCategory and topic.isCategoryCandidate %}
           <span class="topic-card__badge">
             <svg class="topic-card__toque" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="6.5" cy="9" r="4.5"/><circle cx="12" cy="7" r="5.5"/><circle cx="17.5" cy="9" r="4.5"/><rect x="7" y="12" width="10" height="7" rx="1.5"/></svg>
             {{- tt.candidateLabel }}</span>
@@ -39,6 +32,27 @@
         </span>
       </a>
     </li>
-  {%- endfor %}
+{%- endmacro %}
+<section class="topic-map" aria-labelledby="topic-map-heading">
+  <div class="topic-map__intro">
+    <h2 id="topic-map-heading">{{ tt.allTopics }}</h2>
+    <p>{{ tt.intro }}</p>
+    <p class="topic-map__candidate-note">
+      <span class="topic-map__candidate-dot" aria-hidden="true"></span>
+      {{ tt.candidateHint }}
+    </p>
+  </div>
+
+  {#- 冊封分類優先（taxonomy 的 category: true，人核可的編輯決策），
+      其餘口味在第二段。topicMap 已依 冊封 → 候選 → 熱度 排序。 #}
+  {%- if topicMap and topicMap[0] and topicMap[0].isCategory %}
+  <h3 class="topic-map__section-heading">{{ tt.categoriesHeading }}</h3>
+  <ul class="topic-map__grid topic-map__grid--categories">
+  {%- for topic in topicMap %}{% if topic.isCategory %}{{ topicCard(topic, tt) }}{% endif %}{% endfor %}
+  </ul>
+  <h3 class="topic-map__section-heading">{{ tt.othersHeading }}</h3>
+  {%- endif %}
+  <ul class="topic-map__grid">
+  {%- for topic in topicMap %}{% if not topic.isCategory %}{{ topicCard(topic, tt) }}{% endif %}{% endfor %}
   </ul>
 </section>

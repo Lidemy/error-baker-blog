@@ -22,6 +22,7 @@
     "Babel": { "slug": "babel" },
     "Backend": {
       "slug": "backend",
+      "category": true,
       "aliases": ["back-end", "back end"],
       "legacySlugs": ["back-end"]
     },
@@ -76,6 +77,7 @@
     "Framework": { "slug": "framework" },
     "Frontend": {
       "slug": "frontend",
+      "category": true,
       "aliases": ["Front-end", "front-end", "front end"],
       "legacySlugs": ["front-end"]
     },
@@ -113,6 +115,7 @@
     "Interpreted Language": { "slug": "interpreted-language" },
     "JavaScript": {
       "slug": "javascript",
+      "category": true,
       "aliases": ["js"],
       "legacySlugs": ["js"]
     },

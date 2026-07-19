@@ -16,6 +16,9 @@ translationKey: home
 <p>
   {{ i18n['zh-TW'].intro2 }}
 </p>
+{%- set sfTopics = collections.topicMap %}
+{%- set sfTags = i18n['zh-TW'].tags %}
+{% include "signature-flavors.njk" %}
 </section>
 <section class="posts">
   {% set postslist = collections.postsZhTW | reverse | head(8) %}

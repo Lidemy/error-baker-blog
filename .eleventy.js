@@ -179,6 +179,12 @@ module.exports = function (eleventyConfig) {
   });
   eleventyConfig.addFilter("topicVersions", topicVersions);
   eleventyConfig.addFilter("tagIndexVersions", tagIndexVersions);
+  // Pick one language's topic list out of the localizedTopicMaps collection
+  // (nunjucks `set` is loop-scoped, so templates cannot select it inline).
+  eleventyConfig.addFilter("localizedTopicsFor", (maps, lang) => {
+    const entry = (maps || []).find((map) => map.lang === lang);
+    return entry ? entry.topics : [];
+  });
 
   eleventyConfig.addFilter("readableDate", (dateObj) => {
     return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat(
