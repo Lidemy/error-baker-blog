@@ -10,7 +10,7 @@ export
 # Deploy
 .netlify/
 
-# CI reports
+# Lighthouse reports (local lhci runs)
 .lighthouseci/
 
 # OS / editor
