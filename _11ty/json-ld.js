@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const { JSDOM } = require("jsdom");
+const { JSDOM, VirtualConsole } = require("jsdom");
 const { isDateOnly } = require("./publication-dates");
 
 function isHttpUrl(value) {
@@ -86,7 +86,11 @@ const validateJsonLd = (rawContent, outputPath) => {
   if (!outputPath || !outputPath.endsWith(".html")) return rawContent;
   if (!rawContent.includes("application/ld+json")) return rawContent;
 
-  const dom = new JSDOM(rawContent);
+  const dom = new JSDOM(rawContent, {
+    // jsdom 15 reports modern CSS syntax (for example color-mix()) as a
+    // stylesheet parse warning even though the HTML DOM is valid.
+    virtualConsole: new VirtualConsole(),
+  });
   const blocks = [
     ...dom.window.document.querySelectorAll("script[type='application/ld+json']"),
   ];

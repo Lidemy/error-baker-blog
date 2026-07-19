@@ -14,7 +14,10 @@
 const assert = require("assert").strict;
 const fs = require("fs");
 const path = require("path");
-const { JSDOM } = require("jsdom");
+const { JSDOM, VirtualConsole } = require("jsdom");
+// jsdom 15 reports modern CSS syntax (for example color-mix()) as parse
+// warnings; route them into a muted VirtualConsole to keep test output clean.
+const quietConsole = new VirtualConsole();
 const { threadPath } = require("../_11ty/discussions");
 
 const SITE = path.resolve(__dirname, "..", "_site");
@@ -34,7 +37,7 @@ function utterancesPages() {
     .map((file) => {
       const html = fs.readFileSync(file, "utf8");
       if (!html.includes("utteranc.es/client.js")) return null;
-      const doc = new JSDOM(html).window.document;
+      const doc = new JSDOM(html, { virtualConsole: quietConsole }).window.document;
       const embeds = [...doc.querySelectorAll('script[src*="utteranc.es"]')];
       const pagePath =
         "/" + path.relative(SITE, path.dirname(file)).split(path.sep).join("/") + "/";
@@ -46,7 +49,7 @@ function utterancesPages() {
 function embedFor(pagePath) {
   const file = path.join(SITE, ...pagePath.split("/").filter(Boolean), "index.html");
   assert.ok(fs.existsSync(file), `Missing build output: ${file}`);
-  const doc = new JSDOM(fs.readFileSync(file, "utf8")).window.document;
+  const doc = new JSDOM(fs.readFileSync(file, "utf8"), { virtualConsole: quietConsole }).window.document;
   const embeds = doc.querySelectorAll('script[src*="utteranc.es"]');
   assert.equal(embeds.length, 1, `${pagePath} must have exactly one utterances embed`);
   return embeds[0];

@@ -56,6 +56,9 @@ function localizedShellPermalink(data) {
   if (/about-i18n\.njk$/.test(inputPath) && data.alang) {
     return `/${data.alang}/about/`;
   }
+  if (/404-i18n\.njk$/.test(inputPath) && data.notFoundLang) {
+    return `/${data.notFoundLang}/404.html`;
+  }
   if (/feed\/feed-i18n\.njk$/.test(inputPath) && data.flang) {
     return `/${data.flang}/feed/feed.xml`;
   }
@@ -69,9 +72,6 @@ function localizedShellPermalink(data) {
     data.ap.author
   ) {
     return `/${data.ap.lang}/posts/${data.ap.author}/`;
-  }
-  if (/404-i18n\.njk$/.test(inputPath) && data.fplang) {
-    return `/${data.fplang}/404.html`;
   }
   return null;
 }
@@ -91,13 +91,17 @@ function localizedShellPermalink(data) {
 function localizedShellIsActive(data) {
   const inputPath = data.page && data.page.inputPath;
   const localizedShell =
-    /(?:home-i18n|about-i18n|feed\/(?:feed|json)-i18n|author-langs|404-i18n)\.njk$/.test(
+    /(?:home-i18n|about-i18n|404-i18n|feed\/(?:feed|json)-i18n|author-langs)\.njk$/.test(
       inputPath || ""
     );
   if (!localizedShell) return true;
 
   const lang =
-    data.hlang || data.alang || data.flang || (data.ap && data.ap.lang) || data.fplang;
+    data.hlang ||
+    data.alang ||
+    data.notFoundLang ||
+    data.flang ||
+    (data.ap && data.ap.lang);
   const active = data.activeLangs || ["zh-TW"];
   return Boolean(lang && active.includes(lang));
 }

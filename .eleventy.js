@@ -60,6 +60,13 @@ const isDraftFrontmatter = require("./_11ty/draftFlag");
 const { buildAiCrawlRules } = require("./_11ty/aiCrawlPolicy");
 const { commentCountsByPath } = require("./_11ty/discussions");
 const { CSS_FILES } = require("./_11ty/css-bundle");
+const TAG_TAXONOMY = require("./_data/tagTaxonomy.json");
+const {
+  buildTopicMap,
+  tagIndexVersions,
+  topicUrlFor,
+  topicVersions,
+} = require("./_11ty/tag-taxonomy");
 const {
   effectivePublishedDate,
   effectiveModifiedDate,
@@ -157,6 +164,14 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addFilter("cssmin", function (code) {
     return new CleanCSS({}).minify(code).styles;
   });
+
+  // Canonical topic URLs never depend on Eleventy's slug filter: changing a
+  // display label cannot silently move an established topic page.
+  eleventyConfig.addFilter("tagUrl", function (canonical, lang) {
+    return topicUrlFor(canonical, TAG_TAXONOMY, lang);
+  });
+  eleventyConfig.addFilter("topicVersions", topicVersions);
+  eleventyConfig.addFilter("tagIndexVersions", tagIndexVersions);
 
   eleventyConfig.addFilter("readableDate", (dateObj) => {
     return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat(
@@ -485,6 +500,60 @@ module.exports = function (eleventyConfig) {
       .filter((item) => isVisible(item) && postLang(item) === DEFAULT_LANG);
   });
 
+  const visiblePostsForLang = (collectionApi, lang) =>
+    collectionApi
+      .getFilteredByTag("posts")
+      .filter((item) => isVisible(item) && postLang(item) === lang);
+
+  const sourceTopicMap = (collectionApi) =>
+    buildTopicMap(
+      visiblePostsForLang(collectionApi, DEFAULT_LANG),
+      TAG_TAXONOMY,
+      { lang: DEFAULT_LANG }
+    );
+
+  // The source-language map owns corpus-wide counts and the advisory category
+  // threshold. Translations get their own post lists/counts but inherit only
+  // the candidate flag, never the source articles themselves.
+  eleventyConfig.addCollection("topicMap", function (collectionApi) {
+    return sourceTopicMap(collectionApi);
+  });
+
+  eleventyConfig.addCollection("localizedTopicMaps", function (collectionApi) {
+    const sourceMap = sourceTopicMap(collectionApi);
+    const candidateIds = new Set(
+      sourceMap.filter((topic) => topic.isCategoryCandidate).map((topic) => topic.id)
+    );
+    return activeLanguages(IS_DEVELOPMENT)
+      .filter((lang) => lang !== DEFAULT_LANG)
+      .map((lang) => ({
+        lang,
+        url: `/${lang}/tags/`,
+        topics: buildTopicMap(
+          visiblePostsForLang(collectionApi, lang),
+          TAG_TAXONOMY,
+          { lang, candidateIds }
+        ),
+      }));
+  });
+
+  eleventyConfig.addCollection("topicPages", function (collectionApi) {
+    const sourceMap = sourceTopicMap(collectionApi);
+    const candidateIds = new Set(
+      sourceMap.filter((topic) => topic.isCategoryCandidate).map((topic) => topic.id)
+    );
+    const localized = activeLanguages(IS_DEVELOPMENT)
+      .filter((lang) => lang !== DEFAULT_LANG)
+      .flatMap((lang) =>
+        buildTopicMap(
+          visiblePostsForLang(collectionApi, lang),
+          TAG_TAXONOMY,
+          { lang, candidateIds }
+        )
+      );
+    return sourceMap.concat(localized);
+  });
+
   // Activate a localized section only after that language has at least one
   // visible translated post. Draft translations count in local `--serve`
   // previews but never create empty, indexable production home/About/feed URLs.
@@ -560,8 +629,6 @@ module.exports = function (eleventyConfig) {
     }
     return map;
   });
-
-  eleventyConfig.addCollection("tagList", require("./_11ty/getTagList"));
 
   eleventyConfig.addPassthroughCopy("img");
   // Component and base CSS are build-only inputs inlined by optimize-html.

@@ -12,5 +12,6 @@ permalink: "/{{ alang }}/about/"
 eleventyComputed:
   lang: "{{ alang }}"
   title: "{{ i18n[alang].aboutTitle }}"
+  description: "{{ i18n[alang].aboutOriginBody | striptags | truncate(140) }}"
   translationKey: about
 ---

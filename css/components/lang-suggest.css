@@ -116,10 +116,3 @@ body.dark .lang-suggest {
     transform: none;
   }
 }
-/* The article share control occupies the lower-right corner between 377px and
-   600px. Lift the notice above it; at 376px the share control is already hidden. */
-@media (min-width: 377px) and (max-width: 660px) {
-  body.tmpl-post .lang-suggest {
-    bottom: calc(5rem + env(safe-area-inset-bottom));
-  }
-}

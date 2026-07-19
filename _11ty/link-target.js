@@ -1,11 +1,15 @@
-const { JSDOM } = require("jsdom");
+const { JSDOM, VirtualConsole } = require("jsdom");
 const BASE_URL = require("../_data/metadata.json").url;
 
 const linkTarget = async (rawContent, outputPath) => {
   let content = rawContent;
 
   if (outputPath && outputPath.endsWith(".html")) {
-    const dom = new JSDOM(content);
+    const dom = new JSDOM(content, {
+      // jsdom 15 reports modern CSS syntax (for example color-mix()) as a
+      // stylesheet parse warning even though the HTML DOM is valid.
+      virtualConsole: new VirtualConsole(),
+    });
     const links = [...dom.window.document.querySelectorAll("a")];
 
     if (links.length > 0) {

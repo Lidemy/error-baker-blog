@@ -3,7 +3,10 @@
 const assert = require("assert").strict;
 const fs = require("fs");
 const path = require("path");
-const { JSDOM } = require("jsdom");
+const { JSDOM, VirtualConsole } = require("jsdom");
+// jsdom 15 reports modern CSS syntax (for example color-mix()) as parse
+// warnings; route them into a muted VirtualConsole to keep test output clean.
+const quietConsole = new VirtualConsole();
 const metadata = require("../_data/metadata.json");
 const computedData = require("../_data/eleventyComputed.js");
 

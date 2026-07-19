@@ -3,7 +3,10 @@
 const assert = require("assert").strict;
 const fs = require("fs");
 const path = require("path");
-const { JSDOM } = require("jsdom");
+const { JSDOM, VirtualConsole } = require("jsdom");
+// jsdom 15 reports modern CSS syntax (for example color-mix()) as parse
+// warnings; route them into a muted VirtualConsole to keep test output clean.
+const quietConsole = new VirtualConsole();
 const { buildAuthorStats } = require("../_11ty/authorStats.js");
 
 const ABOUT_FILENAME = path.resolve(__dirname, "..", "_site", "about", "index.html");
@@ -128,7 +131,7 @@ describe("gamification build output", () => {
 
   before(() => {
     assert.ok(fs.existsSync(ABOUT_FILENAME), `Missing build output: ${ABOUT_FILENAME}`);
-    about = new JSDOM(fs.readFileSync(ABOUT_FILENAME, "utf8")).window.document;
+    about = new JSDOM(fs.readFileSync(ABOUT_FILENAME, "utf8"), { virtualConsole: quietConsole }).window.document;
   });
 
   it("renders the leaderboard with rank, level badge, and proportional bars", () => {
@@ -149,12 +152,12 @@ describe("gamification build output", () => {
   });
 
   it("renders the localized leaderboard on translated about pages", () => {
-    const enAbout = new JSDOM(fs.readFileSync(EN_ABOUT_FILENAME, "utf8")).window.document;
+    const enAbout = new JSDOM(fs.readFileSync(EN_ABOUT_FILENAME, "utf8"), { virtualConsole: quietConsole }).window.document;
     assert.ok(enAbout.querySelector("ul.gx-leaderboard li.gx-row"));
   });
 
   it("renders the quarterly contribution calendar on author pages", () => {
-    const author = new JSDOM(fs.readFileSync(AUTHOR_FILENAME, "utf8")).window.document;
+    const author = new JSDOM(fs.readFileSync(AUTHOR_FILENAME, "utf8"), { virtualConsole: quietConsole }).window.document;
     const cells = [...author.querySelectorAll(".gx-cal .gx-cell[data-level]")];
     assert.ok(cells.length > 0, "Expected contribution calendar cells");
     for (const cell of cells) {
@@ -164,11 +167,11 @@ describe("gamification build output", () => {
 
   it("loads gamification.css only on about and author-listing pages", () => {
     const selector = "link[href^='/css/gamification.css']";
-    const authorDoc = new JSDOM(fs.readFileSync(AUTHOR_FILENAME, "utf8")).window.document;
+    const authorDoc = new JSDOM(fs.readFileSync(AUTHOR_FILENAME, "utf8"), { virtualConsole: quietConsole }).window.document;
     assert.ok(about.querySelector(selector));
     assert.ok(authorDoc.querySelector(selector));
     for (const file of [HOME_FILENAME, POST_FILENAME]) {
-      const doc = new JSDOM(fs.readFileSync(file, "utf8")).window.document;
+      const doc = new JSDOM(fs.readFileSync(file, "utf8"), { virtualConsole: quietConsole }).window.document;
       assert.equal(doc.querySelector(selector), null, `Unexpected gamification.css in ${file}`);
     }
   });

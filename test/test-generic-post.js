@@ -3,8 +3,12 @@
 const assert = require("assert").strict;
 const fs = require("fs");
 const path = require("path");
-const { JSDOM } = require("jsdom");
+const { JSDOM, VirtualConsole } = require("jsdom");
+// jsdom 15 reports modern CSS syntax (for example color-mix()) as parse
+// warnings; route them into a muted VirtualConsole to keep test output clean.
+const quietConsole = new VirtualConsole();
 const metadata = require("../_data/metadata.json");
+const i18n = require("../_data/i18n.json");
 
 const POST_PATH = "/posts/tian/git-flow/";
 const POST_URL = metadata.url + POST_PATH;
@@ -32,7 +36,7 @@ describe("representative post build output", () => {
 
   before(() => {
     assert.ok(fs.existsSync(POST_FILENAME), `Missing build output: ${POST_FILENAME}`);
-    doc = new JSDOM(fs.readFileSync(POST_FILENAME, "utf8")).window.document;
+    doc = new JSDOM(fs.readFileSync(POST_FILENAME, "utf8"), { virtualConsole: quietConsole }).window.document;
   });
 
   it("has correct title, language, canonical, and social metadata", () => {
@@ -57,10 +61,17 @@ describe("representative post build output", () => {
   });
 
   it("has an accessible share control and correct publication date", () => {
-    const share = doc.querySelector("share-widget button");
-    assert.ok(share);
-    assert.ok(share.getAttribute("aria-label"));
-    assert.equal(share.getAttribute("href"), POST_URL);
+    const shares = [...doc.querySelectorAll("[on-click='share']")];
+    assert.equal(shares.length, 1, "Expected one article sharing action");
+
+    const share = shares[0];
+    assert.ok(share.matches("main article .post-share > button.post-share__button"));
+    assert.equal(share.tagName, "BUTTON");
+    assert.equal(share.type, "button");
+    assert.equal(share.hasAttribute("href"), false, "A button must not have href");
+    assert.equal(share.dataset.shareUrl, POST_URL);
+    assert.equal(share.getAttribute("aria-label"), i18n["zh-TW"].shareArticle);
+    assert.match(share.textContent, new RegExp(i18n["zh-TW"].shareArticle));
 
     const published = doc.querySelector("time.byline-date");
     assert.equal(published.getAttribute("datetime"), "2021-10-28");
@@ -93,8 +104,9 @@ describe("representative post build output", () => {
       fs.existsSync(IMAGE_POST_FILENAME),
       `Missing build output: ${IMAGE_POST_FILENAME}`
     );
-    const imagePost = new JSDOM(fs.readFileSync(IMAGE_POST_FILENAME, "utf8"))
-      .window.document;
+    const imagePost = new JSDOM(fs.readFileSync(IMAGE_POST_FILENAME, "utf8"), {
+      virtualConsole: quietConsole,
+    }).window.document;
     const article = JSON.parse(
       imagePost.querySelector("script[type='application/ld+json']").textContent
     );
@@ -108,9 +120,9 @@ describe("representative post build output", () => {
       fs.existsSync(IMAGE_POST_FILENAME),
       `Missing build output: ${IMAGE_POST_FILENAME}`
     );
-    const imageDoc = new JSDOM(
-      fs.readFileSync(IMAGE_POST_FILENAME, "utf8")
-    ).window.document;
+    const imageDoc = new JSDOM(fs.readFileSync(IMAGE_POST_FILENAME, "utf8"), {
+      virtualConsole: quietConsole,
+    }).window.document;
     const image = imageDoc.querySelector("picture img[src^='/img/']:not(.avatar)");
     assert.ok(image, "Expected at least one optimized local image");
     assert.match(image.getAttribute("width"), /^\d+$/);

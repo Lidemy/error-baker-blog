@@ -10,6 +10,10 @@
       translations collection. Only zh-TW + langs with a generated page are
       listed, so the switcher/hreflang never link to an empty author page. #}
   {%- set langVersions = collections.siteLangsWithPublishedPosts | authorVersions(collections.authorLangPages, translationKey) %}
+{%- elif translationKey == 'tags' %}
+  {%- set langVersions = collections.siteLangsWithPublishedPosts | tagIndexVersions %}
+{%- elif topicId %}
+  {%- set langVersions = collections.topicPages | topicVersions(topicId) %}
 {%- elif translationKey %}
   {%- set langVersions = collections.translations[translationKey] %}
 {%- else %}
@@ -106,7 +110,7 @@
     <link rel="alternate" href="{{ jsonFeedPath | url }}" type="application/feed+json" title="{{ t.siteName or metadata.title }} (JSON Feed)">
 
     <link rel="preconnect" href="/" crossorigin>
-    <script async defer src="{{ "/js/min.js" | addHash }}"
+    <script defer src="{{ "/js/min.js" | addHash }}"
       {% if webvitals %}data-cwv-src="{{ "/js/web-vitals.js" | addHash }}"{% endif %}>
     </script>
     {% if googleanalytics %}
@@ -129,8 +133,11 @@
       const LIGHT = "light";
       
       (function initTheme() {
-        const currentTheme =
-          localStorage.getItem("theme") ||
+        let currentTheme;
+        try {
+          currentTheme = localStorage.getItem("theme");
+        } catch (e) {}
+        currentTheme = currentTheme ||
           (window.matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT);
         if (currentTheme === DARK) {
           bodyEl.classList.add(DARK);
@@ -141,16 +148,9 @@
         const toggleEl = document.querySelector("#color-scheme-toggle");
         toggleEl.addEventListener("click", handleToggleEvent);
 
-        // The markup ships the light-mode icon; initTheme only sets the class.
-        // Sync the icon (and utterances, when present) with the theme applied
-        // at load, so dark-mode visitors see the sun icon before any click.
-        if (bodyEl.classList.contains(DARK)) {
-          const toggleImg = toggleEl.querySelector("img");
-          toggleImg.src = toggleImg.src.replace(DARK, LIGHT);
-          if (document.querySelector('script[src*="utteranc.es"]')) {
-            setUtterancesTheme(DARK);
-          }
-        }
+        // The icon shows the theme users can switch to. Keep its accessible
+        // action name and pressed state in sync with the actual theme.
+        syncThemeControl(bodyEl.classList.contains(DARK) ? DARK : LIGHT);
 
         function handleToggleEvent() {
           const apply = () => {
@@ -158,7 +158,9 @@
             document.documentElement.classList.toggle(DARK, isDark);
             const theme = isDark ? DARK : LIGHT;
             setTheme(theme);
-            localStorage.setItem("theme", theme);
+            try {
+              localStorage.setItem("theme", theme);
+            } catch (e) {}
           };
           // Cross-fade the whole page between themes where supported.
           if (
@@ -172,14 +174,21 @@
         }
 
         function setTheme(theme) {
-          const toggleImg = toggleEl.querySelector("img");
+          syncThemeControl(theme);
           if (theme === DARK) {
             setUtterancesTheme(DARK);
-            toggleImg.src = toggleImg.src.replace(DARK, LIGHT);
           } else {
             setUtterancesTheme(LIGHT);
-            toggleImg.src = toggleImg.src.replace(LIGHT, DARK);
           }
+        }
+
+        function syncThemeControl(theme) {
+          const isDark = theme === DARK;
+          toggleEl.setAttribute("aria-pressed", String(isDark));
+          toggleEl.setAttribute(
+            "aria-label",
+            isDark ? toggleEl.dataset.labelToLight : toggleEl.dataset.labelToDark
+          );
         }
 
         // Mobile nav + language menu
@@ -190,11 +199,16 @@
         function closeNav() {
           nav.classList.remove("nav-open");
           navToggle.setAttribute("aria-expanded", "false");
+          navToggle.setAttribute("aria-label", navToggle.dataset.labelOpen);
         }
 
         navToggle.addEventListener("click", () => {
           const open = nav.classList.toggle("nav-open");
           navToggle.setAttribute("aria-expanded", open);
+          navToggle.setAttribute(
+            "aria-label",
+            open ? navToggle.dataset.labelClose : navToggle.dataset.labelOpen
+          );
           if (!open && langSwitch) langSwitch.removeAttribute("open");
         });
 
@@ -222,23 +236,25 @@
       });
     </script>
     <header>
-      <nav aria-label="{{ t.menu }}">
+      <nav aria-label="{{ t.primaryNavigation }}">
         <div id="nav">
           <p class="site-title">
-            <a href="{{ homeUrl | url }}" title="Homepage">{{ t.siteName or metadata.title }}</a>
+            <a href="{{ homeUrl | url }}" title="{{ t.homeLabel }}" aria-label="{{ t.siteName or metadata.title }}">
+              {{ t.siteName or metadata.title }}
+            </a>
           </p>
-          <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu">
-            <span class="visually-hidden">{{ t.menu }}</span>
-            <span class="nav-toggle__bars" aria-hidden="true"></span>
-          </button>
           {#- Read more about `eleventy-navigation` at https://www.11ty.dev/docs/plugins/navigation/ #}
           <div id="site-menu" class="nav__links">
-          {#- zh-TW shows the full chrome (Archive/Tags/About). Other languages
-              only have a translated About + Home, so Archive/Tags (zh-TW-only
-              browse) are hidden and About points at the per-language page. #}
+          {#- Archive remains source-language only. Tags and About have localized
+              shells whenever that language has a published translation. #}
           {%- for entry in collections.all | eleventyNavigation %}
-            {%- if pageLang == 'zh-TW' or entry.key == 'About' %}
-            {%- set navHref = ('/' + pageLang + '/about/') if (pageLang != 'zh-TW' and entry.key == 'About') else entry.url %}
+            {%- if pageLang == 'zh-TW' or entry.key == 'About' or entry.key == 'Tags' %}
+            {%- set navHref = entry.url %}
+            {%- if pageLang != 'zh-TW' and entry.key == 'About' %}
+              {%- set navHref = '/' + pageLang + '/about/' %}
+            {%- elif pageLang != 'zh-TW' and entry.key == 'Tags' %}
+              {%- set navHref = '/' + pageLang + '/tags/' %}
+            {%- endif %}
             <a class="nav__link" href="{{ navHref | url }}">{{ i18n[pageLang]['nav_' + entry.key] or entry.title }}</a>
             {%- endif %}
           {%- endfor %}
@@ -264,8 +280,32 @@
             </ul>
           </details>
           </div>
-          <button id="color-scheme-toggle" type="button" aria-label="{{ t.toggleTheme or 'switch dark mode' }}">
-            <img src="{{ '/img/dark.svg' | url }}" alt="" />
+          <button id="color-scheme-toggle" type="button" aria-pressed="false"
+            aria-label="{{ t.switchToDarkTheme }}"
+            data-label-to-dark="{{ t.switchToDarkTheme }}"
+            data-label-to-light="{{ t.switchToLightTheme }}">
+            {#- Original brand icons from img/dark.svg / img/light.svg, inlined
+                with currentColor so both themes tint them without filters. #}
+            <svg class="theme-icon theme-icon--dark" viewBox="0 0 116 125" aria-hidden="true" focusable="false">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M59.4294 2.67585C47.3407 19.8194 46.4764 43.3554 59.0134 61.6878C71.5503 80.0203 93.7972 87.7513 114.158 82.7037C110.7 87.6081 106.323 91.9892 101.078 95.5758C77.5013 111.699 45.3177 105.657 29.1942 82.0802C13.0707 58.5033 19.1129 26.3197 42.6898 10.1962C47.9343 6.60961 53.6047 4.11983 59.4294 2.67585Z"/>
+            </svg>
+            <svg class="theme-icon theme-icon--light" viewBox="0 0 150 150" aria-hidden="true" focusable="false">
+              <ellipse cx="74.7805" cy="73.7101" rx="48.0776" ry="47.0013"/>
+              <path d="M75.0001 0L87.3955 20.9888H62.6047L75.0001 0Z"/>
+              <path d="M73.855 150L61.4596 129.011L86.2504 129.011L73.855 150Z"/>
+              <path d="M150 73.3208L128.531 85.4387L128.531 61.2029L150 73.3208Z"/>
+              <path d="M131.838 22.9675L123.527 45.8005L107.456 27.3469L131.838 22.9675Z"/>
+              <path d="M132.271 127.071L108.325 120.798L125.854 103.661L132.271 127.071Z"/>
+              <path d="M-1.13718e-09 73.6849L21.4695 85.8028L21.4695 61.567L-1.13718e-09 73.6849Z"/>
+              <path d="M15.8459 19.9688L22.2622 43.3788L39.7919 26.2415L15.8459 19.9688Z"/>
+              <path d="M15.8459 127.071L39.792 120.798L22.2622 103.661L15.8459 127.071Z"/>
+            </svg>
+          </button>
+          {#- Keep the primary menu at the outer edge on mobile: the theme
+              control is a quick setting; the menu is the main navigation. #}
+          <button id="nav-toggle" class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-menu"
+            aria-label="{{ t.openMenu }}" data-label-open="{{ t.openMenu }}" data-label-close="{{ t.closeMenu }}">
+            <span class="nav-toggle__bars" aria-hidden="true"></span>
           </button>
         </div>
         <div id="reading-progress" aria-hidden="true"></div>
@@ -274,7 +314,8 @@
       {% block extraArticleHeader %}{% endblock %}
       {#- data-ui feeds src/main.js the page-language UI strings (toasts etc.),
           following the lang-suggest data-strings pattern. #}
-      <dialog id="message" data-ui="{{ t.js | dump }}"></dialog>
+      <dialog id="message" role="status" aria-live="polite" aria-atomic="true"
+        data-ui="{{ t.js | dump }}"></dialog>
       {% if googleanalytics %}
       <noscript>
         <img src="/.netlify/functions/ga?v=1&_v=j83&t=pageview&dr=https%3A%2F%2Fno-script.com&_s=1&dh={{ metadata.domain | encodeURIComponent }}&dp={{ page.url | encodeURIComponent }}&ul=en-us&de=UTF-8&dt={{title|encodeURIComponent}}&tid={{googleanalytics}}" width="1" height="1"
@@ -316,16 +357,23 @@
     </aside>
     {%- endif %}
 
-    {#- Revealed by src/main.js after ~1.5 screens of scrolling. Rendered here
-        (hidden) so its styles survive the per-page PurgeCSS pass. #}
-    <button id="back-to-top" class="back-to-top" type="button" hidden
-      aria-label="{{ t.backToTop or '回到頂端' }}" on-click="backToTop">↑</button>
+    {#- Back-to-top is the only fixed reading action. Article sharing lives in
+        the post flow, so neither control can cover the other or the comments. #}
+    <div class="reader-tools" hidden>
+      <button id="back-to-top" class="reader-tool back-to-top" type="button" hidden
+        aria-label="{{ t.backToTop }}" on-click="backToTop">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M6 10l6-6 6 6M12 4v16"/>
+        </svg>
+        <span class="reader-tool__label" aria-hidden="true">{{ t.backToTop }}</span>
+      </button>
+    </div>
 
     <footer>
       <div class="copyright">&copy; 2021&ndash;{{ year }} {{ t.copyright }}</div>
       {#- Reuse the localized feedPath computed in <head> so the footer icon
           points at the current language's feed, not always the zh-TW one. #}
-      <a href="{{ feedPath | url }}" id="rss"><img  src="/img/rss-feed.svg" alt="rss feed" /></a>
+      <a href="{{ feedPath | url }}" id="rss" aria-label="{{ t.rssFeed }}"><img src="/img/rss-feed.svg" alt="" /></a>
     </footer>
 
     <!-- Current page: {{ page.url | url }} -->
@@ -336,11 +384,12 @@
           return;
         }
         isUtterancesLoaded = true
+        setUtterancesTheme(bodyEl.classList.contains(DARK) ? DARK : LIGHT)
       });
       function setUtterancesTheme(theme) {
         let utterancesIframe = document.querySelector('.utterances iframe')
-        if (!isUtterancesLoaded) {
-          return requestAnimationFrame(() => setUtterancesTheme(theme))
+        if (!isUtterancesLoaded || !utterancesIframe) {
+          return
         }
         utterancesIframe.contentWindow.postMessage({
           type: 'set-theme',

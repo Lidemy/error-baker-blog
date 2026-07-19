@@ -4,7 +4,10 @@ const assert = require("assert").strict;
 const fs = require("fs");
 const path = require("path");
 const nunjucks = require("nunjucks");
-const { JSDOM } = require("jsdom");
+const { JSDOM, VirtualConsole } = require("jsdom");
+// jsdom 15 reports modern CSS syntax (for example color-mix()) as parse
+// warnings; route them into a muted VirtualConsole to keep test output clean.
+const quietConsole = new VirtualConsole();
 const rssPlugin = require("@11ty/eleventy-plugin-rss");
 const metadata = require("../_data/metadata.json");
 const i18n = require("../_data/i18n.json");
@@ -36,7 +39,7 @@ function assertRfc3339(value, label) {
 }
 
 function assertAbsoluteContentUrls(html, label) {
-  const doc = new JSDOM(`<body>${html}</body>`).window.document;
+  const doc = new JSDOM(`<body>${html}</body>`, { virtualConsole: quietConsole }).window.document;
   for (const element of doc.querySelectorAll("[href],[src],[poster],[srcset]")) {
     for (const attribute of ["href", "src", "poster"]) {
       if (!element.hasAttribute(attribute)) continue;
@@ -215,7 +218,7 @@ describe("syndication feed output", () => {
     for (const lang of langs) {
       const files = pathsForLang(lang);
       if (!fs.existsSync(files.home)) continue;
-      const doc = new JSDOM(fs.readFileSync(files.home, "utf8")).window.document;
+      const doc = new JSDOM(fs.readFileSync(files.home, "utf8"), { virtualConsole: quietConsole }).window.document;
       const atom = doc.querySelectorAll(
         "link[rel='alternate'][type='application/atom+xml']"
       );

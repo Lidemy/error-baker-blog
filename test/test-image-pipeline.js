@@ -1,7 +1,10 @@
 "use strict";
 
 const assert = require("assert").strict;
-const { JSDOM } = require("jsdom");
+const { JSDOM, VirtualConsole } = require("jsdom");
+// jsdom 15 reports modern CSS syntax (for example color-mix()) as parse
+// warnings; route them into a muted VirtualConsole to keep test output clean.
+const quietConsole = new VirtualConsole();
 const imagePlugin = require("../_11ty/img-dim.js");
 
 function getTransform() {
@@ -40,7 +43,7 @@ describe("image build pipeline", () => {
       '<!doctype html><img class="avatar avatar-large" alt="" src="/img/authors/tian.jpg">',
       "_site/avatar-test/index.html"
     );
-    const doc = new JSDOM(output).window.document;
+    const doc = new JSDOM(output, { virtualConsole: quietConsole }).window.document;
     const image = doc.querySelector("picture > img.avatar");
     assert.ok(image, "Expected the local avatar to be wrapped in a picture");
     assert.match(image.getAttribute("width"), /^\d+$/);
@@ -62,7 +65,7 @@ describe("image build pipeline", () => {
       '<!doctype html><img class="avatar avatar-small" alt="" src="/img/authors/tian.jpg">',
       "_site/small-avatar-test/index.html"
     );
-    const doc = new JSDOM(output).window.document;
+    const doc = new JSDOM(output, { virtualConsole: quietConsole }).window.document;
     const image = doc.querySelector("picture > img.avatar-small");
     assert.ok(image, "Expected the small avatar to be wrapped in a picture");
     assert.equal(image.getAttribute("src"), "/img/authors/tian-96w.jpg");

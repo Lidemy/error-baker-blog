@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const { JSDOM } = require("jsdom");
+const { JSDOM, VirtualConsole } = require("jsdom");
 const { promisify } = require("util");
 const sizeOf = promisify(require("image-size"));
 const blurryPlaceholder = require("./blurry-placeholder");
@@ -208,7 +208,11 @@ const dimImages = async (rawContent, outputPath) => {
   let content = rawContent;
 
   if (outputPath && outputPath.endsWith(".html")) {
-    const dom = new JSDOM(content);
+    const dom = new JSDOM(content, {
+      // jsdom 15 reports modern CSS syntax (for example color-mix()) as a
+      // stylesheet parse warning even though the HTML DOM is valid.
+      virtualConsole: new VirtualConsole(),
+    });
     const images = [...dom.window.document.querySelectorAll("img,amp-img")];
 
     if (images.length > 0) {
