@@ -2588,9 +2588,17 @@ body.dark .topic-map {
 .topic-card--category {
   border-color: color-mix(in srgb, var(--accent) 55%, var(--rule));
 }
+/* Inline-flex keeps the toque optically centered with the title's cap
+   height instead of riding the text baseline. */
+.topic-card__heading strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.32rem;
+  min-width: 0;
+}
 .topic-card--category .topic-card__heading .topic-card__toque {
+  flex: 0 0 auto;
   fill: var(--accent);
-  margin-right: 0.3rem;
 }
 .topic-map__section-heading {
   margin: 1.8rem 0 0.9rem;
@@ -2650,6 +2658,26 @@ body.dark .topic-map {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+/* Baker names are secondary detail: the stats line already carries the count
+   and the topic page lists everyone. Pointer devices reveal the names on
+   hover or keyboard focus; touch devices (no hover) keep them visible, so no
+   reader loses information. Opacity only — the row keeps its height and the
+   card never shifts. */
+@media (hover: hover) {
+  .topic-card__authors {
+    opacity: 0;
+    transition: opacity var(--dur) var(--ease);
+  }
+  .topic-card:hover .topic-card__authors,
+  .topic-card__link:focus-visible .topic-card__authors {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .topic-card__authors {
+    transition: none;
+  }
 }
 .topic-breadcrumb {
   margin-bottom: 1.25rem;
