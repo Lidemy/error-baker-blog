@@ -78,6 +78,16 @@ describe("representative post build output", () => {
     assert.match(published.textContent, /2021-10-28/);
   });
 
+  it("signs the byline with the author's earned gamification title", () => {
+    const i18n = require("../_data/i18n.json");
+    const role = doc.querySelector(".byline-role").textContent.trim();
+    const titles = Object.values(i18n["zh-TW"].gx.tier);
+    assert.ok(
+      titles.includes(role),
+      `byline role "${role}" must be one of the tier titles: ${titles.join("、")}`
+    );
+  });
+
   it("emits valid Article JSON-LD for the post", () => {
     const value = doc.querySelector("script[type='application/ld+json']").textContent;
     const article = JSON.parse(value);

@@ -185,6 +185,12 @@ module.exports = function (eleventyConfig) {
     const entry = (maps || []).find((map) => map.lang === lang);
     return entry ? entry.topics : [];
   });
+  // The post byline wears the author's earned gamification title (tier);
+  // same loop-scoping reason as above.
+  eleventyConfig.addFilter("authorTierFor", (authors, authorKey) => {
+    const entry = (authors || []).find((a) => a.key === authorKey);
+    return entry ? entry.tier : null;
+  });
 
   eleventyConfig.addFilter("readableDate", (dateObj) => {
     return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat(
