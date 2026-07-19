@@ -6,7 +6,7 @@
     <a class="archive-title" href="{{ post.url | url }}">{% if post.data.title %}{{ post.data.title }}{% else %}<code>{{ post.url }}</code>{% endif %}</a>
     <span class="archive-by">
       <img class="avatar avatar-small" src="{{ author.avatarUrl }}" alt="" loading="lazy" />
-      <a href="/posts/{{ post.data.author }}">{{ author.name }}</a>
+      <a href="{{ collections.authorLangPages | authorUrlForLang(lang, post.data.author) | url }}">{{ author.name }}</a>
     </span>
   </li>
 {% endfor %}
