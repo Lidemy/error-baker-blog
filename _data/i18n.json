@@ -72,7 +72,10 @@
       "linkCopied": "麵包連結已打包，可以分享了 🍞",
       "copyPrompt": "複製這份麵包的連結",
       "anchorCopied": "章節連結已複製 🔗",
-      "readDone": "吃完這份麵包了！合胃口嗎？🍞"
+      "readDone": "吃完這份麵包了！合胃口嗎？🍞",
+      "codeCopy": "複製",
+      "codeCopied": "已複製 ✓",
+      "codeCopyLabel": "複製程式碼"
     },
     "langName": "繁體中文",
     "publishedOn": "出爐於",
@@ -190,7 +193,10 @@
       "linkCopied": "Loaf link copied — ready to share 🍞",
       "copyPrompt": "Copy this loaf link",
       "anchorCopied": "Section link copied 🔗",
-      "readDone": "You finished this loaf — how was it? 🍞"
+      "readDone": "You finished this loaf — how was it? 🍞",
+      "codeCopy": "Copy",
+      "codeCopied": "Copied ✓",
+      "codeCopyLabel": "Copy code"
     },
     "langName": "English",
     "publishedOn": "Fresh from the oven on",
@@ -308,7 +314,10 @@
       "linkCopied": "パンのリンクをコピーしました 🍞",
       "copyPrompt": "このパンのリンクをコピー",
       "anchorCopied": "見出しリンクをコピーしました 🔗",
-      "readDone": "完食！お味はいかがでしたか？🍞"
+      "readDone": "完食！お味はいかがでしたか？🍞",
+      "codeCopy": "コピー",
+      "codeCopied": "コピーしました ✓",
+      "codeCopyLabel": "コードをコピー"
     },
     "langName": "日本語",
     "publishedOn": "焼き上がり：",
@@ -426,7 +435,10 @@
       "linkCopied": "面包链接已打包，可以分享了 🍞",
       "copyPrompt": "复制这份面包的链接",
       "anchorCopied": "小节链接已复制 🔗",
-      "readDone": "吃完这份面包了！合胃口吗？🍞"
+      "readDone": "吃完这份面包了！合胃口吗？🍞",
+      "codeCopy": "复制",
+      "codeCopied": "已复制 ✓",
+      "codeCopyLabel": "复制代码"
     },
     "langName": "简体中文",
     "publishedOn": "出炉于",

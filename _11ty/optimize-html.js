@@ -99,7 +99,10 @@ const purifyCss = async (rawContent, outputPath) => {
       // topic-card--candidate / topic-card__badge render only while a
       // category candidate exists in the corpus; keep the whole topic-*
       // family so a candidate-free build cannot strip their styling.
-      whitelistPatterns: [/^:lang/, /^search-/, /^topic-/],
+      // code-copy / code-copy-wrap / code-copy--done are injected by
+      // src/main.js onto post code blocks, so they never appear in the
+      // server-rendered HTML PurgeCSS scans — keep the whole family.
+      whitelistPatterns: [/^:lang/, /^search-/, /^topic-/, /^code-copy/],
     });
 
     const after = csso.minify(purged[0].css).css;

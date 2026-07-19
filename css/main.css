@@ -880,6 +880,42 @@ pre[class*="language-"] {
   border-radius: 0.3em;
   white-space: normal;
 }
+/* Copy-code button (JS-injected by src/main.js on post code blocks).
+   The .code-copy* classes never appear in server-rendered HTML, so they are
+   whitelisted in _11ty/optimize-html.js or PurgeCSS would strip these rules. */
+.code-copy-wrap {
+  position: relative;
+}
+.code-copy {
+  position: absolute;
+  top: 0.5em;
+  right: 0.5em;
+  z-index: 1;
+  padding: 0.25em 0.7em;
+  font-family: inherit;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: #ccc;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 0.35em;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease,
+    border-color 0.15s ease;
+}
+.code-copy:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+.code-copy:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+.code-copy--done {
+  color: #fff;
+  background: var(--accent, #b5322e);
+  border-color: var(--accent, #b5322e);
+}
 .token.block-comment,
 .token.cdata,
 .token.comment,
