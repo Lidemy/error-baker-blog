@@ -174,6 +174,23 @@ function compileTaxonomy(taxonomy) {
     });
   }
 
+  // Umbrella topics are broad categories a post may legitimately carry, but a
+  // post tagged with ONLY umbrellas still awaits a human-assigned leaf topic.
+  // Declaring them here keeps the leaf-topic backlog a derived report instead
+  // of a hand-maintained list.
+  const umbrellaTopics = policy.umbrellaTopics || [];
+  if (!Array.isArray(umbrellaTopics)) {
+    errors.push("policy.umbrellaTopics must be an array of canonical labels");
+  } else {
+    for (const canonical of umbrellaTopics) {
+      if (!byCanonical.has(canonical)) {
+        errors.push(
+          `policy.umbrellaTopics: ${JSON.stringify(canonical)} is not a registered topic`
+        );
+      }
+    }
+  }
+
   if (errors.length > 0) {
     const error = new Error(`Invalid tag taxonomy:\n- ${errors.join("\n- ")}`);
     error.issues = errors;
@@ -187,6 +204,7 @@ function compileTaxonomy(taxonomy) {
     byLookup,
     byLegacySlug,
     retired,
+    umbrellaTopics,
   };
 }
 

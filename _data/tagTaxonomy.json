@@ -1,6 +1,7 @@
 {
   "schemaVersion": 1,
   "policy": {
+    "umbrellaTopics": ["Frontend", "Backend"],
     "minTagsPerPost": 1,
     "maxTagsPerPost": 5,
     "categoryMinPosts": 8,
