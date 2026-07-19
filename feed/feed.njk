@@ -9,5 +9,4 @@ eleventyExcludeFromCollections: true
 {%- set feedSelfUrl = metadata.feed.path | url | absoluteUrl(metadata.url) %}
 {%- set feedHomeUrl = '/' | url | absoluteUrl(metadata.url) %}
 {%- set feedId = metadata.feed.id %}
-{%- set feedAnalytics = true %}
 {%- include "feeds/atom.njk" %}

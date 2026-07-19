@@ -75,6 +75,43 @@ describe("production output boundaries", () => {
     sitemapUrls = [...sitemapDoc.querySelectorAll("loc")].map((node) => node.textContent);
   });
 
+  it("loads the Umami analytics script and drops every legacy GA remnant", () => {
+    const htmlFiles = walk(SITE_ROOT).filter((name) => name.endsWith(".html"));
+    assert.ok(htmlFiles.length > 0, "No built HTML pages to inspect");
+
+    const websiteId = metadata.umami.websiteId;
+    const scriptSrc = metadata.umami.scriptSrc;
+    assert.ok(websiteId, "metadata.umami.websiteId must be set");
+
+    const homepage = path.join(SITE_ROOT, "index.html");
+    assert.ok(fs.existsSync(homepage), `Missing build output: ${homepage}`);
+    const homeDoc = new JSDOM(fs.readFileSync(homepage, "utf8")).window.document;
+    const umami = homeDoc.querySelector(`script[data-website-id="${websiteId}"]`);
+    assert.ok(umami, "Homepage must load the Umami script with its website id");
+    assert.equal(umami.getAttribute("src"), scriptSrc);
+
+    const forbidden = [
+      /cached\.js/,
+      /web-vitals\.js/,
+      /google-analytics\.com/,
+      /googletagmanager\.com/,
+      /\bga-id=/,
+      /\bga\(/,
+      /\.netlify\/functions\/ga\b/,
+    ];
+    for (const filename of htmlFiles) {
+      const html = fs.readFileSync(filename, "utf8");
+      const relative = path.relative(SITE_ROOT, filename);
+      for (const pattern of forbidden) {
+        assert.doesNotMatch(
+          html,
+          pattern,
+          `${relative} still carries a legacy analytics remnant: ${pattern}`
+        );
+      }
+    }
+  });
+
   it("never publishes internal agent or diagnostic pages", () => {
     assert.equal(fs.existsSync(path.join(SITE_ROOT, "AGENTS", "index.html")), false);
     assert.equal(fs.existsSync(path.join(SITE_ROOT, "page-list", "index.html")), false);

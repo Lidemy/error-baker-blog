@@ -272,7 +272,6 @@ describe("syndication feed output", () => {
         authors: { sixwings: { name: "Six & Wings" } },
       },
       collections: { authorLangPages: [] },
-      googleanalytics: "",
     };
 
     const atomRaw = await render(env, "feeds/atom.njk", {
