@@ -161,6 +161,17 @@ describe("built topic pages", () => {
     // Every card carries an ember bake stage; the busiest topics reach 4.
     assert.equal(document.querySelectorAll("[class*='topic-card--bake-']").length, 92);
     assert.ok(document.querySelectorAll(".topic-card--bake-4").length >= 3);
+    // Query-string filter: scope + input + per-card haystacks + empty state,
+    // so /tags/?flavor=… stays a shareable, pre-filtered URL.
+    const scope = document.querySelector("[data-filter-scope='flavor']");
+    assert.ok(scope, "missing filter scope");
+    assert.ok(scope.querySelector("[data-filter-input]"));
+    assert.equal(scope.querySelectorAll("[data-filter]").length, 92);
+    assert.ok(scope.querySelector("[data-filter-empty][hidden]"));
+    const goCard = [...scope.querySelectorAll("[data-filter]")].find((card) =>
+      card.getAttribute("data-filter").includes("golang")
+    );
+    assert.ok(goCard, "aliases must be part of the filter haystack");
     assert.equal(document.querySelector("#post-list"), null);
     assert.equal(document.querySelector(".archive-row"), null);
     assert.ok(document.querySelector('a[href="/tags/frontend/"]'));

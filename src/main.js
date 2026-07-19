@@ -19,13 +19,72 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { initSiteSearch } from "./search-ui.mjs";
+import { normalizeText } from "./search-core.mjs";
 
 const exposed = {};
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initSiteSearch, { once: true });
-} else {
+// Generic query-string-synced list filter. A container opts in with
+// data-filter-scope="<param>"; its items carry data-filter haystacks and an
+// input carries data-filter-input. The current query lives in the URL
+// (?<param>=…, replaceState) so a filtered view is copy-paste shareable, and
+// any page can reuse the mechanism by adding the attributes.
+function initDataFilter() {
+  document.querySelectorAll("[data-filter-scope]").forEach(function (scope) {
+    var input = scope.querySelector("[data-filter-input]");
+    if (!input) return;
+    var param = scope.getAttribute("data-filter-scope") || "q";
+    var items = [].slice.call(scope.querySelectorAll("[data-filter]"));
+    var groups = [].slice.call(scope.querySelectorAll("[data-filter-group]"));
+    var empty = scope.querySelector("[data-filter-empty]");
+
+    function apply(raw) {
+      var query = normalizeText(raw);
+      var shown = 0;
+      items.forEach(function (item) {
+        var hit =
+          !query ||
+          normalizeText(item.getAttribute("data-filter")).indexOf(query) !== -1;
+        item.hidden = !hit;
+        if (hit) shown += 1;
+      });
+      groups.forEach(function (group) {
+        group.hidden = !group.querySelector("[data-filter]:not([hidden])");
+      });
+      if (empty) empty.hidden = !(query && shown === 0);
+    }
+
+    function syncUrl(raw) {
+      var url = new URL(location.href);
+      if (raw) {
+        url.searchParams.set(param, raw);
+      } else {
+        url.searchParams.delete(param);
+      }
+      history.replaceState(null, "", url);
+    }
+
+    input.addEventListener("input", function () {
+      apply(input.value);
+      syncUrl(input.value.trim());
+    });
+
+    var initial = new URL(location.href).searchParams.get(param);
+    if (initial) {
+      input.value = initial;
+      apply(initial);
+    }
+  });
+}
+
+function initInteractive() {
   initSiteSearch();
+  initDataFilter();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initInteractive, { once: true });
+} else {
+  initInteractive();
 }
 
 // Page-language UI strings, injected by base.njk on <dialog id="message">

@@ -2508,6 +2508,42 @@ body.dark .topic-map {
   border-radius: 999px;
   background: var(--accent);
 }
+/* Filter input: quiet single-field control synced with ?flavor= in the URL. */
+.flavor-filter {
+  position: relative;
+  max-width: 22rem;
+  margin-top: 1.1rem;
+}
+.flavor-filter__icon {
+  position: absolute;
+  top: 50%;
+  left: 0.7rem;
+  width: 1em;
+  height: 1em;
+  transform: translateY(-50%);
+  fill: none;
+  stroke: var(--ink-faint);
+  stroke-width: 2;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+.flavor-filter__input {
+  width: 100%;
+  margin: 0;
+  padding: 0.5rem 0.75rem 0.5rem 2.1rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-control);
+  background: var(--paper-raised);
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+.flavor-filter__input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.topic-map__filter-empty {
+  color: var(--ink-faint);
+}
 .topic-map__grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
