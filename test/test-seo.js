@@ -92,6 +92,15 @@ describe("SEO head emissions", () => {
 });
 
 describe("SEO deployment artifacts", () => {
+  it("keeps the search index out of search engines via _headers", () => {
+    const headers = fs.readFileSync(path.join(SITE_ROOT, "_headers"), "utf8");
+    const block = headers.split("/search-index.json")[1] || "";
+    assert.ok(
+      /X-Robots-Tag:\s*noindex/.test(block),
+      "search-index.json must carry X-Robots-Tag: noindex"
+    );
+  });
+
   it("advertises the sitemap from robots.txt", () => {
     const robots = fs.readFileSync(path.join(SITE_ROOT, "robots.txt"), "utf8");
     assert.ok(robots.includes(`Sitemap: ${metadata.url}/sitemap.xml`));

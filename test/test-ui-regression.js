@@ -29,6 +29,47 @@ function inlineStyle(relative) {
   return match[1];
 }
 
+describe("search dialog markup", () => {
+  let dialog;
+
+  before(() => {
+    dialog = documentFor("index.html").getElementById("site-search");
+  });
+
+  it("is an accessible dialog wired for lazy index loading", () => {
+    assert.ok(dialog, "missing #site-search");
+    assert.equal(dialog.tagName, "DIALOG");
+    assert.equal(dialog.getAttribute("aria-labelledby"), "search-title");
+    assert.ok(dialog.querySelector("h2#search-title"));
+    assert.equal(dialog.getAttribute("data-index-url"), "/search-index.json");
+    assert.equal(dialog.getAttribute("data-lang"), "zh-TW");
+    assert.ok(dialog.getAttribute("data-i18n").includes("{query}"));
+  });
+
+  it("keeps the close button and search form scoped and labelled", () => {
+    const close = dialog.querySelector("button.search-dialog__close");
+    assert.ok(close);
+    assert.ok(close.getAttribute("aria-label").length > 0);
+    const form = dialog.querySelector("form.search-form");
+    assert.equal(form.getAttribute("role"), "search");
+    const input = dialog.querySelector("input#search-input");
+    assert.equal(input.getAttribute("type"), "search");
+    assert.equal(input.getAttribute("aria-controls"), "search-results");
+    assert.ok(dialog.querySelector("label[for='search-input']"));
+  });
+
+  it("announces result updates through a live region", () => {
+    assert.ok(dialog.querySelector("[aria-live]"));
+  });
+
+  it("is opened by a toggle that declares its popup contract", () => {
+    const toggle = documentFor("index.html").getElementById("search-toggle");
+    assert.equal(toggle.getAttribute("aria-controls"), "site-search");
+    assert.equal(toggle.getAttribute("aria-haspopup"), "dialog");
+    assert.equal(toggle.getAttribute("aria-expanded"), "false");
+  });
+});
+
 describe("language switcher markup", () => {
   it("links available languages with hreflang and marks the current one", () => {
     const doc = documentFor("index.html");
@@ -61,8 +102,11 @@ describe("brand token regression", () => {
   it("defines the shared radius tokens on sampled pages", () => {
     for (const page of ["index.html", "posts/tian/git-flow/index.html"]) {
       const css = inlineStyle(page);
-      // --radius-control ships with the search layer (its only consumer).
-      for (const token of ["--radius-surface", "--radius-chip"]) {
+      for (const token of [
+        "--radius-surface",
+        "--radius-control",
+        "--radius-chip",
+      ]) {
         assert.ok(css.includes(token), `${page}: missing ${token}`);
       }
     }

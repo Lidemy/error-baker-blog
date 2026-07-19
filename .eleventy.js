@@ -60,6 +60,7 @@ const isDraftFrontmatter = require("./_11ty/draftFlag");
 const { buildAiCrawlRules } = require("./_11ty/aiCrawlPolicy");
 const { commentCountsByPath } = require("./_11ty/discussions");
 const { CSS_FILES } = require("./_11ty/css-bundle");
+const { buildSearchIndexJson } = require("./_11ty/search-index");
 const TAG_TAXONOMY = require("./_data/tagTaxonomy.json");
 const {
   buildTopicMap,
@@ -163,6 +164,12 @@ module.exports = function (eleventyConfig) {
 
   eleventyConfig.addFilter("cssmin", function (code) {
     return new CleanCSS({}).minify(code).styles;
+  });
+
+  // Build a static, published-only index. The browser fetches it lazily when
+  // the search dialog first opens, so ordinary page loads pay no index cost.
+  eleventyConfig.addFilter("searchIndex", function (posts, metadata, langs) {
+    return buildSearchIndexJson(posts, metadata, langs);
   });
 
   // Canonical topic URLs never depend on Eleventy's slug filter: changing a

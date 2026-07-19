@@ -39,32 +39,42 @@ describe("homepage build output", () => {
     assert.ok(hrefs.includes("/about/"));
   });
 
-  it("keeps mobile header actions in theme, menu order", () => {
+  it("keeps mobile header actions in search, theme, menu order", () => {
     const nav = doc.getElementById("nav");
     const actionIds = [...nav.children]
       .map((element) => element.id)
       .filter((id) => [
+        "search-toggle",
         "color-scheme-toggle",
         "nav-toggle",
       ].includes(id));
 
     assert.deepEqual(actionIds, [
+      "search-toggle",
       "color-scheme-toggle",
       "nav-toggle",
     ]);
+    assert.equal(
+      doc.getElementById("search-toggle").nextElementSibling.id,
+      "color-scheme-toggle"
+    );
     assert.equal(
       doc.getElementById("color-scheme-toggle").nextElementSibling.id,
       "nav-toggle"
     );
   });
 
-  it("localizes the theme and menu action names", () => {
+  it("localizes the search, theme, and menu action names", () => {
     const strings = i18n["zh-TW"];
     const primaryNav = doc.querySelector("header nav");
+    const search = doc.getElementById("search-toggle");
     const theme = doc.getElementById("color-scheme-toggle");
     const menu = doc.getElementById("nav-toggle");
 
     assert.equal(primaryNav.getAttribute("aria-label"), strings.primaryNavigation);
+    assert.equal(search.getAttribute("aria-label"), strings.search.open);
+    assert.equal(search.getAttribute("aria-controls"), "site-search");
+    assert.equal(search.getAttribute("aria-haspopup"), "dialog");
     assert.equal(theme.getAttribute("aria-label"), strings.switchToDarkTheme);
     assert.equal(theme.dataset.labelToDark, strings.switchToDarkTheme);
     assert.equal(theme.dataset.labelToLight, strings.switchToLightTheme);
