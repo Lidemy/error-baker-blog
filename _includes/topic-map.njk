@@ -65,6 +65,9 @@
     {%- for topic in topicMap %}{% if topic.isCategory %}{{ topicCard(topic, tt) }}{% endif %}{% endfor %}
     </ul>
   </div>
+  {#- topicMap 排序冊封優先，末位不是冊封 ⇔ 存在非冊封口味：
+      全數冊封時整個 others 群組（含標題與空 <ul>）不渲染。 #}
+  {%- if topicMap[topicMap.length - 1] and not topicMap[topicMap.length - 1].isCategory %}
   <div class="topic-map__group" data-filter-group>
     <h3 class="topic-map__section-heading">{{ tt.othersHeading }}</h3>
     <ul class="topic-map__grid topic-map__grid--regular">
@@ -74,6 +77,7 @@
     {%- for topic in topicMap %}{% if not topic.isCategory and topic.postCount < 3 %}{{ topicCard(topic, tt) }}{% endif %}{% endfor %}
     </ul>
   </div>
+  {%- endif %}
   {%- else %}
   <div class="topic-map__group" data-filter-group>
     <ul class="topic-map__grid topic-map__grid--regular">

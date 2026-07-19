@@ -7,7 +7,7 @@
     <svg class="signature-flavors__toque" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="6.5" cy="9" r="4.5"/><circle cx="12" cy="7" r="5.5"/><circle cx="17.5" cy="9" r="4.5"/><rect x="7" y="12" width="10" height="7" rx="1.5"/></svg>
     {{- sfTags.categoriesHeading }}</span>
   {%- for topic in sfTopics %}{% if topic.isCategory %}
-  <a class="signature-flavors__chip" href="{{ topic.url | url }}">{{ topic.canonical }}
+  <a class="signature-flavors__chip" href="{{ topic.url | url }}">{{ topic.canonical -}}
     <span class="signature-flavors__count">{{ topic.postCount }} {{ sfTags.postOne if topic.postCount == 1 else sfTags.postMany }}</span></a>
   {%- endif %}{% endfor %}
 </p>

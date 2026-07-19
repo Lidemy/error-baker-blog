@@ -87,15 +87,20 @@ describe("language switcher markup", () => {
 describe("signature flavors strip", () => {
   it("lists enthroned categories as chips, localized to published topics", () => {
     for (const lang of activeLanguages(false)) {
-      const home = lang === languages[0] ? "index.html" : `${lang}/index.html`;
-      const doc = documentFor(home);
-      const chips = doc.querySelectorAll(".signature-flavors__chip");
-      if (lang === languages[0]) {
+      const isDefault = lang === languages[0];
+      const home = isDefault ? "index.html" : `${lang}/index.html`;
+      const chips = documentFor(home).querySelectorAll(".signature-flavors__chip");
+      // A localized chip renders exactly when that language's topic map has
+      // the enthroned category (≥1 published post — otherwise it would 404),
+      // so the same language's /tags/ page is the source of truth.
+      const tagsPage = isDefault ? "tags/index.html" : `${lang}/tags/index.html`;
+      const expected = documentFor(tagsPage).querySelectorAll(
+        ".topic-card--category"
+      ).length;
+      assert.ok(expected >= 1, `${lang}: no category cards on its topic map`);
+      assert.equal(chips.length, expected, `${lang}: chips vs topic map mismatch`);
+      if (isDefault) {
         assert.equal(chips.length, 3, "zh-TW: expected all 3 category chips");
-      } else {
-        // A localized chip only renders when that language has at least one
-        // published post in the category — otherwise it would 404.
-        assert.ok(chips.length >= 1 && chips.length <= 3, `${lang}: ${chips.length}`);
       }
       for (const chip of chips) {
         assert.match(chip.getAttribute("href"), /\/tags\//);

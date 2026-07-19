@@ -98,12 +98,23 @@ try {
 function ui(key, fallback) {
   return uiStrings[key] || fallback;
 }
+// Share-link hygiene: strip only known tracking params. Functional params
+// (e.g. the data-filter's ?flavor=…) must survive so filtered views stay
+// shareable — a blanket `search = ""` here used to wipe them 1s after load.
 if (location.search) {
-  var a = document.createElement("a");
-  a.href = location.href;
-  a.search = "";
+  var TRACKING_PARAMS = /^(utm_|gclid$|fbclid$|ref$)/;
   setTimeout(() => {
-    history.replaceState(null, null, a.href);
+    var url = new URL(location.href);
+    var dropped = false;
+    [...url.searchParams.keys()].forEach(function (key) {
+      if (TRACKING_PARAMS.test(key)) {
+        url.searchParams.delete(key);
+        dropped = true;
+      }
+    });
+    if (dropped) {
+      history.replaceState(null, null, url);
+    }
   }, 1000)
 }
 
