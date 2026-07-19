@@ -24,7 +24,8 @@
   --h2: 1.55rem;
   --h1: 2rem;
 
-  --black: 900;
+  /* Weight scale is 400/600/700 site-wide; a 900 "black" invites synthetic
+     bold smearing on CJK system fonts, so no such token exists. */
   --bold: 700;
   --normal: 400;
 
@@ -1157,8 +1158,9 @@ body {
   --inlineCodeBg: rgba(31, 29, 27, 0.05);
   --inlineCodeColor: var(--accent);
   /* Serif display family (Latin first, CJK appended below per language). */
-  --font-serif: "Iowan Old Style", "Apple Garamond", Georgia, "Source Serif 4",
-    "Times New Roman", Times, serif;
+  /* Web-safe anchored: Iowan is a macOS nicety; Georgia and Times guarantee a
+     deliberate serif on every platform (no dead entries, no luck-based fonts). */
+  --font-serif: "Iowan Old Style", Georgia, "Times New Roman", Times, serif;
   /* Shared motion tokens for micro-interactions. */
   --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
   --dur: 0.25s;
@@ -1197,17 +1199,17 @@ body.dark {
    stack so Latin words render in the Latin face and CJK glyphs fall through. */
 body:lang(zh-TW),
 body:lang(zh-Hant) {
-  --font-serif: "Iowan Old Style", Georgia, "Source Serif 4", "Noto Serif TC",
-    "Songti TC", "Source Han Serif TC", serif;
+  --font-serif: "Iowan Old Style", Georgia, "Noto Serif TC", "Songti TC",
+    "PMingLiU", serif;
 }
 body:lang(zh-CN),
 body:lang(zh-Hans) {
-  --font-serif: "Iowan Old Style", Georgia, "Source Serif 4", "Noto Serif SC",
-    "Songti SC", "Source Han Serif SC", serif;
+  --font-serif: "Iowan Old Style", Georgia, "Noto Serif SC", "Songti SC",
+    "SimSun", serif;
 }
 body:lang(ja) {
-  --font-serif: "Iowan Old Style", Georgia, "Source Serif 4", "Noto Serif JP",
-    "YuMincho", "Hiragino Mincho ProN", serif;
+  --font-serif: "Iowan Old Style", Georgia, "Noto Serif JP",
+    "Hiragino Mincho ProN", "YuMincho", "Yu Mincho", "MS PMincho", serif;
 }
 
 /* ── Article measure & comfortable padding ──────────────────────────────

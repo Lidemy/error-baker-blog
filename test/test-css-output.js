@@ -98,6 +98,19 @@ describe("purged CSS output", () => {
     assert.match(notFound, /\.not-found__mark/);
   });
 
+  it("keeps typography web-safe anchored on the 400/600/700 weight scale", () => {
+    const css = readCssBundle();
+    // Serif stacks must end on guaranteed platform fonts, not luck-based ones.
+    assert.doesNotMatch(css, /Apple Garamond|Source Serif 4/);
+    assert.match(css, /"Iowan Old Style", Georgia/);
+    assert.match(css, /"PMingLiU"/);
+    assert.match(css, /"SimSun"/);
+    assert.match(css, /"MS PMincho"/);
+    // No black weights: CJK system fonts would synthesize them into smears.
+    assert.doesNotMatch(css, /font-weight:\s*(800|900)\b/);
+    assert.doesNotMatch(css, /--black/);
+  });
+
   it("publishes only CSS that pages load directly", () => {
     CSS_FILES.forEach((relativePath) => {
       assert.equal(
