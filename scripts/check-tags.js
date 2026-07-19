@@ -171,10 +171,35 @@ function main() {
     `✓ Tag checks passed: ${report.sourcePosts.length} source posts, ` +
       `${report.topicMap.length} topics, ${assignments} assignments`
   );
-  const candidates = report.topicMap.filter((topic) => topic.isCategoryCandidate);
-  if (candidates.length > 0) {
-    console.log("  Category candidates (advisory only):");
-    for (const topic of candidates) {
+  // Enthronement is a human decision recorded as `category: true` in the
+  // taxonomy; thresholds only nominate. Nothing here upgrades or demotes.
+  const categories = report.topicMap.filter((topic) => topic.isCategory);
+  if (categories.length > 0) {
+    console.log("  Categories (enthroned in taxonomy):");
+    for (const topic of categories) {
+      console.log(
+        `  - ${topic.canonical}: ${topic.postCount} posts / ${topic.authorCount} authors`
+      );
+    }
+  }
+  const pendingCandidates = report.topicMap.filter(
+    (topic) => topic.isCategoryCandidate && !topic.isCategory
+  );
+  if (pendingCandidates.length > 0) {
+    console.log("  Category candidates awaiting an editorial decision (advisory):");
+    for (const topic of pendingCandidates) {
+      console.log(
+        `  - ${topic.canonical}: ${topic.postCount} posts / ${topic.authorCount} authors`
+      );
+    }
+  }
+  const belowThreshold = categories.filter((topic) => !topic.isCategoryCandidate);
+  if (belowThreshold.length > 0) {
+    console.log(
+      "  ⚠ Enthroned categories below the nomination thresholds" +
+        " (advisory — demotion is a human decision):"
+    );
+    for (const topic of belowThreshold) {
       console.log(
         `  - ${topic.canonical}: ${topic.postCount} posts / ${topic.authorCount} authors`
       );

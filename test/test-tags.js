@@ -153,10 +153,25 @@ describe("built topic pages", () => {
   it("renders the source topic map without expanding article lists", () => {
     const document = documentFor("_site/tags/index.html");
     assert.equal(document.querySelectorAll(".topic-card").length, 92);
-    assert.equal(document.querySelectorAll(".topic-card--candidate").length, 3);
+    // Enthroned categories (taxonomy `category: true`) lead in their own
+    // group; with all current candidates enthroned no candidate badge remains.
+    assert.equal(document.querySelectorAll(".topic-card--category").length, 3);
+    assert.equal(document.querySelectorAll(".topic-card--candidate").length, 0);
+    assert.equal(document.querySelectorAll(".topic-map__section-heading").length, 2);
     // Every card carries an ember bake stage; the busiest topics reach 4.
     assert.equal(document.querySelectorAll("[class*='topic-card--bake-']").length, 92);
     assert.ok(document.querySelectorAll(".topic-card--bake-4").length >= 3);
+    // Query-string filter: scope + input + per-card haystacks + empty state,
+    // so /tags/?flavor=… stays a shareable, pre-filtered URL.
+    const scope = document.querySelector("[data-filter-scope='flavor']");
+    assert.ok(scope, "missing filter scope");
+    assert.ok(scope.querySelector("[data-filter-input]"));
+    assert.equal(scope.querySelectorAll("[data-filter]").length, 92);
+    assert.ok(scope.querySelector("[data-filter-empty][hidden]"));
+    const goCard = [...scope.querySelectorAll("[data-filter]")].find((card) =>
+      card.getAttribute("data-filter").includes("golang")
+    );
+    assert.ok(goCard, "aliases must be part of the filter haystack");
     assert.equal(document.querySelector("#post-list"), null);
     assert.equal(document.querySelector(".archive-row"), null);
     assert.ok(document.querySelector('a[href="/tags/frontend/"]'));

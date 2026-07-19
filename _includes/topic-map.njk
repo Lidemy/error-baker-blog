@@ -1,15 +1,4 @@
-<section class="topic-map" aria-labelledby="topic-map-heading">
-  <div class="topic-map__intro">
-    <h2 id="topic-map-heading">{{ tt.allTopics }}</h2>
-    <p>{{ tt.intro }}</p>
-    <p class="topic-map__candidate-note">
-      <span class="topic-map__candidate-dot" aria-hidden="true"></span>
-      {{ tt.candidateHint }}
-    </p>
-  </div>
-
-  <ul class="topic-map__grid">
-  {%- for topic in topicMap %}
+{%- macro topicCard(topic, tt) %}
     {#- 越烤越深：文章數映射到餘燼色階（同貢獻日曆的分級邏輯），
         口味越熱門、左側的烘焙度縱條烤得越深。 #}
     {%- set bake = 1 %}
@@ -17,11 +6,16 @@
     {%- elif topic.postCount >= 6 %}{% set bake = 3 %}
     {%- elif topic.postCount >= 3 %}{% set bake = 2 %}
     {%- endif %}
-    <li class="topic-card topic-card--bake-{{ bake }}{% if topic.isCategoryCandidate %} topic-card--candidate{% endif %}">
+    <li class="topic-card topic-card--bake-{{ bake }}{% if topic.isCategory %} topic-card--category{% elif topic.isCategoryCandidate %} topic-card--candidate{% endif %}"
+      data-filter="{{ topic.canonical }} {{ topic.aliases | join(' ') }}{% for authorKey in topic.authors %} {{ metadata.authors[authorKey].name }}{% endfor %}">
       <a class="topic-card__link" href="{{ topic.url | url }}">
         <span class="topic-card__heading">
-          <strong>{{ topic.canonical }}</strong>
-          {%- if topic.isCategoryCandidate %}
+          <strong>
+            {%- if topic.isCategory %}
+            <svg class="topic-card__toque" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="6.5" cy="9" r="4.5"/><circle cx="12" cy="7" r="5.5"/><circle cx="17.5" cy="9" r="4.5"/><rect x="7" y="12" width="10" height="7" rx="1.5"/></svg>
+            {%- endif %}
+            {{- topic.canonical }}</strong>
+          {%- if not topic.isCategory and topic.isCategoryCandidate %}
           <span class="topic-card__badge">
             <svg class="topic-card__toque" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="6.5" cy="9" r="4.5"/><circle cx="12" cy="7" r="5.5"/><circle cx="17.5" cy="9" r="4.5"/><rect x="7" y="12" width="10" height="7" rx="1.5"/></svg>
             {{- tt.candidateLabel }}</span>
@@ -29,8 +23,8 @@
         </span>
         <span class="topic-card__stats">
           {{ topic.postCount }} {{ tt.postOne if topic.postCount == 1 else tt.postMany }}
-          <span aria-hidden="true">·</span>
-          {{ topic.authorCount }} {{ tt.authorOne if topic.authorCount == 1 else tt.authorMany }}
+          <span class="topic-card__stats-authors"><span aria-hidden="true">·</span>
+          {{ topic.authorCount }} {{ tt.authorOne if topic.authorCount == 1 else tt.authorMany }}</span>
         </span>
         <span class="topic-card__authors">
         {%- for authorKey in topic.authors %}
@@ -39,6 +33,60 @@
         </span>
       </a>
     </li>
-  {%- endfor %}
-  </ul>
+{%- endmacro %}
+{#- data-filter-scope：通用的 query-string 篩選機制（src/main.js initDataFilter）。
+    scope 值即參數名——/tags/?flavor=go 開頁即套用，網址可直接分享。 #}
+<section class="topic-map" aria-labelledby="topic-map-heading" data-filter-scope="flavor">
+  <div class="topic-map__intro">
+    <h2 id="topic-map-heading">{{ tt.allTopics }}</h2>
+    <p>{{ tt.intro }}</p>
+    <p class="topic-map__candidate-note">
+      <span class="topic-map__candidate-dot" aria-hidden="true"></span>
+      {{ tt.candidateHint }}
+    </p>
+    <p class="flavor-filter">
+      <label class="visually-hidden" for="flavor-filter-input">{{ tt.filterLabel }}</label>
+      <svg class="flavor-filter__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <circle cx="10.75" cy="10.75" r="6.25"/>
+        <path d="m15.5 15.5 4 4"/>
+      </svg>
+      <input id="flavor-filter-input" class="flavor-filter__input" type="search"
+        data-filter-input autocomplete="off" spellcheck="false"
+        placeholder="{{ tt.filterPlaceholder }}">
+    </p>
+  </div>
+
+  {#- 冊封分類優先（taxonomy 的 category: true，人核可的編輯決策）。
+      資訊密度隨文章量遞減：3 欄大卡 → 4 欄中卡 → 6-7 欄迷你卡。 #}
+  {%- if topicMap and topicMap[0] and topicMap[0].isCategory %}
+  <div class="topic-map__group" data-filter-group>
+    <h3 class="topic-map__section-heading">{{ tt.categoriesHeading }}</h3>
+    <ul class="topic-map__grid topic-map__grid--categories">
+    {%- for topic in topicMap %}{% if topic.isCategory %}{{ topicCard(topic, tt) }}{% endif %}{% endfor %}
+    </ul>
+  </div>
+  {#- topicMap 排序冊封優先，末位不是冊封 ⇔ 存在非冊封口味：
+      全數冊封時整個 others 群組（含標題與空 <ul>）不渲染。 #}
+  {%- if topicMap[topicMap.length - 1] and not topicMap[topicMap.length - 1].isCategory %}
+  <div class="topic-map__group" data-filter-group>
+    <h3 class="topic-map__section-heading">{{ tt.othersHeading }}</h3>
+    <ul class="topic-map__grid topic-map__grid--regular">
+    {%- for topic in topicMap %}{% if not topic.isCategory and topic.postCount >= 3 %}{{ topicCard(topic, tt) }}{% endif %}{% endfor %}
+    </ul>
+    <ul class="topic-map__grid topic-map__grid--mini">
+    {%- for topic in topicMap %}{% if not topic.isCategory and topic.postCount < 3 %}{{ topicCard(topic, tt) }}{% endif %}{% endfor %}
+    </ul>
+  </div>
+  {%- endif %}
+  {%- else %}
+  <div class="topic-map__group" data-filter-group>
+    <ul class="topic-map__grid topic-map__grid--regular">
+    {%- for topic in topicMap %}{% if topic.postCount >= 3 %}{{ topicCard(topic, tt) }}{% endif %}{% endfor %}
+    </ul>
+    <ul class="topic-map__grid topic-map__grid--mini">
+    {%- for topic in topicMap %}{% if topic.postCount < 3 %}{{ topicCard(topic, tt) }}{% endif %}{% endfor %}
+    </ul>
+  </div>
+  {%- endif %}
+  <p class="topic-map__filter-empty" data-filter-empty hidden>{{ tt.filterEmpty }}</p>
 </section>

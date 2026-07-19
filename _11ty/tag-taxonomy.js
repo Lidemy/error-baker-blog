@@ -78,10 +78,22 @@ function compileTaxonomy(taxonomy) {
       errors.push(`${canonical}: legacySlugs must be an array of strings`);
       continue;
     }
+    if (
+      definition.category !== undefined &&
+      definition.category !== true
+    ) {
+      errors.push(
+        `${canonical}: category must be true when present (enthronement is explicit)`
+      );
+      continue;
+    }
     const topic = {
       id: slug,
       canonical,
       slug,
+      // Enthroned categories are a human editorial decision recorded in the
+      // taxonomy; thresholds only nominate candidates (see check-tags).
+      category: definition.category === true,
       aliases: aliases.slice(),
       legacySlugs: legacySlugs.slice(),
     };
@@ -205,6 +217,9 @@ function compileTaxonomy(taxonomy) {
     byLegacySlug,
     retired,
     umbrellaTopics,
+    categories: topics
+      .filter((topic) => topic.category)
+      .map((topic) => topic.canonical),
   };
 }
 
@@ -366,6 +381,7 @@ function buildTopicMap(posts, taxonomy, options = {}) {
         postCount: stat.posts.length,
         authors: [...stat.authors].sort(),
         authorCount: stat.authors.size,
+        isCategory: topic.category,
         isCategoryCandidate: inheritedCandidates
           ? inheritedCandidates.has(topic.id)
           : directCandidate,
@@ -373,6 +389,7 @@ function buildTopicMap(posts, taxonomy, options = {}) {
     })
     .sort(
       (a, b) =>
+        Number(b.isCategory) - Number(a.isCategory) ||
         Number(b.isCategoryCandidate) - Number(a.isCategoryCandidate) ||
         b.postCount - a.postCount ||
         a.canonical.localeCompare(b.canonical, "en")

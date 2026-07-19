@@ -90,6 +90,17 @@ body.dark .theme-icon--dark {
 body.dark .theme-icon--light {
   display: block;
 }
+/* 桌機 icon 簇：44px 觸擊盒讓 22px 圖形四周多出 11px 空氣，與文字項的
+   1.5rem 間距疊加後視覺上過鬆；負邊距把「圖形間距」拉回與文字一致，
+   並讓最右圖形對齊內容右緣。 */
+@media (min-width: 841px) {
+  #search-toggle {
+    margin: 0 -0.55rem 0 -0.3rem;
+  }
+  #color-scheme-toggle {
+    margin-right: -0.7rem;
+  }
+}
 /* ID selector: must outgun the generic `button:not([disabled])` accent
    rules from the base stylesheet, same trick as #color-scheme-toggle. */
 #nav-toggle {

@@ -19,13 +19,72 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 import { initSiteSearch } from "./search-ui.mjs";
+import { normalizeText } from "./search-core.mjs";
 
 const exposed = {};
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initSiteSearch, { once: true });
-} else {
+// Generic query-string-synced list filter. A container opts in with
+// data-filter-scope="<param>"; its items carry data-filter haystacks and an
+// input carries data-filter-input. The current query lives in the URL
+// (?<param>=…, replaceState) so a filtered view is copy-paste shareable, and
+// any page can reuse the mechanism by adding the attributes.
+function initDataFilter() {
+  document.querySelectorAll("[data-filter-scope]").forEach(function (scope) {
+    var input = scope.querySelector("[data-filter-input]");
+    if (!input) return;
+    var param = scope.getAttribute("data-filter-scope") || "q";
+    var items = [].slice.call(scope.querySelectorAll("[data-filter]"));
+    var groups = [].slice.call(scope.querySelectorAll("[data-filter-group]"));
+    var empty = scope.querySelector("[data-filter-empty]");
+
+    function apply(raw) {
+      var query = normalizeText(raw);
+      var shown = 0;
+      items.forEach(function (item) {
+        var hit =
+          !query ||
+          normalizeText(item.getAttribute("data-filter")).indexOf(query) !== -1;
+        item.hidden = !hit;
+        if (hit) shown += 1;
+      });
+      groups.forEach(function (group) {
+        group.hidden = !group.querySelector("[data-filter]:not([hidden])");
+      });
+      if (empty) empty.hidden = !(query && shown === 0);
+    }
+
+    function syncUrl(raw) {
+      var url = new URL(location.href);
+      if (raw) {
+        url.searchParams.set(param, raw);
+      } else {
+        url.searchParams.delete(param);
+      }
+      history.replaceState(null, "", url);
+    }
+
+    input.addEventListener("input", function () {
+      apply(input.value);
+      syncUrl(input.value.trim());
+    });
+
+    var initial = new URL(location.href).searchParams.get(param);
+    if (initial) {
+      input.value = initial;
+      apply(initial);
+    }
+  });
+}
+
+function initInteractive() {
   initSiteSearch();
+  initDataFilter();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initInteractive, { once: true });
+} else {
+  initInteractive();
 }
 
 // Page-language UI strings, injected by base.njk on <dialog id="message">
@@ -39,12 +98,23 @@ try {
 function ui(key, fallback) {
   return uiStrings[key] || fallback;
 }
+// Share-link hygiene: strip only known tracking params. Functional params
+// (e.g. the data-filter's ?flavor=…) must survive so filtered views stay
+// shareable — a blanket `search = ""` here used to wipe them 1s after load.
 if (location.search) {
-  var a = document.createElement("a");
-  a.href = location.href;
-  a.search = "";
+  var TRACKING_PARAMS = /^(utm_|gclid$|fbclid$|ref$)/;
   setTimeout(() => {
-    history.replaceState(null, null, a.href);
+    var url = new URL(location.href);
+    var dropped = false;
+    [...url.searchParams.keys()].forEach(function (key) {
+      if (TRACKING_PARAMS.test(key)) {
+        url.searchParams.delete(key);
+        dropped = true;
+      }
+    });
+    if (dropped) {
+      history.replaceState(null, null, url);
+    }
   }, 1000)
 }
 

@@ -84,6 +84,31 @@ describe("language switcher markup", () => {
   });
 });
 
+describe("signature flavors strip", () => {
+  it("lists enthroned categories as chips, localized to published topics", () => {
+    for (const lang of activeLanguages(false)) {
+      const isDefault = lang === languages[0];
+      const home = isDefault ? "index.html" : `${lang}/index.html`;
+      const chips = documentFor(home).querySelectorAll(".signature-flavors__chip");
+      // A localized chip renders exactly when that language's topic map has
+      // the enthroned category (≥1 published post — otherwise it would 404),
+      // so the same language's /tags/ page is the source of truth.
+      const tagsPage = isDefault ? "tags/index.html" : `${lang}/tags/index.html`;
+      const expected = documentFor(tagsPage).querySelectorAll(
+        ".topic-card--category"
+      ).length;
+      assert.ok(expected >= 1, `${lang}: no category cards on its topic map`);
+      assert.equal(chips.length, expected, `${lang}: chips vs topic map mismatch`);
+      if (isDefault) {
+        assert.equal(chips.length, 3, "zh-TW: expected all 3 category chips");
+      }
+      for (const chip of chips) {
+        assert.match(chip.getAttribute("href"), /\/tags\//);
+      }
+    }
+  });
+});
+
 describe("footer feed link", () => {
   it("points at the current language's feed on every home page", () => {
     for (const lang of activeLanguages(false)) {
