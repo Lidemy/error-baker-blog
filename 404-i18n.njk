@@ -4,6 +4,7 @@
 # status = 404 serves /<lang>/404.html for any unmatched /<lang>/* path, so a
 # reader hitting /ja/posts/bad-slug/ sees the Japanese 404 instead of zh-TW.
 layout: layouts/home.njk
+eleventyExcludeFromCollections: true
 pagination:
   data: collections.siteLangsWithPublishedPosts
   size: 1
