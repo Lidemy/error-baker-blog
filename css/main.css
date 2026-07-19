@@ -1575,6 +1575,11 @@ header > h1.w-full {
 body.tmpl-home header {
   padding-bottom: 1.5em;
 }
+/* 口味地圖頁共用 home layout，但不需要 masthead 的大留白：
+   頁面 H1 與「所有口味」之間收斂節奏（:has 不支援時維持原留白，無害）。 */
+body.tmpl-home:has(.topic-map) header {
+  padding-bottom: 0.2em;
+}
 body.tmpl-home .intro {
   max-width: 40rem;
   margin: 0 auto 2.5rem;
@@ -2489,12 +2494,15 @@ body.dark .topic-map {
 }
 .topic-map__intro {
   max-width: 44rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.6rem;
 }
+/* 收斂頁首節奏：H1（口味地圖）與本節標題間不再各自留白疊加。 */
 .topic-map__intro h2 {
-  margin-bottom: 0.5rem;
+  margin-top: 0;
+  margin-bottom: 0.4rem;
 }
 .topic-map__intro p {
+  margin: 0 0 0.55rem;
   color: var(--ink-soft);
 }
 .topic-map__candidate-note {
@@ -2718,6 +2726,25 @@ body.dark .topic-map {
 .signature-flavors__chip:hover {
   border-color: var(--accent);
   color: var(--accent);
+}
+/* Hover 彩蛋：招牌 chip 滑過時廚師帽現身（觸控裝置無 hover，僅屬桌機趣味）。 */
+.signature-flavors__chip-toque {
+  width: 0;
+  height: 0.95em;
+  fill: var(--accent);
+  opacity: 0;
+  align-self: center;
+  transition: width var(--dur) var(--ease), opacity var(--dur) var(--ease);
+}
+.signature-flavors__chip:hover .signature-flavors__chip-toque,
+.signature-flavors__chip:focus-visible .signature-flavors__chip-toque {
+  width: 0.95em;
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .signature-flavors__chip-toque {
+    transition: none;
+  }
 }
 .signature-flavors__count {
   color: var(--ink-faint);
