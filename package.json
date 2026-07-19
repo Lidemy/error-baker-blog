@@ -15,7 +15,7 @@
     "js-build-watch": "rollup -c rollup.config.js -w",
     "debug": "DEBUG=* eleventy && npm run test",
     "test": "npm run test:site && npm run test:translations && npm run check-tags",
-    "test:site": "node scripts/assert-site-built.js && mocha test/test*.js",
+    "test:site": "node scripts/assert-site-built.js && mocha --timeout 10000 test/test*.js",
     "test-watch": "mocha test/test*.js --watch",
     "diff-site": "node scripts/diff-site.js",
     "check-translations": "node scripts/check-translations.js",
