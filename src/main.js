@@ -515,3 +515,77 @@ document.body.addEventListener(
     });
   }
 })();
+
+// ── Copy-code button (post code blocks) ─────────────────────────────────
+// Prism renders fenced blocks as <pre class="language-*"><code>…</code></pre>.
+// We wrap each in a positioned container and inject a copy button. The
+// injected classes (code-copy*) are whitelisted in _11ty/optimize-html.js —
+// PurgeCSS scans only server-rendered HTML and would otherwise strip their
+// styles. Feedback reuses the shared #message toast (role="status").
+(function () {
+  if (!document.body.classList.contains("tmpl-post")) return;
+  var blocks = document.querySelectorAll("pre[class*='language-']");
+  if (!blocks.length) return;
+
+  var LABEL_COPY = ui("codeCopy", "複製");
+  var LABEL_DONE = ui("codeCopied", "已複製 ✓");
+  var ARIA_LABEL = ui("codeCopyLabel", "複製程式碼");
+
+  function legacyCopy(text) {
+    var field = document.createElement("textarea");
+    field.value = text;
+    field.setAttribute("readonly", "");
+    field.style.position = "fixed";
+    field.style.opacity = "0";
+    document.body.appendChild(field);
+    field.select();
+    var copied = false;
+    try {
+      copied = document.execCommand("copy");
+    } catch (e) {}
+    field.remove();
+    return copied;
+  }
+
+  [].forEach.call(blocks, function (pre) {
+    // Defensive against a double init: never wrap the same block twice.
+    if (pre.parentNode && pre.parentNode.classList.contains("code-copy-wrap")) {
+      return;
+    }
+    var wrap = document.createElement("div");
+    wrap.className = "code-copy-wrap";
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "code-copy";
+    btn.textContent = LABEL_COPY;
+    btn.setAttribute("aria-label", ARIA_LABEL);
+    wrap.appendChild(btn);
+
+    var resetTimer = null;
+    btn.addEventListener("click", function () {
+      var code = pre.querySelector("code");
+      var text = (code || pre).textContent;
+      function onCopied() {
+        track("copy-code");
+        message(LABEL_DONE);
+        btn.textContent = LABEL_DONE;
+        btn.classList.add("code-copy--done");
+        if (resetTimer) clearTimeout(resetTimer);
+        resetTimer = setTimeout(function () {
+          btn.textContent = LABEL_COPY;
+          btn.classList.remove("code-copy--done");
+        }, 2000);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(onCopied, function () {
+          if (legacyCopy(text)) onCopied();
+        });
+      } else if (legacyCopy(text)) {
+        onCopied();
+      }
+    });
+  });
+})();
