@@ -121,7 +121,23 @@ function auditPosts(postsDirectory = "posts") {
     .map((topic) => topic.canonical)
     .filter((canonical) => !usedCanonical.has(canonical));
 
-  return { issues, posts, sourcePosts, topicMap, unusedTopics };
+  // Source posts tagged with ONLY umbrella categories still await a
+  // human-assigned leaf topic; this derived list IS the backlog for the
+  // /normalize-tags workflow (AGENTS.md「Tag 正規化規範」).
+  const umbrella = new Set(taxonomyRegistry.umbrellaTopics);
+  const leafBacklog =
+    umbrella.size === 0
+      ? []
+      : sourcePosts
+          .filter(
+            (post) =>
+              Array.isArray(post.data.tags) &&
+              post.data.tags.length > 0 &&
+              post.data.tags.every((tag) => umbrella.has(tag))
+          )
+          .map((post) => ({ path: post.path, tags: post.data.tags.slice() }));
+
+  return { issues, posts, sourcePosts, topicMap, unusedTopics, leafBacklog };
 }
 
 function formatIssue(issue) {
@@ -140,7 +156,10 @@ function main() {
   if (report.issues.length > 0) {
     console.error(`\n✖ Tag checks failed (${report.issues.length})\n`);
     console.error(report.issues.map(formatIssue).join("\n"));
-    console.error("");
+    console.error(
+      "\n  提示：可執行 /normalize-tags <檔案>（AGENTS.md「Tag 正規化規範」，" +
+        "AI 推薦、人核可）取得修正建議。\n"
+    );
     process.exit(1);
   }
 
@@ -163,6 +182,17 @@ function main() {
   }
   if (report.unusedTopics.length > 0) {
     console.log(`  Unused registered topics: ${report.unusedTopics.join(", ")}`);
+  }
+  if (report.leafBacklog.length > 0) {
+    console.log(
+      `  Leaf-topic backlog (advisory, ${report.leafBacklog.length} posts tagged with umbrellas only` +
+        ` — run /normalize-tags backlog):`
+    );
+    for (const entry of report.leafBacklog) {
+      console.log(
+        `  - ${path.relative(process.cwd(), entry.path)} [${entry.tags.join(", ")}]`
+      );
+    }
   }
 }
 
