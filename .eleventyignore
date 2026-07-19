@@ -1,6 +1,7 @@
 .DS_Store
 .agents/
 .claude/
+.zcode/
 .github/
 .netlify/
 _site/
