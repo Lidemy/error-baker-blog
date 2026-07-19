@@ -79,7 +79,6 @@ const {
   sortFeedPosts,
   feedUpdatedDate,
 } = require("./_11ty/feed-data");
-const GA_ID = require("./_data/metadata.json").googleAnalyticsId;
 
 module.exports = function (eleventyConfig) {
   eleventyConfig.addPlugin(pluginRss);
@@ -653,8 +652,7 @@ module.exports = function (eleventyConfig) {
   // Component and base CSS are build-only inputs inlined by optimize-html.
   // Only the conditionally linked gamification stylesheet is public.
   eleventyConfig.addPassthroughCopy("css/gamification.css");
-  // We need to copy cached.js only if GA is used
-  eleventyConfig.addPassthroughCopy(GA_ID ? "js" : "js/*[!cached].*");
+  eleventyConfig.addPassthroughCopy("js");
   eleventyConfig.addPassthroughCopy("fonts");
   eleventyConfig.addPassthroughCopy("_headers");
 

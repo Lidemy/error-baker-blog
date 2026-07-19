@@ -23,9 +23,6 @@
 <!doctype html>
 <html lang="{{ pageLang }}"
     domain="{{ metadata.domain }}"
-    {% if googleanalytics %}
-    ga-id="{{ googleanalytics }}"
-    {% endif %}
   >
   <head>
     <meta charset="utf-8">
@@ -113,11 +110,9 @@
     {#- Display serif（Fraunces latin subset, ~36KB, immutable-cached）。
         preload 消除首屏字體交換；CJK 內文不使用 webfont（效能預算）。 #}
     <link rel="preload" href="/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-    <script defer src="{{ "/js/min.js" | addHash }}"
-      {% if webvitals %}data-cwv-src="{{ "/js/web-vitals.js" | addHash }}"{% endif %}>
-    </script>
-    {% if googleanalytics %}
-      <script async defer src="{{ "/js/cached.js" | addHash }}"></script>
+    <script defer src="{{ "/js/min.js" | addHash }}"></script>
+    {% if metadata.umami.websiteId %}
+      <script defer src="{{ metadata.umami.scriptSrc }}" data-website-id="{{ metadata.umami.websiteId }}"></script>
     {% endif %}
     {% if templateClass == 'tmpl-about' or (templateClass != 'tmpl-post' and '/posts/' in page.url) %}
       <link rel="stylesheet" href="{{ '/css/gamification.css' | addHash }}">
@@ -330,12 +325,6 @@
           following the lang-suggest data-strings pattern. #}
       <dialog id="message" role="status" aria-live="polite" aria-atomic="true"
         data-ui="{{ t.js | dump }}"></dialog>
-      {% if googleanalytics %}
-      <noscript>
-        <img src="/.netlify/functions/ga?v=1&_v=j83&t=pageview&dr=https%3A%2F%2Fno-script.com&_s=1&dh={{ metadata.domain | encodeURIComponent }}&dp={{ page.url | encodeURIComponent }}&ul=en-us&de=UTF-8&dt={{title|encodeURIComponent}}&tid={{googleanalytics}}" width="1" height="1"
-        style="display:none" alt="">
-      </noscript>
-      {% endif %}
     </header>
 
     <dialog id="site-search" class="search-dialog" aria-labelledby="search-title"
