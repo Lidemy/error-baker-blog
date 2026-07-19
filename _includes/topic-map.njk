@@ -10,12 +10,21 @@
 
   <ul class="topic-map__grid">
   {%- for topic in topicMap %}
-    <li class="topic-card{% if topic.isCategoryCandidate %} topic-card--candidate{% endif %}">
+    {#- 越烤越深：文章數映射到餘燼色階（同貢獻日曆的分級邏輯），
+        口味越熱門、左側的烘焙度縱條烤得越深。 #}
+    {%- set bake = 1 %}
+    {%- if topic.postCount >= 10 %}{% set bake = 4 %}
+    {%- elif topic.postCount >= 6 %}{% set bake = 3 %}
+    {%- elif topic.postCount >= 3 %}{% set bake = 2 %}
+    {%- endif %}
+    <li class="topic-card topic-card--bake-{{ bake }}{% if topic.isCategoryCandidate %} topic-card--candidate{% endif %}">
       <a class="topic-card__link" href="{{ topic.url | url }}">
         <span class="topic-card__heading">
           <strong>{{ topic.canonical }}</strong>
           {%- if topic.isCategoryCandidate %}
-          <span class="topic-card__badge">{{ tt.candidateLabel }}</span>
+          <span class="topic-card__badge">
+            <svg class="topic-card__toque" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="6.5" cy="9" r="4.5"/><circle cx="12" cy="7" r="5.5"/><circle cx="17.5" cy="9" r="4.5"/><rect x="7" y="12" width="10" height="7" rx="1.5"/></svg>
+            {{- tt.candidateLabel }}</span>
           {%- endif %}
         </span>
         <span class="topic-card__stats">

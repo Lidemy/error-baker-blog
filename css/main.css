@@ -2469,6 +2469,22 @@ body.tmpl-home .intro {
    keeps natural fills while still avoiding orphans. */
 
 /* ── Topic map: taxonomy first, articles one level deeper ─────────────── */
+/* Ember bake scale, mirrored from the gamification ramp (gamification.css is
+   only loaded on about/author pages, so the values are restated here — same
+   dough→oven-fire stops, light and dark). More posts = a deeper-baked crust
+   bar on the card's left edge: the brand's "bakes darker" dynamic as data. */
+.topic-map {
+  --bake-1: #eac7a2;
+  --bake-2: #d99757;
+  --bake-3: #bc5b2b;
+  --bake-4: #93351f;
+}
+body.dark .topic-map {
+  --bake-1: #5c3423;
+  --bake-2: #94512a;
+  --bake-3: #c96f38;
+  --bake-4: #ee9556;
+}
 .topic-map__intro {
   max-width: 44rem;
   margin-bottom: 2rem;
@@ -2516,6 +2532,22 @@ body.tmpl-home .intro {
 .topic-card--candidate {
   border-color: color-mix(in srgb, var(--accent) 55%, var(--rule));
 }
+/* Crust bar: post count mapped to the ember scale (thresholds follow the
+   contribution calendar's level logic). Candidates keep the accent frame —
+   red = editorial nomination, ember = data heat; the left edge stays ember
+   on both. Hovering "bakes" the flavor one stage darker. */
+.topic-card--bake-1 { --bake: var(--bake-1); }
+.topic-card--bake-2 { --bake: var(--bake-2); }
+.topic-card--bake-3 { --bake: var(--bake-3); }
+.topic-card--bake-4 { --bake: var(--bake-4); }
+.topic-card--bake-1:hover { --bake: var(--bake-2); }
+.topic-card--bake-2:hover { --bake: var(--bake-3); }
+.topic-card--bake-3:hover,
+.topic-card--bake-4:hover { --bake: var(--bake-4); }
+.topic-card,
+.topic-card--candidate {
+  border-left: 4px solid var(--bake, var(--rule));
+}
 .topic-card__link {
   display: flex;
   min-height: 100%;
@@ -2536,6 +2568,7 @@ body.tmpl-home .intro {
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
+  gap: 0.28rem;
   padding: 0.15rem 0.45rem;
   border-radius: 999px;
   background: color-mix(in srgb, var(--accent) 12%, transparent);
@@ -2543,6 +2576,11 @@ body.tmpl-home .intro {
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.02em;
+}
+.topic-card__toque {
+  width: 0.95em;
+  height: 0.95em;
+  fill: currentColor;
 }
 .topic-card__stats,
 .topic-card__authors {

@@ -154,6 +154,9 @@ describe("built topic pages", () => {
     const document = documentFor("_site/tags/index.html");
     assert.equal(document.querySelectorAll(".topic-card").length, 92);
     assert.equal(document.querySelectorAll(".topic-card--candidate").length, 3);
+    // Every card carries an ember bake stage; the busiest topics reach 4.
+    assert.equal(document.querySelectorAll("[class*='topic-card--bake-']").length, 92);
+    assert.ok(document.querySelectorAll(".topic-card--bake-4").length >= 3);
     assert.equal(document.querySelector("#post-list"), null);
     assert.equal(document.querySelector(".archive-row"), null);
     assert.ok(document.querySelector('a[href="/tags/frontend/"]'));
