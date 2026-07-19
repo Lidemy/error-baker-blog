@@ -10,6 +10,9 @@ export
 # Deploy
 .netlify/
 
+# Lighthouse reports (local lhci runs)
+.lighthouseci/
+
 # OS / editor
 .DS_Store
 .vscode/
