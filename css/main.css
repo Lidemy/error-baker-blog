@@ -2607,6 +2607,41 @@ body.dark .topic-map {
   font-weight: 600;
   letter-spacing: 0.05em;
 }
+/* 資訊密度隨文章量遞減：招牌 3 欄大卡 → 其餘 4 欄中卡 → 迷你 6-7 欄小卡。
+   其餘與迷你只留標題＋統計（名單屬三級資訊，招牌卡 hover 與 topic 頁都有
+   完整列表）；迷你卡再省去烘焙師數，只剩標題＋份數。 */
+.topic-map__grid--regular {
+  /* auto-fill（非 auto-fit）：項目少時保留空軌，卡片維持約 4 欄的尺寸
+     而不是撐滿整行——中卡的「中」是相對招牌卡的固定比例。 */
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+}
+.topic-map__grid--regular .topic-card__heading {
+  font-size: 1rem;
+}
+.topic-map__grid:not(.topic-map__grid--categories) .topic-card__authors {
+  display: none;
+}
+.topic-map__grid--mini {
+  margin-top: 0.9rem;
+  gap: 0.6rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 8.5rem), 1fr));
+}
+.topic-map__grid--mini .topic-card {
+  border-left-width: 3px;
+}
+.topic-map__grid--mini .topic-card__link {
+  padding: 0.6rem 0.75rem;
+  gap: 0.25rem;
+}
+.topic-map__grid--mini .topic-card__heading {
+  font-size: 0.88rem;
+}
+.topic-map__grid--mini .topic-card__stats {
+  font-size: 0.72rem;
+}
+.topic-map__grid--mini .topic-card__stats-authors {
+  display: none;
+}
 /* ── Signature flavors: data-driven strip under the hand-written intro ── */
 .signature-flavors {
   display: flex;

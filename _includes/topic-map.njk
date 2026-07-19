@@ -22,8 +22,8 @@
         </span>
         <span class="topic-card__stats">
           {{ topic.postCount }} {{ tt.postOne if topic.postCount == 1 else tt.postMany }}
-          <span aria-hidden="true">·</span>
-          {{ topic.authorCount }} {{ tt.authorOne if topic.authorCount == 1 else tt.authorMany }}
+          <span class="topic-card__stats-authors"><span aria-hidden="true">·</span>
+          {{ topic.authorCount }} {{ tt.authorOne if topic.authorCount == 1 else tt.authorMany }}</span>
         </span>
         <span class="topic-card__authors">
         {%- for authorKey in topic.authors %}
@@ -52,7 +52,12 @@
   </ul>
   <h3 class="topic-map__section-heading">{{ tt.othersHeading }}</h3>
   {%- endif %}
-  <ul class="topic-map__grid">
-  {%- for topic in topicMap %}{% if not topic.isCategory %}{{ topicCard(topic, tt) }}{% endif %}{% endfor %}
+  {#- 資訊密度隨文章量遞減：3 份以上中卡（約 4 欄）、1-2 份迷你卡（約 6 欄，
+      只留標題與份數）。topicMap 已排序，兩組各自聚攏。 #}
+  <ul class="topic-map__grid topic-map__grid--regular">
+  {%- for topic in topicMap %}{% if not topic.isCategory and topic.postCount >= 3 %}{{ topicCard(topic, tt) }}{% endif %}{% endfor %}
+  </ul>
+  <ul class="topic-map__grid topic-map__grid--mini">
+  {%- for topic in topicMap %}{% if not topic.isCategory and topic.postCount < 3 %}{{ topicCard(topic, tt) }}{% endif %}{% endfor %}
   </ul>
 </section>
