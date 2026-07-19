@@ -1,7 +1,7 @@
 ---
 title: 用 k6 為 api 做 Load Testing
 date: 2021-08-07
-tags: [back-end]
+tags: [Backend]
 author: ruofan
 layout: layouts/post.njk
 image: https://k6.io/static/d34aede268b85c2821a801227fc9e696/80926/cloud-stub.webp
@@ -248,4 +248,3 @@ export default function () {
 
 
 在閱讀文章時如果有遇到什麼問題，或是有什麼建議，都歡迎留言告訴我，謝謝。😃
-

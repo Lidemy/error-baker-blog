@@ -1,7 +1,7 @@
 ---
 title: Still Learning in This Day and Age | Boshiamy Input Method
 date: 2023-08-31
-tags: [boshiamy]
+tags: [Boshiamy]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/B1HXrmRTn.gif

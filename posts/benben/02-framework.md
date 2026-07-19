@@ -1,7 +1,7 @@
 ---
 title: 為什麼要使用框架 - 你聽過最好的答案是什麼？
 date: 2021-09-19
-tags: [framework]
+tags: [Framework]
 author: benben
 layout: layouts/post.njk
 image: https://www.saaspegasus.com/static/images/web/modern-javascript/2008-vs-2021.png

@@ -1,7 +1,7 @@
 ---
 title: 帶你入門區塊鏈（ㄧ）
 date: 2022-03-06
-tags: [block-chain, article]
+tags: [Blockchain]
 author: xiang
 layout: layouts/post.njk
 image:

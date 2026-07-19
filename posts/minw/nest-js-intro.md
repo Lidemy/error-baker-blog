@@ -1,7 +1,7 @@
 ---
 title: 初探用 Nest.js 做出一個 CRUD 服務
 date: 2021-08-08
-tags: [back-end]
+tags: [Backend]
 author: minw
 layout: layouts/post.njk
 ---

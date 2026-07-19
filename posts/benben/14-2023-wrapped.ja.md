@@ -1,7 +1,7 @@
 ---
 title: 2023 年度振り返り | 目標、効率、バランス
 date: 2023-12-30
-tags: [Front-end]
+tags: [Frontend]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/rydsCO3Da.png

@@ -1,7 +1,7 @@
 ---
 title: 克服 Django-allauth 開發問題
 date: 2025-01-07
-tags: [python, django, django-allauth, csrf, cookie]
+tags: [Python, Django, django-allauth, CSRF, Cookie]
 author: cwc329
 layout: layouts/post.njk
 ---

@@ -1,7 +1,7 @@
 ---
 title: 從開發到產品的心得
 date: 2021-11-07
-tags: [pm]
+tags: [Product Management]
 author: minw
 layout: layouts/post.njk
 ---

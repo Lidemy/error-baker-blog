@@ -1,7 +1,7 @@
 ---
 title: 誰でも記事が書ける —— メモから記事へ
 date: 2021-08-22
-tags: [article]
+tags: [Technical Writing]
 author: benben
 layout: layouts/post.njk
 lang: ja

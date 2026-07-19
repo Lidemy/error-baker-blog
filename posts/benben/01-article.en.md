@@ -1,7 +1,7 @@
 ---
 title: Anyone Can Write — From Notes to Articles
 date: 2021-08-22
-tags: [article]
+tags: [Technical Writing]
 author: benben
 layout: layouts/post.njk
 lang: en

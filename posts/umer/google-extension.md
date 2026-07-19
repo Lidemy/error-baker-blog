@@ -1,7 +1,7 @@
 ---
 title: 初探 Google extension
 date: 2021-09-09
-tags: [JavaScript, google-extension]
+tags: [JavaScript, Chrome Extension]
 author: umer
 layout: layouts/post.njk
 ---

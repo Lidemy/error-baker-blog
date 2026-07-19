@@ -1,7 +1,7 @@
 ---
 title: Uno CSS — The Rising Star to Unify Them All?
 date: 2022-05-18
-tags: [CSS, unoCSS]
+tags: [CSS, UnoCSS]
 author: benben
 layout: layouts/post.njk
 image: https://i.imgur.com/XRsgu8H.png

@@ -1,7 +1,7 @@
 ---
 title: 用 NextAuth 實作第三方登入
 date: 2021-12-04
-tags: [Front-end]
+tags: [Frontend]
 author: ruofan
 layout: layouts/post.njk
 ---

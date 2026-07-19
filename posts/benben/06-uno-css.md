@@ -1,7 +1,7 @@
 ---
 title: Uno CSS - 一統天下的明日之星？
 date: 2022-05-18
-tags: [CSS, unoCSS]
+tags: [CSS, UnoCSS]
 author: benben
 layout: layouts/post.njk
 image: https://i.imgur.com/XRsgu8H.png

@@ -1,7 +1,7 @@
 ---
 title: Collaborative Notes Within Collaborative Notes — JavaScript30 as an Example
 date: 2021-10-26
-tags: [JavaScript, collaborative]
+tags: [JavaScript, Collaborative Writing]
 author: benben
 layout: layouts/post.njk
 image: https://i.imgur.com/ZmEEvep.png

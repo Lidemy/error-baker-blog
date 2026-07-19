@@ -1,7 +1,7 @@
 ---
 title: 用 Fireorm interact with Cloud Firestore
 date: 2021-12-17
-tags: [back-end]
+tags: [Backend]
 author: ruofan
 layout: layouts/post.njk
 image: /img/posts/ruofan/cloud-firestore.png

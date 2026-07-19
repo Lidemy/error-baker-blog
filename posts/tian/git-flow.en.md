@@ -1,7 +1,7 @@
 ---
 title: "GitFlow as I Understand It"
 date: 2021-10-28
-tags: [git, flow]
+tags: [Git, Git Flow]
 author: tian
 layout: layouts/post.njk
 lang: en

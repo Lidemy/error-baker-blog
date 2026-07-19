@@ -1,7 +1,7 @@
 ---
 title: この時代にまだ学んでる | 嘸蝦米入力メソッド
 date: 2023-08-31
-tags: [boshiamy]
+tags: [Boshiamy]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/B1HXrmRTn.gif

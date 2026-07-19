@@ -1,7 +1,7 @@
 ---
 title: 結合 Line bot 與 twitter 爬蟲的研究紀錄 實戰篇
 date: 2021-08-15
-tags: [JavaScript, line-bot]
+tags: [JavaScript, LINE Bot]
 author: umer
 layout: layouts/post.njk
 ---

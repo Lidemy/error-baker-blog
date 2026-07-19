@@ -1,7 +1,7 @@
 ---
 title: next-seo 初體驗
 date: 2021-08-30
-tags: [JavaScript, next.js, SEO, schema]
+tags: [JavaScript, Next.js, SEO, Structured Data]
 author: clay
 layout: layouts/post.njk
 ---

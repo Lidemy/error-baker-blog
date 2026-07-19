@@ -1,7 +1,7 @@
 ---
 title: 如何提升打字速度 - 從初心者轉職超級初心者
 date: 2022-10-16
-tags: [typing, vs-code-plugin]
+tags: [Typing, VS Code Extension]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/rJWJgRQ1i.gif

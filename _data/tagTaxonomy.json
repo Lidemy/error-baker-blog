@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 1,
+  "policy": {
+    "minTagsPerPost": 1,
+    "maxTagsPerPost": 5,
+    "categoryMinPosts": 8,
+    "categoryMinAuthors": 3
+  },
+  "topics": {
+    "AI": { "slug": "ai" },
+    "API Documentation": {
+      "slug": "api-documentation",
+      "aliases": ["API-doc", "api-doc"],
+      "legacySlugs": ["api-doc"]
+    },
+    "Array": { "slug": "array" },
+    "Async": { "slug": "async" },
+    "Automation": { "slug": "automation" },
+    "Await": { "slug": "await" },
+    "AWS": { "slug": "aws" },
+    "Babel": { "slug": "babel" },
+    "Backend": {
+      "slug": "backend",
+      "aliases": ["back-end", "back end"],
+      "legacySlugs": ["back-end"]
+    },
+    "Blockchain": {
+      "slug": "blockchain",
+      "aliases": ["block-chain"],
+      "legacySlugs": ["block-chain"]
+    },
+    "Boshiamy": { "slug": "boshiamy" },
+    "Chrome Extension": {
+      "slug": "chrome-extension",
+      "legacySlugs": ["google-extension"]
+    },
+    "CI/CD": { "slug": "ci-cd" },
+    "Circular Dependency": { "slug": "circular-dependency" },
+    "CLI": { "slug": "cli" },
+    "Collaborative Writing": {
+      "slug": "collaborative-writing",
+      "legacySlugs": ["collaborative"]
+    },
+    "Compiled Language": { "slug": "compiled-language" },
+    "Cookie": { "slug": "cookie" },
+    "CSRF": { "slug": "csrf" },
+    "CSS": { "slug": "css" },
+    "Data Visualization": {
+      "slug": "data-visualization",
+      "aliases": ["data-vis"],
+      "legacySlugs": ["data-vis"]
+    },
+    "Deep Copy": { "slug": "deep-copy" },
+    "Deployment": {
+      "slug": "deployment",
+      "aliases": ["deploy"],
+      "legacySlugs": ["deploy"]
+    },
+    "Design Patterns": {
+      "slug": "design-patterns",
+      "legacySlugs": ["pattern"]
+    },
+    "DevOps": { "slug": "devops" },
+    "Django": { "slug": "django" },
+    "django-allauth": { "slug": "django-allauth" },
+    "dotenv": { "slug": "dotenv" },
+    "Eleventy": { "slug": "eleventy" },
+    "Encoding": {
+      "slug": "encoding",
+      "aliases": ["encode"],
+      "legacySlugs": ["encode"]
+    },
+    "ESLint": { "slug": "eslint" },
+    "FormatJS": { "slug": "formatjs" },
+    "Framework": { "slug": "framework" },
+    "Frontend": {
+      "slug": "frontend",
+      "aliases": ["Front-end", "front-end", "front end"],
+      "legacySlugs": ["front-end"]
+    },
+    "Gatsby Plugin": {
+      "slug": "gatsby-plugin",
+      "aliases": ["Gatsby-Plugin"]
+    },
+    "Gatus": { "slug": "gatus" },
+    "Git": { "slug": "git" },
+    "Git Flow": {
+      "slug": "git-flow",
+      "legacySlugs": ["flow"]
+    },
+    "GitHub": { "slug": "github" },
+    "GitHub Actions": {
+      "slug": "github-actions",
+      "aliases": ["github-actions"]
+    },
+    "Go": {
+      "slug": "go",
+      "aliases": ["golang"],
+      "legacySlugs": ["golang"]
+    },
+    "Google": { "slug": "google" },
+    "gRPC": { "slug": "grpc" },
+    "Heroku": { "slug": "heroku" },
+    "HTML": { "slug": "html" },
+    "HTTP": { "slug": "http" },
+    "Image": { "slug": "image" },
+    "Internationalization": {
+      "slug": "internationalization",
+      "aliases": ["i18n", "internationalisation"],
+      "legacySlugs": ["i18n"]
+    },
+    "Interpreted Language": { "slug": "interpreted-language" },
+    "JavaScript": {
+      "slug": "javascript",
+      "aliases": ["js"],
+      "legacySlugs": ["js"]
+    },
+    "LeetCode": { "slug": "leetcode" },
+    "LINE Bot": {
+      "slug": "line-bot",
+      "aliases": ["line-bot"]
+    },
+    "Markdown": { "slug": "markdown" },
+    "Mentor": { "slug": "mentor" },
+    "Monitoring": { "slug": "monitoring" },
+    "Monorepo": { "slug": "monorepo" },
+    "multipart/form-data": { "slug": "multipart-form-data" },
+    "Next.js": {
+      "slug": "next-js",
+      "aliases": ["nextjs"],
+      "legacySlugs": ["next.js"]
+    },
+    "Node.js": {
+      "slug": "node-js",
+      "aliases": ["nodejs"],
+      "legacySlugs": ["nodejs"]
+    },
+    "nodemon": { "slug": "nodemon" },
+    "npm": { "slug": "npm" },
+    "OpenAPI": { "slug": "openapi" },
+    "p5.js": {
+      "slug": "p5-js",
+      "aliases": ["p5"],
+      "legacySlugs": ["p5"]
+    },
+    "Performance": { "slug": "performance" },
+    "Product Management": {
+      "slug": "product-management",
+      "legacySlugs": ["pm"]
+    },
+    "Python": { "slug": "python" },
+    "QR Code": {
+      "slug": "qr-code",
+      "aliases": ["qrcode"],
+      "legacySlugs": ["qrcode"]
+    },
+    "Raycast": { "slug": "raycast" },
+    "React": { "slug": "react" },
+    "React Hook Form": { "slug": "react-hook-form" },
+    "React Intl": {
+      "slug": "react-intl",
+      "legacySlugs": ["intl"]
+    },
+    "React Memo": {
+      "slug": "react-memo",
+      "legacySlugs": ["memo"]
+    },
+    "RFC": { "slug": "rfc" },
+    "RFC 7578": { "slug": "rfc-7578" },
+    "Salary": { "slug": "salary" },
+    "SEO": { "slug": "seo" },
+    "Sequelize": { "slug": "sequelize" },
+    "Shallow Copy": { "slug": "shallow-copy" },
+    "Structured Data": {
+      "slug": "structured-data",
+      "legacySlugs": ["schema"]
+    },
+    "Swagger Editor": { "slug": "swagger-editor" },
+    "Swagger UI": { "slug": "swagger-ui" },
+    "Technical Writing": { "slug": "technical-writing" },
+    "Terminal": { "slug": "terminal" },
+    "Todo List": {
+      "slug": "todo-list",
+      "aliases": ["todo-list"]
+    },
+    "TypeScript": { "slug": "typescript" },
+    "Typing": { "slug": "typing" },
+    "UnoCSS": { "slug": "unocss" },
+    "Vim": { "slug": "vim" },
+    "VS Code Extension": {
+      "slug": "vs-code-extension",
+      "aliases": ["vs-code-plugin", "VS Code Plugin"],
+      "legacySlugs": ["vs-code-plugin"]
+    },
+    "Vue": { "slug": "vue" },
+    "Warp": { "slug": "warp" },
+    "WeakMap": {
+      "slug": "weakmap",
+      "aliases": ["weap-map", "weak-map"],
+      "legacySlugs": ["weap-map"]
+    }
+  },
+  "retired": {
+    "article": {
+      "replacement": null,
+      "reason": "Content format is not a technical topic. Retag each article by subject."
+    }
+  }
+}

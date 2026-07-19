@@ -1,7 +1,7 @@
 ---
 title: Debug 系列 01
 date: 2021-10-10
-tags: [Front-end, JavaScript]
+tags: [Frontend, JavaScript]
 author: xiang
 layout: layouts/post.njk
 image:

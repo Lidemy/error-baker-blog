@@ -1,7 +1,7 @@
 ---
 title: 原始碼探索
 date: 2021-09-18
-tags: [back-end, JavaScript, sequelize]
+tags: [Backend, JavaScript, Sequelize]
 author: cwc329
 layout: layouts/post.njk
 ---

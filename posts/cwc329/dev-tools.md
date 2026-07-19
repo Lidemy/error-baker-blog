@@ -1,7 +1,7 @@
 ---
 title: 優化舊有專案（一）：加入 dotenv, nodemon, babel 優化開發
 date: 2021-08-22
-tags: [back-end, JavaScript, dotenv, babel, nodemon]
+tags: [Backend, JavaScript, dotenv, Babel, nodemon]
 author: cwc329
 layout: layouts/post.njk
 ---

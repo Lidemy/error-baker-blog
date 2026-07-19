@@ -1,7 +1,7 @@
 ---
 title: 如何從 GitHub Template 更新 repo？
 date: 2021-09-05
-tags: [github]
+tags: [GitHub]
 author: sixwings
 layout: layouts/post.njk
 ---

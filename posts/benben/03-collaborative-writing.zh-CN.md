@@ -1,7 +1,7 @@
 ---
 title: 共笔中的共笔 —— 以 JavaScript30 为例
 date: 2021-10-26
-tags: [JavaScript, collaborative]
+tags: [JavaScript, Collaborative Writing]
 author: benben
 layout: layouts/post.njk
 image: https://i.imgur.com/ZmEEvep.png

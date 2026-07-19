@@ -1,7 +1,7 @@
 ---
 title: Vim for beginners
 date: 2023-05-07
-tags: [vim]
+tags: [Vim]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/BkbJbumEh.gif

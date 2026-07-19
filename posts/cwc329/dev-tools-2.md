@@ -1,7 +1,7 @@
 ---
 title: 優化舊有專案（二）：加入 CI/CD with github actions
 date: 2022-02-27
-tags: [back-end, 'CI/CD', 'github actions', heroku]
+tags: [Backend, CI/CD, GitHub Actions, Heroku]
 author: cwc329
 layout: layouts/post.njk
 ---

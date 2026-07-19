@@ -1,7 +1,7 @@
 ---
 title: 探討幾種常見的 CSS 命名慣例
 date: 2021-08-29
-tags: [Front-end, CSS]
+tags: [Frontend, CSS]
 author: simon198
 layout: layouts/post.njk
 ---

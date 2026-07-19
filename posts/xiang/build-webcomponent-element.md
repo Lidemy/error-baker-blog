@@ -1,7 +1,7 @@
 ---
 title: 如何使用 Web Component 技術來製作元件
 date: 2021-11-07
-tags: [Front-end, JavaScript]
+tags: [Frontend, JavaScript]
 author: xiang
 layout: layouts/post.njk
 image:

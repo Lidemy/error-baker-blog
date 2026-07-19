@@ -1,7 +1,7 @@
 ---
 title: 現代前端開發 - 那些我使用過的 Pattern 和 工具
 date: 2021-10-04
-tags: [typescript, react, react-hook-form, pattern, Todo-list, Front-end]
+tags: [TypeScript, React, React Hook Form, Design Patterns, Todo List]
 author: tian
 layout: layouts/post.njk
 ---

@@ -1,7 +1,7 @@
 ---
 title: "我所理解的 GitFlow"
 date: 2021-10-28
-tags: [git, flow]
+tags: [Git, Git Flow]
 author: tian
 layout: layouts/post.njk
 lang: zh-CN
