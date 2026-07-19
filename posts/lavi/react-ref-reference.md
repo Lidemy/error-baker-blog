@@ -1,7 +1,7 @@
 ---
 title: React Ref 的一點研究
 date: 2021-09-27
-tags: [react]
+tags: [React]
 author: lavi
 layout: layouts/post.njk
 ---
@@ -686,7 +686,6 @@ function Parent () {
 - [React.fowardRef](https://reactjs.org/docs/react-api.html#reactforwardref)
 - [Refs and the DOM](https://reactjs.org/docs/refs-and-the-dom.html)
 - [Forwarding Refs](https://reactjs.org/docs/forwarding-refs.html)
-
 
 
 

@@ -1,7 +1,7 @@
 ---
 title: 實作專案套件化
 date: 2022-04-03
-tags: [Front-end, article]
+tags: [Frontend]
 author: xiang
 layout: layouts/post.njk
 image:

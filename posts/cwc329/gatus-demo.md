@@ -1,7 +1,7 @@
 ---
 title: Gatus demo
 date: 2022-09-08
-tags: [Gatus, monitoring, devops]
+tags: [Gatus, Monitoring, DevOps]
 author: cwc329
 layout: layouts/post.njk
 ---

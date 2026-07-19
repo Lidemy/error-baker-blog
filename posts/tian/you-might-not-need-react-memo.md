@@ -1,7 +1,7 @@
 ---
 title: 你可能不需要 React Memo
 date: 2021-08-29
-tags: [performance, react, memo]
+tags: [Performance, React, React Memo]
 author: tian
 layout: layouts/post.njk
 ---

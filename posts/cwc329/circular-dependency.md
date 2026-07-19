@@ -1,7 +1,7 @@
 ---
 title: 淺談工作上遇到的 Circular Dependency
 date: 2022-01-30
-tags: [JavaScript, 'circular dependency', eslint]
+tags: [JavaScript, Circular Dependency, ESLint]
 author: cwc329
 layout: layouts/post.njk
 ---

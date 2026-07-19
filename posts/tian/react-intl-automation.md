@@ -1,7 +1,7 @@
 ---
 title: 如何使用 react-intl + babel plugin 自動化產出多國語系檔？
 date: 2022-01-31
-tags: [react, intl, internationalization, i18n, automation, babel, js, formatjs, ast]
+tags: [React Intl, Internationalization, Babel, FormatJS, Automation]
 author: tian
 layout: layouts/post.njk
 ---

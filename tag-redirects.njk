@@ -1,0 +1,8 @@
+---
+permalink: _redirects
+eleventyExcludeFromCollections: true
+sitemapExclude: true
+---
+{% for redirect in tagRedirects -%}
+{{ redirect.from }} {{ redirect.to }} {{ redirect.status }}!
+{% endfor -%}

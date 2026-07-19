@@ -1,7 +1,7 @@
 ---
 title: 人人都可以写文章 —— 从笔记到文章
 date: 2021-08-22
-tags: [article]
+tags: [Technical Writing]
 author: benben
 layout: layouts/post.njk
 lang: zh-CN

@@ -1,7 +1,7 @@
 ---
 title: フロントエンドの雑魚 —— 転職 1 年と 2 ヶ月の振り返り
 date: 2023-02-01
-tags: [Front-end, salary]
+tags: [Frontend, Salary]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/SJOHgbO3j.jpg

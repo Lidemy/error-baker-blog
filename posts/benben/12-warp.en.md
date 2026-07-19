@@ -1,7 +1,7 @@
 ---
 title: Warp | Your 21st Century AI Terminal
 date: 2023-05-31
-tags: [warp, terminal, ai]
+tags: [Warp, Terminal, AI]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/HJsA77LE3.gif

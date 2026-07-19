@@ -1,7 +1,7 @@
 ---
 title: multipart/form-data 初探
 date: 2022-04-30
-tags: ["RFC 7578", OpenAPI, multipart/form-data, RFC]
+tags: [RFC 7578, OpenAPI, multipart/form-data, RFC]
 author: cwc329
 layout: layouts/post.njk
 ---

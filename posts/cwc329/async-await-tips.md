@@ -1,7 +1,7 @@
 ---
 title: async/await 到底在等什麼？
 date: 2021-11-22
-tags: [JavaScript, async, await]
+tags: [JavaScript, Async, Await]
 author: cwc329
 layout: layouts/post.njk
 ---

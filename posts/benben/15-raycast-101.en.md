@@ -1,7 +1,7 @@
 ---
 title: Raycast | An Incomplete Handbook
 date: 2025-07-31
-tags: [raycast, ai]
+tags: [Raycast, AI]
 author: benben
 layout: layouts/post.njk
 image: https://img.youtube.com/vi/NuIpZoQwuVY/0.jpg

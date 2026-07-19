@@ -1,7 +1,7 @@
 ---
 title: なぜフレームワークを使うのか —— 今まで聞いた中で一番良い答えは？
 date: 2021-09-19
-tags: [framework]
+tags: [Framework]
 author: benben
 layout: layouts/post.njk
 image: https://www.saaspegasus.com/static/images/web/modern-javascript/2008-vs-2021.png

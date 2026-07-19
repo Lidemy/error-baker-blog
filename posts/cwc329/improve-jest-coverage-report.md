@@ -1,7 +1,7 @@
 ---
 title: 改善 CI/CD 中的 jest-coverage-report
 date: 2023-03-26
-tags: [devops, 'github actions', 'CI/CD']
+tags: [DevOps, GitHub Actions, CI/CD]
 author: cwc329
 layout: layouts/post.njk
 ---

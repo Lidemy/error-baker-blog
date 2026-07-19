@@ -1,7 +1,7 @@
 ---
 title: Leetcode Subsets and Golang Slice
 date: 2024-08-28
-tags: [golang, leetcode]
+tags: [Go, LeetCode]
 author: cwc329
 layout: layouts/post.njk
 ---

@@ -8,24 +8,26 @@
   },
   "scripts": {
     "clean": "node scripts/clean-output.js",
-    "build": "npm run clean && npm run js-build && eleventy && npm run test",
+    "build": "npm run clean && npm run check-tags && npm run js-build && eleventy && npm run test",
     "watch": "concurrently \"eleventy --serve\" \"npm run js-build-watch\"",
     "serve": "eleventy --serve",
     "js-build": "rollup -c rollup.config.js",
     "js-build-watch": "rollup -c rollup.config.js -w",
     "debug": "DEBUG=* eleventy && npm run test",
-    "test": "npm run test:site && npm run test:translations",
+    "test": "npm run test:site && npm run test:translations && npm run check-tags",
     "test:site": "node scripts/assert-site-built.js && mocha test/test*.js",
     "test-watch": "mocha test/test*.js --watch",
     "check-translations": "node scripts/check-translations.js",
     "check-translations:all": "node scripts/check-translations.js --all",
+    "check-tags": "node scripts/check-tags.js",
     "test:translations": "node scripts/check-translations.test.js && npm run check-translations:all"
   },
   "pre-push": [
     "build"
   ],
   "pre-commit": [
-    "check-translations"
+    "check-translations",
+    "check-tags"
   ],
   "repository": {
     "type": "git",

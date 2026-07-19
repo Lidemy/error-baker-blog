@@ -1,7 +1,7 @@
 ---
 title: Frontend Noob — Career-Change Reflection at 1 Year and 2 Months
 date: 2023-02-01
-tags: [Front-end, salary]
+tags: [Frontend, Salary]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/SJOHgbO3j.jpg

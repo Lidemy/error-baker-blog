@@ -1,7 +1,7 @@
 ---
 title: monorepo 之我見
 date: 2021-12-26
-tags: [monorepo]
+tags: [Monorepo]
 author: cwc329
 layout: layouts/post.njk
 ---

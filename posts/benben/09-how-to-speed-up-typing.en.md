@@ -1,7 +1,7 @@
 ---
 title: How to Improve Your Typing Speed — From Beginner to Super Beginner
 date: 2022-10-16
-tags: [typing, vs-code-plugin]
+tags: [Typing, VS Code Extension]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/rJWJgRQ1i.gif

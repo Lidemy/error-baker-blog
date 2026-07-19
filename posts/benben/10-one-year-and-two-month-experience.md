@@ -1,7 +1,7 @@
 ---
 title: 前端菜雞 - 轉職 1 年又 2 個月心得
 date: 2023-02-01
-tags: [Front-end, salary]
+tags: [Frontend, Salary]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/SJOHgbO3j.jpg

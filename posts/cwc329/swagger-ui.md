@@ -1,7 +1,7 @@
 ---
 title: 初探 swagger-ui
 date: 2021-10-24
-tags: [swagger-ui, swagger-editor, API-doc, OpenAPI, npm]
+tags: [Swagger UI, Swagger Editor, API Documentation, OpenAPI, npm]
 author: cwc329
 layout: layouts/post.njk
 ---

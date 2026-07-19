@@ -1,7 +1,7 @@
 ---
 title: Why Use a Framework — What's the Best Answer You've Heard?
 date: 2021-09-19
-tags: [framework]
+tags: [Framework]
 author: benben
 layout: layouts/post.njk
 image: https://www.saaspegasus.com/static/images/web/modern-javascript/2008-vs-2021.png

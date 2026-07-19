@@ -1,7 +1,7 @@
 ---
 title: Vue3 Composition API & React hooks
 date: 2022-07-30
-tags: [Front-end, react, vue]
+tags: [Frontend, React, Vue]
 author: benben
 layout: layouts/post.njk
 image: https://dev-to-uploads.s3.amazonaws.com/i/296z018ivuyy4p3954at.png

@@ -1,7 +1,7 @@
 ---
 title: 用 sheetJS 匯出 excel
 date: 2022-05-22
-tags: [Front-end]
+tags: [Frontend]
 author: ruofan
 layout: layouts/post.njk
 ---

@@ -1,7 +1,7 @@
 ---
 title: svelte 結合 firebase 實作登入
 date: 2021-09-04
-tags: [Front-end]
+tags: [Frontend]
 author: ruofan
 layout: layouts/post.njk
 image: https://i.imgur.com/JIy4LhV.png

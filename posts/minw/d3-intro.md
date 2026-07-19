@@ -1,7 +1,7 @@
 ---
 title: 再看 D3.js
 date: 2021-10-03
-tags: [data-vis]
+tags: [Data Visualization]
 author: minw
 layout: layouts/post.njk
 ---

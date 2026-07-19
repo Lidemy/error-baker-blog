@@ -1,7 +1,7 @@
 ---
 title: 用 Vue 實作 Infinite Scroll
 date: 2022-02-06
-tags: [Front-end]
+tags: [Frontend]
 author: ruofan
 layout: layouts/post.njk
 

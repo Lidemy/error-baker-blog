@@ -1,7 +1,7 @@
 ---
 title: 如何準確的 Google 到想要的內容
 date: 2021-09-28
-tags: [google]
+tags: [Google]
 author: simon198
 layout: layouts/post.njk
 ---

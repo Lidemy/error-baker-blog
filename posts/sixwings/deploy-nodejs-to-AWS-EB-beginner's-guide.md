@@ -1,7 +1,7 @@
 ---
 title: 在 AWS EB 上部署 Nodejs 網站的入門指南
 date: 2021-10-05
-tags: [back-end,nodejs,AWS]
+tags: [Backend, Node.js, AWS]
 author: sixwings
 layout: layouts/post.njk
 ---

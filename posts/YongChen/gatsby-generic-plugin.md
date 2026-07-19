@@ -1,7 +1,7 @@
 ---
 title: 來做一個 Gatsby Generic Plugin 吧
 date: 2021-11-15
-tags: [Gatsby-Plugin]
+tags: [Gatsby Plugin]
 author: YongChen
 layout: layouts/post.njk
 ---

@@ -1,7 +1,7 @@
 ---
 title: 介紹 Cookie 的新屬性 SameParty
 date: 2021-10-05
-tags: [cookie, google]
+tags: [Cookie, Google]
 author: umer
 layout: layouts/post.njk
 ---

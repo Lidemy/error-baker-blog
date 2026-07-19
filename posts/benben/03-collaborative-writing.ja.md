@@ -1,7 +1,7 @@
 ---
 title: 共同ノートの中の共同ノート —— JavaScript30 を例に
 date: 2021-10-26
-tags: [JavaScript, collaborative]
+tags: [JavaScript, Collaborative Writing]
 author: benben
 layout: layouts/post.njk
 image: https://i.imgur.com/ZmEEvep.png

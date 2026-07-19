@@ -1,7 +1,7 @@
 ---
 title: 進階版 To do list
 date: 2021-09-12
-tags: [Front-end, JavaScript, Todo-list]
+tags: [Frontend, JavaScript, Todo List]
 author: xiang
 layout: layouts/post.njk
 image: https://blog.errorbaker.tw/img/posts/xiang/todo-03.png

@@ -1,7 +1,7 @@
 ---
 title: 用 11ty 寫部落格的心得
 date: 2021-10-31
-tags: ["Eleventy", "JavaScript"]
+tags: [Eleventy, JavaScript]
 author: lavi
 layout: layouts/post.njk
 ---
@@ -284,7 +284,6 @@ template 本身有透過 `<meta>` 來做 [CSP](https://developer.mozilla.org/en-
 除此之外也還有一些樣式上的 bug 要處理就是。不過總算是有一個自己的平台可以開始累積內容 🙂。
 
 Big guy is john，感謝大家的觀看。
-
 
 
 

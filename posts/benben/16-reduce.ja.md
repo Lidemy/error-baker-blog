@@ -1,7 +1,7 @@
 ---
 title: 'Reduce | 完全マニュアル'
 date: 2026-05-16
-tags: [JavaScript, array]
+tags: [JavaScript, Array]
 author: benben
 layout: layouts/post.njk
 lang: ja

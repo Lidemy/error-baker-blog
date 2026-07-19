@@ -1,7 +1,7 @@
 ---
 title: 從本地到雲端，淺談部署和各種部署姿勢
 date: 2021-08-12
-tags: [deploy]
+tags: [Deployment]
 author: lavi
 layout: layouts/post.njk
 ---

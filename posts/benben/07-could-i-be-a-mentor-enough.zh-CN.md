@@ -1,7 +1,7 @@
 ---
 title: RE [前端引路人计划] —— 我也能够当个 mentor 吗？
 date: 2022-06-30
-tags: [mentor, Front-end]
+tags: [Mentor, Frontend]
 author: benben
 layout: layouts/post.njk
 image: https://camo.githubusercontent.com/c110c0c2bf1812ae1c8669b897e8d8a724fc29cea1bed87c34fe43fc67ba85a6/68747470733a2f2f692e696d6775722e636f6d2f515935767466422e706e67

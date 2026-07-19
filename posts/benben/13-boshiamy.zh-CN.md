@@ -1,7 +1,7 @@
 ---
 title: 什么时代了还在学 | 嘸蝦米输入法
 date: 2023-08-31
-tags: [boshiamy]
+tags: [Boshiamy]
 author: benben
 layout: layouts/post.njk
 image: https://hackmd.io/_uploads/B1HXrmRTn.gif

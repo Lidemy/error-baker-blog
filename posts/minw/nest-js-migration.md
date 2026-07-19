@@ -1,7 +1,7 @@
 ---
 title: 實作 Nest.js 中的 Migration 與 Seeder
 date: 2021-09-05
-tags: [back-end]
+tags: [Backend]
 author: minw
 layout: layouts/post.njk
 ---
