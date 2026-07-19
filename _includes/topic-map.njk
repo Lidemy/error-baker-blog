@@ -1,0 +1,35 @@
+<section class="topic-map" aria-labelledby="topic-map-heading">
+  <div class="topic-map__intro">
+    <h2 id="topic-map-heading">{{ tt.allTopics }}</h2>
+    <p>{{ tt.intro }}</p>
+    <p class="topic-map__candidate-note">
+      <span class="topic-map__candidate-dot" aria-hidden="true"></span>
+      {{ tt.candidateHint }}
+    </p>
+  </div>
+
+  <ul class="topic-map__grid">
+  {%- for topic in topicMap %}
+    <li class="topic-card{% if topic.isCategoryCandidate %} topic-card--candidate{% endif %}">
+      <a class="topic-card__link" href="{{ topic.url | url }}">
+        <span class="topic-card__heading">
+          <strong>{{ topic.canonical }}</strong>
+          {%- if topic.isCategoryCandidate %}
+          <span class="topic-card__badge">{{ tt.candidateLabel }}</span>
+          {%- endif %}
+        </span>
+        <span class="topic-card__stats">
+          {{ topic.postCount }} {{ tt.postOne if topic.postCount == 1 else tt.postMany }}
+          <span aria-hidden="true">·</span>
+          {{ topic.authorCount }} {{ tt.authorOne if topic.authorCount == 1 else tt.authorMany }}
+        </span>
+        <span class="topic-card__authors">
+        {%- for authorKey in topic.authors %}
+          {{ metadata.authors[authorKey].name }}{% if not loop.last %}、{% endif %}
+        {%- endfor %}
+        </span>
+      </a>
+    </li>
+  {%- endfor %}
+  </ul>
+</section>

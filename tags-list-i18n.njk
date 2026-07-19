@@ -1,0 +1,17 @@
+---
+# Per-language topic maps. Only languages with a visible translated post are
+# present in localizedTopicMaps, so these shells can never be empty or orphaned.
+layout: layouts/home.njk
+pagination:
+  data: collections.localizedTopicMaps
+  size: 1
+  alias: localizedTopicMap
+permalink: "/{{ localizedTopicMap.lang }}/tags/"
+eleventyComputed:
+  lang: "{{ localizedTopicMap.lang }}"
+  title: "{{ i18n[localizedTopicMap.lang].tags.title }}"
+  translationKey: tags
+---
+{% set topicMap = localizedTopicMap.topics %}
+{% set tt = i18n[localizedTopicMap.lang].tags %}
+{% include "topic-map.njk" %}

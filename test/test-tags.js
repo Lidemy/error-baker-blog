@@ -2,6 +2,7 @@
 
 const assert = require("assert").strict;
 const fs = require("fs");
+const { JSDOM, VirtualConsole } = require("jsdom");
 const taxonomy = require("../_data/tagTaxonomy.json");
 const { auditPosts } = require("../scripts/check-tags");
 const {
@@ -128,6 +129,14 @@ describe("tag taxonomy", () => {
 });
 
 describe("built topic pages", () => {
+  function documentFor(file) {
+    return new JSDOM(fs.readFileSync(file, "utf8"), {
+      // jsdom 15 reports modern CSS syntax (for example color-mix()) as a
+      // stylesheet parse warning even though the HTML DOM is valid.
+      virtualConsole: new VirtualConsole(),
+    }).window.document;
+  }
+
   it("publishes permanent redirects for the verified legacy tag URLs", () => {
     const lines = fs
       .readFileSync("_site/_redirects", "utf8")
@@ -141,4 +150,36 @@ describe("built topic pages", () => {
     assert.equal(lines.some((line) => /^\/(?:en|ja|zh-CN)\//.test(line)), false);
   });
 
+  it("renders the source topic map without expanding article lists", () => {
+    const document = documentFor("_site/tags/index.html");
+    assert.equal(document.querySelectorAll(".topic-card").length, 92);
+    assert.equal(document.querySelectorAll(".topic-card--candidate").length, 3);
+    assert.equal(document.querySelector("#post-list"), null);
+    assert.equal(document.querySelector(".archive-row"), null);
+    assert.ok(document.querySelector('a[href="/tags/frontend/"]'));
+  });
+
+  it("uses canonical detail slugs and preserves source article lists", () => {
+    const document = documentFor("_site/tags/frontend/index.html");
+    assert.equal(document.querySelectorAll(".archive-row").length, 23);
+    assert.ok(document.querySelector('a[href="/tags/"]'));
+    assert.ok(fs.existsSync("_site/tags/node-js/index.html"));
+  });
+
+  it("localizes topic chrome while keeping labels canonical and posts locale-only", () => {
+    for (const lang of ["en", "ja", "zh-CN"]) {
+      const map = documentFor(`_site/${lang}/tags/index.html`);
+      assert.equal(map.documentElement.lang, lang);
+      assert.equal(map.querySelectorAll(".topic-card").length, 24);
+      assert.ok(map.querySelector('a[href="/' + lang + '/tags/git/"]'));
+      assert.ok(map.querySelector('nav a[href="/' + lang + '/tags/"]'));
+
+      const detail = documentFor(`_site/${lang}/tags/git/index.html`);
+      const articleLinks = [...detail.querySelectorAll(".archive-title")].map(
+        (link) => link.getAttribute("href")
+      );
+      assert.deepEqual(articleLinks, [`/${lang}/posts/tian/git-flow/`]);
+      assert.equal(detail.querySelector("h1").textContent.includes("Git"), true);
+    }
+  });
 });

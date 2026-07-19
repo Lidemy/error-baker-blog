@@ -1,0 +1,27 @@
+.not-found {
+  max-width: 38rem;
+  margin: 2rem auto 4rem;
+  text-align: center;
+}
+
+.not-found__mark {
+  margin: 0 0 1rem;
+  font-size: clamp(3rem, 12vw, 5rem);
+  line-height: 1;
+}
+
+.not-found a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.not-found a:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 7%, transparent);
+}

@@ -1,28 +1,28 @@
 ---
 pagination:
-  data: collections
+  data: collections.topicPages
   size: 1
-  alias: tag
-  filter:
-    - all
-    - nav
-    - post
-    - posts
-    - postsZhTW
-    - siteLangsWithPublishedPosts
-    - translations
-    - authorsByPostCount
-    - authorLangPages
-    - aiCrawlRules
-    - tagList
-  addAllPagesToCollections: true
+  alias: topicPage
 layout: layouts/home.njk
 eleventyComputed:
-  title: Tagged “{{ tag }}”
-permalink: /tags/{{ tag | slug }}/
+  lang: "{{ topicPage.lang }}"
+  title: "{{ i18n[topicPage.lang].tags.detailPrefix }}{{ topicPage.canonical }}"
+  topicId: "{{ topicPage.id }}"
+permalink: "{{ topicPage.url }}"
 ---
 
-{% set postslist = collections[ tag ] | filterByLang('zh-TW') | reverse %}
+{% set tt = i18n[topicPage.lang].tags %}
+{% set mapUrl = '/tags/' if topicPage.lang == 'zh-TW' else '/' + topicPage.lang + '/tags/' %}
+<nav class="topic-breadcrumb" aria-label="{{ tt.breadcrumbLabel }}">
+  <a href="{{ mapUrl | url }}">← {{ tt.backToMap }}</a>
+</nav>
+<p class="topic-detail__stats">
+  {{ topicPage.postCount }} {{ tt.postOne if topicPage.postCount == 1 else tt.postMany }}
+  <span aria-hidden="true">·</span>
+  {{ topicPage.authorCount }} {{ tt.authorOne if topicPage.authorCount == 1 else tt.authorMany }}
+  {%- if topicPage.isCategoryCandidate %}
+  <span class="topic-card__badge">{{ tt.candidateLabel }}</span>
+  {%- endif %}
+</p>
+{% set postslist = topicPage.posts | reverse %}
 {% include "postslist.njk" %}
-
-<p>See <a href="{{ '/tags/' | url }}">all tags</a>.</p>

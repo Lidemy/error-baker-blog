@@ -53,7 +53,42 @@ header nav {
   opacity: 1;
 }
 #color-scheme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
   margin: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+#color-scheme-toggle:hover {
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  color: var(--accent);
+}
+/* Original filled brand icons (moon/sun), tinted via currentColor. 20px
+   instead of the stroked icons' 22px: filled shapes carry more optical
+   weight, so they render slightly smaller to sit level with the 2px-stroke
+   magnifier and hamburger. */
+.theme-icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+  pointer-events: none;
+}
+.theme-icon--light {
+  display: none;
+}
+body.dark .theme-icon--dark {
+  display: none;
+}
+body.dark .theme-icon--light {
+  display: block;
 }
 /* ID selector: must outgun the generic `button:not([disabled])` accent
    rules from the base stylesheet, same trick as #color-scheme-toggle. */

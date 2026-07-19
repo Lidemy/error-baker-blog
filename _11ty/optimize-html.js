@@ -93,7 +93,10 @@ const purifyCss = async (rawContent, outputPath) => {
       // Language-aware typography selectors (`:lang(ja) article` etc.) start
       // with a functional pseudo-class purgecss@2 can't match against content,
       // so the whole rule group is dropped without this.
-      whitelistPatterns: [/^:lang/],
+      // topic-card--candidate / topic-card__badge render only while a
+      // category candidate exists in the corpus; keep the whole topic-*
+      // family so a candidate-free build cannot strip their styling.
+      whitelistPatterns: [/^:lang/, /^search-/, /^topic-/],
     });
 
     const after = csso.minify(purged[0].css).css;

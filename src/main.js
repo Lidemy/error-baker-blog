@@ -40,29 +40,56 @@ if (location.search) {
   }, 1000)
 }
 
-function tweet_(url) {
-  open(
-    "https://twitter.com/intent/tweet?url=" + encodeURIComponent(url),
-    "_blank"
+function legacyCopyShareUrl(url) {
+  var field = document.createElement("textarea");
+  field.value = url;
+  field.setAttribute("readonly", "");
+  field.style.position = "fixed";
+  field.style.opacity = "0";
+  document.body.appendChild(field);
+  field.select();
+  var copied = false;
+  try {
+    copied = document.execCommand("copy");
+  } catch (error) {}
+  field.remove();
+  if (copied) {
+    message(ui("linkCopied", "麵包連結已複製"));
+  } else {
+    window.prompt(ui("copyPrompt", "Copy this link"), url);
+  }
+}
+
+function copyShareUrl(url) {
+  if (!navigator.clipboard) {
+    legacyCopyShareUrl(url);
+    return;
+  }
+  navigator.clipboard.writeText(url).then(
+    function () {
+      message(ui("linkCopied", "麵包連結已複製"));
+    },
+    function () {
+      legacyCopyShareUrl(url);
+    }
   );
 }
-function tweet(anchor) {
-  tweet_(anchor.getAttribute("href"));
-}
-expose("tweet", tweet);
 
 function share(anchor) {
-  var url = anchor.getAttribute("href");
-  event.preventDefault();
+  var url = anchor.getAttribute("data-share-url");
   if (navigator.share) {
     navigator.share({
+      title: document.title,
       url: url,
+    }).catch(function (error) {
+      // Closing the native share sheet is an intentional no-op. For actual
+      // platform failures, preserve a useful copy fallback.
+      if (!error || error.name !== "AbortError") {
+        copyShareUrl(url);
+      }
     });
-  } else if (navigator.clipboard) {
-    navigator.clipboard.writeText(url);
-    message(ui("linkCopied", "文章連結已複製"));
   } else {
-    tweet_(url);
+    copyShareUrl(url);
   }
 }
 expose("share", share);
@@ -213,6 +240,7 @@ addEventListener(
 if (window.ResizeObserver && document.querySelector("header nav #nav")) {
   var progress = document.getElementById("reading-progress");
   var backToTopButton = document.getElementById("back-to-top");
+  var readerTools = document.querySelector(".reader-tools");
   var readDoneShown = false;
 
   var timeOfLastScroll = 0;
@@ -224,7 +252,7 @@ if (window.ResizeObserver && document.querySelector("header nav #nav")) {
     }
     timeOfLastScroll = Date.now();
   }
-  addEventListener("scroll", scroll);
+  addEventListener("scroll", scroll, { passive: true });
 
   // The progress bar "bakes" from pale dough to deep ember with reading
   // progress, like watching a loaf brown in the oven (values mirror
@@ -255,8 +283,12 @@ if (window.ResizeObserver && document.querySelector("header nav #nav")) {
     progress.style.transform = `translate(-${100 - percent}vw, 0)`;
     progress.style.backgroundColor = bakeColor(percent);
     if (backToTopButton) {
-      backToTopButton.hidden =
+      var hideBackToTop =
         document.scrollingElement.scrollTop < winHeight * 1.5;
+      backToTopButton.hidden = hideBackToTop;
+      if (readerTools) {
+        readerTools.hidden = hideBackToTop;
+      }
     }
     if (
       percent >= 100 &&
@@ -292,6 +324,10 @@ expose("backToTop", function () {
   // css `scroll-behavior: smooth` animates this (and turns it off under
   // prefers-reduced-motion).
   window.scrollTo(0, 0);
+  var homeLink = document.querySelector(".site-title a");
+  if (homeLink) {
+    homeLink.focus({ preventScroll: true });
+  }
 });
 
 // Clicking a heading's "#" anchor copies the section link. Default hash

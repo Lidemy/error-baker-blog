@@ -19,7 +19,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-const { JSDOM } = require("jsdom");
+const { JSDOM, VirtualConsole } = require("jsdom");
 const cspHashGen = require("csp-hash-generator");
 const syncPackage = require("browser-sync/package.json");
 
@@ -49,7 +49,11 @@ const addCspHash = async (rawContent, outputPath) => {
   let content = rawContent;
 
   if (outputPath && outputPath.endsWith(".html")) {
-    const dom = new JSDOM(content);
+    const dom = new JSDOM(content, {
+      // jsdom 15 reports modern CSS syntax (for example color-mix()) as a
+      // stylesheet parse warning even though the HTML DOM is valid.
+      virtualConsole: new VirtualConsole(),
+    });
     const cspAble = [
       ...dom.window.document.querySelectorAll("script[csp-hash]"),
     ];

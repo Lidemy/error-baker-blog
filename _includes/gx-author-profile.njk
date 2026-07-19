@@ -9,8 +9,8 @@
       {%- endif -%}
       Lv.{{ stat.level }} · {{ t.gx.tier[stat.tier] }}</span>
     {%- if stat.rank %}<span class="gx-profile__rank">#{{ stat.rank }}</span>{% endif %}
-    <span class="gx-profile__count">{{ stat.count }} {{ t.postsUnit or '篇' }}</span>
-    {%- if stat.comments %}<span class="gx-comments" title="{{ stat.comments }} {{ t.gx.commentsUnit }}">💬 {{ stat.comments }}</span>{% endif %}
+    <span class="gx-profile__count">{{ stat.count }} {{ t.postUnit if stat.count == 1 else t.postsUnit }}</span>
+    {%- if stat.comments %}<span class="gx-comments" title="{{ stat.comments }} {{ t.gx.commentUnit if stat.comments == 1 else t.gx.commentsUnit }}">💬 {{ stat.comments }}</span>{% endif %}
     {%- if stat.mostDiscussed %}<span class="gx-badge gx-badge--discussed">{{ t.gx.mostDiscussed }}</span>{% endif %}
     {%- if stat.medal %}<span class="gx-profile__medal">{{ stat.medal }}</span>{% endif %}
   </div>
@@ -21,7 +21,7 @@
   <div class="gx-cal">
     <div class="gx-periods">
       {%- for c in cal.cells %}
-      <div class="gx-period" title="{{ c.year }} Q{{ c.quarter }} · {{ c.count }} {{ t.postsUnit or '篇' }}">
+      <div class="gx-period" title="{{ c.year }} Q{{ c.quarter }} · {{ c.count }} {{ t.postUnit if c.count == 1 else t.postsUnit }}">
         <i class="gx-cell" data-level="{{ c.level }}"></i>
         <span class="gx-period__lbl"><b>{% if c.quarter == 1 or loop.first %}{{ c.year }}{% endif %}</b>Q{{ c.quarter }}</span>
       </div>

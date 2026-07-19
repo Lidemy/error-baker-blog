@@ -1,23 +1,24 @@
 ---
-# Per-language 404 pages: /en/404.html, /ja/404.html, /zh-CN/404.html
-# (the zh-TW 404 is 404.njk at /404.html). Netlify's [[redirects]] rule with
-# status = 404 serves /<lang>/404.html for any unmatched /<lang>/* path, so a
-# reader hitting /ja/posts/bad-slug/ sees the Japanese 404 instead of zh-TW.
+# Localized not-found documents. Netlify routes missing locale-prefixed URLs
+# to these files with a real HTTP 404 status (see netlify.toml).
 layout: layouts/home.njk
-eleventyExcludeFromCollections: true
 pagination:
   data: collections.siteLangsWithPublishedPosts
   size: 1
-  alias: fplang
+  alias: notFoundLang
   filter:
     - zh-TW
-permalink: "/{{ fplang }}/404.html"
+permalink: "/{{ notFoundLang }}/404.html"
+eleventyExcludeFromCollections: true
+sitemapExclude: true
 eleventyComputed:
-  lang: "{{ fplang }}"
-  title: "{{ i18n[fplang].notFoundTitle }}"
+  lang: "{{ notFoundLang }}"
+  title: "{{ i18n[notFoundLang].notFoundTitle }}"
 ---
-<p style="font-size: 3rem" aria-hidden="true">🍞🔥</p>
 
-<p>{{ i18n[fplang].notFoundBody }}</p>
-
-<a href="{{ ('/' + fplang + '/') | url }}">{{ i18n[fplang].notFoundHome }}</a>
+{% set nt = i18n[notFoundLang] %}
+<div class="not-found">
+  <p class="not-found__mark" aria-hidden="true">🍞🔥</p>
+  <p>{{ nt.notFoundBody }}</p>
+  <p><a href="{{ ('/' + notFoundLang + '/') | url }}">{{ nt.notFoundHome }}</a></p>
+</div>

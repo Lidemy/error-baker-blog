@@ -22,17 +22,17 @@ templateClass: tmpl-post
   <div class="byline">
     <a class="byline-author" href="{{ authorUrl }}">
       <img class="avatar" src="{{ postAuthor.avatarUrl }}" alt="" />
-      <span>{{ postAuthor.name }}</span>
+      <span><span class="byline-role">{{ t.publishedBy }}</span> {{ postAuthor.name }}</span>
     </a>
     <time class="byline-date" datetime="{{ page.date | htmlDateString }}">{{ t.publishedOn }} {{ page.date | htmlDateString }}</time>
     <span class="byline-tags">
-    {%- for tag in tags %}{% if tag !== "posts" %}{% set tagUrl %}/tags/{{ tag | slug }}/{% endset %}<a href="{{ tagUrl | url }}" class="post-tag">#{{ tag }}</a>{% endif %}{% endfor %}
+    {%- for tag in tags %}{% if tag !== "posts" %}{% set canonicalTagUrl = tag | tagUrl(pageLang) %}<a href="{{ canonicalTagUrl | url }}" class="post-tag">#{{ tag }}</a>{% endif %}{% endfor %}
     </span>
   </div>
 {% endblock %}
 
 
-{% set shareUrl = metadata.url + page.url %}
+{% set shareUrl = articleUrl %}
 
 {% block article %}
 
@@ -49,9 +49,18 @@ templateClass: tmpl-post
   <div class="author-intro">{{ authorIntro | safe }}</div>
 </section>
 
-<p>
-  <a href="{{ shareUrl | safe }}" on-click="share">{{ t.shareArticle }}</a>
-</p>
+<div class="post-share">
+  <button class="post-share__button" type="button" on-click="share"
+    data-share-url="{{ shareUrl | escape }}" aria-label="{{ t.shareArticle }}">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <circle cx="18" cy="5" r="2.25"/>
+      <circle cx="6" cy="12" r="2.25"/>
+      <circle cx="18" cy="19" r="2.25"/>
+      <path d="M8 11l7.9-4.6M8 13l7.9 4.6"/>
+    </svg>
+    <span>{{ t.shareArticle }}</span>
+  </button>
+</div>
 
 {%- set related = collections.posts | filterByLang(pageLang) | relatedPosts(page, tags, author, 3) %}
 {%- if related.length %}
@@ -96,12 +105,6 @@ templateClass: tmpl-post
   async>
 </script>
 {% endif %}
-
-<share-widget>
-  <button on-click="share" aria-label="Share" href="{{ shareUrl | safe }}">
-    <div></div>
-  </button>
-</share-widget>
 
 <script type="application/ld+json">
 {

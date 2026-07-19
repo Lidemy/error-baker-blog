@@ -77,51 +77,6 @@ header nav {
 }
 /*! purgecss end ignore */
 
-share-widget {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  opacity: 0.9;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  overflow: hidden;
-  box-shadow: 2px 3px 5px 2px rgba(0, 0, 0, 0.2);
-}
-
-@media screen and (max-width: 376px) {
-  share-widget {
-    display: none;
-  }
-}
-
-share-widget div {
-  margin-left: 50%;
-  transform: translateX(-50%);
-  width: 20px;
-  height: 20px;
-  background-image: url("/img/share.svg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-}
-
-.apple share-widget div {
-  background-image: url("/img/share-apple.svg");
-}
-
-share-widget button {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  transition: 0.3s;
-}
-
-share-widget button:active {
-  transform: scale(1.2);
-}
-
 dialog {
   background-color: var(--primary);
   position: fixed;
@@ -1207,6 +1162,12 @@ body {
   /* Shared motion tokens for micro-interactions. */
   --ease: cubic-bezier(0.2, 0.6, 0.2, 1);
   --dur: 0.25s;
+  /* Shared radius scale: raised surfaces (cards, dialogs), inner controls
+     (forms, result rows), small chips (shortcut hints, tooltips). Pills stay
+     999px and true circles 50% by convention. */
+  --radius-surface: 12px;
+  --radius-control: 8px;
+  --radius-chip: 4px;
 }
 body.dark {
   --paper: #1a1816;
@@ -1444,11 +1405,6 @@ main {
   padding: 0.25rem;
   cursor: pointer;
   line-height: 0;
-}
-#color-scheme-toggle img {
-  width: 24px;
-  display: block;
-  pointer-events: none;
 }
 /* ── Post cards: robust clamp + gentle hover ────────────────────────────*/
 .summary {
@@ -1808,43 +1764,6 @@ dialog#message[open] {
   }
 }
 
-/* Back-to-top: revealed by src/main.js after ~1.5 screens of scrolling.
-   `button.` prefix outranks the global button:not([disabled]) rules. */
-button.back-to-top {
-  position: fixed;
-  right: clamp(1rem, 3vw, 2rem);
-  bottom: clamp(1rem, 3vw, 2rem);
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  border: 0;
-  border-radius: 999px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 1.15rem;
-  line-height: 1;
-  cursor: pointer;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
-  z-index: 10;
-}
-button.back-to-top:hover {
-  background: var(--accent-hover);
-  color: #fff;
-  transform: translateY(-2px);
-}
-button.back-to-top {
-  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease),
-    background 0.15s;
-}
-/* Fade/rise in when the hidden attribute is removed (2024 CSS; browsers
-   without @starting-style just show the button instantly). */
-@starting-style {
-  button.back-to-top {
-    opacity: 0;
-    transform: translateY(10px) scale(0.9);
-  }
-}
-
 /* "Freshly baked" chip on posts younger than 30 days (see isFresh filter). */
 .post-fresh {
   display: inline-block;
@@ -1920,6 +1839,10 @@ body.tmpl-post article {
   width: 30px;
   height: 30px;
   margin: 0;
+}
+.byline-role {
+  color: var(--ink-faint);
+  font-weight: 500;
 }
 .byline-tags {
   width: 100%;
@@ -2185,20 +2108,6 @@ h6:hover > .direct-link {
    REFINEMENTS round 2 — nav, language dropdown, back-to-top, author card,
    home masthead rhythm, modern pagination (design-craft review)
    ════════════════════════════════════════════════════════════════════════ */
-
-/* Theme-toggle icon: the SVGs are white (#fafafa); invert them on the light
-   "paper" nav so the icon is visible, keep them white on the dark nav. */
-#color-scheme-toggle {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-#color-scheme-toggle img {
-  filter: invert(1) brightness(0.2);
-}
-body.dark #color-scheme-toggle img {
-  filter: none;
-}
 
 /* ── Language switcher: compact globe dropdown (native <details>) ─────────*/
 .lang-switch {
@@ -2558,3 +2467,118 @@ body.tmpl-home .intro {
 /* The intro is prose, not a headline: `balance` halves short paragraphs at
    commas ("lyrics look", worst in en/ja). `pretty` (set in the shared rule)
    keeps natural fills while still avoiding orphans. */
+
+/* ── Topic map: taxonomy first, articles one level deeper ─────────────── */
+.topic-map__intro {
+  max-width: 44rem;
+  margin-bottom: 2rem;
+}
+.topic-map__intro h2 {
+  margin-bottom: 0.5rem;
+}
+.topic-map__intro p {
+  color: var(--ink-soft);
+}
+.topic-map__candidate-note {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  font-size: 0.9rem;
+}
+.topic-map__candidate-dot {
+  flex: 0 0 auto;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: var(--accent);
+}
+.topic-map__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.topic-card {
+  min-width: 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-surface);
+  background: var(--paper-raised);
+  transition: border-color var(--dur) var(--ease),
+    transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.topic-card:hover {
+  border-color: var(--rule-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1.25rem rgba(31, 29, 27, 0.08);
+}
+.topic-card--candidate {
+  border-color: color-mix(in srgb, var(--accent) 55%, var(--rule));
+}
+.topic-card__link {
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 1rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+.topic-card__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.65rem;
+  font-size: 1.08rem;
+}
+.topic-card__badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.topic-card__stats,
+.topic-card__authors {
+  color: var(--ink-faint);
+  font-size: 0.84rem;
+}
+.topic-card__authors {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.topic-breadcrumb {
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+}
+.topic-breadcrumb a {
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+.topic-breadcrumb a:hover {
+  color: var(--accent);
+}
+.topic-detail__stats {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  color: var(--ink-faint);
+  font-size: 0.9rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topic-card {
+    transition: none;
+  }
+  .topic-card:hover {
+    transform: none;
+  }
+}
