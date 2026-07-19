@@ -60,6 +60,34 @@ describe("image build pipeline", () => {
     assert.equal(sources[0].getAttribute("sizes"), "64px");
   });
 
+  it("converts GIFs to <video> — including odd-height GIFs that broke the 2021 build", async function () {
+    // react.gif 是 874x615（奇數高）：正是 2021 年讓 ffmpeg 以
+    // "height not divisible by 2" 失敗、導致 gif2mp4 被整個停用的檔案。
+    // 用它當 fixture，確保 scale 濾鏡修正不會回歸。
+    this.timeout(30000);
+    const output = await transform(
+      '<!doctype html><p><img alt="React demo" src="/img/posts/clay/react.gif"></p>',
+      "_site/gif-test/index.html"
+    );
+    const doc = new JSDOM(output, { virtualConsole: quietConsole }).window.document;
+    assert.equal(doc.querySelector("img"), null, "The <img> should be replaced");
+    const video = doc.querySelector("video");
+    assert.ok(video, "Expected the GIF to be swapped for a <video>");
+    assert.equal(video.getAttribute("src"), "/img/posts/clay/react.mp4");
+    assert.equal(video.getAttribute("width"), "874");
+    assert.equal(video.getAttribute("height"), "615");
+    for (const attr of ["autoplay", "muted", "loop", "playsinline"]) {
+      assert.ok(video.hasAttribute(attr), `Expected ${attr} on the <video>`);
+    }
+    assert.equal(video.getAttribute("aria-label"), "React demo");
+    assert.equal(video.getAttribute("alt"), null);
+
+    const fs = require("fs");
+    const mp4 = "_site/img/posts/clay/react.mp4";
+    assert.ok(fs.existsSync(mp4), `Expected ${mp4} to be written`);
+    assert.ok(fs.statSync(mp4).size > 0, `Expected ${mp4} to be non-empty`);
+  });
+
   it("caps small local avatars at 96px without downsizing larger avatars", async () => {
     const output = await transform(
       '<!doctype html><img class="avatar avatar-small" alt="" src="/img/authors/tian.jpg">',
