@@ -20,4 +20,4 @@ eleventyComputed:
 
 <p>{{ i18n[fplang].notFoundBody }}</p>
 
-<a href="{{ '/' | url }}">{{ i18n[fplang].notFoundBack }}</a>
+<a href="{{ ('/' + fplang + '/') | url }}">{{ i18n[fplang].notFoundHome }}</a>

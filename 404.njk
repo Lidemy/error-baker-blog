@@ -1,12 +1,13 @@
 ---
 layout: layouts/home.njk
-title: 這一爐烤焦了 Q___Q
 permalink: 404.html
 eleventyExcludeFromCollections: true
+eleventyComputed:
+  title: "{{ i18n['zh-TW'].notFoundTitle }}"
 ---
 
 <p style="font-size: 3rem" aria-hidden="true">🍞🔥</p>
 
 <p>{{ i18n['zh-TW'].notFoundBody }}</p>
 
-<a href="{{ '/' | url }}">{{ i18n['zh-TW'].notFoundBack }}</a>
+<a href="{{ '/' | url }}">{{ i18n['zh-TW'].notFoundHome }}</a>
