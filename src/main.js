@@ -589,3 +589,69 @@ document.body.addEventListener(
     });
   });
 })();
+
+// ── Front-end error beacon ──────────────────────────────────────────────
+// Report uncaught errors and unhandled promise rejections to a Netlify
+// function via sendBeacon (fire-and-forget; survives the page unloading).
+// We send only technical fields — no PII. Cross-origin "Script error." is
+// opaque and useless, so it is dropped. Reports are deduped per session and
+// capped per pageview so a looping error can't flood the sink.
+(function () {
+  if (!navigator.sendBeacon) return;
+  var ENDPOINT = "/.netlify/functions/error-log";
+  var MAX_PER_PAGEVIEW = 5;
+  var STACK_MAX = 2000;
+  var sent = 0;
+  var seen = {};
+
+  function truncate(s, n) {
+    if (typeof s !== "string") return "";
+    return s.length > n ? s.slice(0, n) : s;
+  }
+
+  function report(payload) {
+    if (sent >= MAX_PER_PAGEVIEW) return;
+    var key = payload.message + "|" + payload.source + "|" + payload.line;
+    if (seen[key]) return;
+    seen[key] = true;
+    sent++;
+    try {
+      var blob = new Blob([JSON.stringify(payload)], {
+        type: "application/json",
+      });
+      navigator.sendBeacon(ENDPOINT, blob);
+    } catch (e) {}
+  }
+
+  addEventListener("error", function (e) {
+    // Cross-origin script errors are reported opaquely as "Script error."
+    // with no usable source — nothing actionable, so drop them. Resource
+    // load failures (img/script) fire without e.error and e.lineno; skip
+    // those too, we only want script exceptions.
+    if (!e.message || e.message === "Script error.") return;
+    if (!e.error && !e.lineno) return;
+    report({
+      message: truncate(e.message, 500),
+      source: truncate(e.filename || "", 500),
+      line: e.lineno || 0,
+      col: e.colno || 0,
+      stack: truncate((e.error && e.error.stack) || "", STACK_MAX),
+      path: location.pathname,
+      ua: truncate(navigator.userAgent, 300),
+    });
+  });
+
+  addEventListener("unhandledrejection", function (e) {
+    var reason = e.reason;
+    var msg = reason && reason.message ? reason.message : String(reason);
+    report({
+      message: truncate("Unhandled rejection: " + msg, 500),
+      source: "",
+      line: 0,
+      col: 0,
+      stack: truncate((reason && reason.stack) || "", STACK_MAX),
+      path: location.pathname,
+      ua: truncate(navigator.userAgent, 300),
+    });
+  });
+})();
