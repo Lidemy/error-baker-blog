@@ -11,6 +11,7 @@ permalink: "/{{ ap.lang }}/posts/{{ ap.author }}/"
 eleventyComputed:
   lang: "{{ ap.lang }}"
   title: "{{ metadata.authors[ap.author].name }}"
+  translationKey: "authors/{{ ap.author }}"
 ---
 {% set postslist = collections.posts | filterByLang(ap.lang) %}
 {% set author = ap.author %}

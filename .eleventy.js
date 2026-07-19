@@ -398,6 +398,37 @@ module.exports = function (eleventyConfig) {
     }));
   });
 
+  // Author pages: the zh-TW author page /posts/<author>/ is the hand-written
+  // posts/<author>/index.njk; a per-language /<lang>/posts/<author>/ exists only
+  // when collections.authorLangPages has that (lang, author) pair. List only
+  // the versions that actually exist so the switcher and hreflang never point
+  // at an empty page. `translationKey` is the sentinel `authors/<author>`.
+  eleventyConfig.addFilter(
+    "authorVersions",
+    function (langsArr, authorLangPages, translationKey) {
+      const author = (translationKey || "").replace(/^authors\//, "");
+      if (!author || author === translationKey) return [];
+      const localized = new Set(
+        (authorLangPages || [])
+          .filter((p) => p.author === author)
+          .map((p) => p.lang)
+      );
+      const versions = [];
+      for (const code of langsArr || []) {
+        if (code === DEFAULT_LANG || localized.has(code)) {
+          versions.push({
+            lang: code,
+            url:
+              code === DEFAULT_LANG
+                ? `/posts/${author}/`
+                : `/${code}/posts/${author}/`,
+          });
+        }
+      }
+      return versions;
+    }
+  );
+
   // Return only controlled pagination records missing from collections.all.
   // Never return collections.all itself here: computed draft exclusions are
   // applied later in Eleventy's lifecycle and must remain handled by Eleventy.

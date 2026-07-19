@@ -4,6 +4,12 @@
   {%- set langVersions = collections.siteLangsWithPublishedPosts | homeVersions %}
 {%- elif translationKey == 'about' %}
   {%- set langVersions = collections.siteLangsWithPublishedPosts | aboutVersions %}
+{%- elif translationKey and translationKey.startsWith('authors/') %}
+  {#- Author pages are paginated shell templates (like home/about), so build
+      their version set deterministically from authorLangPages instead of the
+      translations collection. Only zh-TW + langs with a generated page are
+      listed, so the switcher/hreflang never link to an empty author page. #}
+  {%- set langVersions = collections.siteLangsWithPublishedPosts | authorVersions(collections.authorLangPages, translationKey) %}
 {%- elif translationKey %}
   {%- set langVersions = collections.translations[translationKey] %}
 {%- else %}
