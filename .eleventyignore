@@ -3,6 +3,7 @@
 .claude/
 .zcode/
 .github/
+.lighthouseci/
 .netlify/
 _site/
 node_modules/
