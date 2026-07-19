@@ -64,8 +64,6 @@ jobs:
           npm run js-build
           npx eleventy
           cp -R _site /tmp/site-head
-          # diff-site 腳本只存在於 head，先存起來供 base 比對用
-          cp scripts/diff-site.js /tmp/diff-site.js
         env:
           ELEVENTY_ENV: production
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -86,8 +84,11 @@ jobs:
 
       - name: Diff SEO output into job summary
         run: |
+          # 工作區目前在 merge-base；從 PR head 還原 diff 腳本後於
+          # 工作區內執行，讓 require() 能解析到 node_modules（jsdom）。
+          git checkout --force "${{ github.sha }}" -- scripts/diff-site.js
           set +e
-          node /tmp/diff-site.js /tmp/site-base /tmp/site-head > /tmp/seo-diff.md
+          node scripts/diff-site.js /tmp/site-base /tmp/site-head > /tmp/seo-diff.md
           status=$?
           set -e
           {
