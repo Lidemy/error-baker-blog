@@ -257,6 +257,9 @@ module.exports = function (eleventyConfig) {
     "suggestAvailable",
     "suggestRead",
     "suggestDismiss",
+    "notFoundTitle",
+    "notFoundBody",
+    "notFoundBack",
   ];
   if (!Array.isArray(SITE_LANGS) || SITE_LANGS.length === 0) {
     throw new Error("_data/langs.json must be a non-empty array of language codes");

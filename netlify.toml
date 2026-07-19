@@ -23,6 +23,15 @@
   status = 301
   force = true
 
+# Serve the localized 404 for any unmatched path under a language prefix
+# (e.g. /ja/posts/bad-slug/ → /ja/404.html). `force` defaults to false, so
+# real pages win and only genuinely-missing paths get the localized 404.
+# The zh-TW root /404.html covers no-prefix and /posts/* paths.
+[[redirects]]
+  from = "/:lang/*"
+  to = "/:lang/404.html"
+  status = 404
+
 [[headers]]
   for = "*.avif"
     [headers.values]

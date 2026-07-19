@@ -70,6 +70,9 @@ function localizedShellPermalink(data) {
   ) {
     return `/${data.ap.lang}/posts/${data.ap.author}/`;
   }
+  if (/404-i18n\.njk$/.test(inputPath) && data.fplang) {
+    return `/${data.fplang}/404.html`;
+  }
   return null;
 }
 
@@ -88,12 +91,13 @@ function localizedShellPermalink(data) {
 function localizedShellIsActive(data) {
   const inputPath = data.page && data.page.inputPath;
   const localizedShell =
-    /(?:home-i18n|about-i18n|feed\/(?:feed|json)-i18n|author-langs)\.njk$/.test(
+    /(?:home-i18n|about-i18n|feed\/(?:feed|json)-i18n|author-langs|404-i18n)\.njk$/.test(
       inputPath || ""
     );
   if (!localizedShell) return true;
 
-  const lang = data.hlang || data.alang || data.flang || (data.ap && data.ap.lang);
+  const lang =
+    data.hlang || data.alang || data.flang || (data.ap && data.ap.lang) || data.fplang;
   const active = data.activeLangs || ["zh-TW"];
   return Boolean(lang && active.includes(lang));
 }
