@@ -17,6 +17,7 @@
     "test": "npm run test:site && npm run test:translations && npm run check-tags",
     "test:site": "node scripts/assert-site-built.js && mocha test/test*.js",
     "test-watch": "mocha test/test*.js --watch",
+    "diff-site": "node scripts/diff-site.js",
     "check-translations": "node scripts/check-translations.js",
     "check-translations:all": "node scripts/check-translations.js --all",
     "check-tags": "node scripts/check-tags.js",
