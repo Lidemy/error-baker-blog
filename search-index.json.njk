@@ -1,0 +1,6 @@
+---
+permalink: /search-index.json
+eleventyExcludeFromCollections: true
+sitemapExclude: true
+---
+{{ collections.posts | searchIndex(metadata, langs) | safe }}

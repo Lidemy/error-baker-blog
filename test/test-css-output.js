@@ -65,6 +65,7 @@ describe("purged CSS output", () => {
       "css/components/lang-suggest.css",
       "css/components/header-nav.css",
       "css/components/reader-tools.css",
+      "css/components/search.css",
       "css/components/not-found.css",
     ]);
 
@@ -72,23 +73,28 @@ describe("purged CSS output", () => {
     const bannerStart = css.indexOf("Locale-suggestion banner");
     const headerStart = css.indexOf("HEADER — quiet editorial top bar");
     const readerToolsStart = css.indexOf("READER TOOLS — quiet");
+    const searchStart = css.indexOf("FIND A LOAF — site-wide");
     const notFoundStart = css.indexOf(".not-found {");
     assert.ok(bannerStart > -1, "Expected the locale suggestion component");
     assert.ok(headerStart > bannerStart, "Expected header styles after banner styles");
     assert.ok(readerToolsStart > headerStart, "Expected reader tools after header styles");
-    assert.ok(notFoundStart > readerToolsStart, "Expected not-found styles after reader tools");
+    assert.ok(searchStart > readerToolsStart, "Expected search styles after reader tools");
+    assert.ok(notFoundStart > searchStart, "Expected not-found styles after search styles");
 
     const main = fs.readFileSync(path.join(PROJECT_ROOT, CSS_FILES[0]), "utf8");
     const banner = fs.readFileSync(path.join(PROJECT_ROOT, CSS_FILES[1]), "utf8");
     const header = fs.readFileSync(path.join(PROJECT_ROOT, CSS_FILES[2]), "utf8");
     const readerTools = fs.readFileSync(path.join(PROJECT_ROOT, CSS_FILES[3]), "utf8");
-    const notFound = fs.readFileSync(path.join(PROJECT_ROOT, CSS_FILES[4]), "utf8");
+    const search = fs.readFileSync(path.join(PROJECT_ROOT, CSS_FILES[4]), "utf8");
+    const notFound = fs.readFileSync(path.join(PROJECT_ROOT, CSS_FILES[5]), "utf8");
     assert.doesNotMatch(main, /\.lang-suggest/);
     assert.match(banner, /body\.dark \.lang-suggest/);
     assert.match(header, /html\.js \.nav__links/);
     assert.match(header, /html:not\(\.js\) #nav-toggle/);
     assert.match(readerTools, /\.reader-tools > button\.reader-tool/);
     assert.match(readerTools, /border-radius:\s*50%/);
+    assert.match(search, /dialog\.search-dialog/);
+    assert.match(search, /#nav > button\.search-toggle/);
     assert.match(notFound, /\.not-found__mark/);
   });
 

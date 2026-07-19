@@ -12,6 +12,7 @@ const CSS_FILES = Object.freeze([
   "css/components/lang-suggest.css",
   "css/components/header-nav.css",
   "css/components/reader-tools.css",
+  "css/components/search.css",
   "css/components/not-found.css",
 ]);
 

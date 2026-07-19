@@ -223,6 +223,8 @@
 
         document.addEventListener("keydown", (e) => {
           if (e.key !== "Escape") return;
+          const searchDialog = document.getElementById("site-search");
+          if (searchDialog && searchDialog.open) return;
           if (langSwitch && langSwitch.open) {
             langSwitch.removeAttribute("open");
             langSwitch.querySelector("summary").focus();
@@ -240,7 +242,8 @@
         <div id="nav">
           <p class="site-title">
             <a href="{{ homeUrl | url }}" title="{{ t.homeLabel }}" aria-label="{{ t.siteName or metadata.title }}">
-              {{ t.siteName or metadata.title }}
+              <span class="site-title__full">{{ t.siteName or metadata.title }}</span>
+              <span class="site-title__compact" aria-hidden="true">ErrorBaker</span>
             </a>
           </p>
           {#- Read more about `eleventy-navigation` at https://www.11ty.dev/docs/plugins/navigation/ #}
@@ -280,6 +283,14 @@
             </ul>
           </details>
           </div>
+          <button id="search-toggle" class="search-toggle" type="button"
+            aria-haspopup="dialog" aria-controls="site-search" aria-expanded="false"
+            aria-label="{{ t.search.open }}">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="10.75" cy="10.75" r="6.25"/>
+              <path d="m15.5 15.5 4 4"/>
+            </svg>
+          </button>
           <button id="color-scheme-toggle" type="button" aria-pressed="false"
             aria-label="{{ t.switchToDarkTheme }}"
             data-label-to-dark="{{ t.switchToDarkTheme }}"
@@ -323,6 +334,115 @@
       </noscript>
       {% endif %}
     </header>
+
+    <dialog id="site-search" class="search-dialog" aria-labelledby="search-title"
+      data-lang="{{ pageLang }}" data-index-url="{{ '/search-index.json' | url }}"
+      data-i18n="{{ t.search | dump }}">
+      <div class="search-dialog__shell">
+        <div class="search-dialog__heading">
+          <div>
+            <p class="search-dialog__eyebrow">ErrorBaker</p>
+            <h2 id="search-title">{{ t.search.title }}</h2>
+          </div>
+          <button class="search-dialog__close" type="button" aria-label="{{ t.search.close }}">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M6 6l12 12M18 6 6 18"/>
+            </svg>
+          </button>
+        </div>
+
+        <form class="search-form" role="search">
+          <label class="visually-hidden" for="search-input">{{ t.search.label }}</label>
+          <svg class="search-form__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="10.75" cy="10.75" r="6.25"/>
+            <path d="m15.5 15.5 4 4"/>
+          </svg>
+          <input id="search-input" class="search-form__input" type="search"
+            autocomplete="off" spellcheck="false" enterkeyhint="search"
+            placeholder="{{ t.search.placeholder }}" aria-describedby="search-help"
+            aria-controls="search-results">
+          <button class="search-form__clear" type="button" hidden aria-label="{{ t.search.clear }}">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <path d="M7 7l10 10M17 7 7 17"/>
+            </svg>
+          </button>
+          <kbd class="search-form__shortcut" aria-hidden="true">⌘K</kbd>
+        </form>
+        <p id="search-help" class="visually-hidden">{{ t.search.label }}</p>
+
+        <div class="search-dialog__body" aria-busy="false">
+          <p id="search-status" class="visually-hidden" role="status"
+            aria-live="polite" aria-atomic="true"></p>
+
+          <div class="search-state search-state--idle">
+            <svg class="search-state__icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+              <path d="M12 28h40v24H12zM18 28c0-9 6-16 14-16s14 7 14 16M22 20c3 2 6 3 10 3s7-1 10-3"/>
+            </svg>
+            <h3>{{ t.search.idleTitle }}</h3>
+            <p>{{ t.search.idleBody }}</p>
+          </div>
+
+          <div class="search-state search-state--loading" hidden>
+            <span class="search-spinner" aria-hidden="true"></span>
+            <p>{{ t.search.loading }}</p>
+          </div>
+
+          <div class="search-state search-state--empty" hidden>
+            <h3 class="search-empty__title"></h3>
+            <p class="search-empty__body">{{ t.search.noResultsBody }}</p>
+          </div>
+
+          <div class="search-state search-state--error" hidden>
+            <h3>{{ t.search.errorTitle }}</h3>
+            <p>{{ t.search.errorBody }}</p>
+            <button class="search-retry" type="button">{{ t.search.retry }}</button>
+          </div>
+
+          <div id="search-results" class="search-results" hidden>
+            <p class="search-fallback" hidden>{{ t.search.fallbackNotice }}</p>
+            <div class="search-group search-group--articles" hidden>
+              <h3>{{ t.search.articlesHeading }}</h3>
+              <ul class="search-result-list search-result-list--articles"></ul>
+            </div>
+            <div class="search-group search-group--authors" hidden>
+              <h3>{{ t.search.authorsHeading }}</h3>
+              <ul class="search-result-list search-result-list--authors"></ul>
+            </div>
+            <div class="search-group search-group--other" hidden>
+              <h3>{{ t.search.otherLanguagesHeading }}</h3>
+              <ul class="search-result-list search-result-list--other"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <template id="search-article-template">
+        <li class="search-result search-result--article">
+          <a class="search-result__link">
+            <span class="search-result__topline">
+              <strong class="search-result__title"></strong>
+              <span class="search-result__lang"></span>
+            </span>
+            <span class="search-result__meta"></span>
+            <span class="search-result__snippet"></span>
+            <span class="search-result__reason"></span>
+          </a>
+        </li>
+      </template>
+
+      <template id="search-author-template">
+        <li class="search-result search-result--author">
+          <a class="search-result__link search-result__link--author">
+            <img class="search-result__avatar" alt="" loading="lazy">
+            <span class="search-result__author-body">
+              <strong class="search-result__title"></strong>
+              <span class="search-result__meta"></span>
+              <span class="search-result__snippet"></span>
+            </span>
+          </a>
+        </li>
+      </template>
+    </dialog>
 
     <main id="main">
       <article>

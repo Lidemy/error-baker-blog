@@ -26,6 +26,10 @@ Allow: /
 
 User-agent: {{ bot }}
 Allow: /
+{#- The site-wide search index centralizes full article text, including work by
+    authors who have not opted in to AI crawling. Keep that aggregate endpoint
+    outside every generative crawler's allowed surface. #}
+Disallow: /search-index.json
 {%- for path in rules.disallowPaths %}
 Disallow: {{ path }}
 {%- endfor %}

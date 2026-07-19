@@ -18,7 +18,15 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+import { initSiteSearch } from "./search-ui.mjs";
+
 const exposed = {};
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initSiteSearch, { once: true });
+} else {
+  initSiteSearch();
+}
 
 // Page-language UI strings, injected by base.njk on <dialog id="message">
 // (same pattern as the lang-suggest banner's data-strings).
