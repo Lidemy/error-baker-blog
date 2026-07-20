@@ -75,9 +75,11 @@ const processImage = async (img, outputPath) => {
     return;
   }
   if (dimensions.type == "gif") {
-    // note: disable gif2mp4 by huli
-    return
-    const videoSrc = await gif2mp4(src);
+    // 2021 年 huli 在此停用 gif2mp4（"note: disable gif2mp4 by huli"）：
+    // 當時新增的 react.gif 是 874x615（奇數高），ffmpeg 的 yuv420p 要求
+    // 偶數寬高，轉檔直接失敗。video-gif.js 已加 scale 濾鏡修正根因，
+    // 因此恢復轉檔。
+    const videoSrc = await gif2mp4(localUrlPath(src));
     const video = img.ownerDocument.createElement(
       /AMP/i.test(img.tagName) ? "amp-video" : "video"
     );
@@ -88,10 +90,12 @@ const processImage = async (img, outputPath) => {
     video.setAttribute("autoplay", "");
     video.setAttribute("muted", "");
     video.setAttribute("loop", "");
+    video.setAttribute("playsinline", "");
     if (!video.getAttribute("aria-label")) {
-      video.setAttribute("aria-label", img.getAttribute("alt"));
-      video.removeAttribute("alt");
+      const alt = img.getAttribute("alt");
+      if (alt) video.setAttribute("aria-label", alt);
     }
+    video.removeAttribute("alt");
     img.parentElement.replaceChild(video, img);
     return;
   }
