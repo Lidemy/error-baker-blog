@@ -23,6 +23,18 @@ import { normalizeText } from "./search-core.mjs";
 
 const exposed = {};
 
+// ── Umami 北極星事件 ────────────────────────────────────────────────────
+// The Umami script is injected by base.njk only when metadata.umami.websiteId
+// is set, and readers may block it. Every call MUST go through this guard so
+// analytics being absent can never throw or change page behaviour.
+function track(name, data) {
+  try {
+    if (window.umami && typeof window.umami.track === "function") {
+      window.umami.track(name, data);
+    }
+  } catch (e) {}
+}
+
 // Generic query-string-synced list filter. A container opts in with
 // data-filter-scope="<param>"; its items carry data-filter haystacks and an
 // input carries data-filter-input. The current query lives in the URL
@@ -154,6 +166,7 @@ function copyShareUrl(url) {
 }
 
 function share(anchor) {
+  track("share");
   var url = anchor.getAttribute("data-share-url");
   if (navigator.share) {
     navigator.share({
@@ -216,6 +229,11 @@ if (window.ResizeObserver && document.querySelector("header nav #nav")) {
   var backToTopButton = document.getElementById("back-to-top");
   var readerTools = document.querySelector(".reader-tools");
   var readDoneShown = false;
+  // Reading-depth milestones (post pages only). Each fires at most once per
+  // pageview; distinct event names keep read-100 directly chartable in Umami.
+  var isPostPage = document.body.classList.contains("tmpl-post");
+  var readMilestones = [25, 50, 75, 100];
+  var readFired = {};
 
   var timeOfLastScroll = 0;
   var requestedAniFrame = false;
@@ -256,6 +274,14 @@ if (window.ResizeObserver && document.querySelector("header nav #nav")) {
     );
     progress.style.transform = `translate(-${100 - percent}vw, 0)`;
     progress.style.backgroundColor = bakeColor(percent);
+    if (isPostPage) {
+      readMilestones.forEach(function (m) {
+        if (percent >= m && !readFired[m]) {
+          readFired[m] = true;
+          track("read-" + m);
+        }
+      });
+    }
     if (backToTopButton) {
       var hideBackToTop =
         document.scrollingElement.scrollTop < winHeight * 1.5;
@@ -315,6 +341,20 @@ addEventListener("click", function (e) {
     location.origin + location.pathname + anchor.getAttribute("href")
   );
   message(ui("anchorCopied", "段落連結已複製 🔗"));
+});
+
+// Delegated analytics for server-rendered links (no inline scripts in
+// templates): the header language switcher and the footer feed icon. Umami's
+// tracker sends with keepalive, so counting right before navigation is safe.
+addEventListener("click", function (e) {
+  var langLink = e.target.closest("a.lang-switch__item");
+  if (langLink) {
+    track("lang-switch", { lang: langLink.getAttribute("hreflang") || "" });
+    return;
+  }
+  if (e.target.closest("a#rss")) {
+    track("feed-click");
+  }
 });
 
 addEventListener("click", (e) => {
