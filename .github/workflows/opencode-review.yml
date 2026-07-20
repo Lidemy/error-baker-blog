@@ -14,6 +14,10 @@ jobs:
     # Human-pushed commits still get reviewed.
     if: github.actor != 'opencode-agent[bot]'
     runs-on: ubuntu-latest
+    # A normal review finishes in a few minutes; cap the job so a runaway
+    # agent loop (e.g. PR #247 ran 4h35m / 1.1k model calls) can't bill the
+    # opencode-go balance dry before it's cancelled.
+    timeout-minutes: 60
     permissions:
       id-token: write
       contents: read
@@ -82,5 +86,5 @@ jobs:
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          model: opencode-go/qwen3.7-plus
+          model: opencode-go/mimo-v2.5
           prompt: ${{ steps.prompt.outputs.value }}
