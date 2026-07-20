@@ -14,6 +14,10 @@ jobs:
     # Human-pushed commits still get reviewed.
     if: github.actor != 'opencode-agent[bot]'
     runs-on: ubuntu-latest
+    # A normal review finishes in a few minutes; cap the job so a runaway
+    # agent loop (e.g. PR #247 ran 4h35m / 1.1k model calls) can't bill the
+    # opencode-go balance dry before it's cancelled.
+    timeout-minutes: 60
     permissions:
       id-token: write
       contents: read
@@ -57,7 +61,11 @@ jobs:
               echo '6. Untranslated prose: markdown link text [text](url) and <img alt="..."> should be translated — except external article titles (preserve verbatim).'
               echo '7. Chinese idioms / slang literally carried into Japanese (e.g. 香る for "很香", 麗麗 for "煩瑣") — flag for re-translation.'
               echo ''
-              echo 'Keep the review concrete and concise. Output a markdown summary with sections: Frontmatter & AGENTS.md Compliance, Issues Found (by severity), Not defects (verified correct).'
+              echo 'Output format: read .github/REVIEW_FORMAT.md and follow it exactly — same `## Code Review` title, Verdict line, and [Blocker] / [Major] / [Nit] tags — but use these translation-specific sections instead of the generic ones:'
+              echo '- ### Frontmatter & AGENTS.md Compliance'
+              echo '- ### Findings (same severity tags)'
+              echo '- ### Verified OK (not defects — esp. JP/zh-CN character forms correct per REVIEW-PITFALLS.md)'
+              echo '- ### Tests & Build'
               echo 'PROMPT_END'
             } >> "$GITHUB_OUTPUT"
           else
@@ -72,7 +80,9 @@ jobs:
               echo '- Security, typos, dead code, obvious regressions'
               echo '- Consistency with surrounding code style'
               echo ''
-              echo 'Keep the review concrete and concise. Skip the translation/AGENTS.md checks entirely.'
+              echo 'Skip the translation/AGENTS.md checks entirely.'
+              echo ''
+              echo 'Output format: read .github/REVIEW_FORMAT.md and follow it exactly. Always start with `## Code Review` and a `**Verdict:**` line (LGTM / Request changes / Needs discussion); tag every finding [Blocker] / [Major] / [Nit] with a file:line.'
               echo 'PROMPT_END'
             } >> "$GITHUB_OUTPUT"
           fi
@@ -82,5 +92,5 @@ jobs:
         env:
           OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
         with:
-          model: opencode-go/qwen3.7-plus
+          model: opencode-go/mimo-v2.5
           prompt: ${{ steps.prompt.outputs.value }}
