@@ -55,7 +55,6 @@ const markdownItAnchor = require("markdown-it-anchor");
 const CleanCSS = require("clean-css");
 const { buildAuthorStats } = require("./_11ty/authorStats");
 const activeLanguages = require("./_11ty/activeLanguages");
-const isDraftFrontmatter = require("./_11ty/draftFlag");
 const { buildAiCrawlRules } = require("./_11ty/aiCrawlPolicy");
 const { commentCountsByPath } = require("./_11ty/discussions");
 const { CSS_FILES } = require("./_11ty/css-bundle");
@@ -305,36 +304,23 @@ module.exports = function (eleventyConfig) {
   // `ELEVENTY_ENV=development eleventy` emit orphan draft pages (permalink
   // gate said dev, collection gate said production).
   const IS_DEVELOPMENT = require("./_data/isdevelopment.js")();
-  const draftCache = new Map();
 
   const postLang = (item) => (item.data && item.data.lang) || DEFAULT_LANG;
-  const isDraft = (item) => {
-    if (!item) return false;
-    if (item.data && (item.data.draft === true || item.data.draft === "true")) {
-      return true;
-    }
-
-    // Eleventy 0.12 constructs custom collections before global computed data
-    // has finished. Read the source frontmatter as a deterministic fallback so
-    // drafts can never leak into feeds, hreflang, or sitemap collections.
-    const inputPath = item.inputPath;
-    if (!inputPath || !inputPath.endsWith(".md")) return false;
-    // Cache only for one-shot builds: a --serve rebuild must observe draft
-    // toggles in frontmatter, so dev reads the file every time.
-    if (!IS_DEVELOPMENT && draftCache.has(inputPath)) {
-      return draftCache.get(inputPath);
-    }
-    let draft = false;
-    try {
-      const raw = fs.readFileSync(inputPath, "utf8");
-      const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/);
-      draft = Boolean(match && isDraftFrontmatter(match[1]));
-    } catch (error) {
-      throw new Error(`Unable to inspect draft state for ${inputPath}: ${error.message}`);
-    }
-    if (!IS_DEVELOPMENT) draftCache.set(inputPath, draft);
-    return draft;
-  };
+  // Eleventy 3.x resolves the full data cascade before it constructs custom
+  // collections, so `item.data.draft` is reliably populated here — drafts never
+  // leak into feeds, hreflang, or sitemap collections. Eleventy 0.12 built
+  // collections before global computed data finished, which forced a fallback
+  // that re-read and regex-parsed each source file's frontmatter (cached via a
+  // draftCache); that fallback is removed in the 3.x cleanup. The shared
+  // frontmatter predicate _11ty/draftFlag.js is still used by
+  // _11ty/activeLanguages.js and _11ty/search-index.js, which parse raw files
+  // outside Eleventy's data cascade.
+  const isDraft = (item) =>
+    Boolean(
+      item &&
+        item.data &&
+        (item.data.draft === true || item.data.draft === "true")
+    );
   const isVisible = (item) => !isDraft(item) || IS_DEVELOPMENT;
   // Only strip suffixes that are actual site languages, so a legitimately
   // dotted slug (e.g. `intro.v2.md`) keeps its full key.
