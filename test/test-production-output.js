@@ -180,9 +180,11 @@ describe("production output boundaries", () => {
       permalink: "/{{ ap.lang }}/posts/{{ ap.author }}/",
     };
 
+    // Active shell → the front-matter permalink template is passed through for
+    // Eleventy 3.x to re-render per pagination page; inactive shell → false.
     assert.equal(
       computedData.permalink({ ...base, ap: { lang: "en", author: "tian" } }),
-      "/en/posts/tian/"
+      "/{{ ap.lang }}/posts/{{ ap.author }}/"
     );
     assert.equal(
       computedData.permalink({ ...base, ap: { lang: "ja", author: "tian" } }),
@@ -196,25 +198,28 @@ describe("production output boundaries", () => {
       {
         inputPath: "./feed/feed-i18n.njk",
         raw: "/{{ flang }}/feed/feed.xml",
-        expected: "/en/feed/feed.xml",
       },
       {
         inputPath: "./feed/json-i18n.njk",
         raw: "/{{ flang }}/feed/feed.json",
-        expected: "/en/feed/feed.json",
       },
     ];
-    for (const { inputPath, raw, expected } of cases) {
+    for (const { inputPath, raw } of cases) {
       const base = { page: { inputPath }, activeLangs, permalink: raw };
-      assert.equal(computedData.permalink({ ...base, flang: "en" }), expected);
+      // Active language → template passed through verbatim (Eleventy 3.x
+      // re-renders it); inactive language → false, so no page is emitted.
+      assert.equal(computedData.permalink({ ...base, flang: "en" }), raw);
       assert.equal(computedData.permalink({ ...base, flang: "ja" }), false);
     }
   });
 
-  // Eleventy 0.12 does not re-render a permalink string returned from
-  // computed data, so active shells must yield concrete URLs — echoing the
-  // raw front-matter template collapses them all onto one empty output path.
-  it("renders concrete permalinks for active localized shells", () => {
+  // Eleventy 3.x re-renders a permalink template returned from computed data,
+  // so an active shell simply passes its own front-matter permalink template
+  // through and Eleventy resolves it per pagination page. (Eleventy 0.12 did
+  // NOT re-render it, which forced an explicit concrete-URL helper here; the
+  // concrete output is now asserted end-to-end by the sitemap/existence tests
+  // above.)
+  it("passes each active localized shell's permalink template through", () => {
     const activeLangs = ["zh-TW", "en"];
     assert.equal(
       computedData.permalink({
@@ -223,7 +228,7 @@ describe("production output boundaries", () => {
         hlang: "en",
         permalink: "/{{ hlang }}/",
       }),
-      "/en/"
+      "/{{ hlang }}/"
     );
     assert.equal(
       computedData.permalink({
@@ -232,7 +237,17 @@ describe("production output boundaries", () => {
         alang: "en",
         permalink: "/{{ alang }}/about/",
       }),
-      "/en/about/"
+      "/{{ alang }}/about/"
+    );
+    // An inactive shell still yields false regardless of the raw template.
+    assert.equal(
+      computedData.permalink({
+        page: { inputPath: "./home-i18n.njk" },
+        activeLangs,
+        hlang: "ja",
+        permalink: "/{{ hlang }}/",
+      }),
+      false
     );
   });
 });
