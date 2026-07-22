@@ -515,3 +515,143 @@ document.body.addEventListener(
     });
   }
 })();
+
+// ── Copy-code button (post code blocks) ─────────────────────────────────
+// Prism renders fenced blocks as <pre class="language-*"><code>…</code></pre>.
+// We wrap each in a positioned container and inject a copy button. The
+// injected classes (code-copy*) are whitelisted in _11ty/optimize-html.js —
+// PurgeCSS scans only server-rendered HTML and would otherwise strip their
+// styles. Feedback reuses the shared #message toast (role="status").
+(function () {
+  if (!document.body.classList.contains("tmpl-post")) return;
+  var blocks = document.querySelectorAll("pre[class*='language-']");
+  if (!blocks.length) return;
+
+  var LABEL_COPY = ui("codeCopy", "複製");
+  var LABEL_DONE = ui("codeCopied", "已複製 ✓");
+  var ARIA_LABEL = ui("codeCopyLabel", "複製程式碼");
+
+  function legacyCopy(text) {
+    var field = document.createElement("textarea");
+    field.value = text;
+    field.setAttribute("readonly", "");
+    field.style.position = "fixed";
+    field.style.opacity = "0";
+    document.body.appendChild(field);
+    field.select();
+    var copied = false;
+    try {
+      copied = document.execCommand("copy");
+    } catch (e) {}
+    field.remove();
+    return copied;
+  }
+
+  [].forEach.call(blocks, function (pre) {
+    // Defensive against a double init: never wrap the same block twice.
+    if (pre.parentNode && pre.parentNode.classList.contains("code-copy-wrap")) {
+      return;
+    }
+    var wrap = document.createElement("div");
+    wrap.className = "code-copy-wrap";
+    pre.parentNode.insertBefore(wrap, pre);
+    wrap.appendChild(pre);
+
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "code-copy";
+    btn.textContent = LABEL_COPY;
+    btn.setAttribute("aria-label", ARIA_LABEL);
+    wrap.appendChild(btn);
+
+    var resetTimer = null;
+    btn.addEventListener("click", function () {
+      var code = pre.querySelector("code");
+      var text = (code || pre).textContent;
+      function onCopied() {
+        track("copy-code");
+        message(LABEL_DONE);
+        btn.textContent = LABEL_DONE;
+        btn.classList.add("code-copy--done");
+        if (resetTimer) clearTimeout(resetTimer);
+        resetTimer = setTimeout(function () {
+          btn.textContent = LABEL_COPY;
+          btn.classList.remove("code-copy--done");
+        }, 2000);
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(onCopied, function () {
+          if (legacyCopy(text)) onCopied();
+        });
+      } else if (legacyCopy(text)) {
+        onCopied();
+      }
+    });
+  });
+})();
+
+// ── Front-end error beacon ──────────────────────────────────────────────
+// Report uncaught errors and unhandled promise rejections to a Netlify
+// function via sendBeacon (fire-and-forget; survives the page unloading).
+// We send only technical fields — no PII. Cross-origin "Script error." is
+// opaque and useless, so it is dropped. Reports are deduped per session and
+// capped per pageview so a looping error can't flood the sink.
+(function () {
+  if (!navigator.sendBeacon) return;
+  var ENDPOINT = "/.netlify/functions/error-log";
+  var MAX_PER_PAGEVIEW = 5;
+  var STACK_MAX = 2000;
+  var sent = 0;
+  var seen = {};
+
+  function truncate(s, n) {
+    if (typeof s !== "string") return "";
+    return s.length > n ? s.slice(0, n) : s;
+  }
+
+  function report(payload) {
+    if (sent >= MAX_PER_PAGEVIEW) return;
+    var key = payload.message + "|" + payload.source + "|" + payload.line;
+    if (seen[key]) return;
+    seen[key] = true;
+    sent++;
+    try {
+      var blob = new Blob([JSON.stringify(payload)], {
+        type: "application/json",
+      });
+      navigator.sendBeacon(ENDPOINT, blob);
+    } catch (e) {}
+  }
+
+  addEventListener("error", function (e) {
+    // Cross-origin script errors are reported opaquely as "Script error."
+    // with no usable source — nothing actionable, so drop them. Resource
+    // load failures (img/script) fire without e.error and e.lineno; skip
+    // those too, we only want script exceptions.
+    if (!e.message || e.message === "Script error.") return;
+    if (!e.error && !e.lineno) return;
+    report({
+      message: truncate(e.message, 500),
+      source: truncate(e.filename || "", 500),
+      line: e.lineno || 0,
+      col: e.colno || 0,
+      stack: truncate((e.error && e.error.stack) || "", STACK_MAX),
+      path: location.pathname,
+      ua: truncate(navigator.userAgent, 300),
+    });
+  });
+
+  addEventListener("unhandledrejection", function (e) {
+    var reason = e.reason;
+    var msg = reason && reason.message ? reason.message : String(reason);
+    report({
+      message: truncate("Unhandled rejection: " + msg, 500),
+      source: "",
+      line: 0,
+      col: 0,
+      stack: truncate((reason && reason.stack) || "", STACK_MAX),
+      path: location.pathname,
+      ua: truncate(navigator.userAgent, 300),
+    });
+  });
+})();
