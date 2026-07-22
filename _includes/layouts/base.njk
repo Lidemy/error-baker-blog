@@ -29,7 +29,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Apply the colour theme to <html> BEFORE the inlined CSS paints, so
          navigating between pages never flashes light-then-dark. -->
-    <script csp-hash>
+    <script>
       (function () {
         document.documentElement.classList.add("js");
         try {
@@ -106,7 +106,6 @@
     <link rel="alternate" href="{{ feedPath | url }}" type="application/atom+xml" title="{{ t.siteName or metadata.title }} (Atom)">
     <link rel="alternate" href="{{ jsonFeedPath | url }}" type="application/feed+json" title="{{ t.siteName or metadata.title }} (JSON Feed)">
 
-    <link rel="preconnect" href="/" crossorigin>
     {#- Display serif（Fraunces latin subset, ~36KB, immutable-cached）。
         preload 消除首屏字體交換；CJK 內文不使用 webfont（效能預算）。 #}
     <link rel="preload" href="/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin>
@@ -118,7 +117,7 @@
       <link rel="stylesheet" href="{{ '/css/gamification.css' | addHash }}">
     {% endif %}
     <!-- Notably iOS UAs also contain Mac OS X -->
-    <script csp-hash>if (/Mac OS X/.test(navigator.userAgent))document.documentElement.classList.add('apple')
+    <script>if (/Mac OS X/.test(navigator.userAgent))document.documentElement.classList.add('apple')
     </script>
     <!-- css is inserted by optimize-html custom plugin -->
   </head>

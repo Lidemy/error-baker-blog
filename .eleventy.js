@@ -52,7 +52,6 @@ const pluginSyntaxHighlight = require("@11ty/eleventy-plugin-syntaxhighlight");
 const pluginNavigation = require("@11ty/eleventy-navigation");
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
-const localImages = require("./third_party/eleventy-plugin-local-images/.eleventy.js");
 const CleanCSS = require("clean-css");
 const { buildAuthorStats } = require("./_11ty/authorStats");
 const activeLanguages = require("./_11ty/activeLanguages");
@@ -85,15 +84,6 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPlugin(pluginSyntaxHighlight);
   eleventyConfig.addPlugin(pluginNavigation);
 
-  // NOTE: we don't need this plugin for now
-  // eleventyConfig.addPlugin(localImages, {
-  //   distPath: "_site",
-  //   assetPath: "/img/remote",
-  //   selector:
-  //     "img,amp-img,amp-video,meta[property='og:image'],meta[name='twitter:image'],amp-story",
-  //   verbose: false,
-  // });
-
   eleventyConfig.addPlugin(require("./_11ty/summary.js"));
   eleventyConfig.addPlugin(require("./_11ty/link-target.js"));
   eleventyConfig.addPlugin(require("./_11ty/img-dim.js"));
@@ -101,8 +91,6 @@ module.exports = function (eleventyConfig) {
   // Validate structured data after every HTML-mutating transform so CI checks
   // the exact minified document that will be deployed.
   eleventyConfig.addPlugin(require("./_11ty/json-ld.js"));
-  // NOTE: disable CSP because we don't need it
-  // eleventyConfig.addPlugin(require("./_11ty/apply-csp.js"));
   eleventyConfig.setDataDeepMerge(true);
   eleventyConfig.addLayoutAlias("post", "layouts/post.njk");
   eleventyConfig.addNunjucksAsyncFilter("addHash", function (
@@ -656,7 +644,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("fonts");
   eleventyConfig.addPassthroughCopy("_headers");
 
-  // We need to rebuild upon JS change to update the CSP.
+  // Rebuild upon JS change so hashed asset URLs (addHash) stay current.
   eleventyConfig.addWatchTarget("./js/");
   // Explicit files keep Eleventy 0.12 watching nested build-only CSS sources.
   CSS_FILES.forEach((file) => eleventyConfig.addWatchTarget(`./${file}`));
