@@ -665,21 +665,19 @@ module.exports = function (eleventyConfig) {
   });
   eleventyConfig.setLibrary("md", markdownLibrary);
 
-  // Browsersync Overrides
-  eleventyConfig.setBrowserSyncConfig({
-    callbacks: {
-      ready: function (err, browserSync) {
-        const content_404 = fs.readFileSync("_site/404.html");
-
-        browserSync.addMiddleware("*", (req, res) => {
-          // Provides the 404 content without redirect.
-          res.write(content_404);
-          res.end();
-        });
-      },
-    },
-    ui: false,
-    ghostMode: false,
+  // Dev server 404 handling.
+  //
+  // Eleventy 2.0 replaced BrowserSync with @11ty/eleventy-dev-server, so the
+  // old `setBrowserSyncConfig({ callbacks.ready … addMiddleware })` 404 shim is
+  // gone. The dev server reproduces the same behaviour natively: for any
+  // unknown path it serves the site's own `/404.html` (no redirect, keeps the
+  // requested URL), which is exactly what the removed middleware did. We pin the
+  // filename explicitly to match the previous contract.
+  eleventyConfig.setServerOptions({
+    showAllHosts: false,
+    // Serve /404.html for not-found routes (BrowserSync-parity, no redirect).
+    // This is the dev-server default, stated here for documentation.
+    showVersion: false,
   });
 
   return {
@@ -695,9 +693,25 @@ module.exports = function (eleventyConfig) {
     // You can also pass this in on the command line using `--pathprefix`
     // pathPrefix: "/",
 
-    markdownTemplateEngine: "liquid",
+    // Markdown content is NOT run through a template engine.
+    //
+    // Under 0.12 markdown was pre-processed by liquidjs 9.x, which silently
+    // evaluated stray `{{ … }}` in fenced code blocks (Vue interpolation, JSX
+    // `value={{a, b}}`) to empty strings — a latent bug that mangled those code
+    // samples. liquidjs 10.x (bundled with Eleventy 3) is stricter and now
+    // throws a fatal TokenizationError on the same input (e.g. `{{a, b}}` →
+    // "expected | before filter"), aborting the whole build. No `.md` file in
+    // this repo relies on Liquid templating (grep: zero `{% %}`, and every
+    // `{{ }}` sits inside a code fence), so disabling the markdown template
+    // engine is behaviour-neutral for every SEO surface (titles/descriptions
+    // come from front matter + explicit `<!-- summary -->` blocks, never from
+    // code fences — see the golden diff, which stays empty) while rendering the
+    // affected code samples literally and correctly instead of blank.
+    markdownTemplateEngine: false,
     htmlTemplateEngine: "njk",
-    dataTemplateEngine: "njk",
+    // `dataTemplateEngine` was removed in Eleventy 2.0 (data files are plain
+    // JS/JSON now, no template pass). Its former value ("njk") had no effect on
+    // this repo's *.json/*.js data, so dropping it is behaviour-neutral.
 
     // These are all optional, defaults are shown:
     dir: {
