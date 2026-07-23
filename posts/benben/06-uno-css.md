@@ -1,5 +1,6 @@
 ---
 title: Uno CSS - 一統天下的明日之星？
+description: "UnoCSS 是什麼？本文從 Tailwind 常見的痛點切入，說明 UnoCSS 如何用即時生成與正則配置解決 class 單位混亂、還要查文件的困擾，帶會 Tailwind 或 Bootstrap 的人快速上手。"
 date: 2022-05-18
 tags: [CSS, UnoCSS]
 author: benben

@@ -1,5 +1,6 @@
 ---
 title: a simple RESTful api with Go
+description: "透過實作一個簡單的 RESTful API 認識 Golang：從安裝、go mod init 專案初始化、用 gorilla/mux 管理套件，到實作 main 與 handler function，適合想入門 Go 的人。"
 date: 2022-01-01
 tags: [Backend]
 author: ruofan

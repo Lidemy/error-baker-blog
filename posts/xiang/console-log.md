@@ -1,5 +1,6 @@
 ---
 title: 好玩 && 好用的 console log 技巧
+description: "好玩又好用的 console.log 技巧：除了最基本的 log，還有哪些 console 方法能幫你更好 debug？本文整理印出資料的各種技巧與 console 特殊用法，讓 debug 生活更有效率。"
 date: 2021-12-12
 tags: [Frontend, JavaScript]
 author: xiang

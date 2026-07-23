@@ -1,5 +1,6 @@
 ---
 title: Scroll-driven Animations
+description: "認識新的 Scroll-driven Animations API：對比傳統用 addEventListener 監聽捲動、在主執行緒跑 callback 的做法，介紹用捲動進度時間線與視圖進度時間線做出效能更好的滾動驅動動畫。"
 date: 2023-10-19
 tags: [Frontend]
 author: ruofan

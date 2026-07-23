@@ -1,5 +1,6 @@
 ---
 title: 介紹 Cookie 的新屬性 SameParty
+description: "介紹 Cookie 的新屬性 SameParty：釐清第一方與第三方 Cookie 的相對概念、SameSite 三種值與缺點，再到 Chromium 的 First-Party Sets 與 SameParty 想解決的問題。"
 date: 2021-10-05
 tags: [Cookie, Google]
 author: umer

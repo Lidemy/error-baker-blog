@@ -1,5 +1,6 @@
 ---
 title: Leetcode Subsets and Golang Slice
+description: "用 LeetCode 78 Subsets 練 Golang 時，踩到新手最常見的 slice 與 underlying array 陷阱。本文帶你看 backtracking 解法，並補上 Go slice 的基礎概念與最佳化。"
 date: 2024-08-28
 tags: [Go, LeetCode]
 author: cwc329

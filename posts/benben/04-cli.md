@@ -1,5 +1,6 @@
 ---
 title: 等等我還想學 CLI - 微進階的 CLI
+description: "寫給已入門者的 CLI 微進階指南：從 cd、ls、pwd 等基礎指令談起，分享作者在工作中累積的終端機操作心得與循序漸進的學習法，帶你把命令列用得更順手。"
 date: 2022-01-02
 tags: [JavaScript, CLI]
 author: benben

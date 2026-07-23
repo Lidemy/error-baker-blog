@@ -1,5 +1,6 @@
 ---
 title: 如何從 GitHub Template 更新 repo？
+description: "如何從 GitHub Template 更新既有 repo？當參照的 Template 有新 commit 時，帶你用 git remote、fetch、merge 同步版本，處理 package.json 衝突，並合併到其他作業分支。"
 date: 2021-09-05
 tags: [GitHub]
 author: sixwings

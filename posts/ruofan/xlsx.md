@@ -1,5 +1,6 @@
 ---
 title: 用 sheetJS 匯出 excel
+description: "用 SheetJS 匯出 Excel：透過簡潔的程式碼把資料轉成 xlsx 檔下載，並從原始碼觀察 SheetJS 背後如何組出 worksheet 與 workbook，適合有前端匯出報表需求的人。"
 date: 2022-05-22
 tags: [Frontend]
 author: ruofan

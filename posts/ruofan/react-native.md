@@ -1,5 +1,6 @@
 ---
 title: Setup your react native project
+description: "設置 React Native 開發環境的踩坑紀錄：比較 Expo CLI 與 React Native CLI，說明 Expo、Expo Go、EAS Build 各自的用途與限制，並分享在電腦上設定 simulator 的過程。"
 date: 2022-08-13
 tags: [Frontend]
 author: ruofan

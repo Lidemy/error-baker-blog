@@ -1,5 +1,6 @@
 ---
 title: Warp | 你的 21 世紀 AI Terminal
+description: "介紹用 Rust 打造的 AI 終端機 Warp：對比 iTerm2、Windows Terminal，看它在個人化、自動補全、輸出複製與 AI 功能上的優勢，並分享安裝設定與實際使用心得。"
 date: 2023-05-31
 tags: [Warp, Terminal, AI]
 author: benben

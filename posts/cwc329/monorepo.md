@@ -1,5 +1,6 @@
 ---
 title: monorepo 之我見
+description: "monorepo 之我見：解釋 monorepo 與 polyrepo 的差別，用前後端專案為例對比兩種目錄結構，並分享公司從 polyrepo 轉為 monorepo 後，作者在開發與維運上實際感受到的差異。"
 date: 2021-12-26
 tags: [Monorepo]
 author: cwc329

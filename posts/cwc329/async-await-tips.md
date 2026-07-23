@@ -1,5 +1,6 @@
 ---
 title: async/await 到底在等什麼？
+description: "async/await 到底在等什麼？從它回傳 Promise 的本質，解釋 no-return-await 規則與 await 順序陷阱，並比較 Promise.all 與 for loop await 的差異。"
 date: 2021-11-22
 tags: [JavaScript, Async, Await]
 author: cwc329

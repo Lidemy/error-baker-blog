@@ -1,5 +1,6 @@
 ---
 title: 原始碼探索
+description: "原始碼探索：從 Sequelize eager loading 的驚豔出發，記錄作者第一次翻閱套件原始碼、找出它如何依照 model 關聯產生巢狀資料結構的過程與方法。"
 date: 2021-09-18
 tags: [Backend, JavaScript, Sequelize]
 author: cwc329

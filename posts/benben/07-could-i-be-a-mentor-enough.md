@@ -1,5 +1,6 @@
 ---
 title: RE [前端引路人計劃] - 我也能夠當個 mentor 嗎？
+description: "轉職前端一年多的作者，如何從「前端引路人計畫」得到啟發，走上開讀書會、當微 mentor 的路。這是一篇關於心態、自我提升與經驗傳承的分享，寫給想開始帶人成長的工程師。"
 date: 2022-06-30
 tags: [Mentor, Frontend]
 author: benben

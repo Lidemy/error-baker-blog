@@ -1,5 +1,6 @@
 ---
 title: 在 AWS EB 上部署 Nodejs 網站的入門指南
+description: "以新手視角在 AWS Elastic Beanstalk 上部署 Node.js 網站的入門指南：從建立環境、打包上傳，到解決 start script、資料庫連線、Sequelize migrate、環境變數與 HTTPS 等常見問題。"
 date: 2021-10-05
 tags: [Backend, Node.js, AWS]
 author: sixwings

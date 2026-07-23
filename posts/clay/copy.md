@@ -1,5 +1,6 @@
 ---
 title: 聊聊 JavaScript 中的深拷貝 (上)
+description: "聊聊 JavaScript 的深拷貝（上）：從 call by reference 的賦值陷阱談起，說明展開運算子只能處理淺拷貝，以及遇到多層物件、用 JSON.parse(JSON.stringify()) 深拷貝會踩到哪些問題。"
 date: 2021-10-08
 tags: [JavaScript, Shallow Copy, Deep Copy]
 author: clay

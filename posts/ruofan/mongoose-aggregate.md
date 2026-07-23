@@ -1,5 +1,6 @@
 ---
 title: mongoose 中的 aggregate
+description: "Mongoose 中的 aggregate 基本操作：認識這個 node.js 的 MongoDB ODM，並用範例帶你理解 $match、$project、$lookup、$unwind、$cond 等聚合管線運算子，附版本注意事項。"
 date: 2021-10-03
 tags: [Backend]
 author: ruofan

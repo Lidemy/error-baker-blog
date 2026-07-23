@@ -1,5 +1,6 @@
 ---
 title: React Ref 的一點研究
+description: "更全面地理解 React Ref：除了取得 DOM 與存變數，本文深入 createRef、useRef、callback ref 與 component 的 ref，並分享 ref 與元件生命週期順序的一些實驗和發現。"
 date: 2021-09-27
 tags: [React]
 author: lavi

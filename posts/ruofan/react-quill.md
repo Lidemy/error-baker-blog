@@ -1,5 +1,6 @@
 ---
 title: render quill delta 的方式
+description: "如何一致渲染 Quill 編輯器產出的內容：說明 Quill 產生的 Delta 是什麼、為何它是 JSON 的子集，並帶你實作讓後台編輯的資料能在前端一致呈現的方法。"
 date: 2021-11-07
 tags: [Frontend]
 author: ruofan

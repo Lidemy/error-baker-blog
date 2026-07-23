@@ -1,5 +1,6 @@
 ---
 title: 使用 Golang 建立一個 gRPC 架構
+description: "用 Golang 建立 gRPC 服務的入門：先搞懂 RPC 與 gRPC 是什麼、Protocol Buffers 如何序列化資料，再實作最基礎的 Unary 呼叫，從定義 .proto 到生成 stub code 一步步走過。"
 date: 2021-08-28
 tags: [Backend, JavaScript, Go]
 author: cian

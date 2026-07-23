@@ -1,5 +1,6 @@
 ---
 title: 進階版 To do list
+description: "進階版 To do list：跳脫單純練習 CRUD 的框架，加入「群組」概念，讓待辦事項能依工作、採買、學習等類別歸類。本文拋出規格與資料規劃的思考方向，適合當作自我練習題。"
 date: 2021-09-12
 tags: [Frontend, JavaScript, Todo List]
 author: xiang

@@ -1,5 +1,6 @@
 ---
 title: Raycast | 不完全手冊
+description: "Raycast 不完全手冊：從取代 Spotlight 的安裝設定開始，介紹剪貼簿記錄、Snippet、視窗管理、Store 外掛與 Raycast AI 等實用功能，帶 Mac 使用者打造高效啟動器。"
 date: 2025-07-31
 tags: [Raycast, AI]
 author: benben

@@ -1,5 +1,6 @@
 ---
 title: 初探 swagger-ui
+description: "初探 swagger-ui：如何依 OpenAPI 規範用 YAML 或 JSON 撰寫 API 文件並轉成可互動網頁，並用 swagger-ui-watcher 做模組化、即時預覽的分層管理，讓 API 文件更好寫也更好維護。"
 date: 2021-10-24
 tags: [Swagger UI, Swagger Editor, API Documentation, OpenAPI, npm]
 author: cwc329

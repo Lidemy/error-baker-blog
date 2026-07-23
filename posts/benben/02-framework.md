@@ -1,5 +1,6 @@
 ---
 title: 為什麼要使用框架 - 你聽過最好的答案是什麼？
+description: "與其死背面試答案，不如從歷史理解框架存在的理由。本文回顧 JavaScript、jQuery 到 React 的前端演進，帶你想清楚「為什麼要用框架」，找到能說服自己的答案。"
 date: 2021-09-19
 tags: [Framework]
 author: benben

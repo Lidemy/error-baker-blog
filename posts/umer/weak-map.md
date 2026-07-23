@@ -1,5 +1,6 @@
 ---
 title: 介紹 WeakMap
+description: "介紹 ES6 的 WeakMap：說明弱引用與垃圾回收的關係、常見的記憶體洩漏情況（全域變數、閉包、event listener），並比較 Map 與 WeakMap 的差異與適合使用 WeakMap 的場景。"
 date: 2021-11-12
 tags: [JavaScript, WeakMap]
 author: umer

@@ -1,5 +1,6 @@
 ---
 title: New Architecture of Rreac Native
+description: "深入 React Native 0.76 的新架構：解析舊架構 Bridge 的序列化效能瓶頸、同步性與單執行緒限制，以及新架構如何用 JSI、Turbo Modules、Fabric 來解決這些問題。"
 date: 2025-01-26
 tags: [Frontend]
 author: ruofan

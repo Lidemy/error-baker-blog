@@ -1,5 +1,6 @@
 ---
 title: 用 Vue 實作 Infinite Scroll
+description: "用 Vue 實作無限捲動的兩種方法：一是監聽 scroll 搭配 throttling 偵測捲到底部，二是用 Intersection Observer API 偵測元素進入 viewport 時載入更多資料。"
 date: 2022-02-06
 tags: [Frontend]
 author: ruofan

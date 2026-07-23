@@ -1,5 +1,6 @@
 ---
 title: Vue3 Composition API & React hooks
+description: "並列比較 Vue3 Composition API 與 React Hooks 的用法：從最基本的 Counter 計數器範例，看兩者如何定義響應式資料並驅動畫面，適合已熟悉其中一方、想理解另一方的開發者。"
 date: 2022-07-30
 tags: [Frontend, React, Vue]
 author: benben

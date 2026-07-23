@@ -1,5 +1,6 @@
 ---
 title: gRPC 和 HTTP/2 Streaming
+description: "深入 gRPC 背後的 HTTP/2 與 Streaming：從 SPDY 的由來、stream 與 frame 傳輸結構，到 Server 與 Client 端 streaming 的實作，理解 gRPC 四種生命週期的技術基礎。"
 date: 2021-10-03
 tags: [Backend, Go, gRPC, HTTP]
 author: cian

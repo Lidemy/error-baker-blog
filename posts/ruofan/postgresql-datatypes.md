@@ -1,5 +1,6 @@
 ---
 title: HSTORE  vs JSONB in PostgreSQL
+description: "PostgreSQL 中 HSTORE 與 JSONB 的差別：從 key/value 儲存與查詢效能、schemaless 的彈性比較兩種資料型態，並解釋 PostgreSQL 背後用 TOAST 處理大型資料的機制與對效能的影響。"
 date: 2022-06-29
 tags: [Backend]
 author: ruofan

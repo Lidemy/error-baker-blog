@@ -1,5 +1,6 @@
 ---
 title: Reduce | 完全手冊
+description: "JavaScript Array.prototype.reduce 完全手冊：拆解 reduce 的規格、命名由來、參數意義，以及什麼時候該用、什麼時候不該用，帶你徹底搞懂這個最讓新手陌生的陣列方法。"
 date: 2026-05-16
 tags: [JavaScript, Array]
 author: benben

@@ -1,5 +1,6 @@
 ---
 title: 用 k6 為 api 做 Load Testing
+description: "用 k6 為 API 做負載測試：認識這個以 Go 撰寫的開源效能測試工具與各種測試類型的差異，並實作 Load testing，含用 Webpack、Babel 打包並搭配 faker 產生假資料的完整設定。"
 date: 2021-08-07
 tags: [Backend]
 author: ruofan

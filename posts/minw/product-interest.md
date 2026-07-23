@@ -1,5 +1,6 @@
 ---
 title: 從開發到產品的心得
+description: "從開發到產品的心得：以開發者視角切入產品管理，分享如何從產品、使用者、利害關係人三個面向徹底了解產品，以及文件、開卡、小工具與流程上的實務紀錄。"
 date: 2021-11-07
 tags: [Product Management]
 author: minw

@@ -1,5 +1,6 @@
 ---
 title: 現代前端開發 - 那些我使用過的 Pattern 和 工具
+description: "以 React Hook Form 加 TypeScript 做一個巢狀 Todo List：從 User Story 出發，示範 Type 組合、元件複用、CSS 複用與自訂 Hooks 等常見的前端 Pattern。"
 date: 2021-10-04
 tags: [TypeScript, React, React Hook Form, Design Patterns, Todo List]
 author: tian

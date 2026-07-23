@@ -1,5 +1,6 @@
 ---
 title: 我所理解的 GitFlow
+description: "我所理解的 GitFlow：以團隊從一人成長到多人的過程，說明版本控制流程如何從單一 master，逐步演變到 develop、feature 副分支與 Pull Request Review，達成穩定持續的交付。"
 date: 2021-10-28
 tags: [Git, Git Flow]
 author: tian

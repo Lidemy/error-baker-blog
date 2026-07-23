@@ -1,5 +1,6 @@
 ---
 title: 來做一個 Gatsby Generic Plugin 吧
+description: "拆解 Gatsby Plugin 的檔案組成與五種類型命名規範，並用 Gatsby Node API 與 createNode 手把手做出一個最簡單的 Generic Plugin，適合想開發並發布自有外掛的人。"
 date: 2021-11-15
 tags: [Gatsby Plugin]
 author: YongChen

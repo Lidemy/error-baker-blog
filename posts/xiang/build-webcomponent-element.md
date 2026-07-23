@@ -1,5 +1,6 @@
 ---
 title: 如何使用 Web Component 技術來製作元件
+description: "用 Web Component 製作元件：延續表格元件基礎，介紹 LitElement，說明 Template、Style、Properties、Events、Lifecycle 等概念，實作可跨框架共用的元件庫。"
 date: 2021-11-07
 tags: [Frontend, JavaScript]
 author: xiang

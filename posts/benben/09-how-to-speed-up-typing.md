@@ -1,5 +1,6 @@
 ---
 title: 如何提升打字速度 - 從初心者轉職超級初心者
+description: "如何提升打字效率？本文從物理、心理、視覺三個面向，分享打字練習網站、VS Code 快捷與各種提速技巧，幫長時間敲鍵盤的開發者把「打字很快的感覺」練出來。"
 date: 2022-10-16
 tags: [Typing, VS Code Extension]
 author: benben

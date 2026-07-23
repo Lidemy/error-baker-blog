@@ -1,5 +1,6 @@
 ---
 title: 儲存資料到 firestore 前，需要注意哪些事？
+description: "儲存資料到 Firestore 前要注意什麼？從官方每次 transaction 最多 500 筆寫入的限制出發，用實際情境說明容易踩到的坑，並分享在開發上可行的資料結構設計與解決方法。"
 date: 2022-04-16
 tags: [Backend]
 author: ruofan

@@ -1,5 +1,6 @@
 ---
 title: 克服 Django-allauth 開發問題
+description: "用 Django 加 django-allauth 做縮網址服務的開發紀錄：如何克服 SPA 下的 CSRF Token 與 redirect URL 問題，並用 reverse proxy 解決 cookie same site 限制。"
 date: 2025-01-07
 tags: [Python, Django, django-allauth, CSRF, Cookie]
 author: cwc329
