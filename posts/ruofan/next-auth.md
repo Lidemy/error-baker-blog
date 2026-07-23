@@ -1,5 +1,6 @@
 ---
 title: 用 NextAuth 實作第三方登入
+description: "用 NextAuth 實作第三方登入：除了帶你認識如何在 Next.js 中整合登入，也完整示範 LINE、Google、Facebook 三家開發者後台的環境設定與 callback URL 配置。"
 date: 2021-12-04
 tags: [Frontend]
 author: ruofan

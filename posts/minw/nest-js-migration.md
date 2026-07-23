@@ -1,5 +1,6 @@
 ---
 title: 實作 Nest.js 中的 Migration 與 Seeder
+description: "在 Nest.js 中實作 Migration 與 Seeder：TypeORM 加 Nest 坑很多，分享調整 ormconfig 參考 build 目錄、用原生 Migration 產生與塞假資料的做法。"
 date: 2021-09-05
 tags: [Backend]
 author: minw

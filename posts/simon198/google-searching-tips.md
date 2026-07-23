@@ -1,5 +1,6 @@
 ---
 title: 如何準確的 Google 到想要的內容
+description: "如何準確 Google 到想要的內容：整理完全比對、site 指定網站、排除關鍵字、after／before 時間區間、萬用字元等搜尋技巧，幫你更快從搜尋結果撈到真正需要的答案。"
 date: 2021-09-28
 tags: [Google]
 author: simon198

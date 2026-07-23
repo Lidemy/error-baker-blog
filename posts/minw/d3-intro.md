@@ -1,5 +1,6 @@
 ---
 title: 再看 D3.js
+description: "再看 D3.js：從資料視覺化的本質談起，說明 Visual Encoding 與資料型別（類別、等級、等距、等比）如何對應，並解釋為何 D3 直接操作 DOM 的做法最貼近視覺化的想像。"
 date: 2021-10-03
 tags: [Data Visualization]
 author: minw

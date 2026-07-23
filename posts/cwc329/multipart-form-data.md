@@ -1,5 +1,6 @@
 ---
 title: multipart/form-data 初探
+description: "multipart/form-data 初探：當後端要一個 request 同時傳 JSON 與檔案並上傳 S3，從 OpenAPI 與 RFC 7578 出發，說明 boundary、各 part 的 header 與多檔案欄位處理。"
 date: 2022-04-30
 tags: [RFC 7578, OpenAPI, multipart/form-data, RFC]
 author: cwc329

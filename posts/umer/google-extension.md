@@ -1,5 +1,6 @@
 ---
 title: 初探 Google extension
+description: "初探 Google（Chrome）擴充功能開發：認識 manifest.json、popup、background、content script 的組成與職責，並實作一個能把輸入訊息 prepend 到當前分頁的簡單 extension。"
 date: 2021-09-09
 tags: [JavaScript, Chrome Extension]
 author: umer

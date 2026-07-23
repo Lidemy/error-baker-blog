@@ -1,5 +1,6 @@
 ---
 title: 共筆中的共筆 - 以 JavaScript30 為例
+description: "以 JavaScript30 為題發起共筆讀書會的實作回顧：如何用 HackMD 與 CodePen 搭建共筆環境、規劃分享流程，並談為別人分享而學帶來的學習動力，適合想發起讀書會的新手。"
 date: 2021-10-26
 tags: [JavaScript, Collaborative Writing]
 author: benben

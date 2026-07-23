@@ -1,5 +1,6 @@
 ---
 title: 優化舊有專案（一）：加入 dotenv, nodemon, babel 優化開發
+description: "優化舊有專案（一）：在自己的 side project 中導入 dotenv、nodemon、babel-node。分享如何用 .env 管理環境變數、自動重啟與編譯，把工作上看到的好用工具在自己專案裡練起來。"
 date: 2021-08-22
 tags: [Backend, JavaScript, dotenv, Babel, nodemon]
 author: cwc329

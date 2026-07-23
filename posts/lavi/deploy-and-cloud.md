@@ -1,5 +1,6 @@
 ---
 title: 從本地到雲端，淺談部署和各種部署姿勢
+description: "從本地到雲端，淺談各種部署姿勢：用飲料販賣機比喻拆解「部署」是什麼，並比較本地、雲端主機（IaaS）、PaaS、容器與 Kubernetes、FaaS 各種方式的優缺與取捨。"
 date: 2021-08-12
 tags: [Deployment]
 author: lavi

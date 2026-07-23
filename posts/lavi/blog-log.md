@@ -1,5 +1,6 @@
 ---
 title: 用 11ty 寫部落格的心得
+description: "用 11ty（Eleventy）自架部落格的完整心得：從離開 Medium、CoderBridge 的理由，到規劃、設計、開發、搬家與部署的每個步驟，並分享圖片優化、CSP、CSS 等實作細節。"
 date: 2021-10-31
 tags: [Eleventy, JavaScript]
 author: lavi

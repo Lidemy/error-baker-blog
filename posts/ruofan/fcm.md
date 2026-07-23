@@ -1,5 +1,6 @@
 ---
 title: web Push Notifications
+description: "用 Firebase Cloud Messaging 在 web 推播通知：搭配 service worker 實作訊息接收與通知產生，說明 push service 的運作原理、各家瀏覽器支援度，以及 iOS 上的限制與注意事項。"
 date: 2022-03-13
 tags: [Frontend]
 author: ruofan

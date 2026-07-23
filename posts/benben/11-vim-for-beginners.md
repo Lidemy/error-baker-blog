@@ -1,5 +1,6 @@
 ---
 title: Vim for beginners
+description: "寫給初學者的 Vim 入門：認識 Vim 無所不在的精神、如何離開 Vim，以及輸入與儲存這兩個任何編輯器的第一課，帶你踏出用鍵盤取代滑鼠的第一步。"
 date: 2023-05-07
 tags: [Vim]
 author: benben

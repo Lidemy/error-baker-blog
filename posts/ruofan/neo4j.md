@@ -1,5 +1,6 @@
 ---
 title: At a glance of Neo4j
+description: "初探 Neo4j 與 graph database：先總覽 NoSQL 各種類型，再從七橋問題與 graph theory 談 graph 是什麼、適合的應用場景，並比較一般 SQL 與 Neo4j 的差異及不適合的資料。"
 date: 2022-10-09
 tags: [Backend]
 author: ruofan

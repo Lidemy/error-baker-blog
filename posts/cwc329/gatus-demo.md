@@ -1,5 +1,6 @@
 ---
 title: Gatus demo
+description: "介紹用 Go 撰寫的開源監控工具 Gatus：它與 Prometheus、CloudWatch 最大的不同是能主動測試 endpoint，不必等有流量才發現問題。附 Docker Compose demo 與實際使用情境的取捨。"
 date: 2022-09-08
 tags: [Gatus, Monitoring, DevOps]
 author: cwc329

@@ -1,5 +1,6 @@
 ---
 title: 用 Web Component 製作客製化表格元件
+description: "用 Web Component 製作可客製化的表格元件：為了打造跨框架共用的元件庫，從 Web Component 與 shadow DOM 的基本概念談起，示範如何讓使用者自訂 column 與綁定 action 的 table 元件。"
 date: 2021-08-15
 tags: [Frontend, JavaScript]
 author: xiang

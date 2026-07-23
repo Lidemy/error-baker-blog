@@ -1,5 +1,6 @@
 ---
 title: 一段的 React-markdown 研究之旅
+description: "一段 React-markdown 研究之旅：從進度報告出現的怪異排版出發，追查 react-markdown、CommonMark 與 remark-gfm 如何影響解析，最終發現問題出在 remark-gfm 的除錯故事。"
 date: 2021-08-08
 tags: [Markdown]
 author: sixwings

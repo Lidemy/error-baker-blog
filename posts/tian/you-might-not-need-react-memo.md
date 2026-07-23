@@ -1,5 +1,6 @@
 ---
 title: 你可能不需要 React Memo
+description: "你可能不需要 React memo：對 Functional Component 做渲染優化，不一定要用 memo，也能靠元件重組或 useMemo 達成。本文剖析 Pure Component 與各種優化的取捨成本。"
 date: 2021-08-29
 tags: [Performance, React, React Memo]
 author: tian

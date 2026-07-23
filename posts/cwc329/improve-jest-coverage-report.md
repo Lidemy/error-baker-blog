@@ -1,5 +1,6 @@
 ---
 title: 改善 CI/CD 中的 jest-coverage-report
+description: "改善 CI/CD 中跑太久的 Jest coverage report：從 --runInBand 的嘗試與失敗，到深入 jest-coverage-report action 原始碼，找出執行時間沒下降的真正原因，一段誠實的除錯歷程。"
 date: 2023-03-26
 tags: [DevOps, GitHub Actions, CI/CD]
 author: cwc329

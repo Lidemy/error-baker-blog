@@ -1,5 +1,6 @@
 ---
 title: 前端開發需了解的 GA 基礎
+description: "前端開發需了解的 GA 基礎：以 GA4 為例，從「資料統計與分析」的本質切入，用前端視角說明 GA 事件（event）如何埋設、前端能提供哪些協助，讓你不被後台的圖表淹沒。"
 date: 2022-11-05
 tags: [Frontend]
 author: xiang

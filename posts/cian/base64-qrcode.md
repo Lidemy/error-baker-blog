@@ -1,5 +1,6 @@
 ---
 title: 淺談 Base64 與應用實例分享
+description: "為什麼用 Base64 顯示 QRCode？本文從 Base64 的編碼原理談起，介紹 Data URIs 標準與 HTML 應用，並分享用 Base64 內嵌圖片達成優化的實例。"
 date: 2021-10-21
 tags: [Encoding, HTML, Image, QR Code]
 author: cian

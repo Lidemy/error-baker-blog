@@ -1,5 +1,6 @@
 ---
 title: next-seo 初體驗
+description: "next-seo 初體驗：當 Next.js 專案各頁都要各自維護 SEO meta tag 容易失控，本文介紹用 next-seo 的 NextSeo 元件統一管理，並初探 JSON-LD 結構化資料的用法。"
 date: 2021-08-30
 tags: [JavaScript, Next.js, SEO, Structured Data]
 author: clay

@@ -1,5 +1,6 @@
 ---
 title: Debug 系列 01
+description: "Debug 系列 01：分享工作上四個技術含量不高卻很值得一聊的實際 bug，包含 dispatchEvent 重複上傳、tab 導致跑版、font-weight 失控、表單 tab 無法跳題，帶你看實戰除錯過程。"
 date: 2021-10-10
 tags: [Frontend, JavaScript]
 author: xiang

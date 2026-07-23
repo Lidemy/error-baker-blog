@@ -1,5 +1,6 @@
 ---
 title: 優化舊有專案（二）：加入 CI/CD with github actions
+description: "優化舊有專案（二）：為 Lidemy 期末專案 Podcastify 加上 CI/CD。分享帳號搬遷、前端部署到 GitHub Pages、後端部署到 Heroku，並用 GitHub Actions 自動化部署的實作過程。"
 date: 2022-02-27
 tags: [Backend, CI/CD, GitHub Actions, Heroku]
 author: cwc329

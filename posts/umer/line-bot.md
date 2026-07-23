@@ -1,5 +1,6 @@
 ---
 title: 結合 Line bot 與 twitter 爬蟲的研究紀錄 實戰篇
+description: "結合 LINE Bot 與 Twitter 爬蟲的實戰紀錄：從申請 Messaging API、撰寫 LINE Bot、部署到 EC2、用 Twint 爬推特，到用 crontab 排程每天定期把最新推文推送到 LINE 的完整流程。"
 date: 2021-08-15
 tags: [JavaScript, LINE Bot]
 author: umer

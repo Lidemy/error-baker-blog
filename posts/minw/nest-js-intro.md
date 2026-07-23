@@ -1,5 +1,6 @@
 ---
 title: 初探用 Nest.js 做出一個 CRUD 服務
+description: "初探用 Nest.js 做 CRUD 服務：認識 Controller、Provider、Module 與模組化 MVC 設計，用 Nest CLI 加 TypeORM 從零建立 user module，並補充依賴注入與 DTO 觀念。"
 date: 2021-08-08
 tags: [Backend]
 author: minw

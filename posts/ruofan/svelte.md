@@ -1,5 +1,6 @@
 ---
 title: svelte 結合 firebase 實作登入
+description: "用 Svelte 結合 Firebase 實作登入：認識 Svelte 在 build time 編譯元件、效能出色的特色，並分享搭配 Firebase Google login 與狀態機工具 XState 管理登入流程的實作。"
 date: 2021-09-04
 tags: [Frontend]
 author: ruofan

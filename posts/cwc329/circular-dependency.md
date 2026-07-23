@@ -1,5 +1,6 @@
 ---
 title: 淺談工作上遇到的 Circular Dependency
+description: "淺談工作上遇到的循環相依（Circular Dependency）：什麼是循環相依、它會造成什麼問題，以及在導入 monorepo、ESLint no-cycle 規則與單元測試時如何面對與解決。"
 date: 2022-01-30
 tags: [JavaScript, Circular Dependency, ESLint]
 author: cwc329

@@ -1,5 +1,6 @@
 ---
 title: 用 Fireorm interact with Cloud Firestore
+description: "用 Fireorm 操作 Cloud Firestore：認識 NoSQL 雲端資料庫與 firebase-admin 上的輕量 ORM，從環境設定到用 decorator 定義 schema，並以 repository 做 CRUD。"
 date: 2021-12-17
 tags: [Backend]
 author: ruofan

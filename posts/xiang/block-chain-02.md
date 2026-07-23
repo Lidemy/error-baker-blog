@@ -1,5 +1,6 @@
 ---
 title: 帶你入門區塊鏈（二）
+description: "帶你入門區塊鏈（二）：直接用 Python 寫出單節點的區塊鏈範例，涵蓋建立創世塊、產生公私鑰、簽署與驗證交易、挖礦與調整難度、計算餘額，並附各步驟說明。"
 date: 2022-05-01
 tags: [Blockchain]
 author: xiang
