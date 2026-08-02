@@ -54,9 +54,14 @@ main img {
   content-visibility: auto;
 }
 
-/* Avoid the header hiding the content on anchor scroll. */
+/* Avoid the header hiding the content on anchor scroll.
+   The fixed bar is 3rem tall on desktop and 3.25rem on phones, measured in a
+   root size that scales 16→21px, so it is up to ~68px — the old flat 50px was
+   smaller than the bar itself and every TOC/heading jump landed with the
+   heading tucked underneath it. 4.5rem clears the bar at every root size and
+   still leaves a line of air above the target. */
 article * {
-  scroll-margin-top: 50px;
+  scroll-margin-top: 4.5rem;
 }
 
 /* "Content-visibility: auto" move the images over the other elements
@@ -871,14 +876,13 @@ pre[class*="language-"] {
   margin: 0.5em 0;
   overflow: auto;
 }
-:not(pre) > code[class*="language-"],
+/* Prism's stock sheet also styled *inline* highlighted code
+   (`:not(pre) > code[class*="language-"]`). Markdown never emits that — inline
+   code has no language class — and purgecss@2 drops any selector that opens
+   with a functional pseudo-class anyway, so those branches were dead weight.
+   Anything hand-written that way now picks up the inline chip below instead. */
 pre[class*="language-"] {
   background: #333;
-}
-:not(pre) > code[class*="language-"] {
-  padding: 0.1em;
-  border-radius: 0.3em;
-  white-space: normal;
 }
 /* Copy-code button (JS-injected by src/main.js on post code blocks).
    The .code-copy* classes never appear in server-rendered HTML, so they are
@@ -1371,17 +1375,45 @@ footer a {
 }
 
 /* ── Code: bigger, theme-aware inline chips; readable blocks ─────────────*/
+/* NOTE: purgecss@2 silently drops any selector branch that *starts* with a
+   functional pseudo-class (that is also why `:lang(...)` needs a whitelist
+   pattern). The chip used to be written as
+   `:not(pre) > code:not([class*="language-"]), kbd { … }`, so on every built
+   page only the `kbd` branch survived and inline <code> fell back to the base
+   sheet's dark block surface — a black chip in the middle of light editorial
+   prose. Expressed as plain `code` + a `pre code` reset, no branch starts with
+   a pseudo-class and the chip survives the purge. */
 code,
-kbd {
-  font-size: 0.9em;
-}
-:not(pre) > code:not([class*="language-"]),
 kbd {
   background: var(--inlineCodeBg);
   color: var(--inlineCodeColor);
   padding: 0.15em 0.4em;
   border-radius: 0.35em;
-  font-size: 0.875em;
+  font-size: 0.9em;
+}
+/* Inside a block the surface belongs to the <pre>, so the inner <code> stays
+   transparent — for highlighted and plain fences alike. */
+pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+}
+/* The chip's own padding used to be cancelled on the first syntax token; with
+   the block-level padding reset above that compensation would pull the first
+   token out of the gutter. */
+pre code > span:first-of-type {
+  margin-left: 0;
+}
+/* A fence without a language tag has no `pre[class*="language-"]` to paint,
+   so the warm code surface goes on the <pre> itself and both kinds of block
+   look the same. `--codeBg` was already declared warm; the prism rule above
+   still hard-codes #333, so restate it here on the token. */
+pre,
+pre[class*="language-"] {
+  background: var(--codeBg);
+  color: #ccc;
+  border-radius: 8px;
 }
 code[class*="language-"],
 pre[class*="language-"] {
@@ -1422,6 +1454,10 @@ table {
 }
 html {
   scroll-behavior: smooth;
+  /* Same clearance as `article *`, but on the scroll container, so anchors
+     that are not inside an article (and the browser's own :target and
+     find-in-page scrolling) also stop below the fixed bar. */
+  scroll-padding-top: 4.5rem;
 }
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -2874,4 +2910,90 @@ body.dark .topic-map {
   .topic-card:hover {
     transform: none;
   }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   READING COMFORT — lists, tables, quotes, drop cap
+   Everything below is about the article body only: the parts of a long
+   technical post a reader's eye actually has to work through.
+   ════════════════════════════════════════════════════════════════════════ */
+
+/* Lists: a wrapped bullet used to butt straight into the next one at
+   line-height 1.85, so a five-item list read as one grey block. A small gap
+   between siblings (not inside an item) restores the item boundary. */
+article li + li {
+  margin-top: 0.45em;
+}
+article li > ul,
+article li > ol {
+  margin-top: 0.45em;
+}
+
+/* Tables ---------------------------------------------------------------
+   `.table-scroll` is emitted around every markdown table (see the markdown-it
+   renderer override in .eleventy.js). Without it a wide comparison table has
+   nowhere to go on a phone: the columns squeeze until cells wrap to three
+   lines each. With it the table keeps a legible minimum column width and the
+   reader swipes instead. tabindex makes that scroll keyboard-reachable. */
+.table-scroll {
+  max-width: 100%;
+  margin: 1.6em 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.table-scroll:focus-visible {
+  outline: 2px solid var(--linkColor);
+  outline-offset: 2px;
+}
+article table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+}
+/* The base sheet hard-codes #595959 hairlines: near-black on paper, muddy on
+   ink, and out of step with every other rule in the page. Use the tokens. */
+article th,
+article td {
+  min-width: 6em;
+  padding: 0.55em 0.9em;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.95em;
+  line-height: 1.6;
+}
+article thead th {
+  border-bottom: 1px solid var(--rule-strong);
+  color: var(--ink);
+}
+article tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Quotes: `font-style: italic` has no real italic in any CJK face, so the
+   browser synthesises one by shearing the glyphs — the least readable thing
+   on the page. The accent bar, serif family and colour already say "quote".
+   Latin-language pages keep the true italic. */
+:lang(zh-Hant) article blockquote,
+:lang(zh-TW) article blockquote,
+:lang(zh-Hans) article blockquote,
+:lang(zh-CN) article blockquote,
+:lang(ja) article blockquote {
+  font-style: normal;
+  font-size: 1.12em;
+}
+
+/* Drop cap: a one-line opening paragraph left the floated cap hanging into
+   the paragraph below it. Reserving the cap's own height keeps the collision
+   impossible regardless of how short the opening line is. Scoped to the
+   languages that actually get a cap (en/ja opt out above). */
+body.tmpl-post:lang(zh-Hant) article > p:first-of-type,
+body.tmpl-post:lang(zh-TW) article > p:first-of-type,
+body.tmpl-post:lang(zh-Hans) article > p:first-of-type,
+body.tmpl-post:lang(zh-CN) article > p:first-of-type {
+  min-height: 2.7em;
+}
+
+/* Reading time sits with the byline as a third, quietest rank. */
+.byline-reading {
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
 }

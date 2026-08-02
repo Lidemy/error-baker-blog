@@ -59,6 +59,7 @@ const { buildAiCrawlRules } = require("./_11ty/aiCrawlPolicy");
 const { commentCountsByPath } = require("./_11ty/discussions");
 const { CSS_FILES } = require("./_11ty/css-bundle");
 const { buildSearchIndexJson } = require("./_11ty/search-index");
+const { readingMinutes } = require("./_11ty/readingTime");
 const TAG_TAXONOMY = require("./_data/tagTaxonomy.json");
 const {
   buildTopicMap,
@@ -177,6 +178,9 @@ module.exports = function (eleventyConfig) {
     const entry = (authors || []).find((a) => a.key === authorKey);
     return entry ? entry.tier : null;
   });
+
+  // Reading time for the byline. Bilingual-aware: see _11ty/readingTime.js.
+  eleventyConfig.addFilter("readingMinutes", readingMinutes);
 
   eleventyConfig.addFilter("readableDate", (dateObj) => {
     return DateTime.fromJSDate(dateObj, { zone: "utc" }).toFormat(
@@ -649,6 +653,17 @@ module.exports = function (eleventyConfig) {
     permalinkSymbol: "#",
     permalinkBefore: true
   });
+
+  // Wrap every markdown table in a horizontally scrollable container. A wide
+  // comparison table has nowhere to go on a phone otherwise: the columns
+  // squeeze until each cell wraps to three lines. `tabindex` keeps that scroll
+  // area reachable by keyboard (a scrollable region needs to be focusable).
+  markdownLibrary.renderer.rules.table_open = (tokens, idx, options, env, self) =>
+    '<div class="table-scroll" tabindex="0">' +
+    self.renderToken(tokens, idx, options);
+  markdownLibrary.renderer.rules.table_close = (tokens, idx, options, env, self) =>
+    self.renderToken(tokens, idx, options) + "</div>";
+
   eleventyConfig.setLibrary("md", markdownLibrary);
 
   // Dev server 404 handling.

@@ -53,6 +53,59 @@ describe("purged CSS output", () => {
     assert.match(dismissRule[1], /background:(?:transparent|0 0)/);
   });
 
+  it("never opens a selector with a functional pseudo-class", () => {
+    // purgecss@2 silently discards any selector branch that *starts* with a
+    // functional pseudo-class. That is why `:lang(...)` needs a whitelist
+    // pattern — and it is how the editorial inline-code chip
+    // (`:not(pre) > code:not([class*="language-"])`) disappeared from every
+    // built page, leaving inline <code> on the dark block surface in light
+    // mode. Any new rule written that way would fail the same silent way.
+    const css = readCssBundle().replace(/\/\*[\s\S]*?\*\//g, "");
+    const offenders = css
+      .split("}")
+      .flatMap((block) => (block.includes("{") ? block.split("{")[0] : []))
+      .flatMap((selectorList) => selectorList.split(","))
+      .map((selector) => selector.trim())
+      .filter((selector) => /^:(?!lang\()[a-z-]+\(/.test(selector));
+    assert.deepEqual(
+      offenders,
+      [],
+      "Rewrite these without a leading :not()/:is()/:where() — purgecss@2 drops them"
+    );
+  });
+
+  it("keeps the inline-code chip on plain <code> through the purge", () => {
+    // Pick a page that actually has an inline <code>; PurgeCSS is per page, so
+    // asserting on a post without one would pass for the wrong reason.
+    const postsRoot = path.join(PROJECT_ROOT, "_site", "posts");
+    const page = fs
+      .readdirSync(postsRoot)
+      .filter((author) => fs.statSync(path.join(postsRoot, author)).isDirectory())
+      .flatMap((author) =>
+        fs
+          .readdirSync(path.join(postsRoot, author))
+          .map((slug) => path.join("posts", author, slug, "index.html"))
+      )
+      .find((relativePath) => {
+        const filename = path.join(PROJECT_ROOT, "_site", relativePath);
+        if (!fs.existsSync(filename)) return false;
+        const body = fs.readFileSync(filename, "utf8").split("</head>")[1] || "";
+        return /<p>(?:(?!<\/p>).)*<code(?![^>]*language-)/s.test(body);
+      });
+    assert.ok(page, "Expected at least one post with inline code");
+
+    const css = inlinedCss(page);
+    const chip = [...css.matchAll(/(?:^|\})([^{}]+)\{([^}]*)\}/g)].find(
+      ([, selectors, declarations]) =>
+        selectors.split(",").some((selector) => selector.trim() === "code") &&
+        declarations.includes("--inlineCodeBg")
+    );
+    assert.ok(chip, "Expected the inline chip to apply to bare <code>");
+    assert.match(chip[2], /var\(--inlineCodeColor\)/);
+    // Inside a block the <pre> owns the surface, so the chip must be undone.
+    assert.match(css, /pre code\{[^}]*background:(?:none|0 0)/);
+  });
+
   it("contains no retired language-nav selectors in the source stylesheet", () => {
     const css = readCssBundle();
     assert.doesNotMatch(css, /\.lang-nav/);

@@ -97,6 +97,45 @@ describe("article readability build output", () => {
     assert.match(inlineCss, /\.back-to-top/);
   });
 
+  it("clears the fixed header when jumping to a heading", () => {
+    // The bar is up to ~68px tall (3.25rem at the largest root size), so the
+    // old flat 50px offset dropped every TOC/anchor jump underneath it.
+    assert.match(inlineCss, /scroll-padding-top:4\.5rem/);
+    assert.match(inlineCss, /article \*\{scroll-margin-top:4\.5rem\}/);
+  });
+
+  it("wraps every article table in a keyboard-reachable scroll container", () => {
+    const posts = fs
+      .readdirSync(path.resolve(__dirname, "..", "_site", "posts"))
+      .flatMap((author) => {
+        const authorDir = path.resolve(__dirname, "..", "_site", "posts", author);
+        if (!fs.statSync(authorDir).isDirectory()) return [];
+        return fs
+          .readdirSync(authorDir)
+          .map((slug) => path.join(authorDir, slug, "index.html"))
+          .filter((file) => fs.existsSync(file));
+      });
+
+    const withTables = posts.filter((file) =>
+      fs.readFileSync(file, "utf8").includes("<table")
+    );
+    assert.ok(withTables.length > 0, "Expected at least one post with a table");
+
+    for (const file of withTables) {
+      const postDoc = new JSDOM(fs.readFileSync(file, "utf8"), {
+        virtualConsole: quietConsole,
+      }).window.document;
+      for (const table of postDoc.querySelectorAll("article table")) {
+        const scroller = table.closest(".table-scroll");
+        assert.ok(
+          scroller,
+          `${path.relative(process.cwd(), file)}: table is not inside .table-scroll`
+        );
+        assert.equal(scroller.getAttribute("tabindex"), "0");
+      }
+    }
+  });
+
   it("keeps language-aware article typography through the CSS purge", () => {
     // `:lang(...) article` starts with a functional pseudo-class purgecss@2
     // cannot match against page content; a whitelistPatterns entry keeps it.

@@ -28,6 +28,8 @@ templateClass: tmpl-post
       <span><span class="byline-role">{{ t.gx.tier[authorTier] if authorTier else t.publishedBy }}</span> {{ postAuthor.name }}</span>
     </a>
     <time class="byline-date" datetime="{{ page.date | htmlDateString }}">{{ t.publishedOn }} {{ page.date | htmlDateString }}</time>
+    {#- How long the loaf takes to finish: set before the reader commits. #}
+    <span class="byline-reading">{{ t.readingTime | replace("{count}", content | readingMinutes) }}</span>
     <span class="byline-tags">
     {%- for tag in tags %}{% if tag !== "posts" %}{% set canonicalTagUrl = tag | tagUrl(pageLang) %}<a href="{{ canonicalTagUrl | url }}" class="post-tag">#{{ tag }}</a>{% endif %}{% endfor %}
     </span>
